@@ -7,7 +7,7 @@
 .externalNativeBuild
 .cxx
 local.properties
-/.idea/
+.idea/
 /core/ui/build/
 /library/network/build/
 /.kotlin/
