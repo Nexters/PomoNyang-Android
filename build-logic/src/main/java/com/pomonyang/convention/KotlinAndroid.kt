@@ -27,6 +27,10 @@ internal fun Project.configureKotlinAndroid(
             targetCompatibility = ProjectConfigurations.JAVA_VERSION
         }
 
+        buildFeatures {
+            buildConfig = true
+        }
+
         kotlinOptions {
             val warningsAsErrors: String? by project
             allWarningsAsErrors = warningsAsErrors.toBoolean()

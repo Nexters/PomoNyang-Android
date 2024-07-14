@@ -1,6 +1,7 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.pomonyang.convention.ProjectConfigurations
 import com.pomonyang.convention.configureKotlinAndroid
+import com.pomonyang.convention.configureSecret
 import com.pomonyang.convention.findPluginId
 import com.pomonyang.convention.libs
 import org.gradle.api.Plugin
@@ -14,10 +15,12 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply(libs.findPluginId("android.application"))
                 apply(libs.findPluginId("kotlin.android"))
                 apply(libs.findPluginId("kotlin.serialization"))
+                apply(libs.findPluginId("gradle.secrets"))
             }
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
+                configureSecret()
                 defaultConfig.targetSdk = ProjectConfigurations.TARGET_SDK
 
                 packaging {

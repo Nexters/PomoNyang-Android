@@ -14,6 +14,7 @@ dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.compose.compiler.extension)
+    compileOnly(libs.gradle.secrets)
 }
 
 gradlePlugin {
