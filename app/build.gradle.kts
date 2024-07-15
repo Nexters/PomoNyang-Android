@@ -2,6 +2,7 @@ plugins {
     id("pomonyang.android.application")
     id("pomonyang.android.hilt")
     id("pomonyang.android.application.compose")
+    id("pomonyang.android.application.firebase")
 }
 
 android {
@@ -46,4 +47,5 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.animation)
+    implementation(libs.bundles.firebase)
 }

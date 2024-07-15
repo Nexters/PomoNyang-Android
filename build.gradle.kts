@@ -8,4 +8,8 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.gradle.secrets) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.firebase.pref) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.firebase.appdistribution) apply false
 }
