@@ -1,3 +1,5 @@
+import com.pomonyang.convention.GithubUtils
+
 plugins {
     id("pomonyang.android.application")
     id("pomonyang.android.hilt")
@@ -19,7 +21,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-project.txt"
             )
-            // TODO Distribution
+            firebaseAppDistribution {
+                releaseNotes = "[${GithubUtils.commitHash()}]-${GithubUtils.lastCommitMessage()}"
+                groups = "뽀모냥"
+            }
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -30,8 +35,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-project.txt"
             )
-
-            // TODO Distribution
+            firebaseAppDistribution {
+                releaseNotes = "[${GithubUtils.commitHash()}]-${GithubUtils.lastCommitMessage()}"
+                groups = "뽀모냥"
+            }
         }
     }
 }
