@@ -54,5 +54,4 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.animation)
-    implementation(libs.bundles.firebase)
 }

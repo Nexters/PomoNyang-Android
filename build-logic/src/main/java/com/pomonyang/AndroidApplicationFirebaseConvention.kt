@@ -18,7 +18,7 @@ class AndroidApplicationFirebaseConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                // 여기서 firebase bundle 추가하고 싶었는데 왜 안되지!..
+                add("implementation", libs.findBundle("firebase").get())
                 add("implementation", platform(libs.findLibrary("firebase-bom").get()))
             }
 
