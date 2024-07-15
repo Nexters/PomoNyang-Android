@@ -11,3 +11,5 @@ local.properties
 /core/ui/build/
 /library/network/build/
 /.kotlin/
+debug.secrets.properties
+release.secrets.properties

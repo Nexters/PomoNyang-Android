@@ -29,6 +29,7 @@ kotlinx-serialization-converter = "1.0.0"
 timber = "5.0.1"
 dagger = "2.51.1"
 collections-immutable = "0.3.7"
+secrets = "2.0.1"
 
 [libraries]
 # Compose
@@ -77,6 +78,7 @@ compose-compiler-extension = { module = "org.jetbrains.kotlin:compose-compiler-g
 # etc
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material3" }
+gradle-secrets = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 
 [plugins]
@@ -88,6 +90,7 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+gradle-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 
 [bundles]
 androidx-compose = [

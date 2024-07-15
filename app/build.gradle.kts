@@ -12,7 +12,7 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -20,7 +20,7 @@ android {
             )
             // TODO Distribution
         }
-        getByName("debug") {
+        debug {
             applicationIdSuffix = ".debug"
             isMinifyEnabled = false
             aaptOptions.cruncherEnabled = false
