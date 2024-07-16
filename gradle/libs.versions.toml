@@ -25,11 +25,18 @@ retrofit = "2.9.0"
 kotlin-serializaition = "1.6.3"
 kotlinx-serialization-converter = "1.0.0"
 
+# firebase
+firebase-crashlytics-gradle = "3.0.2"
+firebase-pref-gradle = "1.4.2"
+firebase-appdistribution-gradle = "5.0.0"
+firebase-bom = "33.1.2"
+
 # etc
 timber = "5.0.1"
 dagger = "2.51.1"
 collections-immutable = "0.3.7"
 secrets = "2.0.1"
+google-services = "4.4.2"
 
 [libraries]
 # Compose
@@ -75,6 +82,14 @@ kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", ve
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 compose-compiler-extension = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
+# firebase
+firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebase-crashlytics-gradle" }
+firebase-perf-gradle = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebase-pref-gradle" }
+firebase-appdistribution-gradle = { group = "com.google.firebase", name = "firebase-appdistribution-gradle", version.ref = "firebase-appdistribution-gradle" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-perf = { module = "com.google.firebase:firebase-perf" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+
 # etc
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material3" }
@@ -91,6 +106,10 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 gradle-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-gradle" }
+firebase-pref = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-pref-gradle" }
+firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "firebase-appdistribution-gradle" }
 
 [bundles]
 androidx-compose = [
@@ -105,4 +124,9 @@ androidx-compose = [
 
 androidx-compose-debug = [
     "androidx-compose-tooling",
+]
+
+firebase = [
+    "firebase-crashlytics",
+    "firebase-perf",
 ]

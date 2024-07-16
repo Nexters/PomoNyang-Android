@@ -15,6 +15,9 @@ dependencies {
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.compose.compiler.extension)
     compileOnly(libs.gradle.secrets)
+    compileOnly(libs.firebase.perf.gradle)
+    compileOnly(libs.firebase.crashlytics.gradle)
+    compileOnly(libs.firebase.appdistribution.gradle)
 }
 
 gradlePlugin {
@@ -26,6 +29,10 @@ gradlePlugin {
         register("androidApplicationCompose") {
             id = "pomonyang.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+        register("androidFirebase") {
+            id = "pomonyang.android.application.firebase"
+            implementationClass = "AndroidApplicationFirebaseConventionPlugin"
         }
         register("androidLibrary") {
             id = "pomonyang.android.library"
