@@ -49,9 +49,5 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
-    implementation(libs.timber)
-
-    implementation(libs.androidx.compose.navigation)
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.androidx.compose.animation)
+    implementation(libs.bundles.androidx.compose.navigation)
 }
