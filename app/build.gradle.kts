@@ -50,4 +50,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
     implementation(libs.bundles.androidx.compose.navigation)
+
+    // module impl
+    implementation(projects.data)
+    implementation(projects.domain)
+    implementation(projects.presentation)
 }
