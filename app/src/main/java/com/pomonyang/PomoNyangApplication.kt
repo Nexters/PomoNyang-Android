@@ -7,7 +7,6 @@ import timber.log.Timber
 
 @HiltAndroidApp
 class PomoNyangApplication : Application() {
-
     override fun onCreate() {
         super.onCreate()
         Timber.plant(DebugTimberTree())

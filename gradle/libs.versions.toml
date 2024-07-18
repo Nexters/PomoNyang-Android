@@ -37,6 +37,7 @@ dagger = "2.51.1"
 collections-immutable = "0.3.7"
 secrets = "2.0.1"
 google-services = "4.4.2"
+ktlint = "11.0.0"
 
 [libraries]
 # Compose
@@ -109,6 +110,7 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-gradle" }
 firebase-pref = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-pref-gradle" }
 firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "firebase-appdistribution-gradle" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 
 [bundles]
 androidx-compose = [
