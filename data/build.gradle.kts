@@ -15,4 +15,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.kotlin.coroutine.core)
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 }

@@ -22,14 +22,15 @@ import kotlinx.coroutines.SupervisorJob
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DataStoreModule {
-    private const val POMONYANG_PREFERENCES = BuildConfig.PREFERENCE_DATASTORE_KEY
+    private const val POMONYANG_PREFERENCES =
+        BuildConfig.PREFERENCE_DATASTORE_KEY
 
     @Provides
     @Singleton
     fun providePreferencesDataStore(
         @ApplicationContext context: Context
-    ): DataStore<Preferences> {
-        return PreferenceDataStoreFactory.create(
+    ): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
             corruptionHandler =
                 ReplaceFileCorruptionHandler(
                     produceNewData = { emptyPreferences() }
@@ -49,5 +50,4 @@ internal object DataStoreModule {
                     )
                 }
         )
-    }
 }
