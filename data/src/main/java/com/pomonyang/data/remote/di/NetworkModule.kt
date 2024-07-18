@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.pomonyang.data.BuildConfig
 import com.pomonyang.data.remote.interceptor.HttpRequestInterceptor
 import com.pomonyang.data.remote.service.PomoNyangService
+import com.pomonyang.data.remote.util.NetworkResultCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,23 +20,13 @@ import retrofit2.Retrofit
 internal object NetworkModule {
     private const val BASE_URL = BuildConfig.BASE_URL
 
-    /**
-     * ## ignoreUnknownKeys = true
-     * > 버전이 변경이 되면서 추가되는 값이나 삭제되는 값이 생길 때 dto에서 없어도 정상 동작
-     *
-     * ## coerceInputValues = true
-     * > non-null인데 null 값이 들어올 때 해당 타입의 기본값으로 세팅되게
-     *
-     * ## isLenient = true
-     * > dto에서는 String이지만 Int로 들어올 때 등등 자동으로 파싱
-     */
     @Provides
     @Singleton
     fun provideJsonBuilder(): Json =
         Json {
-            ignoreUnknownKeys = true
-            coerceInputValues = true
-            isLenient = true
+            ignoreUnknownKeys = true // dto 정의되어 있지 않은 필드도 허락
+            coerceInputValues = true // 해당 타입의 기본값으로 세팅되게
+            isLenient = true // String이지만 Int로 들어올 때 등등 자동으로 파싱
             if (BuildConfig.DEBUG) prettyPrint = true
         }
 
@@ -53,8 +44,13 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideNetworkResultCallAdapter(): NetworkResultCallAdapterFactory = NetworkResultCallAdapterFactory()
+
+    @Provides
+    @Singleton
     fun provideRetrofit(
         okHttpClient: OkHttpClient,
+        networkResultCallAdapterFactory: NetworkResultCallAdapterFactory,
         json: Json
     ): Retrofit =
         Retrofit
@@ -62,6 +58,7 @@ internal object NetworkModule {
             .client(okHttpClient)
             .baseUrl(BASE_URL)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .addCallAdapterFactory(networkResultCallAdapterFactory)
             .build()
 
     @Provides
