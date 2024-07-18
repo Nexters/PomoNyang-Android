@@ -1,0 +1,13 @@
+# .editorconfig
+
+[*.{kt,kts}]
+end_of_line = lf
+ij_kotlin_allow_trailing_comma = false
+ij_kotlin_allow_trailing_comma_on_call_site = false
+ij_kotlin_imports_layout = *
+ij_kotlin_line_break_after_multiline_when_entry = true
+ij_kotlin_packages_to_use_import_on_demand = java.util.*,kotlinx.android.synthetic.**
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+ktlint_function_naming_ignore_when_annotated_with = Composable, Test

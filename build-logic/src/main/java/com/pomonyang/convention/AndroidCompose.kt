@@ -1,17 +1,15 @@
 package com.pomonyang.convention
 
 import com.android.build.api.dsl.CommonExtension
+import java.io.File
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
-import java.io.File
 
-internal fun Project.configureAndroidCompose(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
-) {
+internal fun Project.configureAndroidCompose(commonExtension: CommonExtension<*, *, *, *, *, *>) {
     commonExtension.apply {
         buildFeatures {
             compose = true
@@ -41,7 +39,8 @@ private fun Project.buildComposeMetricsParameters(): List<String> {
         val metricsFolder = File(project.buildDir, "compose-metrics")
         metricParameters.add("-P")
         metricParameters.add(
-            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + metricsFolder.absolutePath,
+            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+                metricsFolder.absolutePath
         )
     }
 
@@ -51,7 +50,8 @@ private fun Project.buildComposeMetricsParameters(): List<String> {
         val reportsFolder = File(project.buildDir, "compose-reports")
         metricParameters.add("-P")
         metricParameters.add(
-            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + reportsFolder.absolutePath,
+            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+                reportsFolder.absolutePath
         )
     }
     return metricParameters.toList()
@@ -60,4 +60,3 @@ private fun Project.buildComposeMetricsParameters(): List<String> {
 internal fun CommonExtension<*, *, *, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
     (this as ExtensionAware).extensions.configure("kotlinOptions", block)
 }
-
