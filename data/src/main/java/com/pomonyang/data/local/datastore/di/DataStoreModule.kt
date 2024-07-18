@@ -22,8 +22,7 @@ import kotlinx.coroutines.SupervisorJob
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DataStoreModule {
-    private const val POMONYANG_PREFERENCES =
-        BuildConfig.PREFERENCE_DATASTORE_KEY
+    private const val POMONYANG_PREFERENCES = BuildConfig.PREFERENCE_DATASTORE_NAME
 
     @Provides
     @Singleton
