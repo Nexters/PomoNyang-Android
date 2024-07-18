@@ -9,5 +9,11 @@ android {
 }
 
 dependencies {
-    // TODO 필요한 라이브러리 주입
+    implementation(libs.material)
+    implementation(libs.dagger.hilt.android)
+    implementation(libs.bundles.androidx.compose.navigation)
+
+    // module impl
+    implementation(projects.domain)
+    implementation(projects.data)
 }

@@ -8,5 +8,10 @@ android {
 }
 
 dependencies {
-    // TODO Retrofit이나 기본 네트워크 통신 라이브러리 추가
+    implementation(libs.kotlin.serialization.json)
+    implementation(libs.kotlin.serialization.converter)
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    implementation(libs.kotlin.coroutine.core)
 }

@@ -7,5 +7,7 @@ android {
 }
 
 dependencies {
-    // TODO 필요한 라이브러리 주입
+    implementation(projects.data)
+    implementation(libs.kotlin.coroutine.core)
+    implementation(libs.javax.inject)
 }

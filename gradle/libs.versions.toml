@@ -42,7 +42,6 @@ google-services = "4.4.2"
 # Compose
 androidx-compose-animation = { module = "androidx.compose.animation:animation", version.ref = "compose" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
-androidx-compose-liveData = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "compose" }
 androidx-compose-material = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 androidx-compose-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
@@ -115,11 +114,15 @@ firebase-appdistribution = { id = "com.google.firebase.appdistribution", version
 androidx-compose = [
     "androidx-compose-animation",
     "androidx-compose-foundation",
-    "androidx-compose-liveData",
     "androidx-compose-material",
     "androidx-compose-runtime",
     "androidx-compose-toolingPreview",
     "androidx-lifecycle-runtime-compose"
+]
+
+androidx-compose-navigation = [
+    "androidx-compose-navigation",
+    "androidx-hilt-navigation-compose"
 ]
 
 androidx-compose-debug = [
