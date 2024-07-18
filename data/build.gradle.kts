@@ -14,4 +14,5 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.kotlin.coroutine.core)
+    implementation(libs.androidx.datastore)
 }
