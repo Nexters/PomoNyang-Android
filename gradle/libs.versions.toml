@@ -7,6 +7,8 @@ lifecycle = "2.8.3"
 appcompat = "1.7.0"
 material3 = "1.12.0"
 core-ktx = "1.13.1"
+datastore = "1.1.1"
+room = "2.6.1"
 
 # Compose
 compose = "1.6.8"
@@ -54,6 +56,12 @@ androidx-compose-navigation = { module = "androidx.navigation:navigation-compose
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+
+
 
 # Dagger
 dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
