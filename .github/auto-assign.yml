@@ -1,0 +1,7 @@
+# .github/auto-assign.yml
+addReviewers: true
+addAssignees: true
+reviewers:
+  - HyomK
+assignees:
+  - ${{ github.actor }}
