@@ -6,6 +6,6 @@ import com.pomonyang.data.local.room.dao.SampleDao
 import com.pomonyang.data.local.room.enitity.SampleEntity
 
 @Database(entities = [SampleEntity::class], version = 1, exportSchema = false)
-abstract class SampleDataBase : RoomDatabase() {
+internal abstract class SampleDataBase : RoomDatabase() {
     abstract fun dao(): SampleDao
 }
