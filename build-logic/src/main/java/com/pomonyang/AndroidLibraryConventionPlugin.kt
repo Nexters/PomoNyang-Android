@@ -15,7 +15,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 apply(libs.findPluginId("kotlin.android"))
                 apply(libs.findPluginId("kotlin.serialization"))
                 apply(libs.findPluginId("gradle.secrets"))
-                apply(libs.findPluginId("ktlint"))
             }
 
             extensions.configure<LibraryExtension> {

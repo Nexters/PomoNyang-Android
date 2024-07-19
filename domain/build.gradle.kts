@@ -1,6 +1,5 @@
 plugins {
     id("pomonyang.android.library")
-    alias(libs.plugins.ktlint)
 }
 
 android {

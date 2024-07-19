@@ -12,5 +12,4 @@ plugins {
     alias(libs.plugins.firebase.pref) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.firebase.appdistribution) apply false
-    alias(libs.plugins.ktlint) apply false
 }
