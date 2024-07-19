@@ -38,10 +38,9 @@ class MainActivity : ComponentActivity() {
                     )
 
                     Box(
-                        modifier =
-                            Modifier
-                                .padding(innerPadding)
-                                .fillMaxSize(),
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         if (isConnected) {
