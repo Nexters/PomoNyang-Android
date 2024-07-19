@@ -1,4 +1,4 @@
-name: Assign and Reviewers
+name: assign and reviewers
 
 on:
   pull_request:
