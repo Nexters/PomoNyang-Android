@@ -14,9 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pomonyang.data.remote.util.NetworkConnectivityManager
+import com.pomonyang.presentation.util.DevicePreviews
+import com.pomonyang.presentation.util.ThemePreviews
 import com.pomonyang.ui.theme.PomonyangTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -75,7 +76,8 @@ fun Greeting(
     )
 }
 
-@Preview(showBackground = true)
+@DevicePreviews
+@ThemePreviews
 @Composable
 fun GreetingPreview() {
     PomonyangTheme {
@@ -83,7 +85,8 @@ fun GreetingPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@DevicePreviews
+@ThemePreviews
 @Composable
 fun NetworkErrorScreenPreview() {
     PomonyangTheme {
