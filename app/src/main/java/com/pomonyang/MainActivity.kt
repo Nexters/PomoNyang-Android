@@ -47,4 +47,5 @@ fun GreetingPreview() {
     PomonyangTheme {
         Greeting("Android")
     }
+    ""
 }
