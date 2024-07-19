@@ -8,8 +8,11 @@ jobs:
   assign_and_review:
     runs-on: ubuntu-latest
     steps:
-      - name: Assign Pull Request Author
-        uses: kentaro-m/auto-assign-action@v1.2.0
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Assign reviewers and assignees
+        uses: peter-evans/auto-assign-action@v1
         with:
-          assignees: ${{ github.actor }} # assign pull request author
-          reviewers: HyomK
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/auto-assign.yml
