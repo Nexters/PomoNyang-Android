@@ -1,18 +1,13 @@
 name: assign and reviewers
 
 on:
-  pull_request:
-    types: [opened, ready_for_review]
+ pull_request:
+   types: [opened, ready_for_review]
 
 jobs:
-  assign_and_review:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Assign reviewers and assignees
-        uses: peter-evans/auto-assign-action@v1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          configuration-path: .github/auto-assign.yml
+ add-reviews:
+   runs-on: ubuntu-latest
+   steps:
+     - uses: kentaro-m/auto-assign-action@v1.2.1
+       with:
+         configuration-path: 'github/auto-assign.yml'
