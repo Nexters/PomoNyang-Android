@@ -23,10 +23,10 @@ abstract class BaseViewModel<STATE : ViewState, EVENT : ViewEvent, EFFECT : View
     val state = _state.asStateFlow()
 
     @Suppress("ktlint:standard:backing-property-naming")
-    private val _events: Channel<EVENT> = Channel<EVENT>()
+    private val _events: Channel<EVENT> = Channel<EVENT>(Channel.BUFFERED)
 
     @Suppress("ktlint:standard:backing-property-naming")
-    private val _effects: Channel<EFFECT> = Channel<EFFECT>()
+    private val _effects: Channel<EFFECT> = Channel<EFFECT>(Channel.BUFFERED)
     val effect: Flow<EFFECT> = _effects.receiveAsFlow()
 
     init {
