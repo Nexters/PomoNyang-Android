@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<STATE : ViewState, EVENT : ViewEvent, EFFECT : ViewSideEffect>() : ViewModel() {
+abstract class BaseViewModel<STATE : ViewState, EVENT : ViewEvent, EFFECT : ViewSideEffect> : ViewModel() {
     // UI의 초기 상태를 설정
     abstract fun setInitialState(): STATE
 
@@ -22,9 +22,11 @@ abstract class BaseViewModel<STATE : ViewState, EVENT : ViewEvent, EFFECT : View
     private val _state = MutableStateFlow<STATE>(initialState)
     val state = _state.asStateFlow()
 
-    private val _events = Channel<EVENT>()
+    @Suppress("ktlint:standard:backing-property-naming")
+    private val _events: Channel<EVENT> = Channel<EVENT>()
 
-    private val _effects = Channel<EFFECT>()
+    @Suppress("ktlint:standard:backing-property-naming")
+    private val _effects: Channel<EFFECT> = Channel<EFFECT>()
     val effect: Flow<EFFECT> = _effects.receiveAsFlow()
 
     init {
