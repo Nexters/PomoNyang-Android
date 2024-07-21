@@ -1,0 +1,17 @@
+name: 'PR Auto Assign'
+on:
+    pull_request:
+        types: [opened, ready_for_review]
+
+permissions:
+    contents: read
+    pull-requests: write
+
+jobs:
+    add-reviewers-and-assignee:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: kentaro-m/auto-assign-action@v1.2.5
+              with:
+                  repo-token: '${{ secrets.GITHUB_TOKEN }}'
+                  configuration-path: '.github/auto_assign_config.yml'
