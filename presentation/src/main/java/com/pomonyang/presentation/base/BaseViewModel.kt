@@ -22,32 +22,8 @@ abstract class BaseViewModel<STATE : ViewState, EVENT : ViewEvent, EFFECT : View
     private val _state = MutableStateFlow<STATE>(initialState)
     val state = _state.asStateFlow()
 
-    @Suppress("ktlint:standard:backing-property-naming")
-    private val _events: Channel<EVENT> = Channel<EVENT>(Channel.BUFFERED)
-
-    @Suppress("ktlint:standard:backing-property-naming")
     private val _effects: Channel<EFFECT> = Channel<EFFECT>(Channel.BUFFERED)
-    val effect: Flow<EFFECT> = _effects.receiveAsFlow()
-
-    init {
-        subscribeToEvents()
-        onInit()
-    }
-
-    private fun subscribeToEvents() {
-        viewModelScope.launch {
-            for (event in _events) {
-                handleEvent(event)
-            }
-        }
-    }
-
-    // 추가적인 viewModel initial 작업
-    protected open fun onInit() {}
-
-    fun setEvent(event: EVENT) {
-        viewModelScope.launch { _events.send(event) }
-    }
+    val effects: Flow<EFFECT> = _effects.receiveAsFlow()
 
     protected fun setState(reducer: STATE.() -> STATE) {
         val newState = _state.value.reducer()
@@ -70,8 +46,6 @@ abstract class BaseViewModel<STATE : ViewState, EVENT : ViewEvent, EFFECT : View
     override fun onCleared() {
         super.onCleared()
         onDestroy()
-        _events.close()
         _effects.close()
-        _events.close()
     }
 }
