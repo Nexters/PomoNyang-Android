@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.pomonyang.data.remote.util.NetworkConnectivityManager
+import com.pomonyang.data.remote.util.NetworkMonitor
 import com.pomonyang.presentation.util.DevicePreviews
 import com.pomonyang.presentation.util.ThemePreviews
 import com.pomonyang.ui.theme.PomonyangTheme
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var networkConnectivityManager: NetworkConnectivityManager
+    lateinit var networkMonitor: NetworkMonitor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +34,8 @@ class MainActivity : ComponentActivity() {
             PomonyangTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
-                    val isConnected by networkConnectivityManager.connectionFlow.collectAsStateWithLifecycle(
-                        networkConnectivityManager.isConnected
+                    val isConnected by networkMonitor.isOnline.collectAsStateWithLifecycle(
+                        networkMonitor.isConnected
                     )
 
                     Box(
