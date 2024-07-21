@@ -29,16 +29,14 @@ internal object DataStoreModule {
         @ApplicationContext context: Context
     ): DataStore<Preferences> =
         PreferenceDataStoreFactory.create(
-            corruptionHandler =
-                ReplaceFileCorruptionHandler(
-                    produceNewData = { emptyPreferences() }
-                ),
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { emptyPreferences() }
+            ),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile =
-                {
-                    context.preferencesDataStoreFile(
-                        POMONYANG_PREFERENCES
-                    )
-                }
+            produceFile = {
+                context.preferencesDataStoreFile(
+                    POMONYANG_PREFERENCES
+                )
+            }
         )
 }
