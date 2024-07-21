@@ -4,8 +4,8 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.pomonyang.data.BuildConfig
 import com.pomonyang.data.remote.interceptor.HttpRequestInterceptor
 import com.pomonyang.data.remote.service.PomoNyangService
-import com.pomonyang.data.remote.util.NetworkConnectivityManager
-import com.pomonyang.data.remote.util.NetworkConnectivityManagerImpl
+import com.pomonyang.data.remote.util.NetworkMonitor
+import com.pomonyang.data.remote.util.NetworkMonitorImpl
 import com.pomonyang.data.remote.util.NetworkResultCallAdapterFactory
 import dagger.Binds
 import dagger.Module
@@ -23,7 +23,7 @@ import retrofit2.Retrofit
 internal abstract class NetworkModule {
     @Binds
     @Singleton
-    abstract fun bindNetworkConnectivityManager(networkConnectivityManagerImpl: NetworkConnectivityManagerImpl): NetworkConnectivityManager
+    abstract fun bindNetworkConnectivityManager(networkMonitorImpl: NetworkMonitorImpl): NetworkMonitor
 
     companion object {
         private const val BASE_URL = BuildConfig.BASE_URL
