@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<STATE : ViewState, EVENT : ViewEvent, EFFECT : ViewSideEffect> : ViewModel() {
@@ -25,9 +26,8 @@ abstract class BaseViewModel<STATE : ViewState, EVENT : ViewEvent, EFFECT : View
     private val _effects: Channel<EFFECT> = Channel<EFFECT>(Channel.BUFFERED)
     val effects: Flow<EFFECT> = _effects.receiveAsFlow()
 
-    protected fun setState(reducer: STATE.() -> STATE) {
-        val newState = _state.value.reducer()
-        _state.value = newState
+    protected fun updateState(reducer: STATE.() -> STATE) {
+        _state.update { it.reducer() }
     }
 
     // Intent -> Model -> View 의 사이클을 벗어난 비동기 작업이 완료된 후 UI 상태 변경 외의 작업을 수행할 때 사용
