@@ -5,8 +5,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.pomonyang.presentation.screen.home.Home
-import com.pomonyang.presentation.screen.onboarding.OnBoarding
+import com.pomonyang.presentation.screen.home.homeScreen
+import com.pomonyang.presentation.screen.onboarding.Onboarding
+import com.pomonyang.presentation.screen.onboarding.onboardingScreen
 import com.pomonyang.ui.PomoNyangAppState
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun PomoNyangNavHost(
@@ -19,7 +22,7 @@ internal fun PomoNyangNavHost(
     val navigateUp: () -> Unit = { navHostController.navigateUp() }
 
     val startDestination: Any = if (pomoNyangAppState.isFirstUser) {
-        OnBoarding
+        Onboarding
     } else {
         Home
     }
@@ -29,5 +32,10 @@ internal fun PomoNyangNavHost(
         startDestination = startDestination,
         modifier = modifier
     ) {
+        onboardingScreen(navigateUp = navigateUp) {
+            coroutineScope.launch { onShowSnackbar("arrived at the home screen.", null) }
+            navHostController.navigate(Home)
+        }
+        homeScreen(navigateUp = navigateUp)
     }
 }
