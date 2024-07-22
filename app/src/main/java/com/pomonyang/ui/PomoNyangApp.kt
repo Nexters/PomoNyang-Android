@@ -8,8 +8,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pomonyang.navigation.PomoNyangNavHost
 
 @Composable
@@ -35,8 +37,10 @@ private fun PomoNyangApp(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
 
-        LaunchedEffect(pomoNyangAppState.isOffline) {
-            snackbarHostState.showSnackbar("offline 상태입니다.")
+        val isOffline by pomoNyangAppState.isOffline.collectAsStateWithLifecycle()
+
+        LaunchedEffect(isOffline) {
+            if (isOffline) snackbarHostState.showSnackbar("offline 상태입니다.")
         }
 
         PomoNyangNavHost(
