@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.pomonyang.data.local.datastore.datasource.deviceid.DeviceIdDataSourceImpl
 import com.pomonyang.data.local.datastore.datasource.token.TokenDataSourceImpl
 import dagger.Module
 import dagger.Provides
@@ -36,6 +37,24 @@ internal object DataStoreModule {
             produceFile = {
                 context.preferencesDataStoreFile(
                     TokenDataSourceImpl.TOKEN_PREFERENCES_NAME
+                )
+            }
+        )
+
+    @DeviceIdDataStore
+    @Provides
+    @Singleton
+    internal fun provideDeviceIdDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { emptyPreferences() }
+            ),
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            produceFile = {
+                context.preferencesDataStoreFile(
+                    DeviceIdDataSourceImpl.DEVICE_ID_PREFERENCES_NAME
                 )
             }
         )
