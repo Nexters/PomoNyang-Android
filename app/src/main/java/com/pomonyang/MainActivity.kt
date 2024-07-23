@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             PomonyangTheme {
                 val coroutineScope = rememberCoroutineScope()
                 val pomoNyangAppState = rememberPomoNyangAppState(
-                    isFirstUser = true,
+                    isNewUser = true,
                     networkMonitor = networkMonitor,
                     coroutineScope = coroutineScope
                 )

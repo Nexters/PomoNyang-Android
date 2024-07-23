@@ -21,7 +21,7 @@ internal fun PomoNyangNavHost(
     val navHostController = pomoNyangAppState.navHostController
     val navigateUp: () -> Unit = { navHostController.navigateUp() }
 
-    val startDestination: Any = if (pomoNyangAppState.isFirstUser) {
+    val startDestination: Any = if (pomoNyangAppState.isNewUser) {
         Onboarding
     } else {
         Home

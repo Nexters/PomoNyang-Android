@@ -13,18 +13,18 @@ import kotlinx.coroutines.flow.stateIn
 
 @Composable
 fun rememberPomoNyangAppState(
-    isFirstUser: Boolean,
+    isNewUser: Boolean,
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope,
     navHostController: NavHostController = rememberNavController()
 ) = remember(
-    isFirstUser,
+    isNewUser,
     networkMonitor,
     coroutineScope,
     navHostController
 ) {
     PomoNyangAppState(
-        isFirstUser = isFirstUser,
+        isNewUser = isNewUser,
         networkMonitor = networkMonitor,
         coroutineScope = coroutineScope,
         navHostController = navHostController
@@ -33,7 +33,7 @@ fun rememberPomoNyangAppState(
 
 @Stable
 class PomoNyangAppState(
-    val isFirstUser: Boolean,
+    val isNewUser: Boolean,
     val navHostController: NavHostController,
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope
