@@ -15,7 +15,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 
-class DeviceIdDataSourceImpl @Inject constructor(
+internal class DeviceIdDataSourceImpl @Inject constructor(
     @DeviceIdDataStore private val dataStore: DataStore<Preferences>,
     @ApplicationContext private val context: Context
 ) : DeviceIdDataSource {
