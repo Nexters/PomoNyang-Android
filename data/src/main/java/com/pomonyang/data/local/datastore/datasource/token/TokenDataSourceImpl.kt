@@ -11,7 +11,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 
-class TokenDataSourceImpl @Inject constructor(
+internal class TokenDataSourceImpl @Inject constructor(
     @TokenDataStore private val dataStore: DataStore<Preferences>
 ) : TokenDataSource {
     companion object {

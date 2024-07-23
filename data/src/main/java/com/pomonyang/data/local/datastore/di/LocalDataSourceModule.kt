@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class LocalDataSourceModule {
+internal abstract class LocalDataSourceModule {
     @Binds
     abstract fun provideTokenDataSource(tokenDataSourceImpl: TokenDataSourceImpl): TokenDataSource
 
