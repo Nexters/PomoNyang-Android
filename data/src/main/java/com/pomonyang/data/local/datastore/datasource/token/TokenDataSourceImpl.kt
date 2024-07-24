@@ -14,11 +14,6 @@ import kotlinx.coroutines.flow.first
 internal class TokenDataSourceImpl @Inject constructor(
     @TokenDataStore private val dataStore: DataStore<Preferences>
 ) : TokenDataSource {
-    companion object {
-        const val TOKEN_PREFERENCES_NAME = "token_preferences"
-        private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
-        private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
-    }
 
     override suspend fun saveAccessToken(accessToken: String) {
         dataStore.edit { preferences ->
@@ -54,4 +49,10 @@ internal class TokenDataSourceImpl @Inject constructor(
             throw exception
         }
     }.first()[REFRESH_TOKEN_KEY] ?: ""
+
+    companion object {
+        const val TOKEN_PREFERENCES_NAME = "token_preferences"
+        private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
+        private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
+    }
 }

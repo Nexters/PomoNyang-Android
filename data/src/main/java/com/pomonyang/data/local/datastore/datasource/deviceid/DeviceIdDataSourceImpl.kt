@@ -19,10 +19,6 @@ internal class DeviceIdDataSourceImpl @Inject constructor(
     @DeviceIdDataStore private val dataStore: DataStore<Preferences>,
     @ApplicationContext private val context: Context
 ) : DeviceIdDataSource {
-    companion object {
-        const val DEVICE_ID_PREFERENCES_NAME = "device_id_preferences"
-        private val DEVICE_ID_KEY = stringPreferencesKey("device_id")
-    }
 
     override suspend fun getDeviceId(): String = getStoredDeviceId() ?: getSSAID() ?: getUUID()
 
@@ -39,4 +35,9 @@ internal class DeviceIdDataSourceImpl @Inject constructor(
     private fun getSSAID(): String? = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
     private fun getUUID(): String = UUID.randomUUID().toString()
+
+    companion object {
+        const val DEVICE_ID_PREFERENCES_NAME = "device_id_preferences"
+        private val DEVICE_ID_KEY = stringPreferencesKey("device_id")
+    }
 }
