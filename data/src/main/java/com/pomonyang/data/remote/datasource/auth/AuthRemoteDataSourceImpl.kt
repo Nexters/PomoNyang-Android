@@ -4,9 +4,9 @@ import com.pomonyang.data.remote.model.request.RefreshTokenRequest
 import com.pomonyang.data.remote.service.AuthService
 import javax.inject.Inject
 
-internal class AuthDataSourceImpl @Inject constructor(
+internal class AuthRemoteDataSourceImpl @Inject constructor(
     private val authService: AuthService
-) : AuthDataSource {
+) : AuthRemoteDataSource {
 
     override suspend fun login() {
     }

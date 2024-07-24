@@ -1,17 +1,17 @@
 package com.pomonyang.data.remote.interceptor
 
-import com.pomonyang.data.local.datastore.datasource.token.TokenDataSource
+import com.pomonyang.data.local.datastore.datasource.token.TokenLocalDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 
 internal class HttpRequestInterceptor @Inject constructor(
-    private val tokenDataSource: TokenDataSource
+    private val tokenLocalDataSource: TokenLocalDataSource
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = runBlocking {
-            tokenDataSource.getAccessToken()
+            tokenLocalDataSource.getAccessToken()
         }
         val origin = chain.request()
         val request =

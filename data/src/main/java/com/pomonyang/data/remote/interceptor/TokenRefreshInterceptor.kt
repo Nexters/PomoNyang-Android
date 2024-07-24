@@ -1,15 +1,15 @@
 package com.pomonyang.data.remote.interceptor
 
-import com.pomonyang.data.local.datastore.datasource.token.TokenDataSource
-import com.pomonyang.data.remote.datasource.auth.AuthDataSource
+import com.pomonyang.data.local.datastore.datasource.token.TokenLocalDataSource
+import com.pomonyang.data.remote.datasource.auth.AuthRemoteDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 
 internal class TokenRefreshInterceptor @Inject constructor(
-    private val authDataSource: AuthDataSource,
-    private val tokenDataSource: TokenDataSource
+    private val authRemoteDataSource: AuthRemoteDataSource,
+    private val tokenLocalDataSource: TokenLocalDataSource
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val origin = chain.request()
@@ -30,14 +30,14 @@ internal class TokenRefreshInterceptor @Inject constructor(
     }
 
     private suspend fun getNewAccessToken(): String? {
-        val refreshToken = runBlocking { tokenDataSource.getRefreshToken() }
-        val newAccessToken = runBlocking { authDataSource.refreshAccessToken(refreshToken) }.getOrNull()
+        val refreshToken = runBlocking { tokenLocalDataSource.getRefreshToken() }
+        val newAccessToken = runBlocking { authRemoteDataSource.refreshAccessToken(refreshToken) }.getOrNull()
         return newAccessToken?.let {
-            tokenDataSource.saveAccessToken(it.accessToken)
-            tokenDataSource.saveRefreshToken(it.refreshToken)
+            tokenLocalDataSource.saveAccessToken(it.accessToken)
+            tokenLocalDataSource.saveRefreshToken(it.refreshToken)
             it.accessToken
         } ?: run {
-            authDataSource.logout()
+            authRemoteDataSource.logout()
             null
         }
     }

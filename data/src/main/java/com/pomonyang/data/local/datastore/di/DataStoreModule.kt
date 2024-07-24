@@ -7,8 +7,8 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.pomonyang.data.local.datastore.datasource.deviceid.DeviceIdDataSourceImpl
-import com.pomonyang.data.local.datastore.datasource.token.TokenDataSourceImpl
+import com.pomonyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSourceImpl
+import com.pomonyang.data.local.datastore.datasource.token.TokenLocalDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +36,7 @@ internal object DataStoreModule {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = {
                 context.preferencesDataStoreFile(
-                    TokenDataSourceImpl.TOKEN_PREFERENCES_NAME
+                    TokenLocalDataSourceImpl.TOKEN_PREFERENCES_NAME
                 )
             }
         )
@@ -54,7 +54,7 @@ internal object DataStoreModule {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = {
                 context.preferencesDataStoreFile(
-                    DeviceIdDataSourceImpl.DEVICE_ID_PREFERENCES_NAME
+                    DeviceIdLocalDataSourceImpl.DEVICE_ID_PREFERENCES_NAME
                 )
             }
         )

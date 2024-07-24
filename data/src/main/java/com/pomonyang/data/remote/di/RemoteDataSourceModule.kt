@@ -1,7 +1,7 @@
 package com.pomonyang.data.remote.di
 
-import com.pomonyang.data.remote.datasource.auth.AuthDataSource
-import com.pomonyang.data.remote.datasource.auth.AuthDataSourceImpl
+import com.pomonyang.data.remote.datasource.auth.AuthRemoteDataSource
+import com.pomonyang.data.remote.datasource.auth.AuthRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 internal abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
-    abstract fun provideAuthDataSource(authDataSourceImpl: AuthDataSourceImpl): AuthDataSource
+    abstract fun provideAuthDataSource(authDataSourceImpl: AuthRemoteDataSourceImpl): AuthRemoteDataSource
 }

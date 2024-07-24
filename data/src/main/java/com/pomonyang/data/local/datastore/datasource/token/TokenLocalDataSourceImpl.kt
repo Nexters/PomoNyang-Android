@@ -11,9 +11,9 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 
-internal class TokenDataSourceImpl @Inject constructor(
+internal class TokenLocalDataSourceImpl @Inject constructor(
     @TokenDataStore private val dataStore: DataStore<Preferences>
-) : TokenDataSource {
+) : TokenLocalDataSource {
 
     override suspend fun saveAccessToken(accessToken: String) {
         dataStore.edit { preferences ->

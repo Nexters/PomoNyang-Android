@@ -15,10 +15,10 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 
-internal class DeviceIdDataSourceImpl @Inject constructor(
+internal class DeviceIdLocalDataSourceImpl @Inject constructor(
     @DeviceIdDataStore private val dataStore: DataStore<Preferences>,
     @ApplicationContext private val context: Context
-) : DeviceIdDataSource {
+) : DeviceIdLocalDataSource {
 
     override suspend fun getDeviceId(): String = getStoredDeviceId() ?: getSSAID() ?: getUUID()
 

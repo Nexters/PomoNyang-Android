@@ -1,6 +1,6 @@
 package com.pomonyang.data.local.datastore.datasource.token
 
-interface TokenDataSource {
+interface TokenLocalDataSource {
     suspend fun saveAccessToken(accessToken: String)
     suspend fun saveRefreshToken(refreshToken: String)
     suspend fun getAccessToken(): String

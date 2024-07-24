@@ -2,8 +2,8 @@ package com.pomonyang.data.remote.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.pomonyang.data.BuildConfig
-import com.pomonyang.data.local.datastore.datasource.token.TokenDataSource
-import com.pomonyang.data.remote.datasource.auth.AuthDataSource
+import com.pomonyang.data.local.datastore.datasource.token.TokenLocalDataSource
+import com.pomonyang.data.remote.datasource.auth.AuthRemoteDataSource
 import com.pomonyang.data.remote.interceptor.HttpRequestInterceptor
 import com.pomonyang.data.remote.interceptor.TokenRefreshInterceptor
 import com.pomonyang.data.remote.service.AuthService
@@ -57,11 +57,11 @@ internal abstract class NetworkModule {
 
         @Provides
         @Singleton
-        fun provideHTTPRequestInterceptor(tokenDataSource: TokenDataSource): HttpRequestInterceptor = HttpRequestInterceptor(tokenDataSource)
+        fun provideHTTPRequestInterceptor(tokenLocalDataSource: TokenLocalDataSource): HttpRequestInterceptor = HttpRequestInterceptor(tokenLocalDataSource)
 
         @Provides
         @Singleton
-        fun provideTokenRefreshInterceptor(authDataSource: AuthDataSource, tokenDataSource: TokenDataSource): TokenRefreshInterceptor = TokenRefreshInterceptor(authDataSource, tokenDataSource)
+        fun provideTokenRefreshInterceptor(authRemoteDataSource: AuthRemoteDataSource, tokenLocalDataSource: TokenLocalDataSource): TokenRefreshInterceptor = TokenRefreshInterceptor(authRemoteDataSource, tokenLocalDataSource)
 
         @Provides
         @Singleton
@@ -69,7 +69,10 @@ internal abstract class NetworkModule {
         fun provideOkHttpClient(
             httpRequestInterceptor: HttpRequestInterceptor,
             httpLoggingInterceptor: HttpLoggingInterceptor
-        ): OkHttpClient = OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).addInterceptor(httpRequestInterceptor).build()
+        ): OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(httpRequestInterceptor)
+            .build()
 
         @Provides
         @Singleton
@@ -78,7 +81,11 @@ internal abstract class NetworkModule {
             httpRequestInterceptor: HttpRequestInterceptor,
             httpLoggingInterceptor: HttpLoggingInterceptor,
             tokenRefreshInterceptor: TokenRefreshInterceptor
-        ): OkHttpClient = OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).addInterceptor(tokenRefreshInterceptor).addInterceptor(httpRequestInterceptor).build()
+        ): OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(tokenRefreshInterceptor)
+            .addInterceptor(httpRequestInterceptor)
+            .build()
 
         @Provides
         @Singleton
@@ -91,7 +98,12 @@ internal abstract class NetworkModule {
             @DefaultClient okHttpClient: OkHttpClient,
             networkResultCallAdapterFactory: NetworkResultCallAdapterFactory,
             json: Json
-        ): Retrofit = Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL).addConverterFactory(json.asConverterFactory("application/json".toMediaType())).addCallAdapterFactory(networkResultCallAdapterFactory).build()
+        ): Retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(BASE_URL)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .addCallAdapterFactory(networkResultCallAdapterFactory)
+            .build()
 
         @Provides
         @Singleton
@@ -100,7 +112,12 @@ internal abstract class NetworkModule {
             @TokenClient okHttpClient: OkHttpClient,
             networkResultCallAdapterFactory: NetworkResultCallAdapterFactory,
             json: Json
-        ): Retrofit = Retrofit.Builder().client(okHttpClient).baseUrl(BASE_URL).addConverterFactory(json.asConverterFactory("application/json".toMediaType())).addCallAdapterFactory(networkResultCallAdapterFactory).build()
+        ): Retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(BASE_URL)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .addCallAdapterFactory(networkResultCallAdapterFactory)
+            .build()
 
         @Provides
         @Singleton
