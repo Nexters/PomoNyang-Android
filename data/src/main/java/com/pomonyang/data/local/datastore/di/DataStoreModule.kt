@@ -7,7 +7,8 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.pomonyang.data.BuildConfig
+import com.pomonyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSourceImpl
+import com.pomonyang.data.local.datastore.datasource.token.TokenLocalDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,11 +22,11 @@ import kotlinx.coroutines.SupervisorJob
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DataStoreModule {
-    private const val POMONYANG_PREFERENCES = BuildConfig.PREFERENCE_DATASTORE_NAME
 
+    @TokenDataStore
     @Provides
     @Singleton
-    fun providePreferencesDataStore(
+    internal fun provideTokenDataStore(
         @ApplicationContext context: Context
     ): DataStore<Preferences> =
         PreferenceDataStoreFactory.create(
@@ -35,7 +36,25 @@ internal object DataStoreModule {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = {
                 context.preferencesDataStoreFile(
-                    POMONYANG_PREFERENCES
+                    TokenLocalDataSourceImpl.TOKEN_PREFERENCES_NAME
+                )
+            }
+        )
+
+    @DeviceIdDataStore
+    @Provides
+    @Singleton
+    internal fun provideDeviceIdDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { emptyPreferences() }
+            ),
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            produceFile = {
+                context.preferencesDataStoreFile(
+                    DeviceIdLocalDataSourceImpl.DEVICE_ID_PREFERENCES_NAME
                 )
             }
         )
