@@ -3,9 +3,12 @@ name: "[CI] verify release build test"
 on:
   pull_request:
     types: [ opened, synchronize ]
+    branches:
+      - main
   push:
     branches:
       - main
+
 jobs:
   build_test:
     environment: Release
