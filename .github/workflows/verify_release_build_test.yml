@@ -1,4 +1,4 @@
-name: "[CI] verify build test"
+name: "[CI] verify release build test"
 
 on:
   pull_request:
