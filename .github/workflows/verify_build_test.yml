@@ -33,7 +33,7 @@ jobs:
         uses: ./.github/actions/setup-key-environment
         with:
           key-properties: ${{ secrets.KEY_PROPERTIES }}
-          signed-key: ${{ secrets.SIGNED_KEY }}
+          key-file: ${{ secrets.SIGNED_KEY }}
 
       - name: build test
         run: ./gradlew ${{ matrix.gradle_command }}
