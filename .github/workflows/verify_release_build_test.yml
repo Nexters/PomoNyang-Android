@@ -25,7 +25,6 @@ jobs:
         with:
           google-services: ${{ secrets.GOOGLE_SERVICES }}
           test-mode: release
-          debug-properties: ${{ secrets.DEBUG_PROPERTIES }}
           release-properties: ${{ secrets.RELEASE_PROPERTIES }}
 
       - name: Setup Signed Key Environment
