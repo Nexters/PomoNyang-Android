@@ -32,6 +32,6 @@ jobs:
         with:
           key-properties: ${{ secrets.KEY_PROPERTIES }}
           key-file: ${{ secrets.SIGNED_KEY }}
-          
+
       - name: build test
         run: ./gradlew ${{ matrix.gradle_command }}

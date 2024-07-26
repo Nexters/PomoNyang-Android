@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-      - develop
-
 jobs:
   build_test:
     environment: Release
