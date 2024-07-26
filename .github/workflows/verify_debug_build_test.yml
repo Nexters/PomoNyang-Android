@@ -5,12 +5,12 @@ on:
     types: [ opened, synchronize ]
   push:
     branches:
-      - develop
       - main
+      - develop
 
 jobs:
   build_test:
-    environment: Test
+    environment: Debug
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,15 +25,8 @@ jobs:
         uses: ./.github/actions/setup-development-environment
         with:
           google-services: ${{ secrets.GOOGLE_SERVICES }}
-          test-mode: ${{ github.base_ref == 'develop' && 'debug' || 'release' }}
+          test-mode: debug
           debug-properties: ${{ secrets.DEBUG_PROPERTIES }}
-          release-properties: ${{ secrets.RELEASE_PROPERTIES }}
-
-      - name: Setup Signed Key Environment
-        uses: ./.github/actions/setup-key-environment
-        with:
-          key-properties: ${{ secrets.KEY_PROPERTIES }}
-          key-file: ${{ secrets.SIGNED_KEY }}
 
       - name: build test
         run: ./gradlew ${{ matrix.gradle_command }}
