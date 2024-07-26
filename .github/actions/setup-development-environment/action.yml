@@ -4,6 +4,15 @@ inputs:
   google-services:
     description: 'Google Services Json'
     required: true
+  test-mode:
+    description: 'Test debug or release mode'
+    required: true
+  debug-properties:
+    description: 'Secret Debug Properties'
+    required: true
+  release-properties:
+    description: 'Secret Release Properties'
+    required: false
 
 runs:
   using: "composite"
@@ -20,3 +29,12 @@ runs:
     - name: Create google-services.json
       shell: bash
       run: echo -n "${{ inputs.google-services }}" | base64 --decode > ./app/google-services.json
+
+    - name: Create Debug properties file
+      shell: bash
+      run: echo -n "${{ inputs.debug-properties}}" > ./debug.secrets.properties
+
+    - name: Create Release properties file
+      shell: bash
+      if: ${{inputs.test-mode}} == 'release'
+      run: echo -n "${{ inputs.release-properties}}" > ./release.secrets.properties
