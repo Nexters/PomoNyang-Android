@@ -1,4 +1,4 @@
-name: "[CI] verify build test"
+name: "[CI] verify debug build test"
 
 on:
   pull_request:
@@ -15,7 +15,6 @@ jobs:
     strategy:
       matrix:
         gradle_command:
-          - :app:assembleRelease
           - :app:assembleDebug
     steps:
       - name: Checkout
