@@ -10,6 +10,7 @@ on:
 
 jobs:
   build_test:
+    environment: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,8 +27,13 @@ jobs:
           google-services: ${{ secrets.GOOGLE_SERVICES }}
           test-mode: ${{ github.base_ref == 'develop' && 'debug' || 'release' }}
           debug-properties: ${{ secrets.DEBUG_PROPERTIES }}
-          if: github.base_ref == 'main'
-          release-properties: ${{ secrets.RELEASE_PROPERTIES  }}
+          release-properties: ${{ secrets.RELEASE_PROPERTIES }}
+
+      - name: Setup Signed Key Environment
+        uses: ./.github/actions/setup-key-environment
+        with:
+          key-properties: ${{ secrets.KEY_PROPERTIES }}
+          signed-key: ${{ secrets.SIGNED_KEY }}
 
       - name: build test
         run: ./gradlew ${{ matrix.gradle_command }}

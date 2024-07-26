@@ -1,0 +1,29 @@
+name: "Setup Release Environment"
+
+inputs:
+  key-properties:
+    description: 'Secret Key Properties'
+    required: true
+  key-file:
+    description: 'Signed Key'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: Create Key Properties
+      shell: bash
+      run: echo -n "${{ inputs.key-properties }}" | base64 --decode > ./key.secrets.properties
+
+    - name: Create Signed Key
+      shell: bash
+      run: echo -n "${{ inputs.signed-key }}" | base64 --decode > ./key.jks
