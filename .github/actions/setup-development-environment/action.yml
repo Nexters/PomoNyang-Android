@@ -32,9 +32,9 @@ runs:
 
     - name: Create Debug properties file
       shell: bash
-      run: echo -n "${{ inputs.debug-properties}}" > ./debug.secrets.properties
+      run: echo -n "${{ inputs.debug-properties }}" > ./debug.secrets.properties
 
     - name: Create Release properties file
       shell: bash
-      if: ${{inputs.test-mode}} == 'release'
-      run: echo -n "${{ inputs.release-properties}}" > ./release.secrets.properties
+      if: inputs.test-mode == 'release'
+      run: echo -n "${{ inputs.release-properties }}" > ./release.secrets.properties
