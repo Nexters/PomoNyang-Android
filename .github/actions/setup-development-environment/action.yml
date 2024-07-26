@@ -6,10 +6,10 @@ inputs:
     required: true
   test-mode:
     description: 'Test debug or release mode'
-    required: true
+    required: false
   debug-properties:
     description: 'Secret Debug Properties'
-    required: true
+    required: false
   release-properties:
     description: 'Secret Release Properties'
     required: false

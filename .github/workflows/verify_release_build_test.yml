@@ -1,0 +1,38 @@
+name: "[CI] verify build test"
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build_test:
+    environment: Release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gradle_command:
+          - :app:assembleRelease
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Development Environment
+        uses: ./.github/actions/setup-development-environment
+        with:
+          google-services: ${{ secrets.GOOGLE_SERVICES }}
+          test-mode: release
+          debug-properties: ${{ secrets.DEBUG_PROPERTIES }}
+          release-properties: ${{ secrets.RELEASE_PROPERTIES }}
+
+      - name: Setup Signed Key Environment
+        uses: ./.github/actions/setup-key-environment
+        with:
+          key-properties: ${{ secrets.KEY_PROPERTIES }}
+          key-file: ${{ secrets.SIGNED_KEY }}
+
+      - name: build test
+        run: ./gradlew ${{ matrix.gradle_command }}
