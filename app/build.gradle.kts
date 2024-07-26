@@ -1,3 +1,4 @@
+import com.google.android.libraries.mapsplatform.secrets_gradle_plugin.loadPropertiesFile
 import com.pomonyang.mohanyang.convention.GithubUtils
 
 plugins {
@@ -12,6 +13,18 @@ android {
 
     defaultConfig {
         applicationId = "com.pomonyang.mohanyang"
+        versionCode = 1
+        versionName = "0.0.0"
+    }
+
+    signingConfigs {
+        create("release") {
+            val props = loadPropertiesFile("../key.secrets.properties")
+            storeFile = file(props.getProperty("STORE_FILE_PATH"))
+            storePassword = props.getProperty("STORE_PASSWORD")
+            keyAlias = props.getProperty("KEY_ALIAS")
+            keyPassword = props.getProperty("KEY_PASSWORD")
+        }
     }
 
     buildTypes {
@@ -21,6 +34,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-project.txt"
             )
+            signingConfig = signingConfigs.getByName("release")
             firebaseAppDistribution {
                 releaseNotes = "[${GithubUtils.commitHash()}]-${GithubUtils.lastCommitMessage()}"
                 groups = "뽀모냥"
