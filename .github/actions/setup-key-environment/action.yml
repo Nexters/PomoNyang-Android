@@ -26,4 +26,4 @@ runs:
 
     - name: Create Signed Key
       shell: bash
-      run: echo -n "${{ inputs.key-file }}" | base64 --decode > ./key.jks
+      run: echo -n "${{ inputs.key-file }}" | base64 --decode > ./key
