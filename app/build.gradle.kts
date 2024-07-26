@@ -14,6 +14,16 @@ android {
         applicationId = "com.pomonyang.mohanyang"
     }
 
+    signingConfigs {
+        create("release") {
+            val props = loadPropertiesFile("../key.secrets.properties")
+            storeFile = file(props.getProperty("STORE_FILE_PATH"))
+            storePassword = props.getProperty("STORE_PASSWORD")
+            keyAlias = props.getProperty("KEY_ALIAS")
+            keyPassword = props.getProperty("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -21,6 +31,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-project.txt"
             )
+            signingConfig = signingConfigs.getByName("release")
             firebaseAppDistribution {
                 releaseNotes = "[${GithubUtils.commitHash()}]-${GithubUtils.lastCommitMessage()}"
                 groups = "뽀모냥"
