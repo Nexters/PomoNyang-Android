@@ -27,3 +27,4 @@ runs:
             appdistribution:distribute "${{ inputs.file }}" \
             --app "${{ inputs.appId }}" \
             --groups "${{ inputs.groups }}" \
+         $( (( ${{ inputs.debug }} )) && printf %s '--debug' ) 
