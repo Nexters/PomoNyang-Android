@@ -36,11 +36,6 @@ jobs:
         run: |
           echo "NAME=$(find ./ -type f -name "*.apk" -print -quit)" >> $GITHUB_OUTPUT
 
-      - name: Authenticate to Firebase
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-
       - name: Setup Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
