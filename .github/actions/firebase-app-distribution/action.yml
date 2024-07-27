@@ -19,10 +19,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: upload artifact to Firebase App Distribution
-      uses: wzieba/Firebase-Distribution-Github-Action@v1.5.1
-      with:
-        appId: ${{ inputs.appId }}
-        serviceCredentialsFileContent: ${{ inputs.serviceCredentialsFile }}
-        groups: ${{ inputs.groups }}
-        file: ${{ inputs.file }}
+    - name: Upload Firebase App Distribution
+      shell: bash
+      run: |
+        export GOOGLE_APPLICATION_CREDENTIALS="${{ inputs.serviceCredentialsFile }}"
+        firebase \
+            appdistribution:distribute "${{ inputs.file }}" \
+            --app "${{ inputs.appId }}" \
+            --groups "${{ inputs.groups }}" \
