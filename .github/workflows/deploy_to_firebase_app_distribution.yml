@@ -20,6 +20,12 @@ jobs:
         with:
           google-services: ${{ secrets.GOOGLE_SERVICES }}
 
+      - name: Setup Signed Key Environment
+        uses: ./.github/actions/setup-key-environment
+        with:
+          key-properties: ${{ secrets.KEY_PROPERTIES }}
+          key-file: ${{ secrets.SIGNED_KEY }}
+          
       - name: Build App
         run: ./gradlew ":app:assembleDebug"
 
