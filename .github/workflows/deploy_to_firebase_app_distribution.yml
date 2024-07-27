@@ -5,9 +5,9 @@ on:
     branches:
       - qa
   workflow_dispatch:
-env:
+
 jobs:
-  firebase-app-distribution:
+  build:
     environment: Debug
     name: Firebase App Distribution
     runs-on: self-hosted
