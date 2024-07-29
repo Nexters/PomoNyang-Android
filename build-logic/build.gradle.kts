@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.pomonyang.buildlogic"
+group = "com.mohanyang.buildlogic"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -23,27 +23,27 @@ dependencies {
 gradlePlugin {
     plugins {
         register("androidApplication") {
-            id = "pomonyang.android.application"
+            id = "mohanyang.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("androidApplicationCompose") {
-            id = "pomonyang.android.application.compose"
+            id = "mohanyang.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
         register("androidFirebase") {
-            id = "pomonyang.android.application.firebase"
+            id = "mohanyang.android.application.firebase"
             implementationClass = "AndroidApplicationFirebaseConventionPlugin"
         }
         register("androidLibrary") {
-            id = "pomonyang.android.library"
+            id = "mohanyang.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidLibraryCompose") {
-            id = "pomonyang.android.library.compose"
+            id = "mohanyang.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
         register("androidHilt") {
-            id = "pomonyang.android.hilt"
+            id = "mohanyang.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
     }

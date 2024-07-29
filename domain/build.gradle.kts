@@ -1,9 +1,9 @@
 plugins {
-    id("pomonyang.android.library")
+    id("mohanyang.android.library")
 }
 
 android {
-    namespace = "com.pomonyang.domain"
+    namespace = "com.mohanyang.domain"
 }
 
 dependencies {
