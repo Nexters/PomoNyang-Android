@@ -1,0 +1,28 @@
+name: 'Firebase App Distribution'
+description: 'Uploads artifacts to Firebase App Distribution'
+inputs:
+  appId:
+    description: 'Check App ID'
+    required: true
+  serviceCredentialsFile:
+    description: 'Service credentials file'
+    required: true
+  file:
+    description: 'Artifact to upload (.apk or .ipa)'
+    required: true
+  groups:
+    description: 'Distribution groups'
+    required: true
+  debug:
+    description: 'Flag that can included to print verbose log output.'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: upload artifact to Firebase App Distribution
+      uses: wzieba/Firebase-Distribution-Github-Action@v1.5.1
+      with:
+        appId: ${{ input.appId }}
+        serviceCredentialsFileContent: ${{ input.serviceCredentialsFile }}
+        groups: ${{ input.groups }}
+        file: ${{ input.file }}
