@@ -23,6 +23,6 @@ runs:
       uses: wzieba/Firebase-Distribution-Github-Action@v1.5.1
       with:
         appId: ${{ inputs.appId }}
-        serviceCredentialsFileContent: ${{ inputs.serviceCredentialsFile }}
+        serviceCredentialsFile: ${{ inputs.serviceCredentialsFile }}
         groups: ${{ inputs.groups }}
         file: ${{ inputs.file }}
