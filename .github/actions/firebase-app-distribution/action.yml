@@ -22,7 +22,7 @@ runs:
     - name: upload artifact to Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1.5.1
       with:
-        appId: ${{ input.appId }}
-        serviceCredentialsFileContent: ${{ input.serviceCredentialsFile }}
-        groups: ${{ input.groups }}
-        file: ${{ input.file }}
+        appId: ${{ inputs.appId }}
+        serviceCredentialsFileContent: ${{ inputs.serviceCredentialsFile }}
+        groups: ${{ inputs.groups }}
+        file: ${{ inputs.file }}
