@@ -22,8 +22,8 @@ runs:
 
     - name: Create Key Properties
       shell: bash
-      run: echo -n "${{ inputs.key-properties }}" | base64 --decode > ./key.secrets.properties
+      run: echo -n "${{ inputs.key-properties }}" > ./key.secrets.properties
 
     - name: Create Signed Key
       shell: bash
-      run: echo -n "${{ inputs.key-file }}" | base64 --decode > ./key
+      run: echo -n "${{ inputs.key-file }}" | base64 --decode > ./key-release
