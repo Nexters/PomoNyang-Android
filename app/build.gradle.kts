@@ -1,17 +1,17 @@
-import com.pomonyang.convention.GithubUtils
+import com.pomonyang.mohanyang.convention.GithubUtils
 
 plugins {
-    id("pomonyang.android.application")
-    id("pomonyang.android.hilt")
-    id("pomonyang.android.application.compose")
-    id("pomonyang.android.application.firebase")
+    id("mohanyang.android.application")
+    id("mohanyang.android.hilt")
+    id("mohanyang.android.application.compose")
+    id("mohanyang.android.application.firebase")
 }
 
 android {
-    namespace = "com.pomonyang"
+    namespace = "com.pomonyang.mohanyang"
 
     defaultConfig {
-        applicationId = "com.pomonyang"
+        applicationId = "com.pomonyang.mohanyang"
     }
 
     buildTypes {

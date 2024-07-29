@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:override="true">pomo-nyang debug</string>
+    <string name="app_name" tools:override="true">moha-nyang debug</string>
 </resources>

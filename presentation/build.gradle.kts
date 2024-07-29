@@ -1,11 +1,11 @@
 plugins {
-    id("pomonyang.android.library")
-    id("pomonyang.android.hilt")
-    id("pomonyang.android.library.compose")
+    id("mohanyang.android.library")
+    id("mohanyang.android.hilt")
+    id("mohanyang.android.library.compose")
 }
 
 android {
-    namespace = "com.pomonyang.presentation"
+    namespace = "com.mohanyang.presentation"
 }
 
 dependencies {

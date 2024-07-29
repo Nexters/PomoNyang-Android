@@ -20,7 +20,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "pomo-nyang"
+rootProject.name = "moha-nyang"
 include(":app")
 include(":presentation")
 include(":data")
