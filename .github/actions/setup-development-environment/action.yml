@@ -1,0 +1,39 @@
+name: "Setup Development Environment"
+
+inputs:
+  google-services:
+    description: 'Google Services Json'
+    required: true
+  test-mode:
+    description: 'Test debug or release mode'
+    required: false
+  debug-properties:
+    description: 'Secret Debug Properties'
+    required: false
+  release-properties:
+    description: 'Secret Release Properties'
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: Create google-services.json
+      shell: bash
+      run: echo -n "${{ inputs.google-services }}" | base64 --decode > ./app/google-services.json
+
+    - name: Create Debug properties file
+      shell: bash
+      run: echo -n "${{ inputs.debug-properties }}" > ./debug.secrets.properties
+
+    - name: Create Release properties file
+      shell: bash
+      run: echo -n "${{ inputs.release-properties }}" > ./release.secrets.properties
