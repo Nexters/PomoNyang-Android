@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.ui
+package com.pomonyang.mohanyang.util
 
 import timber.log.Timber
 
