@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.ui.theme
+package com.pomonyang.mohanyang.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

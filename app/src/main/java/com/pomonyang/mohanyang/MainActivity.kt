@@ -6,9 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.rememberCoroutineScope
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
+import com.pomonyang.mohanyang.presentation.theme.MohaNyangTheme
 import com.pomonyang.mohanyang.ui.MohaNyangApp
 import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
-import com.pomonyang.mohanyang.ui.theme.MohaNyangTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
