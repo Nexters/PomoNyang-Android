@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun MohaNyangTheme(
@@ -36,4 +37,11 @@ object MohaNyangTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalMohaNyangTextColorScheme.current
+}
+
+object MohaNyangTheme {
+    val typography: MohaNyangTypography
+        @Composable
+        @ReadOnlyComposable
+        get() = MohaNyangLocalTypo.current
 }
