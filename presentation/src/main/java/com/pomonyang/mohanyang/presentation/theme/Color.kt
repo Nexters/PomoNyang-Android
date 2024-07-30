@@ -77,10 +77,10 @@ private val MohaNyangTextColorScheme = MohaNyangColorScheme(
 )
 
 private val MohaNyangBackgroundColorScheme = MohaNyangColorScheme(
-    primary = MohaNayangColor.Gray800,
-    secondary = MohaNayangColor.Gray600,
-    tertiary = MohaNayangColor.Gray500,
-    inverse = MohaNayangColor.White,
+    primary = MohaNayangColor.Gray500,
+    secondary = MohaNayangColor.Gray100,
+    tertiary = MohaNayangColor.Gray400,
+    inverse = MohaNayangColor.Gray900,
     accent1 = MohaNayangColor.Orange500,
     accent2 = MohaNayangColor.Orange50
 )
