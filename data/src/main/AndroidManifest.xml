@@ -14,11 +14,5 @@
 
             </intent-filter>
         </receiver>
-
-        <service
-            android:name="com.pomonyang.mohanyang.data.local.device.service.LockScreenMonitorImpl"
-            android:enabled="true"
-            android:exported="false" />
-
     </application>
 </manifest>
