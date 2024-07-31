@@ -4,7 +4,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 
 @Composable
 fun MohaNyangTheme(
@@ -13,10 +14,10 @@ fun MohaNyangTheme(
     CompositionLocalProvider(
         LocalMohaNyangIconColorScheme provides MohaNyangTheme.iconColorScheme,
         LocalMohaNyangBackgroundColorScheme provides MohaNyangTheme.backgroundColorScheme,
-        LocalMohaNyangTextColorScheme provides MohaNyangTheme.textColorScheme
+        LocalMohaNyangTextColorScheme provides MohaNyangTheme.textColorScheme,
+        LocalDensity provides Density(LocalDensity.current.density, fontScale = 1f)
     ) {
         MaterialTheme(
-            typography = Typography,
             content = content
         )
     }
@@ -37,11 +38,9 @@ object MohaNyangTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalMohaNyangTextColorScheme.current
-}
 
-object MohaNyangTheme {
     val typography: MohaNyangTypography
         @Composable
         @ReadOnlyComposable
-        get() = MohaNyangLocalTypo.current
+        get() = LocalMohaNyangTypo.current
 }

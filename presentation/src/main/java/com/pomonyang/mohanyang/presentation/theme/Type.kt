@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -21,16 +20,6 @@ import androidx.compose.ui.unit.sp
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
-
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-)
 
 private val pretendardStyle = FontFamily(
     Font(R.font.pretendard_regular, weight = FontWeight.Normal),
@@ -151,7 +140,7 @@ data class MohaNyangTypography(
     )
 )
 
-internal val MohaNyangLocalTypo = staticCompositionLocalOf { MohaNyangTypography() }
+internal val LocalMohaNyangTypo = staticCompositionLocalOf { MohaNyangTypography() }
 
 @ThemePreviews
 @DevicePreviews
