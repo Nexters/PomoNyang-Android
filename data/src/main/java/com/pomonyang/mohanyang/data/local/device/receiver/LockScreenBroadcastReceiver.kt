@@ -5,14 +5,14 @@ import android.content.Context
 import android.content.Intent
 
 class LockScreenBroadcastReceiver(
-    private var onScreenStateChanged: (Boolean) -> Unit = {}
+    private var lockStateListener: (Boolean) -> Unit
 ) : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent == null) return
         when (intent.action) {
-            Intent.ACTION_SCREEN_ON -> onScreenStateChanged(false)
-            Intent.ACTION_SCREEN_OFF -> onScreenStateChanged(true)
+            Intent.ACTION_SCREEN_ON -> lockStateListener(false)
+            Intent.ACTION_SCREEN_OFF -> lockStateListener(true)
         }
     }
 }
