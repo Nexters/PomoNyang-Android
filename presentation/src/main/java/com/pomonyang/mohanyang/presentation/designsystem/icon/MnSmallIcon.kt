@@ -9,12 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import com.mohanyang.presentation.R
 
 @Composable
 fun MnSmallIcon(
     modifier: Modifier = Modifier,
-    @DrawableRes resourceId: Int = R.drawable.ic_null,
+    @DrawableRes resourceId: Int,
     contentDescription: String? = null,
     tint: Color = LocalContentColor.current
 ) {
