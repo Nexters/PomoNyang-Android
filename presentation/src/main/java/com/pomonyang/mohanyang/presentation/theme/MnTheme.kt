@@ -6,6 +6,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import com.pomonyang.mohanyang.presentation.designsystem.token.LocalMnBackgroundColorScheme
+import com.pomonyang.mohanyang.presentation.designsystem.token.LocalMnIconColorScheme
+import com.pomonyang.mohanyang.presentation.designsystem.token.LocalMnTextColorScheme
+import com.pomonyang.mohanyang.presentation.designsystem.token.LocalMnTypo
+import com.pomonyang.mohanyang.presentation.designsystem.token.MnColorScheme
+import com.pomonyang.mohanyang.presentation.designsystem.token.MnTypography
 
 @Composable
 fun MnTheme(
