@@ -1,8 +1,8 @@
-package com.pomonyang.mohanyang.presentation.theme
+package com.pomonyang.mohanyang.presentation.designsystem.token
 
 import androidx.compose.ui.unit.dp
 
-object MhSpacing {
+object MnSpacing {
     val xSmall = 4.dp
     val small = 8.dp
     val medium = 12.dp

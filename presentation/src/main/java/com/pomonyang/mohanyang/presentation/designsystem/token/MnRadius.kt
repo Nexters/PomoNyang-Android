@@ -1,8 +1,8 @@
-package com.pomonyang.mohanyang.presentation.theme
+package com.pomonyang.mohanyang.presentation.designsystem.token
 
 import androidx.compose.ui.unit.dp
 
-object MhRadius {
+object MnRadius {
     val xSmall = 12.dp
     val small = 16.dp
     val medium = 20.dp

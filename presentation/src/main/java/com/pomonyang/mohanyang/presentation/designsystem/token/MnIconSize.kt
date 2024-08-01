@@ -1,3 +1,5 @@
+package com.pomonyang.mohanyang.presentation.designsystem.token
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -13,7 +15,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnXSmallIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
-object IconSize {
+object MnIconSize {
     val xSmall = 16.dp
     val small = 20.dp
     val medium = 24.dp

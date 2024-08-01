@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.theme
+package com.pomonyang.mohanyang.presentation.designsystem.token
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
@@ -87,7 +88,7 @@ data class MnTypography(
         lineHeightStyle = setDefaultLineHeight(),
         letterSpacing = (-0.02).em
     ),
-    val bodySemibold: TextStyle = TextStyle(
+    val bodySemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
@@ -104,7 +105,7 @@ data class MnTypography(
         letterSpacing = (-0.01).em
     ),
 
-    val subBodySemibold: TextStyle = TextStyle(
+    val subBodySemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
@@ -121,7 +122,7 @@ data class MnTypography(
         lineHeightStyle = setDefaultLineHeight(),
         letterSpacing = (-0.01).em
     ),
-    val captionSemibold: TextStyle = TextStyle(
+    val captionSemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 12.sp,
@@ -159,13 +160,13 @@ fun TypoPreview() {
         Text("header4", style = MnTheme.typography.header4)
         Text("header5", style = MnTheme.typography.header5)
 
-        Text("bodySemibold", style = MnTheme.typography.bodySemibold)
+        Text("bodySemibold", style = MnTheme.typography.bodySemiBold)
         Text("bodyRegular", style = MnTheme.typography.bodyRegular)
 
-        Text("subBodySemibold", style = MnTheme.typography.subBodySemibold)
+        Text("subBodySemibold", style = MnTheme.typography.subBodySemiBold)
         Text("subBodyRegular", style = MnTheme.typography.subBodyRegular)
 
-        Text("captionSemibold", style = MnTheme.typography.captionSemibold)
-        Text("captionSemibold", style = MnTheme.typography.captionSemibold)
+        Text("captionSemibold", style = MnTheme.typography.captionSemiBold)
+        Text("captionSemibold", style = MnTheme.typography.captionSemiBold)
     }
 }
