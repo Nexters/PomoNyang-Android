@@ -15,7 +15,7 @@ fun MnLargeIcon(
     modifier: Modifier = Modifier,
     @DrawableRes resourceId: Int,
     contentDescription: String? = null,
-    tint: Color = LocalContentColor.current
+    tint: Color = Color.Unspecified
 ) {
     Icon(
         painter = painterResource(id = resourceId),
