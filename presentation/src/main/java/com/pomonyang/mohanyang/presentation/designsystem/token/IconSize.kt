@@ -4,11 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pomonyang.mohanyang.presentation.designsystem.icon.MNLargeIcon
-import com.pomonyang.mohanyang.presentation.designsystem.icon.MNMediumIcon
-import com.pomonyang.mohanyang.presentation.designsystem.icon.MNSmallIcon
-import com.pomonyang.mohanyang.presentation.designsystem.icon.MNXLargeIcon
-import com.pomonyang.mohanyang.presentation.designsystem.icon.MNXSmallIcon
+import com.pomonyang.mohanyang.presentation.designsystem.icon.MnLargeIcon
+import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
+import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
+import com.pomonyang.mohanyang.presentation.designsystem.icon.MnXLargeIcon
+import com.pomonyang.mohanyang.presentation.designsystem.icon.MnXSmallIcon
 import com.pomonyang.mohanyang.presentation.theme.MohaNyangTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
@@ -28,11 +28,11 @@ private fun MohaNyangIconPreview() {
         Column(
             verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.Top)
         ) {
-            MNXSmallIcon()
-            MNSmallIcon()
-            MNMediumIcon()
-            MNLargeIcon()
-            MNXLargeIcon()
+            MnXSmallIcon()
+            MnSmallIcon()
+            MnMediumIcon()
+            MnLargeIcon()
+            MnXLargeIcon()
         }
     }
 }

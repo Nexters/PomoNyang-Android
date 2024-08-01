@@ -12,7 +12,7 @@ import androidx.compose.ui.res.painterResource
 import com.mohanyang.presentation.R
 
 @Composable
-fun MNXLargeIcon(
+fun MnXLargeIcon(
     modifier: Modifier = Modifier,
     @DrawableRes resourceId: Int = R.drawable.ic_null,
     contentDescription: String? = null,
