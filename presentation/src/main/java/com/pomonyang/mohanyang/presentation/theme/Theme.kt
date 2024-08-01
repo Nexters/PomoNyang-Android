@@ -8,13 +8,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 
 @Composable
-fun MohaNyangTheme(
+fun MnTheme(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalMohaNyangIconColorScheme provides MohaNyangTheme.iconColorScheme,
-        LocalMohaNyangBackgroundColorScheme provides MohaNyangTheme.backgroundColorScheme,
-        LocalMohaNyangTextColorScheme provides MohaNyangTheme.textColorScheme,
+        LocalMnIconColorScheme provides MnTheme.iconColorScheme,
+        LocalMnBackgroundColorScheme provides MnTheme.backgroundColorScheme,
+        LocalMnTextColorScheme provides MnTheme.textColorScheme,
         LocalDensity provides Density(LocalDensity.current.density, fontScale = 1f)
     ) {
         MaterialTheme(
@@ -23,24 +23,24 @@ fun MohaNyangTheme(
     }
 }
 
-object MohaNyangTheme {
-    val iconColorScheme: MohaNyangColorScheme
+object MnTheme {
+    val iconColorScheme: MnColorScheme
         @Composable
         @ReadOnlyComposable
-        get() = LocalMohaNyangIconColorScheme.current
+        get() = LocalMnIconColorScheme.current
 
-    val backgroundColorScheme: MohaNyangColorScheme
+    val backgroundColorScheme: MnColorScheme
         @Composable
         @ReadOnlyComposable
-        get() = LocalMohaNyangBackgroundColorScheme.current
+        get() = LocalMnBackgroundColorScheme.current
 
-    val textColorScheme: MohaNyangColorScheme
+    val textColorScheme: MnColorScheme
         @Composable
         @ReadOnlyComposable
-        get() = LocalMohaNyangTextColorScheme.current
+        get() = LocalMnTextColorScheme.current
 
-    val typography: MohaNyangTypography
+    val typography: MnTypography
         @Composable
         @ReadOnlyComposable
-        get() = LocalMohaNyangTypo.current
+        get() = LocalMnTypo.current
 }

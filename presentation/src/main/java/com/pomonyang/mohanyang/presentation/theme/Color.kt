@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
 @Immutable
-object MohaNayangColor {
+object MnColor {
     val White = Color(0xFFFFFFFF)
     val Black = Color(0xFF000000)
 
@@ -50,7 +50,7 @@ object MohaNayangColor {
 }
 
 @Immutable
-class MohaNyangColorScheme(
+class MnColorScheme(
     val primary: Color,
     val secondary: Color,
     val tertiary: Color,
@@ -60,41 +60,41 @@ class MohaNyangColorScheme(
     val accent2: Color = Color.Unspecified
 )
 
-private val MohaNyangIconColorScheme = MohaNyangColorScheme(
-    primary = MohaNayangColor.Gray700,
-    secondary = MohaNayangColor.Gray500,
-    tertiary = MohaNayangColor.Gray300,
-    disabled = MohaNayangColor.Gray200,
-    inverse = MohaNayangColor.White
+private val MnIconColorScheme = MnColorScheme(
+    primary = MnColor.Gray700,
+    secondary = MnColor.Gray500,
+    tertiary = MnColor.Gray300,
+    disabled = MnColor.Gray200,
+    inverse = MnColor.White
 )
 
-private val MohaNyangTextColorScheme = MohaNyangColorScheme(
-    primary = MohaNayangColor.Gray800,
-    secondary = MohaNayangColor.Gray600,
-    tertiary = MohaNayangColor.Gray500,
-    disabled = MohaNayangColor.Gray300,
-    inverse = MohaNayangColor.White
+private val MnTextColorScheme = MnColorScheme(
+    primary = MnColor.Gray800,
+    secondary = MnColor.Gray600,
+    tertiary = MnColor.Gray500,
+    disabled = MnColor.Gray300,
+    inverse = MnColor.White
 )
 
-private val MohaNyangBackgroundColorScheme = MohaNyangColorScheme(
-    primary = MohaNayangColor.Gray500,
-    secondary = MohaNayangColor.Gray100,
-    tertiary = MohaNayangColor.Gray400,
-    inverse = MohaNayangColor.Gray900,
-    accent1 = MohaNayangColor.Orange500,
-    accent2 = MohaNayangColor.Orange50
+private val MnBackgroundColorScheme = MnColorScheme(
+    primary = MnColor.Gray500,
+    secondary = MnColor.Gray100,
+    tertiary = MnColor.Gray400,
+    inverse = MnColor.Gray900,
+    accent1 = MnColor.Orange500,
+    accent2 = MnColor.Orange50
 )
 
-val LocalMohaNyangIconColorScheme = staticCompositionLocalOf { MohaNyangIconColorScheme }
-val LocalMohaNyangTextColorScheme = staticCompositionLocalOf { MohaNyangTextColorScheme }
-val LocalMohaNyangBackgroundColorScheme = staticCompositionLocalOf { MohaNyangBackgroundColorScheme }
+val LocalMnIconColorScheme = staticCompositionLocalOf { MnIconColorScheme }
+val LocalMnTextColorScheme = staticCompositionLocalOf { MnTextColorScheme }
+val LocalMnBackgroundColorScheme = staticCompositionLocalOf { MnBackgroundColorScheme }
 
 @ThemePreviews
 @Composable
-private fun MohaNyangColorSchemePreview() {
-    MohaNyangTheme {
-        Column(modifier = Modifier.background(MohaNyangTheme.backgroundColorScheme.accent1)) {
-            Text(text = "test", color = MohaNyangTheme.textColorScheme.inverse)
+private fun MnColorSchemePreview() {
+    MnTheme {
+        Column(modifier = Modifier.background(MnTheme.backgroundColorScheme.accent1)) {
+            Text(text = "test", color = MnTheme.textColorScheme.inverse)
         }
     }
 }
