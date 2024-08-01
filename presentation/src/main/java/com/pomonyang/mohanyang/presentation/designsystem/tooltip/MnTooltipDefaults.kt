@@ -10,6 +10,7 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 object MnTooltipDefaults {
     val anchorWidth = 14.dp
     val anchorHeight = 9.dp
+    val overlayBackgroundColor = MnColor.Black.copy(alpha = 0.5f)
 
     @Composable
     fun lightTooltipColors(

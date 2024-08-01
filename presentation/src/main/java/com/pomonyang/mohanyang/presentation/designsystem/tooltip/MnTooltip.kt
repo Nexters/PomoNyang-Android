@@ -1,5 +1,8 @@
 package com.pomonyang.mohanyang.presentation.designsystem.tooltip
 
+import android.R
+import android.view.Window
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.animateFloat
@@ -7,7 +10,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +23,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,10 +44,12 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.text.style.TextAlign
@@ -56,7 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toOffset
 import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.Popup
-import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
+import androidx.core.content.ContextCompat
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -64,6 +70,7 @@ import com.pomonyang.mohanyang.presentation.util.dpToPx
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import com.pomonyang.mohanyang.presentation.util.pxToDp
 import kotlin.math.min
+import kotlinx.coroutines.delay
 
 @Composable
 fun Modifier.tooltip(
@@ -82,6 +89,7 @@ fun Modifier.tooltip(
 ): Modifier {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
+    val activity = LocalContext.current as ComponentActivity
     val screenWidthPx = remember { with(density) { configuration.screenWidthDp.dp.roundToPx() } }
     val screenHeightPx = remember { with(density) { configuration.screenHeightDp.dp.roundToPx() } }
 
@@ -108,6 +116,8 @@ fun Modifier.tooltip(
         label = "tooltip transition"
     )
     if (enabled) {
+        handleSystemBarsColor(activity.window)
+
         Popup {
             Box(
                 modifier = Modifier
@@ -117,15 +127,10 @@ fun Modifier.tooltip(
                         highlightComponent = highlightComponent,
                         positionInRoot = positionInRoot,
                         componentSize = componentSize,
-                        backgroundColor = MnColor.Black,
-                        backgroundAlpha = 0.5f,
+                        backgroundColor = MnTooltipDefaults.overlayBackgroundColor,
                         shape = ovalShape
                     )
-                    .clickable(
-                        onClick = {
-                            onDismiss()
-                        }
-                    )
+                    .noRippleClickable { onDismiss() }
             ) {
                 MnTooltipImpl(
                     modifier = Modifier
@@ -148,6 +153,22 @@ fun Modifier.tooltip(
         componentSize = it.size
         positionInRoot = it.positionInWindow().run {
             IntOffset(this.x.toInt(), this.y.toInt() - statusBarHeight)
+        }
+    }
+}
+
+@Composable
+private fun handleSystemBarsColor(window: Window) {
+    val transparent = ContextCompat.getColor(window.context, R.color.transparent)
+    LaunchedEffect(Unit) {
+        delay(1)
+        window.statusBarColor = MnTooltipDefaults.overlayBackgroundColor.toArgb()
+        window.navigationBarColor = MnTooltipDefaults.overlayBackgroundColor.toArgb()
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            window.statusBarColor = transparent
+            window.navigationBarColor = transparent
         }
     }
 }
@@ -303,7 +324,6 @@ private fun Modifier.drawOverlayBackground(
     positionInRoot: IntOffset,
     componentSize: IntSize,
     backgroundColor: Color,
-    backgroundAlpha: Float,
     shape: Dp
 ): Modifier = if (showOverlay) {
     if (highlightComponent) {
@@ -317,11 +337,11 @@ private fun Modifier.drawOverlayBackground(
                 )
             }
             clipPath(highlightPath, clipOp = ClipOp.Difference) {
-                drawRect(SolidColor(backgroundColor.copy(alpha = backgroundAlpha)))
+                drawRect(SolidColor(backgroundColor))
             }
         }
     } else {
-        background(backgroundColor.copy(alpha = backgroundAlpha))
+        background(backgroundColor)
     }
 } else {
     this
