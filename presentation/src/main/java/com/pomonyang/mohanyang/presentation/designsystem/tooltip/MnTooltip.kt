@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.designsystem.tooltip
 
-import android.R
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -62,7 +61,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toOffset
 import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.Popup
-import androidx.core.content.ContextCompat
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -107,7 +105,7 @@ fun Modifier.tooltip(
 ): Modifier {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
-    val activity = LocalContext.current as ComponentActivity
+    val activity = LocalContext.current as? ComponentActivity
     val screenWidthPx = remember { with(density) { configuration.screenWidthDp.dp.roundToPx() } }
     val screenHeightPx = remember { with(density) { configuration.screenHeightDp.dp.roundToPx() } }
 
@@ -134,7 +132,7 @@ fun Modifier.tooltip(
         label = "tooltip transition"
     )
     if (enabled) {
-        handleSystemBarsColor(activity.window)
+        handleSystemBarsColor(activity?.window)
 
         Popup {
             Box(
@@ -176,17 +174,16 @@ fun Modifier.tooltip(
 }
 
 @Composable
-private fun handleSystemBarsColor(window: Window) {
-    val transparent = ContextCompat.getColor(window.context, R.color.transparent)
+private fun handleSystemBarsColor(window: Window?) {
     LaunchedEffect(Unit) {
         delay(1)
-        window.statusBarColor = MnTooltipDefaults.overlayBackgroundColor.toArgb()
-        window.navigationBarColor = MnTooltipDefaults.overlayBackgroundColor.toArgb()
+        window?.statusBarColor = MnTooltipDefaults.overlayBackgroundColor.toArgb()
+        window?.navigationBarColor = MnTooltipDefaults.overlayBackgroundColor.toArgb()
     }
     DisposableEffect(Unit) {
         onDispose {
-            window.statusBarColor = transparent
-            window.navigationBarColor = transparent
+            window?.statusBarColor = Color.Transparent.toArgb()
+            window?.navigationBarColor = Color.Transparent.toArgb()
         }
     }
 }
