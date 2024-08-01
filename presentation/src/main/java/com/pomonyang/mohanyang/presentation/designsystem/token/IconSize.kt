@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnLargeIcon
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
@@ -28,11 +29,11 @@ private fun MohaNyangIconPreview() {
         Column(
             verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.Top)
         ) {
-            MnXSmallIcon()
-            MnSmallIcon()
-            MnMediumIcon()
-            MnLargeIcon()
-            MnXLargeIcon()
+            MnXSmallIcon(resourceId = R.drawable.ic_null)
+            MnSmallIcon(resourceId = R.drawable.ic_null)
+            MnMediumIcon(resourceId = R.drawable.ic_null)
+            MnLargeIcon(resourceId = R.drawable.ic_null)
+            MnXLargeIcon(resourceId = R.drawable.ic_null)
         }
     }
 }
