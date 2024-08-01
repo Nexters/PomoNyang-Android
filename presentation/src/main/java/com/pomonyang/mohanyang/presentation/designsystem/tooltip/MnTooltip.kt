@@ -72,9 +72,27 @@ import com.pomonyang.mohanyang.presentation.util.pxToDp
 import kotlin.math.min
 import kotlinx.coroutines.delay
 
+/**
+ * 텍스트 툴팁을 표시하기 위한 Modifier 함수입니다.
+ *
+ * @see com.pomonyang.mohanyang.presentation.designsystem.tooltip.MnBottomTooltipPreview
+ *
+ * @param content 툴팁에 표시할 텍스트.
+ * @param tooltipColors 툴팁의 색상을 정의하는 MnTooltipColors 객체. 기본값은 MnTooltipDefaults.lightTooltipColors().
+ * @param horizontalAlignment 툴팁의 수평 정렬. 기본값은 Alignment.CenterHorizontally.
+ * @param verticalAlignment 툴팁의 수직 정렬. 기본값은 Alignment.Top.
+ * @param anchorAlignment 툴팁 앵커의 정렬. 기본값은 Alignment.BottomCenter.
+ * @param anchorPadding 앵커 주변의 패딩. 기본값은 PaddingValues().
+ * @param ovalShape 강조 영역의 모양을 정의하는 Dp 값. 기본값은 0.dp.
+ * @param contentAlign 툴팁 텍스트의 정렬. 기본값은 TextAlign.Center.
+ * @param enabled 툴팁이 활성화되어 있는지 여부. 기본값은 true.
+ * @param showOverlay 오버레이를 표시할지 여부. 기본값은 true.
+ * @param highlightComponent 컴포넌트를 강조할지 여부. 기본값은 true.
+ * @param onDismiss 툴팁이 해제될 때 호출되는 콜백 함수.
+ */
 @Composable
 fun Modifier.tooltip(
-    text: String,
+    content: String,
     tooltipColors: MnTooltipColors = MnTooltipDefaults.lightTooltipColors(),
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
@@ -140,7 +158,7 @@ fun Modifier.tooltip(
                     tooltipColors = tooltipColors,
                     tooltipContentSize = tooltipContentSize,
                     verticalAlignment = verticalAlignment,
-                    text = text,
+                    content = content,
                     contentAlign = contentAlign,
                     arrowPadding = anchorPadding,
                     arrowAlignment = anchorAlignment
@@ -178,7 +196,7 @@ private fun MnTooltipImpl(
     tooltipColors: MnTooltipColors,
     tooltipContentSize: IntSize,
     verticalAlignment: Alignment.Vertical,
-    text: String,
+    content: String,
     contentAlign: TextAlign,
     arrowPadding: PaddingValues,
     arrowAlignment: Alignment,
@@ -189,7 +207,7 @@ private fun MnTooltipImpl(
             Alignment.Top -> {
                 TooltipContent(
                     tooltipColors = tooltipColors,
-                    content = text,
+                    content = content,
                     contentAlign = contentAlign
                 )
 
@@ -213,7 +231,7 @@ private fun MnTooltipImpl(
 
                 TooltipContent(
                     tooltipColors = tooltipColors,
-                    content = text,
+                    content = content,
                     contentAlign = contentAlign
                 )
             }
@@ -392,7 +410,7 @@ private fun Modifier.animateTooltip(
 
 @Composable
 @Preview
-private fun MhTopTooltipPreview() {
+private fun MnTopTooltipPreview() {
     MnTheme {
         var isShowTooltip by remember { mutableStateOf(true) }
         Box(
@@ -407,7 +425,7 @@ private fun MhTopTooltipPreview() {
                         anchorPadding = PaddingValues(bottom = 12.dp),
                         verticalAlignment = Alignment.Top,
                         enabled = isShowTooltip,
-                        text = "눌러서 시간을 조정할 수 있어요",
+                        content = "눌러서 시간을 조정할 수 있어요",
                         ovalShape = 12.dp,
                         onDismiss = {
                             isShowTooltip = false
@@ -423,7 +441,7 @@ private fun MhTopTooltipPreview() {
 
 @Composable
 @Preview
-private fun MhBottomTooltipPreview() {
+private fun MnBottomTooltipPreview() {
     MnTheme {
         var isShowTooltip by remember { mutableStateOf(true) }
         Box(
@@ -442,7 +460,7 @@ private fun MhBottomTooltipPreview() {
                         anchorAlignment = Alignment.TopStart,
                         anchorPadding = PaddingValues(start = 30.dp, top = 12.dp),
                         enabled = isShowTooltip,
-                        text = "눌러서 카테고리를 변경할 수 있어요",
+                        content = "눌러서 카테고리를 변경할 수 있어요",
                         ovalShape = 12.dp,
                         onDismiss = {
                             isShowTooltip = false
