@@ -1,6 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tooltip_transition_label">Tooltip transition</string>
-    <string name="tooltip_transition_scaling">tooltip transition: scaling</string>
-    <string name="tooltip_transition_alpha">tooltip transition: alpha</string>
 </resources>
