@@ -132,7 +132,7 @@ fun Modifier.tooltip(
         label = "tooltip transition"
     )
     if (enabled) {
-        handleSystemBarsColor(activity?.window)
+        HandleSystemBarsColor(activity?.window)
 
         Popup {
             Box(
@@ -174,7 +174,7 @@ fun Modifier.tooltip(
 }
 
 @Composable
-private fun handleSystemBarsColor(window: Window?) {
+private fun HandleSystemBarsColor(window: Window?) {
     LaunchedEffect(Unit) {
         delay(1)
         window?.statusBarColor = MnTooltipDefaults.overlayBackgroundColor.toArgb()
