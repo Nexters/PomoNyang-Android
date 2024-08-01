@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.rememberCoroutineScope
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
-import com.pomonyang.mohanyang.presentation.theme.MohaNyangTheme
+import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.ui.MohaNyangApp
 import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MohaNyangTheme {
+            MnTheme {
                 val coroutineScope = rememberCoroutineScope()
                 val mohaNyangAppState = rememberMohaNyangAppState(
                     isNewUser = true,

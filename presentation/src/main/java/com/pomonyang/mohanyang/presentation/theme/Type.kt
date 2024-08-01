@@ -36,7 +36,7 @@ private fun setDefaultLineHeight(
 )
 
 @Immutable
-data class MohaNyangTypography(
+data class MnTypography(
     val time: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
@@ -140,7 +140,7 @@ data class MohaNyangTypography(
     )
 )
 
-internal val LocalMohaNyangTypo = staticCompositionLocalOf { MohaNyangTypography() }
+internal val LocalMnTypo = staticCompositionLocalOf { MnTypography() }
 
 @ThemePreviews
 @DevicePreviews
@@ -151,21 +151,21 @@ fun TypoPreview() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically)
     ) {
-        Text("time", style = MohaNyangTheme.typography.time)
+        Text("time", style = MnTheme.typography.time)
 
-        Text("header1", style = MohaNyangTheme.typography.header1)
-        Text("header2", style = MohaNyangTheme.typography.header2)
-        Text("header3", style = MohaNyangTheme.typography.header3)
-        Text("header4", style = MohaNyangTheme.typography.header4)
-        Text("header5", style = MohaNyangTheme.typography.header5)
+        Text("header1", style = MnTheme.typography.header1)
+        Text("header2", style = MnTheme.typography.header2)
+        Text("header3", style = MnTheme.typography.header3)
+        Text("header4", style = MnTheme.typography.header4)
+        Text("header5", style = MnTheme.typography.header5)
 
-        Text("bodySemibold", style = MohaNyangTheme.typography.bodySemibold)
-        Text("bodyRegular", style = MohaNyangTheme.typography.bodyRegular)
+        Text("bodySemibold", style = MnTheme.typography.bodySemibold)
+        Text("bodyRegular", style = MnTheme.typography.bodyRegular)
 
-        Text("subBodySemibold", style = MohaNyangTheme.typography.subBodySemibold)
-        Text("subBodyRegular", style = MohaNyangTheme.typography.subBodyRegular)
+        Text("subBodySemibold", style = MnTheme.typography.subBodySemibold)
+        Text("subBodyRegular", style = MnTheme.typography.subBodyRegular)
 
-        Text("captionSemibold", style = MohaNyangTheme.typography.captionSemibold)
-        Text("captionSemibold", style = MohaNyangTheme.typography.captionSemibold)
+        Text("captionSemibold", style = MnTheme.typography.captionSemibold)
+        Text("captionSemibold", style = MnTheme.typography.captionSemibold)
     }
 }

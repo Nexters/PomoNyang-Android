@@ -10,7 +10,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnXLargeIcon
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnXSmallIcon
-import com.pomonyang.mohanyang.presentation.theme.MohaNyangTheme
+import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
 object IconSize {
@@ -25,7 +25,7 @@ object IconSize {
 @Composable
 @Preview
 private fun MohaNyangIconPreview() {
-    MohaNyangTheme {
+    MnTheme {
         Column(
             verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.Top)
         ) {
