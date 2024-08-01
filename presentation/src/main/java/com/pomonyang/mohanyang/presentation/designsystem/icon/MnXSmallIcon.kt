@@ -12,7 +12,7 @@ import androidx.compose.ui.res.painterResource
 import com.mohanyang.presentation.R
 
 @Composable
-fun MNMediumIcon(
+fun MnXSmallIcon(
     modifier: Modifier = Modifier,
     @DrawableRes resourceId: Int = R.drawable.ic_null,
     contentDescription: String? = null,
@@ -21,7 +21,7 @@ fun MNMediumIcon(
     Icon(
         painter = painterResource(id = resourceId),
         contentDescription = contentDescription,
-        modifier = modifier.size(IconSize.medium),
+        modifier = modifier.size(IconSize.xSmall),
         tint = tint
     )
 }
