@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -59,7 +60,9 @@ fun MnTopAppBar(
                 )
             }
         },
-        modifier = modifier.background(topAppBarColors.containerColor)
+        modifier = modifier
+            .windowInsetsPadding(windowInsets)
+            .background(topAppBarColors.containerColor)
     ) { measurables, constraints ->
         val navigationIconPlaceable = measurables.first { it.layoutId == NAVIGATION_ICON }.measure(constraints)
         val actionsPlaceable = measurables.first { it.layoutId == ACTIONS }.measure(constraints)
