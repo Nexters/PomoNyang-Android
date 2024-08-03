@@ -78,7 +78,7 @@ private val MnTextColorScheme = MnColorScheme(
 )
 
 private val MnBackgroundColorScheme = MnColorScheme(
-    primary = MnColor.Gray500,
+    primary = MnColor.Gray50,
     secondary = MnColor.Gray100,
     tertiary = MnColor.Gray400,
     inverse = MnColor.Gray900,
