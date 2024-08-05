@@ -8,6 +8,7 @@ import com.pomonyang.mohanyang.presentation.screen.home.Home
 import com.pomonyang.mohanyang.presentation.screen.home.homeScreen
 import com.pomonyang.mohanyang.presentation.screen.onboarding.Onboarding
 import com.pomonyang.mohanyang.presentation.screen.onboarding.onboardingScreen
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.pomodoroSettingScreen
 import com.pomonyang.mohanyang.ui.MohaNyangAppState
 import kotlinx.coroutines.launch
 
@@ -36,6 +37,12 @@ internal fun MohaNyangNavHost(
             coroutineScope.launch { onShowSnackbar("arrived at the home screen.", null) }
             navHostController.navigate(Home)
         }
-        homeScreen(navigateUp = navigateUp)
+
+        homeScreen(
+            navigateUp = navigateUp,
+            navHostController = mohaNyangAppState.navHostController
+        )
+
+        pomodoroSettingScreen(isNewUser = mohaNyangAppState.isNewUser)
     }
 }
