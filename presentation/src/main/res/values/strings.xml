@@ -2,4 +2,6 @@
 <resources>
     <string name="focus">집중</string>
     <string name="rest">휴식</string>
+    <string name="tooltip_category_content">눌러서 카테고리를 변경할 수 있어요</string>
+    <string name="tooltip_time_content">눌러서 시간을 조정할 수 있어요</string>
 </resources>

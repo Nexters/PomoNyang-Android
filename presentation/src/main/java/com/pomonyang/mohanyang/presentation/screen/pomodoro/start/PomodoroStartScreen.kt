@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,19 +35,24 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
+import com.pomonyang.mohanyang.presentation.designsystem.tooltip.tooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun PomodoroStarterRoute(
+    isNewUser: Boolean, // TODO [지훈] ViewModel의 State로 변경 예정
     modifier: Modifier = Modifier
 ) {
-    PomodoroStarterScreen(modifier = modifier)
+    PomodoroStarterScreen(modifier = modifier, isNewUser = isNewUser)
 }
 
 @Composable
 fun PomodoroStarterScreen(
+    isNewUser: Boolean,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -74,7 +85,7 @@ fun PomodoroStarterScreen(
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             CatRiveBox()
-            FocusBox()
+            FocusBox(isNewUser)
             StartButton()
         }
     }
@@ -93,17 +104,45 @@ private fun CatRiveBox() {
 
 @Composable
 private fun FocusBox(
+    isNewUser: Boolean,
     modifier: Modifier = Modifier
 ) {
+    var categoryTooltip by remember { mutableStateOf(isNewUser) }
+    var timeTooltip by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = modifier.padding(vertical = MnSpacing.large),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MnSpacing.medium)
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CategoryBox()
+        CategoryBox(
+            modifier = Modifier
+                .padding(bottom = MnSpacing.medium)
+                .tooltip(
+                    enabled = categoryTooltip,
+                    content = stringResource(R.string.tooltip_category_content),
+                    anchorPadding = PaddingValues(bottom = MnSpacing.medium),
+                    ovalShape = MnRadius.xSmall,
+                    onDismiss = {
+                        coroutineScope.launch {
+                            categoryTooltip = false
+                            delay(250)
+                            timeTooltip = true
+                        }
+                    }
+                )
+        )
 
         Row(
-            modifier = Modifier.padding(horizontal = MnSpacing.twoXLarge),
+            modifier = Modifier
+                .padding(horizontal = MnSpacing.twoXLarge)
+                .tooltip(
+                    enabled = timeTooltip,
+                    content = stringResource(R.string.tooltip_time_content),
+                    anchorPadding = PaddingValues(bottom = MnSpacing.medium),
+                    ovalShape = MnRadius.xSmall,
+                    onDismiss = { timeTooltip = false }
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
@@ -202,7 +241,7 @@ private fun StartButton() {
 @Composable
 @Preview
 fun PomodoroStarterScreenPreview() {
-    PomodoroStarterScreen()
+    PomodoroStarterScreen(isNewUser = false)
 }
 
 @Composable
@@ -214,7 +253,7 @@ fun CatImagePreview() {
 @Composable
 @Preview(showBackground = true)
 fun FocusBoxPreview() {
-    FocusBox()
+    FocusBox(isNewUser = false)
 }
 
 @Composable
