@@ -84,26 +84,35 @@ fun PomodoroStarterScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
-            CatRiveBox()
-            FocusBox(isNewUser)
+            CatRive()
+            PomodoroDetailSetting(isNewUser)
             StartButton()
         }
     }
 }
 
 @Composable
-private fun CatRiveBox() {
+private fun CatRive(
+    showTooltip: Boolean = false
+) {
     Box(
         modifier = Modifier
             .size(240.dp)
             .background(MnTheme.backgroundColorScheme.secondary)
+            .tooltip(
+                modifier = Modifier.padding(top = 20.dp),
+                enabled = showTooltip,
+                content = stringResource(R.string.tooltip_rest_content),
+                showOverlay = false,
+                highlightComponent = false
+            )
     ) {
         // TODO
     }
 }
 
 @Composable
-private fun FocusBox(
+private fun PomodoroDetailSetting(
     isNewUser: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -247,13 +256,13 @@ fun PomodoroStarterScreenPreview() {
 @Composable
 @Preview
 fun CatImagePreview() {
-    CatRiveBox()
+    CatRive()
 }
 
 @Composable
 @Preview(showBackground = true)
 fun FocusBoxPreview() {
-    FocusBox(isNewUser = false)
+    PomodoroDetailSetting(isNewUser = false)
 }
 
 @Composable

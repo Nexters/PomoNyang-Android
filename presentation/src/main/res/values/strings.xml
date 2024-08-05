@@ -4,4 +4,5 @@
     <string name="rest">휴식</string>
     <string name="tooltip_category_content">눌러서 카테고리를 변경할 수 있어요</string>
     <string name="tooltip_time_content">눌러서 시간을 조정할 수 있어요</string>
+    <string name="tooltip_rest_content">푹 쉬었나요?\n힘내서 다시 집중할까냥?</string>
 </resources>
