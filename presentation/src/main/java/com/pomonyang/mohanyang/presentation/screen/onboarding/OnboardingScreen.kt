@@ -38,14 +38,29 @@ private fun OnboardingScreen(
         MnDialog(
             title = "Dialog Title",
             subTitle = "Home으로 이동하시겠어요?",
-            positiveButtonLabel = "이동",
-            negativeButtonLabel = "취소",
-            onPositiveButtonClick = {
-                isShowing = false
-                onHomeClick()
+            onDismissRequest = { isShowing = false },
+            positiveButton = {
+                // TODO 나중에 변경 MnBoxButton으로 변경
+                Button(
+                    onClick = {
+                        isShowing = false
+                        onHomeClick()
+                    }
+                ) {
+                    Text("확인")
+                }
             },
-            onNegativeButtonClick = { isShowing = false },
-            onDismissRequest = { isShowing = false }
+            negativeButton = {
+                // TODO 나중에 변경 MnBoxButton으로 변경
+                Button(
+                    onClick = {
+                        isShowing = false
+                        onHomeClick()
+                    }
+                ) {
+                    Text("취소")
+                }
+            }
         )
     }
     Box(

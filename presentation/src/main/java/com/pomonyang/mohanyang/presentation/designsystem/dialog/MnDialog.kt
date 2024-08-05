@@ -1,13 +1,13 @@
 package com.pomonyang.mohanyang.presentation.designsystem.dialog
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Surface
@@ -36,11 +36,8 @@ fun MnDialog(
         decorFitsSystemWindows = true
     ),
     subTitle: String? = null,
-    // TODO 나중에 MnButton완성 되면 거기에 필요한 leading / action / text 갖고 있는 클래스 사용
-    positiveButtonLabel: String? = null,
-    negativeButtonLabel: String? = null,
-    onPositiveButtonClick: () -> Unit = {},
-    onNegativeButtonClick: () -> Unit = {},
+    positiveButton: @Composable (() -> Unit)? = null,
+    negativeButton: @Composable (() -> Unit)? = null,
     onDismissRequest: () -> Unit
 ) {
     MnTheme {
@@ -70,20 +67,30 @@ fun MnDialog(
                         horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium),
                         modifier = Modifier.padding(top = MnSpacing.large)
                     ) {
-                        PositiveButton(
-                            modifier = Modifier.weight(1f),
-                            positiveButtonLabel = positiveButtonLabel,
-                            dialogColors = dialogColors,
-                            onPositiveButtonClick = onPositiveButtonClick,
-                            dialogTextStyles = dialogTextStyles
-                        )
-                        NegativeButton(
-                            modifier = Modifier.weight(1f),
-                            negativeButtonLabel = negativeButtonLabel,
-                            dialogColors = dialogColors,
-                            onNegativeButtonClick = onNegativeButtonClick,
-                            dialogTextStyles = dialogTextStyles
-                        )
+                        if (positiveButton != null) {
+                            Box(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                CompositionLocalProvider(
+                                    LocalTextStyle provides dialogTextStyles.positiveButtonTextStyle,
+                                    LocalContentColor provides dialogColors.positiveButtonTextColor
+                                ) {
+                                    positiveButton()
+                                }
+                            }
+                        }
+                        if (negativeButton != null) {
+                            Box(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                CompositionLocalProvider(
+                                    LocalTextStyle provides dialogTextStyles.negativeButtonTextStyle,
+                                    LocalContentColor provides dialogColors.negativeButtonTextColor
+                                ) {
+                                    negativeButton()
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -122,54 +129,6 @@ private fun DialogTitle(
     )
 }
 
-@Composable
-private fun NegativeButton(
-    negativeButtonLabel: String?,
-    dialogColors: MnDialogColors,
-    onNegativeButtonClick: () -> Unit,
-    dialogTextStyles: MnDialogTextStyles,
-    modifier: Modifier = Modifier
-) {
-    negativeButtonLabel?.let {
-        Button(
-            colors = ButtonDefaults.buttonColors(containerColor = dialogColors.negativeButtonContainerColor),
-            onClick = onNegativeButtonClick,
-            modifier = modifier
-        ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides dialogTextStyles.negativeButtonTextStyle,
-                LocalContentColor provides dialogColors.negativeButtonTextColor
-            ) {
-                Text(text = negativeButtonLabel)
-            }
-        }
-    }
-}
-
-@Composable
-private fun PositiveButton(
-    positiveButtonLabel: String?,
-    dialogColors: MnDialogColors,
-    onPositiveButtonClick: () -> Unit,
-    dialogTextStyles: MnDialogTextStyles,
-    modifier: Modifier = Modifier
-) {
-    positiveButtonLabel?.let {
-        Button(
-            colors = ButtonDefaults.buttonColors(containerColor = dialogColors.positiveButtonContainerColor),
-            onClick = onPositiveButtonClick,
-            modifier = modifier
-        ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides dialogTextStyles.positiveButtonTextStyle,
-                LocalContentColor provides dialogColors.positiveButtonTextColor
-            ) {
-                Text(text = positiveButtonLabel)
-            }
-        }
-    }
-}
-
 @Preview
 @Composable
 private fun MnDialogPreview() {
@@ -178,8 +137,22 @@ private fun MnDialogPreview() {
             title = "Dialog Title",
             subTitle = "Dialog Subtext를 입력해주세요.\n" +
                 "최대 2줄을 넘지 않도록 해요.",
-            positiveButtonLabel = "Button",
-            negativeButtonLabel = "Button",
+            positiveButton = {
+                // TODO 나중에 변경 MnBoxButton으로 변경
+                Button(
+                    onClick = {}
+                ) {
+                    Text("확인")
+                }
+            },
+            negativeButton = {
+                // TODO 나중에 변경 MnBoxButton으로 변경
+                Button(
+                    onClick = {}
+                ) {
+                    Text("취소")
+                }
+            },
             onDismissRequest = {}
         )
     }
@@ -193,7 +166,14 @@ private fun MnDialogOnlyPositiveButtonPreview() {
             title = "Dialog Title",
             subTitle = "Dialog Subtext를 입력해주세요.\n" +
                 "최대 2줄을 넘지 않도록 해요.",
-            positiveButtonLabel = "Button",
+            positiveButton = {
+                // TODO 나중에 변경 MnBoxButton으로 변경
+                Button(
+                    onClick = {}
+                ) {
+                    Text("확인")
+                }
+            },
             onDismissRequest = {}
         )
     }
@@ -207,7 +187,14 @@ private fun MnDialogOnlyNegativeButtonPreview() {
             title = "Dialog Title",
             subTitle = "Dialog Subtext를 입력해주세요.\n" +
                 "최대 2줄을 넘지 않도록 해요.",
-            negativeButtonLabel = "Button",
+            negativeButton = {
+                // TODO 나중에 변경 MnBoxButton으로 변경
+                Button(
+                    onClick = {}
+                ) {
+                    Text("취소")
+                }
+            },
             onDismissRequest = {}
         )
     }
@@ -219,8 +206,22 @@ private fun MnDialogNoSubTitlePreview() {
     MnTheme {
         MnDialog(
             title = "Dialog Title",
-            positiveButtonLabel = "Button",
-            negativeButtonLabel = "Button",
+            positiveButton = {
+                // TODO 나중에 변경 MnBoxButton으로 변경
+                Button(
+                    onClick = {}
+                ) {
+                    Text("확인")
+                }
+            },
+            negativeButton = {
+                // TODO 나중에 변경 MnBoxButton으로 변경
+                Button(
+                    onClick = {}
+                ) {
+                    Text("취소")
+                }
+            },
             onDismissRequest = {}
         )
     }
