@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.start
+package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,15 +43,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun PomodoroStarterRoute(
+fun PomodoroSettingRoute(
     isNewUser: Boolean, // TODO [지훈] ViewModel의 State로 변경 예정
     modifier: Modifier = Modifier
 ) {
-    PomodoroStarterScreen(modifier = modifier, isNewUser = isNewUser)
+    PomodoroSettingScreen(modifier = modifier, isNewUser = isNewUser)
 }
 
 @Composable
-fun PomodoroStarterScreen(
+fun PomodoroSettingScreen(
     isNewUser: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -250,7 +250,7 @@ private fun StartButton() {
 @Composable
 @Preview
 fun PomodoroStarterScreenPreview() {
-    PomodoroStarterScreen(isNewUser = false)
+    PomodoroSettingScreen(isNewUser = false)
 }
 
 @Composable
