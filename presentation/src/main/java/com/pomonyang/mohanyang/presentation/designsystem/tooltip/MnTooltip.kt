@@ -91,6 +91,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun Modifier.tooltip(
     content: String,
+    modifier: Modifier = Modifier,
     tooltipColors: MnTooltipColors = MnTooltipDefaults.lightTooltipColors(),
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
@@ -132,11 +133,13 @@ fun Modifier.tooltip(
         label = "tooltip transition"
     )
     if (enabled) {
-        HandleSystemBarsColor(activity?.window)
+        if (showOverlay) {
+            HandleSystemBarsColor(window = activity?.window)
+        }
 
         Popup {
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize()
                     .drawOverlayBackground(
                         showOverlay = showOverlay,

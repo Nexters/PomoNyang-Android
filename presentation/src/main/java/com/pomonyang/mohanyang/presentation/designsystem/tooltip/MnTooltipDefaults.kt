@@ -24,7 +24,7 @@ object MnTooltipDefaults {
     @Composable
     fun darkTooltipColors(
         containerColor: Color = MnTheme.backgroundColorScheme.inverse,
-        contentColor: Color = MnTheme.iconColorScheme.inverse
+        contentColor: Color = MnTheme.textColorScheme.inverse
     ) = MnTooltipColors(
         containerColor = containerColor,
         contentColor = contentColor
