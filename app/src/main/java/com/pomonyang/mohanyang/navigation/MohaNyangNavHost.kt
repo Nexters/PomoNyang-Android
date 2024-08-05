@@ -36,6 +36,10 @@ internal fun MohaNyangNavHost(
             coroutineScope.launch { onShowSnackbar("arrived at the home screen.", null) }
             navHostController.navigate(Home)
         }
-        homeScreen(navigateUp = navigateUp)
+        homeScreen(
+            navigateUp = navigateUp,
+            isNewUser = mohaNyangAppState.isNewUser,
+            navHostController = mohaNyangAppState.navHostController
+        )
     }
 }
