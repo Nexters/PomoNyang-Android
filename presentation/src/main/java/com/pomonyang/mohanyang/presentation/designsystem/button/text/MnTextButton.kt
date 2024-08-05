@@ -26,7 +26,7 @@ import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 @Composable
 fun MnTextButton(
     modifier: Modifier = Modifier,
-    text: String = "",
+    text: String,
     styles: MnButtonStyleProperties,
     isEnabled: Boolean = true,
     onClick: () -> Unit,

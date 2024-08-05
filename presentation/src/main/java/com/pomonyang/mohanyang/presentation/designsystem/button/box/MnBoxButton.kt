@@ -29,7 +29,7 @@ import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 @Composable
 fun MnBoxButton(
     modifier: Modifier = Modifier,
-    text: String = "",
+    text: String,
     colors: MnBoxButtonColors,
     styles: MnButtonStyleProperties,
     isEnabled: Boolean = true,
@@ -55,7 +55,9 @@ fun MnBoxButton(
                     .background(
                         containerColor
                     )
-                    .padding(styles.contentPadding)
+                    .padding(styles.contentPadding),
+                contentAlignment = Alignment.Center
+
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
