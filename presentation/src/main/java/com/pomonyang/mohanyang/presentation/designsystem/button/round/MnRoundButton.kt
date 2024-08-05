@@ -19,6 +19,7 @@ import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 @Composable
 fun MnRoundButton(
     modifier: Modifier = Modifier,
+    colors: MnRoundButtonColors,
     onClick: () -> Unit = {},
     @DrawableRes iconResourceId: Int
 ) {
@@ -31,12 +32,12 @@ fun MnRoundButton(
         Box(
             modifier = modifier
                 .size(buttonSize)
-                .background(MnTheme.backgroundColorScheme.inverse),
+                .background(colors.containerColor),
             contentAlignment = Alignment.Center
         ) {
             MnLargeIcon(
                 resourceId = iconResourceId,
-                tint = MnTheme.iconColorScheme.tertiary
+                tint = colors.iconColor
             )
         }
     }
@@ -46,6 +47,9 @@ fun MnRoundButton(
 @Composable
 fun PreviewRoundButton() {
     MnTheme {
-        MnRoundButton(iconResourceId = R.drawable.ic_null)
+        MnRoundButton(
+            colors = MnRoundButtonColorType.primary,
+            iconResourceId = R.drawable.ic_null
+        )
     }
 }

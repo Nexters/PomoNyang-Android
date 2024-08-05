@@ -24,6 +24,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonC
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.round.MnRoundButton
+import com.pomonyang.mohanyang.presentation.designsystem.button.round.MnRoundButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
@@ -93,8 +94,12 @@ fun PreviewButtons() {
                 })
             }
 
-            MnRoundButton(iconResourceId = R.drawable.ic_null, onClick = {
-            })
+            MnRoundButton(
+                colors = MnRoundButtonColorType.secondary,
+                iconResourceId = R.drawable.ic_null,
+                onClick = {
+                }
+            )
 
             MnToggleButton(isChecked = checked) {
                 checked = it
