@@ -39,7 +39,8 @@ import timber.log.Timber
 fun MnToastSnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    leadingIconResourceId: Int? = null
+    leadingIconResourceId: Int? = null,
+    leadingIconColor: Color = MnTheme.iconColorScheme.inverse
 ) {
     SnackbarHost(
         hostState = hostState,
@@ -57,7 +58,7 @@ fun MnToastSnackbarHost(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (leadingIconResourceId != null) {
-                    MnMediumIcon(resourceId = leadingIconResourceId, tint = MnTheme.iconColorScheme.disabled)
+                    MnMediumIcon(resourceId = leadingIconResourceId, tint = leadingIconColor)
                     Spacer(modifier = Modifier.padding(end = MnSpacing.small))
                 }
 
