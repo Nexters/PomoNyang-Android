@@ -31,18 +31,14 @@ import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun MnSelectButton(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     isEnabled: Boolean = true,
-    onClick: () -> Unit,
-    titleContent:
-    @Composable()
-    (() -> Unit) = {},
-    subTitleContent:
-    @Composable()
-    (() -> Unit) = {},
     @DrawableRes leftIconResourceId: Int? = null,
-    @DrawableRes rightIconResourceId: Int? = null
+    @DrawableRes rightIconResourceId: Int? = null,
+    titleContent: @Composable() (() -> Unit) = {},
+    subTitleContent: @Composable() (() -> Unit) = {},
 ) {
     val colors = when {
         !isEnabled -> MnSelectButtonSelector.disabled

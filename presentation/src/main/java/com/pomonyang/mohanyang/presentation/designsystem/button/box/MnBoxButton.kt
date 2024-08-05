@@ -28,12 +28,12 @@ import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
 @Composable
 fun MnBoxButton(
-    modifier: Modifier = Modifier,
     text: String,
+    onClick: () -> Unit,
     colors: MnBoxButtonColors,
     styles: MnButtonStyleProperties,
+    modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
-    onClick: () -> Unit,
     @DrawableRes rightIconResourceId: Int? = null,
     @DrawableRes leftIconResourceId: Int? = null
 ) {

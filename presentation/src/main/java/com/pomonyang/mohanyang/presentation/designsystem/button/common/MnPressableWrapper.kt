@@ -20,8 +20,8 @@ import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun MnPressableWrapper(
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Box(

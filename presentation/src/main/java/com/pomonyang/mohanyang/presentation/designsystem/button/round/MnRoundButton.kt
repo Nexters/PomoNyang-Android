@@ -18,10 +18,10 @@ import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
 @Composable
 fun MnRoundButton(
-    modifier: Modifier = Modifier,
     colors: MnRoundButtonColors,
-    onClick: () -> Unit = {},
-    @DrawableRes iconResourceId: Int
+    @DrawableRes iconResourceId: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val buttonSize = 88.dp
 
@@ -49,6 +49,7 @@ fun PreviewRoundButton() {
     MnTheme {
         MnRoundButton(
             colors = MnRoundButtonColorType.primary,
+            onClick = {},
             iconResourceId = R.drawable.ic_null
         )
     }

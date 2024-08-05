@@ -24,9 +24,9 @@ import kotlin.math.roundToInt
 
 @Composable
 fun MnToggleButton(
-    modifier: Modifier = Modifier,
     isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
     val minBound = with(density) { MnToggleButtonSize.padding.toPx() }
@@ -35,7 +35,7 @@ fun MnToggleButton(
     val slide by animateFloatAsState(
         targetValue = if (isChecked) maxBound else minBound,
         animationSpec = tween(durationMillis = 200),
-        label = "mn_switch"
+        label = "mn-toggle"
     )
 
     Box(
@@ -77,7 +77,7 @@ fun MnToggleButton(
 fun PreviewMnToggleButton() {
     var checked by remember { mutableStateOf(false) }
 
-    MnToggleButton(isChecked = checked) {
+    MnToggleButton(isChecked = checked, onCheckedChange = {
         checked = it
-    }
+    })
 }

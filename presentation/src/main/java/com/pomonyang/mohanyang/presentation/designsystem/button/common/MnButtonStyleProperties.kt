@@ -101,9 +101,9 @@ fun PreviewButtons() {
                 }
             )
 
-            MnToggleButton(isChecked = checked) {
+            MnToggleButton(isChecked = checked, onCheckedChange = {
                 checked = it
-            }
+            })
 
             MnSelectButton(
                 modifier = Modifier.padding(10.dp),

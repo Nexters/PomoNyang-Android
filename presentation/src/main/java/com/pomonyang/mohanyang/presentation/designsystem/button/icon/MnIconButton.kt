@@ -22,8 +22,8 @@ import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
 @Composable
 fun MnIconButton(
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     @DrawableRes iconResourceId: Int,
     iconColor: Color = LocalContentColor.current
 ) {
