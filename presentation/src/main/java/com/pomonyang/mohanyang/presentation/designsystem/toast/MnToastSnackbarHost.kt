@@ -1,8 +1,11 @@
 package com.pomonyang.mohanyang.presentation.designsystem.toast
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -19,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
@@ -38,7 +43,7 @@ fun MnToastSnackbarHost(
 ) {
     SnackbarHost(
         hostState = hostState,
-        modifier = modifier
+        modifier = modifier.alpha(0.9f)
     ) { data ->
         Card(
             shape = RoundedCornerShape(MnRadius.small),
@@ -48,8 +53,7 @@ fun MnToastSnackbarHost(
             )
         ) {
             Row(
-                modifier = Modifier
-                    .padding(MnSpacing.large),
+                modifier = Modifier.padding(MnSpacing.large),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (leadingIconResourceId != null) {
@@ -108,6 +112,7 @@ fun PreviewToast() {
         val scope = rememberCoroutineScope()
 
         Scaffold(
+
             snackbarHost = {
                 MnToastSnackbarHost(
                     hostState = snackbarHostState,
@@ -115,21 +120,21 @@ fun PreviewToast() {
                 )
             }
         ) { _ ->
-            Button(onClick = {
-                scope.launch {
-                    showMnSnackbar(
-                        snackbarHostState = snackbarHostState,
-                        message = "안녕나는고양이야나한테말하기전에확인",
-                        actionLabel = "확인",
-                        dismissed = {
+            Box(
+                modifier = Modifier
+                    .background(Color.Yellow)
+                    .fillMaxSize()
+            ) {
+                Button(onClick = {
+                    scope.launch {
+                        showMnSnackbar(snackbarHostState = snackbarHostState, message = "안녕나는고양이야나한테말하기전에확인", actionLabel = "확인", dismissed = {
                             Timber.d("Snackbar Dismissed")
-                        },
-                        actionPerformed = {
+                        }, actionPerformed = {
                             Timber.d("Snackbar Action")
-                        }
-                    )
-                }
-            }) { Text(text = "show Toast") }
+                        })
+                    }
+                }) { Text(text = "show Toast") }
+            }
         }
     }
 }
