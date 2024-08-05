@@ -1,13 +1,11 @@
 package com.pomonyang.mohanyang.presentation.designsystem.button.box
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
 object MnBoxButtonColorType {
     val primary: MnBoxButtonColors
         @Composable
-        @ReadOnlyComposable
         get() = MnBoxButtonColors(
             containerColor = MnTheme.backgroundColorScheme.accent1,
             contentColor = MnTheme.textColorScheme.inverse,
@@ -19,7 +17,6 @@ object MnBoxButtonColorType {
 
     val secondary: MnBoxButtonColors
         @Composable
-        @ReadOnlyComposable
         get() = MnBoxButtonColors(
             containerColor = MnTheme.backgroundColorScheme.inverse,
             contentColor = MnTheme.textColorScheme.inverse,
@@ -31,7 +28,6 @@ object MnBoxButtonColorType {
 
     val tertiary: MnBoxButtonColors
         @Composable
-        @ReadOnlyComposable
         get() = MnBoxButtonColors(
             containerColor = MnTheme.backgroundColorScheme.secondary,
             contentColor = MnTheme.textColorScheme.tertiary,

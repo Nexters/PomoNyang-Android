@@ -2,7 +2,6 @@ package com.pomonyang.mohanyang.presentation.designsystem.button.select
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
@@ -18,7 +17,6 @@ data class MnSelectButtonColors(
 object MnSelectButtonSelector {
     val default: MnSelectButtonColors
         @Composable
-        @ReadOnlyComposable
         get() = MnSelectButtonColors(
             borderColor = Color.Unspecified,
             containerColor = MnTheme.backgroundColorScheme.secondary,
@@ -29,7 +27,6 @@ object MnSelectButtonSelector {
 
     val selected: MnSelectButtonColors
         @Composable
-        @ReadOnlyComposable
         get() = MnSelectButtonColors(
             borderColor = MnTheme.backgroundColorScheme.accent1,
             containerColor = MnTheme.backgroundColorScheme.accent2,
@@ -41,7 +38,6 @@ object MnSelectButtonSelector {
 
     val disabled: MnSelectButtonColors
         @Composable
-        @ReadOnlyComposable
         get() = MnSelectButtonColors(
             borderColor = Color.Unspecified,
             containerColor = MnTheme.backgroundColorScheme.secondary,

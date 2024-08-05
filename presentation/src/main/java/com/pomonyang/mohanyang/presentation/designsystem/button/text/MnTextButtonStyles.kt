@@ -3,7 +3,6 @@ package com.pomonyang.mohanyang.presentation.designsystem.button.text
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.unit.dp
 import com.pomonyang.mohanyang.presentation.designsystem.button.common.MnButtonStyleProperties
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
@@ -19,7 +18,6 @@ object MnTextButtonHeight {
 object MnTextButtonStyles {
     val large: MnButtonStyleProperties
         @Composable
-        @ReadOnlyComposable
         get() = MnButtonStyleProperties(
             height = MnTextButtonHeight.large,
             shape = RoundedCornerShape(MnRadius.small),
@@ -29,7 +27,6 @@ object MnTextButtonStyles {
         )
     val medium: MnButtonStyleProperties
         @Composable
-        @ReadOnlyComposable
         get() = MnButtonStyleProperties(
             height = MnTextButtonHeight.medium,
             shape = RoundedCornerShape(MnRadius.small),
@@ -40,7 +37,6 @@ object MnTextButtonStyles {
 
     val small: MnButtonStyleProperties
         @Composable
-        @ReadOnlyComposable
         get() = MnButtonStyleProperties(
             height = MnTextButtonHeight.small,
             shape = RoundedCornerShape(MnRadius.xSmall),
