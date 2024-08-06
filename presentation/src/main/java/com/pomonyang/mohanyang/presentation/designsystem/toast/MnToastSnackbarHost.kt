@@ -65,17 +65,17 @@ fun MnToastSnackbarHost(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = data.visuals.message,
-                        style = MnTheme.typography.subBodySemiBold
+                        style = MnTheme.typography.subBodyRegular
                     )
                 }
 
-                if (data.visuals.actionLabel != null) {
+                data.visuals.actionLabel?.let { label ->
                     Spacer(modifier = Modifier.padding(start = MnSpacing.small))
                     Text(
                         modifier = Modifier.noRippleClickable {
                             data.performAction()
                         },
-                        text = data.visuals.actionLabel!!,
+                        text = label,
                         style = MnTheme.typography.subBodySemiBold
                     )
                 }
