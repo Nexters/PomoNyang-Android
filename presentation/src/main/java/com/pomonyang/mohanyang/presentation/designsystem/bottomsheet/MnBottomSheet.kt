@@ -1,7 +1,7 @@
 package com.pomonyang.mohanyang.presentation.designsystem.bottomsheet
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -98,11 +98,9 @@ private fun MnModalBottomSheetPreview() {
             title = "Dialog Title",
             subTitle = "Dialog SubText를 입력해주세요.\n최대 2줄을 넘지 않도록 해요."
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 MnSelectListItem(
+                    containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = "기본",
                     onClick = {},
@@ -112,6 +110,7 @@ private fun MnModalBottomSheetPreview() {
                     modifier = Modifier.fillMaxWidth()
                 )
                 MnSelectListItem(
+                    containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = "공부",
                     onClick = {},
@@ -120,6 +119,7 @@ private fun MnModalBottomSheetPreview() {
                     modifier = Modifier.fillMaxWidth()
                 )
                 MnSelectListItem(
+                    containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = "작업",
                     onClick = {},
@@ -128,6 +128,7 @@ private fun MnModalBottomSheetPreview() {
                     modifier = Modifier.fillMaxWidth()
                 )
                 MnSelectListItem(
+                    containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = "운동",
                     onClick = {},
@@ -137,6 +138,7 @@ private fun MnModalBottomSheetPreview() {
                 )
 
                 MnBoxButton(
+                    containerPadding = PaddingValues(top = MnSpacing.medium),
                     modifier = Modifier.fillMaxWidth(),
                     styles = MnBoxButtonStyles.large,
                     text = "확인",

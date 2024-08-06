@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,6 +34,7 @@ import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 fun MnSelectButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    containerPadding: PaddingValues = PaddingValues(),
     isSelected: Boolean = false,
     isEnabled: Boolean = true,
     @DrawableRes leftIconResourceId: Int? = null,
@@ -47,6 +49,7 @@ fun MnSelectButton(
     }
 
     Surface(
+        modifier = Modifier.padding(containerPadding),
         color = colors.containerColor,
         shape = RoundedCornerShape(MnRadius.xSmall),
         border = BorderStroke(

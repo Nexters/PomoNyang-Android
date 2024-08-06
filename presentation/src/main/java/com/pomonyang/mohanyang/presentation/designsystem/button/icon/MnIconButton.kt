@@ -3,6 +3,8 @@ package com.pomonyang.mohanyang.presentation.designsystem.button.icon
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LocalContentColor
@@ -24,6 +26,7 @@ import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 fun MnIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    containerPadding: PaddingValues = PaddingValues(),
     @DrawableRes iconResourceId: Int,
     iconColor: Color = LocalContentColor.current
 ) {
@@ -31,6 +34,7 @@ fun MnIconButton(
 
     MnPressableWrapper(
         modifier = modifier
+            .padding(containerPadding)
             .clip(CircleShape),
         onClick = onClick
     ) {
