@@ -22,14 +22,14 @@ internal class DeviceIdLocalDataSourceImpl @Inject constructor(
 
     override suspend fun getDeviceId(): String = getStoredDeviceId() ?: getSSAID() ?: getUUID()
 
-    private suspend fun getStoredDeviceId(): String = dataStore.data
+    private suspend fun getStoredDeviceId(): String? = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
             } else {
                 throw exception
             }
-        }.first()[DEVICE_ID_KEY] ?: ""
+        }.first()[DEVICE_ID_KEY]
 
     @SuppressLint("HardwareIds")
     private fun getSSAID(): String? = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)

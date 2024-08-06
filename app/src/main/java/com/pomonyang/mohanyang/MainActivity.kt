@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.rememberCoroutineScope
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.ui.MohaNyangApp
 import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
@@ -17,6 +18,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var networkMonitor: NetworkMonitor
 
+    @Inject
+    lateinit var userRepository: UserRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,7 +28,7 @@ class MainActivity : ComponentActivity() {
             MnTheme {
                 val coroutineScope = rememberCoroutineScope()
                 val mohaNyangAppState = rememberMohaNyangAppState(
-                    isNewUser = true,
+                    isNewUser = userRepository.isNewUser(),
                     networkMonitor = networkMonitor,
                     coroutineScope = coroutineScope
                 )
