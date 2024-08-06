@@ -37,8 +37,8 @@ fun MnSelectButton(
     isEnabled: Boolean = true,
     @DrawableRes leftIconResourceId: Int? = null,
     @DrawableRes rightIconResourceId: Int? = null,
-    titleContent: @Composable() (() -> Unit) = {},
-    subTitleContent: @Composable() (() -> Unit) = {},
+    titleContent: @Composable (() -> Unit) = {},
+    subTitleContent: @Composable (() -> Unit) = {}
 ) {
     val colors = when {
         !isEnabled -> MnSelectButtonSelector.disabled
