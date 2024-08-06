@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.designsystem.bottomsheet
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,9 +29,6 @@ fun MnBottomSheet(
     modifier: Modifier = Modifier,
     title: String? = null,
     subTitle: String? = null,
-    buttonText: String? = null,
-    @DrawableRes buttonRightIconResourceId: Int? = null,
-    @DrawableRes buttonLeftIconResourceId: Int? = null,
     textStyles: MnBottomSheetTextStyles = MnBottomSheetDefaults.textStyles(),
     colors: MnBottomSheetColors = MnBottomSheetDefaults.colors(),
     contents: @Composable () -> Unit
@@ -51,19 +47,6 @@ fun MnBottomSheet(
         ) {
             Column(modifier = Modifier.padding(horizontal = MnSpacing.large)) {
                 contents()
-                buttonText?.let {
-                    Spacer(Modifier.height(MnSpacing.large))
-                    MnBoxButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        styles = MnBoxButtonStyles.large,
-                        text = it,
-                        onClick = { },
-                        colors = MnBoxButtonColorType.secondary,
-                        rightIconResourceId = buttonRightIconResourceId,
-                        leftIconResourceId = buttonLeftIconResourceId
-                    )
-                    Spacer(Modifier.height(MnSpacing.medium))
-                }
             }
         }
     }
@@ -113,8 +96,7 @@ private fun MnModalBottomSheetPreview() {
             onDismissRequest = {},
             modifier = Modifier.fillMaxWidth(),
             title = "Dialog Title",
-            subTitle = "Dialog SubText를 입력해주세요.\n최대 2줄을 넘지 않도록 해요.",
-            buttonText = "확인"
+            subTitle = "Dialog SubText를 입력해주세요.\n최대 2줄을 넘지 않도록 해요."
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
@@ -153,6 +135,17 @@ private fun MnModalBottomSheetPreview() {
                     focusTime = "25",
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                MnBoxButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    styles = MnBoxButtonStyles.large,
+                    text = "확인",
+                    onClick = { },
+                    colors = MnBoxButtonColorType.secondary,
+                    rightIconResourceId = R.drawable.ic_null,
+                    leftIconResourceId = R.drawable.ic_null
+                )
+                Spacer(Modifier.height(MnSpacing.medium))
             }
         }
     }
