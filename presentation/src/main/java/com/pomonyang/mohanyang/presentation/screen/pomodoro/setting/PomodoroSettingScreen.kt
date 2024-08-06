@@ -18,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +30,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.domain.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnLargeIcon
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
@@ -43,16 +47,28 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun PomodoroSettingRoute(
-    isNewUser: Boolean, // TODO [지훈] ViewModel의 State로 변경 예정
-    modifier: Modifier = Modifier
+fun PomodoroRoute(
+    isNewUser: Boolean,
+    modifier: Modifier = Modifier,
+    pomodoroViewModel: PomodoroViewModel = hiltViewModel()
 ) {
-    PomodoroSettingScreen(modifier = modifier, isNewUser = isNewUser)
+    val state = pomodoroViewModel.state.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(Unit) {
+        pomodoroViewModel.handleEvent(PomodoroEvent.Init)
+    }
+
+    PomodoroSettingScreen(
+        state = state,
+        modifier = modifier,
+        isNewUser = isNewUser
+    )
 }
 
 @Composable
 fun PomodoroSettingScreen(
     isNewUser: Boolean,
+    state: PomodoroState,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -85,7 +101,10 @@ fun PomodoroSettingScreen(
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             CatRive()
-            PomodoroDetailSetting(isNewUser)
+            PomodoroDetailSetting(
+                isNewUser = isNewUser,
+                selectedCategoryData = state.categoryList[state.selectedCategoryIndex]
+            )
             StartButton()
         }
     }
@@ -114,6 +133,7 @@ private fun CatRive(
 @Composable
 private fun PomodoroDetailSetting(
     isNewUser: Boolean,
+    selectedCategoryData: PomodoroCategoryModel,
     modifier: Modifier = Modifier
 ) {
     var categoryTooltip by remember { mutableStateOf(isNewUser) }
@@ -155,9 +175,9 @@ private fun PomodoroDetailSetting(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
-            TimeComponent(type = stringResource(R.string.focus), time = "25m")
+            TimeComponent(type = stringResource(R.string.focus), time = stringResource(R.string.minute, selectedCategoryData.focusTime))
             TimeDivider()
-            TimeComponent(type = stringResource(R.string.rest), time = "10m")
+            TimeComponent(type = stringResource(R.string.rest), time = stringResource(R.string.minute, selectedCategoryData.restTime))
         }
     }
 }
@@ -250,7 +270,19 @@ private fun StartButton() {
 @Composable
 @Preview
 fun PomodoroStarterScreenPreview() {
-    PomodoroSettingScreen(isNewUser = false)
+    PomodoroSettingScreen(
+        isNewUser = false,
+        state = PomodoroState(
+            categoryList = listOf(
+                PomodoroCategoryModel(
+                    no = 0,
+                    title = "집중",
+                    focusTime = 25,
+                    restTime = 10
+                )
+            )
+        )
+    )
 }
 
 @Composable
@@ -262,7 +294,15 @@ fun CatImagePreview() {
 @Composable
 @Preview(showBackground = true)
 fun FocusBoxPreview() {
-    PomodoroDetailSetting(isNewUser = false)
+    PomodoroDetailSetting(
+        isNewUser = false,
+        selectedCategoryData = PomodoroCategoryModel(
+            no = 0,
+            title = "집중",
+            focusTime = 25,
+            restTime = 10
+        )
+    )
 }
 
 @Composable

@@ -9,6 +9,6 @@ data object PomodoroSetting
 
 fun NavGraphBuilder.pomodoroSettingScreen(isNewUser: Boolean) {
     composable<PomodoroSetting> {
-        PomodoroSettingRoute(isNewUser)
+        PomodoroRoute(isNewUser)
     }
 }
