@@ -26,6 +26,16 @@ class OnboardingViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : BaseViewModel<OnboardUiState, OnboardingEvent, OnboardingSideEffect>() {
 
+    override fun setInitialState(): OnboardUiState = OnboardUiState(isNewUser = true)
+
+    override suspend fun handleEvent(event: OnboardingEvent) {
+        when (event) {
+            is OnboardingEvent.Init -> {
+                login()
+            }
+        }
+    }
+
     private fun login() {
         viewModelScope.launch {
             if (userRepository.isNewUser()) {
@@ -46,16 +56,6 @@ class OnboardingViewModel @Inject constructor(
                 )
             }.onFailure {
                 Timber.e("token fail: $it")
-            }
-        }
-    }
-
-    override fun setInitialState(): OnboardUiState = OnboardUiState(isNewUser = true)
-
-    override suspend fun handleEvent(event: OnboardingEvent) {
-        when (event) {
-            is OnboardingEvent.Init -> {
-                login()
             }
         }
     }

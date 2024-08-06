@@ -7,7 +7,7 @@ import com.pomonyang.mohanyang.data.remote.service.AuthService
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 
-class UserRepositoryImpl @Inject constructor(
+internal class UserRepositoryImpl @Inject constructor(
     private val deviceLocalDataStore: DeviceIdLocalDataSource,
     private val tokenLocalDataSource: TokenLocalDataSource,
     private val authService: AuthService
