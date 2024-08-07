@@ -48,6 +48,7 @@ fun NavGraphBuilder.onboardingScreen(
 
         composable<OnboardingNamingCat> {
             OnboardingNamingCatRoute(
+                onBackClick = { navHostController.popBackStack() },
                 onHomeClick = {
                     navHostController.navigate(
                         route = Home,
