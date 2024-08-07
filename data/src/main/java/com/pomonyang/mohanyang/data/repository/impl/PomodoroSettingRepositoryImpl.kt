@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.data.repository.impl
 
+import com.pomonyang.mohanyang.data.local.datastore.datasource.pomodoro.PomodoroLocalDataSource
 import com.pomonyang.mohanyang.data.local.room.dao.PomodoroSettingDao
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
 import com.pomonyang.mohanyang.data.local.room.enitity.toResponse
@@ -11,8 +12,15 @@ import javax.inject.Inject
 
 internal class PomodoroSettingRepositoryImpl @Inject constructor(
     private val pomodoroSettingRemoteDataSource: PomodoroSettingRemoteDataSource,
+    private val pomodoroLocalDataSource: PomodoroLocalDataSource,
     private val pomodoroSettingDao: PomodoroSettingDao
 ) : PomodoroSettingRepository {
+
+    override suspend fun getRecentUseCategoryNo(): Int = pomodoroLocalDataSource.getRecentCategoryNo()
+
+    override suspend fun updateRecentUseCategoryNo(categoryNo: Int) {
+        pomodoroLocalDataSource.updateRecentCategoryNo(categoryNo)
+    }
 
     override suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>> = pomodoroSettingRemoteDataSource.getPomodoroSettingList()
         .onSuccess { response ->

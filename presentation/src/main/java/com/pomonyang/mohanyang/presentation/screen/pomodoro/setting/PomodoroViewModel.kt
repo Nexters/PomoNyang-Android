@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
 import androidx.lifecycle.viewModelScope
+import com.pomonyang.mohanyang.data.repository.PomodoroSettingRepository
 import com.pomonyang.mohanyang.domain.GetPomodoroSettingListUseCase
 import com.pomonyang.mohanyang.domain.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
@@ -35,7 +36,8 @@ sealed interface PomodoroSideEffect : ViewSideEffect {
 
 @HiltViewModel
 class PomodoroViewModel @Inject constructor(
-    private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase
+    private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase,
+    private val pomodoroSettingRepository: PomodoroSettingRepository
 ) : BaseViewModel<PomodoroState, PomodoroEvent, PomodoroSideEffect>() {
 
     override fun setInitialState(): PomodoroState = PomodoroState()
@@ -65,6 +67,9 @@ class PomodoroViewModel @Inject constructor(
                     setEffect(PomodoroSideEffect.ShowSnackBar("카테고리를 변경했어요"))
                 }
                 updateState { copy(showCategoryBottomSheet = false, selectedCategoryNo = event.confirmCategoryNo) }
+                viewModelScope.launch {
+                    pomodoroSettingRepository.updateRecentUseCategoryNo(event.confirmCategoryNo)
+                }
             }
         }
     }
@@ -72,9 +77,9 @@ class PomodoroViewModel @Inject constructor(
     private fun updatePomodoroCategoryData() {
         viewModelScope.launch {
             getPomodoroSettingListUseCase()
-                .onSuccess { data ->
-                    // 로컬 저장 로직이 우선 없어서 첫번째 아이템으로 설정
-                    updateState { copy(categoryList = data, selectedCategoryNo = data.first().no) }
+                .onSuccess { result ->
+                    val (data, recentCategoryNo) = result
+                    updateState { copy(categoryList = data, selectedCategoryNo = recentCategoryNo) }
                 }
                 .onFailure {
                     setEffect(PomodoroSideEffect.ShowSnackBar("$it"))

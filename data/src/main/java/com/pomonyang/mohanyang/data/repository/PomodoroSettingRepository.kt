@@ -4,6 +4,10 @@ import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingRespons
 
 interface PomodoroSettingRepository {
 
+    suspend fun getRecentUseCategoryNo(): Int
+
+    suspend fun updateRecentUseCategoryNo(categoryNo: Int)
+
     suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
 
     suspend fun updatePomodoroCategoryTimes(
