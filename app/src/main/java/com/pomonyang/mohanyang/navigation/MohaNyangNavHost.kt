@@ -42,6 +42,6 @@ internal fun MohaNyangNavHost(
             navHostController = mohaNyangAppState.navHostController
         )
 
-        pomodoroSettingScreen(isNewUser = mohaNyangAppState.isNewUser)
+        pomodoroSettingScreen(isNewUser = mohaNyangAppState.isNewUser, onShowSnackbar = onShowSnackbar)
     }
 }

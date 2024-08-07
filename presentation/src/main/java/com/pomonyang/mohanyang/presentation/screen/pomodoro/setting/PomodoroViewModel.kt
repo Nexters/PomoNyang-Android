@@ -26,8 +26,7 @@ sealed interface PomodoroEvent : ViewEvent {
     data object ClickStartPomodoro : PomodoroEvent
     data object ClickMyInfo : PomodoroEvent
     data object DismissCategoryDialog : PomodoroEvent
-    data object ClickCategoryConfirmButton : PomodoroEvent
-    data class ClickNewCategory(val categoryNo: Int) : PomodoroEvent
+    data class ClickCategoryConfirmButton(val confirmCategoryNo: Int) : PomodoroEvent
 }
 
 sealed interface PomodoroSideEffect : ViewSideEffect {
@@ -60,12 +59,12 @@ class PomodoroViewModel @Inject constructor(
                 updateState { copy(showCategoryBottomSheet = false) }
             }
 
-            is PomodoroEvent.ClickNewCategory -> {
-                updateState { copy(selectedCategoryNo = event.categoryNo) }
-            }
-
-            PomodoroEvent.ClickCategoryConfirmButton -> {
-                updateState { copy(showCategoryBottomSheet = false) }
+            is PomodoroEvent.ClickCategoryConfirmButton -> {
+                if (state.value.selectedCategoryNo != event.confirmCategoryNo) {
+                    // TODO 지훈 여기 나중에 리소스로 변경
+                    setEffect(PomodoroSideEffect.ShowSnackBar("카테고리를 변경했어요"))
+                }
+                updateState { copy(showCategoryBottomSheet = false, selectedCategoryNo = event.confirmCategoryNo) }
             }
         }
     }

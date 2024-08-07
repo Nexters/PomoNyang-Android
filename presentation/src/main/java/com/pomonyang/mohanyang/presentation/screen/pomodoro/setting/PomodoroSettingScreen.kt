@@ -63,6 +63,7 @@ import timber.log.Timber
 @Composable
 fun PomodoroRoute(
     isNewUser: Boolean,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
     pomodoroViewModel: PomodoroViewModel = hiltViewModel()
 ) {
