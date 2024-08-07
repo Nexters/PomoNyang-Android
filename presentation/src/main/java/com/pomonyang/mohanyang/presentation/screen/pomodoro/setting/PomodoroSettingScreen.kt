@@ -56,7 +56,6 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -68,14 +67,20 @@ fun PomodoroRoute(
     pomodoroViewModel: PomodoroViewModel = hiltViewModel()
 ) {
     val state by pomodoroViewModel.state.collectAsStateWithLifecycle()
-
-    HandleEffect(pomodoroViewModel.effects)
+    pomodoroViewModel.effects.collectWithLifecycle { effect ->
+        Timber.tag("koni").d("handleEffect > $effect")
+        when (effect) {
+            is PomodoroSideEffect.ShowSnackBar -> {
+                onShowSnackbar(effect.message, null)
+            }
+        }
+    }
 
     if (state.showCategoryBottomSheet) {
         PomodoroCategoryBottomSheet(
             onAction = pomodoroViewModel::handleEvent,
             categoryList = state.categoryList,
-            selectedCategoryNo = state.selectedCategoryNo
+            initialCategoryNo = state.selectedCategoryNo
         )
     }
 
@@ -85,18 +90,6 @@ fun PomodoroRoute(
         modifier = modifier,
         isNewUser = isNewUser
     )
-}
-
-@Composable
-private fun HandleEffect(effects: Flow<PomodoroSideEffect>) {
-    effects.collectWithLifecycle {
-        Timber.tag("koni").d("handleEffect > $it")
-        when (it) {
-            is PomodoroSideEffect.ShowSnackBar -> {
-                // todo handle error
-            }
-        }
-    }
 }
 
 @Composable
@@ -159,9 +152,11 @@ fun PomodoroSettingScreen(
 private fun PomodoroCategoryBottomSheet(
     onAction: (PomodoroEvent) -> Unit,
     categoryList: List<PomodoroCategoryModel>,
-    selectedCategoryNo: Int,
+    initialCategoryNo: Int,
     modifier: Modifier = Modifier
 ) {
+    var currentSelectedCategoryNo by remember { mutableStateOf(initialCategoryNo) }
+
     MnBottomSheet(
         onDismissRequest = { onAction(PomodoroEvent.DismissCategoryDialog) },
         modifier = modifier.fillMaxWidth(),
@@ -173,8 +168,8 @@ private fun PomodoroCategoryBottomSheet(
                     containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = pomodoroCategoryModel.title,
-                    onClick = { onAction(PomodoroEvent.ClickNewCategory(pomodoroCategoryModel.no)) },
-                    isSelected = pomodoroCategoryModel.no == selectedCategoryNo,
+                    onClick = { currentSelectedCategoryNo = pomodoroCategoryModel.no },
+                    isSelected = pomodoroCategoryModel.no == currentSelectedCategoryNo,
                     restTime = stringResource(R.string.minute, pomodoroCategoryModel.restTime),
                     focusTime = stringResource(R.string.minute, pomodoroCategoryModel.focusTime),
                     modifier = Modifier.fillMaxWidth()
@@ -186,7 +181,7 @@ private fun PomodoroCategoryBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 styles = MnBoxButtonStyles.large,
                 text = stringResource(R.string.confirm),
-                onClick = { onAction(PomodoroEvent.ClickCategoryConfirmButton) },
+                onClick = { onAction(PomodoroEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo)) },
                 colors = MnBoxButtonColorType.secondary
             )
         }
