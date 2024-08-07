@@ -3,6 +3,8 @@ package com.pomonyang.mohanyang.presentation.designsystem.button.round
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -21,12 +23,13 @@ fun MnRoundButton(
     colors: MnRoundButtonColors,
     @DrawableRes iconResourceId: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    containerPadding: PaddingValues = PaddingValues()
 ) {
     val buttonSize = 88.dp
 
     MnPressableWrapper(
-        modifier = Modifier.clip(CircleShape),
+        modifier = Modifier.padding(containerPadding).clip(CircleShape),
         onClick = onClick
     ) {
         Box(

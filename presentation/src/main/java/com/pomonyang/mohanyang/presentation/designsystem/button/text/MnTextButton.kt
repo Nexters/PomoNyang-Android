@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,12 +31,13 @@ fun MnTextButton(
     styles: MnButtonStyleProperties,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    containerPadding: PaddingValues = PaddingValues(),
     isEnabled: Boolean = true,
     @DrawableRes rightIconResourceId: Int? = null,
     @DrawableRes leftIconResourceId: Int? = null
 ) {
     MnPressableWrapper(
-        modifier = Modifier.clip(styles.shape),
+        modifier = Modifier.padding(containerPadding).clip(styles.shape),
         onClick = onClick
     ) {
         Box(

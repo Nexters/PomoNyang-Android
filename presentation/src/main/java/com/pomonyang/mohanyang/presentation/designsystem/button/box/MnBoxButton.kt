@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,6 +34,7 @@ fun MnBoxButton(
     colors: MnBoxButtonColors,
     styles: MnButtonStyleProperties,
     modifier: Modifier = Modifier,
+    containerPadding: PaddingValues = PaddingValues(),
     isEnabled: Boolean = true,
     @DrawableRes rightIconResourceId: Int? = null,
     @DrawableRes leftIconResourceId: Int? = null
@@ -42,7 +44,7 @@ fun MnBoxButton(
     val iconColor = if (isEnabled) colors.iconColor else colors.disabledIconColor
 
     MnPressableWrapper(
-        modifier = Modifier.clip(shape = styles.shape),
+        modifier = Modifier.padding(containerPadding).clip(shape = styles.shape),
         onClick = onClick
     ) {
         CompositionLocalProvider(
