@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -86,9 +85,9 @@ fun OnboardingSlider(
     contents: List<OnboardingGuideContent>,
     modifier: Modifier = Modifier
 ) {
-    val pageCount = Int.MAX_VALUE
+    val infinitePageCount = Int.MAX_VALUE
 
-    val pagerState = rememberPagerState(pageCount = { pageCount })
+    val pagerState = rememberPagerState(pageCount = { infinitePageCount })
 
     val scope = rememberCoroutineScope()
 
@@ -106,38 +105,35 @@ fun OnboardingSlider(
     }
 
     LaunchedEffect(Unit) {
-        launch {
-            while (true) {
-                delay(animationDelay)
-                val nextPage = pagerState.currentPage + 1
-                onboardingContentScroll(nextPage)
-            }
+        while (true) {
+            delay(animationDelay)
+            val nextPage = pagerState.currentPage + 1
+            onboardingContentScroll(nextPage)
         }
     }
 
     Column(
+        modifier = modifier.padding(bottom = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             contentAlignment = Alignment.Center
         ) {
             HorizontalPager(
-                state = pagerState,
-                modifier = modifier
-                    .wrapContentSize()
-
+                state = pagerState
             ) { currentPage ->
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    OnboardingGuideContent(contents[currentPage % contents.size])
+                    OnboardingGuideContent(
+                        content = contents[currentPage % contents.size]
+                    )
                 }
             }
         }
 
         PageIndicator(
-            modifier = Modifier.padding(bottom = MnSpacing.threeXLarge),
             pageCount = contents.size,
             currentPage = pagerState.currentPage % contents.size,
             onClickIndicator = { page ->
@@ -151,10 +147,11 @@ fun OnboardingSlider(
 
 @Composable
 private fun OnboardingGuideContent(
-    content: OnboardingGuideContent
+    content: OnboardingGuideContent,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier.padding(bottom = MnSpacing.threeXLarge),
+        modifier = modifier.padding(bottom = MnSpacing.threeXLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MnSpacing.threeXLarge)
     ) {
@@ -165,29 +162,35 @@ private fun OnboardingGuideContent(
 
 @Composable
 private fun TextGuide(
-    content: OnboardingGuideContent
+    content: OnboardingGuideContent,
+    modifier: Modifier = Modifier
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MnSpacing.small)
     ) {
         Text(
             text = content.title,
             style = MnTheme.typography.header4,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MnTheme.textColorScheme.primary
         )
         Text(
             text = content.subtitle,
             style = MnTheme.typography.bodyRegular,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MnTheme.textColorScheme.secondary
         )
     }
 }
 
 @Composable
-private fun CatRiveBox() {
+private fun CatRiveBox(
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(240.dp)
             .background(MnTheme.backgroundColorScheme.secondary)
     )
