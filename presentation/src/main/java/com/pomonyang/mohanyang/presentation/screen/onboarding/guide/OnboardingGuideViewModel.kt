@@ -28,7 +28,7 @@ class OnboardingGuideViewModel @Inject constructor(
 
     override fun setInitialState(): OnboardingGuideUiState = OnboardingGuideUiState(isNewUser = true)
 
-    override suspend fun handleEvent(event: OnboardingGuideEvent) {
+    override fun handleEvent(event: OnboardingGuideEvent) {
         when (event) {
             is OnboardingGuideEvent.Init -> {
                 login()
