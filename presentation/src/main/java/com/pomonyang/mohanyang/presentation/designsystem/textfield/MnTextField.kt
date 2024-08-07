@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
+import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
@@ -110,12 +111,12 @@ fun MnTextField(
                             borderWidth,
                             if (isFocused || isError) borderColor else backgroundColor
                         ),
-                        shape = RoundedCornerShape(MnSpacing.small)
+                        shape = RoundedCornerShape(MnRadius.small)
 
                     ) {
                         Box(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(MnSpacing.small))
+                                .clip(RoundedCornerShape(MnRadius.small))
                                 .background(backgroundColor)
                                 .padding(MnSpacing.large),
                             contentAlignment = Alignment.CenterStart
