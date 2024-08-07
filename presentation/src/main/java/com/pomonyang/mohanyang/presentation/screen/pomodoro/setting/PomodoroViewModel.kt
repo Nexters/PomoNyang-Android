@@ -10,10 +10,12 @@ import com.pomonyang.mohanyang.presentation.base.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 data class PomodoroState(
     val categoryList: List<PomodoroCategoryModel> = emptyList(),
-    val selectedCategoryIndex: Int = 0
+    val selectedCategoryNo: Int = 0,
+    val showCategoryBottomSheet: Boolean = false
 ) : ViewState
 
 sealed interface PomodoroEvent : ViewEvent {
@@ -23,10 +25,12 @@ sealed interface PomodoroEvent : ViewEvent {
     data object ClickFocusTime : PomodoroEvent
     data object ClickStartPomodoro : PomodoroEvent
     data object ClickMyInfo : PomodoroEvent
+    data object DismissCategoryDialog : PomodoroEvent
+    data object ClickCategoryConfirmButton : PomodoroEvent
+    data class ClickNewCategory(val categoryNo: Int) : PomodoroEvent
 }
 
 sealed interface PomodoroSideEffect : ViewSideEffect {
-    data object GoToMyInfo : PomodoroSideEffect
     data class ShowSnackBar(val message: String) : PomodoroSideEffect
 }
 
@@ -37,15 +41,31 @@ class PomodoroViewModel @Inject constructor(
 
     override fun setInitialState(): PomodoroState = PomodoroState()
 
-    override suspend fun handleEvent(event: PomodoroEvent) {
+    override fun handleEvent(event: PomodoroEvent) {
+        Timber.tag("koni").d("handleEvent > $event")
         when (event) {
-            PomodoroEvent.ClickCategory -> TODO()
+            PomodoroEvent.ClickCategory -> {
+                updateState { copy(showCategoryBottomSheet = true) }
+            }
+
             PomodoroEvent.ClickFocusTime -> TODO()
             PomodoroEvent.ClickMyInfo -> TODO()
             PomodoroEvent.ClickRestTime -> TODO()
             PomodoroEvent.ClickStartPomodoro -> TODO()
             PomodoroEvent.Init -> {
                 updatePomodoroCategoryData()
+            }
+
+            PomodoroEvent.DismissCategoryDialog -> {
+                updateState { copy(showCategoryBottomSheet = false) }
+            }
+
+            is PomodoroEvent.ClickNewCategory -> {
+                updateState { copy(selectedCategoryNo = event.categoryNo) }
+            }
+
+            PomodoroEvent.ClickCategoryConfirmButton -> {
+                updateState { copy(showCategoryBottomSheet = false) }
             }
         }
     }
@@ -54,7 +74,8 @@ class PomodoroViewModel @Inject constructor(
         viewModelScope.launch {
             getPomodoroSettingListUseCase()
                 .onSuccess { data ->
-                    updateState { copy(categoryList = data) }
+                    // 로컬 저장 로직이 우선 없어서 첫번째 아이템으로 설정
+                    updateState { copy(categoryList = data, selectedCategoryNo = data.first().no) }
                 }
                 .onFailure {
                     setEffect(PomodoroSideEffect.ShowSnackBar("$it"))
