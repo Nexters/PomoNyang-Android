@@ -5,4 +5,18 @@
     <string name="tooltip_category_content">눌러서 카테고리를 변경할 수 있어요</string>
     <string name="tooltip_time_content">눌러서 시간을 조정할 수 있어요</string>
     <string name="tooltip_rest_content">푹 쉬었나요?\n힘내서 다시 집중할까냥?</string>
+    <string name="onboarding_start">시작하기</string>
+    <string-array name="onboarding_guide_title">
+        <item>모하냥과 함께 집중시간을 늘려보세요</item>
+        <item>다른 앱을 실행하면 방해 알림을 보내요</item>
+        <item>집중과 휴식 반복을 통해 몰입을 관리해요</item>
+    </string-array>
+    <string-array name="onboarding_guide_subtitle">
+        <item>고양이 종에 따라 성격이 달라요.\n
+                취향에 맞는 고양이를 선택해 몰입해 보세요.</item>
+        <item>뽀모도로를 실행한 후, 다른 앱을 사용하면\n
+                설정한 주기로 방해 알림을 보내드려요.</item>
+        <item>일정 시간 집중과 휴식을 반복해 번아웃을 방지하고\n
+            짧은 시간의 몰입을 경험해보세요.</item>
+    </string-array>
 </resources>
