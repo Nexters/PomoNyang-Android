@@ -19,4 +19,13 @@
         <item>일정 시간 집중과 휴식을 반복해 번아웃을 방지하고\n
             짧은 시간의 몰입을 경험해보세요.</item>
     </string-array>
+
+    <string name="onboarding_select">고양이 선택</string>
+    <string name="onboarding_select_title">어떤 고양이와 함께할까요?</string>
+    <string name="onboarding_select_subtitle">언제든지 다른 고양이와 함께할 수 있어요</string>
+    <string name="onboarding_select_start">이 고양이와 시작하기</string>
+    <string name="onboarding_select_alarm_title">모하냥</string>
+    <string name="onboarding_select_alarm_content">어디갔냐옹...</string>
+
+
 </resources>
