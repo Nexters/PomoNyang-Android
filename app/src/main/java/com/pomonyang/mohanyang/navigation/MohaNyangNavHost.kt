@@ -10,7 +10,6 @@ import com.pomonyang.mohanyang.presentation.screen.onboarding.Onboarding
 import com.pomonyang.mohanyang.presentation.screen.onboarding.onboardingScreen
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.pomodoroSettingScreen
 import com.pomonyang.mohanyang.ui.MohaNyangAppState
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun MohaNyangNavHost(
@@ -33,10 +32,10 @@ internal fun MohaNyangNavHost(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        onboardingScreen(navigateUp = navigateUp) {
-            coroutineScope.launch { onShowSnackbar("arrived at the home screen.", null) }
-            navHostController.navigate(Home)
-        }
+        onboardingScreen(
+            navigateUp = navigateUp,
+            navHostController = mohaNyangAppState.navHostController
+        )
 
         homeScreen(
             navigateUp = navigateUp,
