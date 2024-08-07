@@ -2,8 +2,8 @@ package com.pomonyang.mohanyang.data.local.room.di
 
 import android.content.Context
 import androidx.room.Room
-import com.pomonyang.mohanyang.data.local.room.dao.SampleDao
-import com.pomonyang.mohanyang.data.local.room.database.SampleDataBase
+import com.pomonyang.mohanyang.data.local.room.dao.PomodoroSettingDao
+import com.pomonyang.mohanyang.data.local.room.database.PomodoroSettingDataBase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,17 +16,18 @@ import javax.inject.Singleton
 internal object RoomModule {
     @Provides
     @Singleton
-    fun provideSampleDatabase(
+    fun providePomodoroSettingDataBase(
         @ApplicationContext context: Context
-    ): SampleDataBase =
+    ): PomodoroSettingDataBase =
         Room
             .databaseBuilder(
-                context,
-                SampleDataBase::class.java,
-                name = "sample-database" // database name string 관리 필요
-            ).fallbackToDestructiveMigration()
+                context = context,
+                klass = PomodoroSettingDataBase::class.java,
+                name = "pomodoro-category-database" // database name string 관리 필요
+            )
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides
-    fun provideSampleDao(database: SampleDataBase): SampleDao = database.dao()
+    fun providePomodoroSettingDao(database: PomodoroSettingDataBase): PomodoroSettingDao = database.dao()
 }

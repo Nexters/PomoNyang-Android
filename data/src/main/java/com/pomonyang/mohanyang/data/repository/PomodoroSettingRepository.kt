@@ -8,6 +8,7 @@ interface PomodoroSettingRepository {
 
     suspend fun updatePomodoroCategoryTimes(
         categoryNo: Int,
+        titleName: String,
         focusTime: String,
         restTime: String
     ): Result<Unit>
