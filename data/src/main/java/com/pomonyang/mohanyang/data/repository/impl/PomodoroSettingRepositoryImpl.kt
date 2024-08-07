@@ -22,13 +22,17 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
         pomodoroLocalDataSource.updateRecentCategoryNo(categoryNo)
     }
 
-    override suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>> = pomodoroSettingRemoteDataSource.getPomodoroSettingList()
-        .onSuccess { response ->
-            pomodoroSettingDao.insertPomodoroSettingData(response.map { it.toEntity() })
+    override suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>> {
+        val localData = pomodoroSettingDao.getPomodoroSetting()
+        return if (localData.isNotEmpty()) {
+            Result.success(localData.map { it.toResponse() })
+        } else {
+            val remoteResult = pomodoroSettingRemoteDataSource.getPomodoroSettingList()
+            remoteResult.onSuccess { response ->
+                pomodoroSettingDao.insertPomodoroSettingData(response.map { it.toEntity() })
+            }
         }
-        .recoverCatching {
-            pomodoroSettingDao.getPomodoroSetting().map { it.toResponse() }
-        }
+    }
 
     override suspend fun updatePomodoroCategoryTimes(
         categoryNo: Int,
