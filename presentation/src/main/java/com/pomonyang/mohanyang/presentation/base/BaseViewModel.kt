@@ -15,7 +15,7 @@ abstract class BaseViewModel<STATE : ViewState, EVENT : ViewEvent, EFFECT : View
     // UI의 초기 상태를 설정
     abstract fun setInitialState(): STATE
 
-    abstract suspend fun handleEvent(event: EVENT)
+    abstract fun handleEvent(event: EVENT)
 
     // 초기 상태를 지연 초기화
     private val initialState: STATE by lazy { setInitialState() }

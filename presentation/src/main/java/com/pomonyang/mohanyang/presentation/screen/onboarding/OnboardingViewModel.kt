@@ -28,7 +28,7 @@ class OnboardingViewModel @Inject constructor(
 
     override fun setInitialState(): OnboardUiState = OnboardUiState(isNewUser = true)
 
-    override suspend fun handleEvent(event: OnboardingEvent) {
+    override fun handleEvent(event: OnboardingEvent) {
         when (event) {
             is OnboardingEvent.Init -> {
                 login()
