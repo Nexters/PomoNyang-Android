@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.data.repository
+package com.pomonyang.mohanyang.data.repository.pomodoro
 
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
 import kotlinx.coroutines.flow.Flow

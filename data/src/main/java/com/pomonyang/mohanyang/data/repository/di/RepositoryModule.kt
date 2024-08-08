@@ -1,7 +1,7 @@
 package com.pomonyang.mohanyang.data.repository.di
 
-import com.pomonyang.mohanyang.data.repository.PomodoroSettingRepository
-import com.pomonyang.mohanyang.data.repository.impl.PomodoroSettingRepositoryImpl
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepositoryImpl
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepositoryImpl
 import dagger.Binds

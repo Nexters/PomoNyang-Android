@@ -1,6 +1,6 @@
 package com.pomonyang.mohanyang.domain.usecase
 
-import com.pomonyang.mohanyang.data.repository.PomodoroSettingRepository
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.domain.model.PomodoroCategoryModel
 import com.pomonyang.mohanyang.domain.model.toModel
 import javax.inject.Inject

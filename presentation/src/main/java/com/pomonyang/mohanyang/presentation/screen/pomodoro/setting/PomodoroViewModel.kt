@@ -1,7 +1,7 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
 import androidx.lifecycle.viewModelScope
-import com.pomonyang.mohanyang.data.repository.PomodoroSettingRepository
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.domain.model.PomodoroCategoryModel
 import com.pomonyang.mohanyang.domain.usecase.GetPomodoroSettingListUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel

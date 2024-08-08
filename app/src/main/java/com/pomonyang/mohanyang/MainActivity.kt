@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
-import com.pomonyang.mohanyang.data.repository.PomodoroSettingRepository
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.ui.MohaNyangApp
