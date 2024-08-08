@@ -2,6 +2,7 @@
 <resources>
     <string name="focus">집중</string>
     <string name="rest">휴식</string>
+    <string name="complete">완료</string>
     <string name="tooltip_category_content">눌러서 카테고리를 변경할 수 있어요</string>
     <string name="tooltip_time_content">눌러서 시간을 조정할 수 있어요</string>
     <string name="tooltip_rest_content">푹 쉬었나요?\n힘내서 다시 집중할까냥?</string>
@@ -22,4 +23,5 @@
         <item>일정 시간 집중과 휴식을 반복해 번아웃을 방지하고\n
             짧은 시간의 몰입을 경험해보세요.</item>
     </string-array>
+    <string name="naming_cat">고양이의 이름을 지어주세요</string>
 </resources>
