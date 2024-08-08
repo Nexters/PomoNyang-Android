@@ -10,6 +10,8 @@ interface PomodoroSettingRepository {
 
     suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
 
+    suspend fun fetchPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
+
     suspend fun updatePomodoroCategoryTimes(
         categoryNo: Int,
         titleName: String,

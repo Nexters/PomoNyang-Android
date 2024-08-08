@@ -27,10 +27,13 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
         return if (localData.isNotEmpty()) {
             Result.success(localData.map { it.toResponse() })
         } else {
-            val remoteResult = pomodoroSettingRemoteDataSource.getPomodoroSettingList()
-            remoteResult.onSuccess { response ->
-                pomodoroSettingDao.insertPomodoroSettingData(response.map { it.toEntity() })
-            }
+            fetchPomodoroSettingList()
+        }
+    }
+
+    override suspend fun fetchPomodoroSettingList(): Result<List<PomodoroSettingResponse>> = pomodoroSettingRemoteDataSource.getPomodoroSettingList().also {
+        it.onSuccess { response ->
+            pomodoroSettingDao.insertPomodoroSettingData(response.map { it.toEntity() })
         }
     }
 
