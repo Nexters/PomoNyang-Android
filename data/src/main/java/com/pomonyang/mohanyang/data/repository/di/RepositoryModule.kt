@@ -25,4 +25,10 @@ internal abstract class RepositoryModule {
     abstract fun provideUserRepository(
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
+
+    @Binds
+    @Singleton
+    internal abstract fun provideCatSettingRepository(
+        catSettingRepositoryImpl: CatSettingRepositoryImpl
+    ): CatSettingRepository
 }
