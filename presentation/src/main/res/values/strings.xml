@@ -31,7 +31,8 @@
     <string name="onboarding_select_subtitle">언제든지 다른 고양이와 함께할 수 있어요</string>
     <string name="onboarding_select_start">이 고양이와 시작하기</string>
     <string name="onboarding_select_alarm_title">모하냥</string>
-    <string name="onboarding_select_alarm_content">어디갔냐옹...</string>
+    <string name="onboarding_select_alarm_empty">고양이를 선택하면\n
+딴 짓 방해알림 예시를 보여드려요</string>
 
 
 </resources>
