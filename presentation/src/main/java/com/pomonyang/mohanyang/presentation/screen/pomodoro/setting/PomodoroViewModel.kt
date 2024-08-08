@@ -10,6 +10,7 @@ import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -36,8 +37,8 @@ sealed interface PomodoroSideEffect : ViewSideEffect {
 
 @HiltViewModel
 class PomodoroViewModel @Inject constructor(
-    private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase,
-    private val pomodoroSettingRepository: PomodoroSettingRepository
+    private val pomodoroSettingRepository: PomodoroSettingRepository,
+    private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase
 ) : BaseViewModel<PomodoroState, PomodoroEvent, PomodoroSideEffect>() {
 
     override fun setInitialState(): PomodoroState = PomodoroState()
@@ -54,7 +55,7 @@ class PomodoroViewModel @Inject constructor(
             PomodoroEvent.ClickRestTime -> TODO()
             PomodoroEvent.ClickStartPomodoro -> TODO()
             PomodoroEvent.Init -> {
-                updatePomodoroCategoryData()
+                collectCategoryData()
             }
 
             PomodoroEvent.DismissCategoryDialog -> {
@@ -62,27 +63,30 @@ class PomodoroViewModel @Inject constructor(
             }
 
             is PomodoroEvent.ClickCategoryConfirmButton -> {
-                if (state.value.selectedCategoryNo != event.confirmCategoryNo) {
-                    // TODO 지훈 여기 나중에 리소스로 변경
-                    setEffect(PomodoroSideEffect.ShowSnackBar("카테고리를 변경했어요"))
-                }
-                updateState { copy(showCategoryBottomSheet = false, selectedCategoryNo = event.confirmCategoryNo) }
+                handleCategoryConfirmButton(event)
                 viewModelScope.launch {
                     pomodoroSettingRepository.updateRecentUseCategoryNo(event.confirmCategoryNo)
                 }
+                updateState { copy(showCategoryBottomSheet = false) }
             }
         }
     }
 
-    private fun updatePomodoroCategoryData() {
+    private fun handleCategoryConfirmButton(event: PomodoroEvent.ClickCategoryConfirmButton) {
+        if (state.value.selectedCategoryNo != event.confirmCategoryNo) {
+            val title = state.value.categoryList.find { it.categoryNo == event.confirmCategoryNo }?.title
+            // TODO 지훈 여기 나중에 리소스로 변경
+            setEffect(PomodoroSideEffect.ShowSnackBar("$title 카테고리로 변경했어요"))
+        }
+    }
+
+    private fun collectCategoryData() {
         viewModelScope.launch {
             getPomodoroSettingListUseCase()
-                .onSuccess { result ->
+                .catch { setEffect(PomodoroSideEffect.ShowSnackBar("$it")) }
+                .collect { result ->
                     val (data, recentCategoryNo) = result
                     updateState { copy(categoryList = data, selectedCategoryNo = recentCategoryNo) }
-                }
-                .onFailure {
-                    setEffect(PomodoroSideEffect.ShowSnackBar("$it"))
                 }
         }
     }
