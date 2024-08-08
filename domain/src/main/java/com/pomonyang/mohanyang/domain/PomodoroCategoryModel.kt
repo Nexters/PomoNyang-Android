@@ -1,19 +1,19 @@
 package com.pomonyang.mohanyang.domain
 
 import androidx.compose.runtime.Immutable
-import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingResponse
+import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
 import java.time.Duration
 
 @Immutable
 data class PomodoroCategoryModel(
-    val no: Int,
+    val categoryNo: Int,
     val title: String,
     val focusTime: Long,
     val restTime: Long
 )
 
-internal fun PomodoroSettingResponse.toModel() = PomodoroCategoryModel(
-    no = no,
+fun PomodoroSettingEntity.toModel() = PomodoroCategoryModel(
+    categoryNo = categoryNo,
     title = title,
     focusTime = Duration.parse(focusTime).toMinutes(),
     restTime = Duration.parse(restTime).toMinutes()

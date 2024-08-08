@@ -3,12 +3,12 @@ package com.pomonyang.mohanyang.data.repository.impl
 import com.pomonyang.mohanyang.data.local.datastore.datasource.pomodoro.PomodoroLocalDataSource
 import com.pomonyang.mohanyang.data.local.room.dao.PomodoroSettingDao
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
-import com.pomonyang.mohanyang.data.local.room.enitity.toResponse
 import com.pomonyang.mohanyang.data.remote.datasource.pomodoro.PomodoroSettingRemoteDataSource
-import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingResponse
 import com.pomonyang.mohanyang.data.remote.model.response.toEntity
 import com.pomonyang.mohanyang.data.repository.PomodoroSettingRepository
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEmpty
 
 internal class PomodoroSettingRepositoryImpl @Inject constructor(
     private val pomodoroSettingRemoteDataSource: PomodoroSettingRemoteDataSource,
@@ -16,25 +16,25 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
     private val pomodoroSettingDao: PomodoroSettingDao
 ) : PomodoroSettingRepository {
 
-    override suspend fun getRecentUseCategoryNo(): Int = pomodoroLocalDataSource.getRecentCategoryNo()
+    override fun getRecentUseCategoryNo(): Flow<Int> = pomodoroLocalDataSource.getRecentCategoryNo()
 
     override suspend fun updateRecentUseCategoryNo(categoryNo: Int) {
         pomodoroLocalDataSource.updateRecentCategoryNo(categoryNo)
     }
 
-    override suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>> {
-        val localData = pomodoroSettingDao.getPomodoroSetting()
-        return if (localData.isNotEmpty()) {
-            Result.success(localData.map { it.toResponse() })
-        } else {
-            fetchPomodoroSettingList()
-        }
-    }
+    override fun getPomodoroSettingList(): Flow<List<PomodoroSettingEntity>> = pomodoroSettingDao
+        .getPomodoroSetting()
+        .onEmpty { fetchPomodoroSettingList() }
 
-    override suspend fun fetchPomodoroSettingList(): Result<List<PomodoroSettingResponse>> = pomodoroSettingRemoteDataSource.getPomodoroSettingList().also {
-        it.onSuccess { response ->
-            pomodoroSettingDao.insertPomodoroSettingData(response.map { it.toEntity() })
-        }
+    override suspend fun fetchPomodoroSettingList() {
+        pomodoroSettingRemoteDataSource.getPomodoroSettingList()
+            .also {
+                it.onSuccess { responses ->
+                    pomodoroSettingDao.insertPomodoroSettingData(
+                        responses.map { response -> response.toEntity() }
+                    )
+                }
+            }
     }
 
     override suspend fun updatePomodoroCategoryTimes(

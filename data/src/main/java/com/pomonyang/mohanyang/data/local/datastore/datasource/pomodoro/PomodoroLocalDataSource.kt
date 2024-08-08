@@ -1,6 +1,8 @@
 package com.pomonyang.mohanyang.data.local.datastore.datasource.pomodoro
 
+import kotlinx.coroutines.flow.Flow
+
 interface PomodoroLocalDataSource {
-    suspend fun getRecentCategoryNo(): Int
+    fun getRecentCategoryNo(): Flow<Int>
     suspend fun updateRecentCategoryNo(categoryNo: Int)
 }

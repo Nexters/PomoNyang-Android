@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PomodoroSettingDao {
@@ -16,5 +17,5 @@ interface PomodoroSettingDao {
     suspend fun updatePomodoroSettingData(pomodoroSettingEntity: PomodoroSettingEntity)
 
     @Query("SELECT * FROM pomodoro_setting")
-    suspend fun getPomodoroSetting(): List<PomodoroSettingEntity>
+    fun getPomodoroSetting(): Flow<List<PomodoroSettingEntity>>
 }

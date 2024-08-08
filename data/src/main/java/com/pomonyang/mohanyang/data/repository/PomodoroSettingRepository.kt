@@ -1,16 +1,17 @@
 package com.pomonyang.mohanyang.data.repository
 
-import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingResponse
+import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
+import kotlinx.coroutines.flow.Flow
 
 interface PomodoroSettingRepository {
 
-    suspend fun getRecentUseCategoryNo(): Int
+    fun getRecentUseCategoryNo(): Flow<Int>
 
     suspend fun updateRecentUseCategoryNo(categoryNo: Int)
 
-    suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
+    fun getPomodoroSettingList(): Flow<List<PomodoroSettingEntity>>
 
-    suspend fun fetchPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
+    suspend fun fetchPomodoroSettingList()
 
     suspend fun updatePomodoroCategoryTimes(
         categoryNo: Int,
