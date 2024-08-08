@@ -15,15 +15,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.domain.model.cat.CatSelectionContent
+import com.pomonyang.mohanyang.domain.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -36,34 +41,49 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnAppBarColors
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.displayAlarm
 import java.time.LocalTime
 
 @Composable
 fun OnboardingSelectCatRoute(
-    onNamingClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onBackClick: () -> Unit,
+    onNavToNaming: () -> Unit,
+    modifier: Modifier = Modifier,
+    onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel()
 ) {
+    val state by onboardingSelectCatViewModel.state.collectAsStateWithLifecycle()
+
+    onboardingSelectCatViewModel.effects.collectWithLifecycle { effect ->
+        when (effect) {
+            is SelectCatSideEffect.OnNavToNaming -> {
+                onNavToNaming()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        onboardingSelectCatViewModel.getCatTypes()
+    }
+
     OnboardingSelectCatScreen(
-        onNamingClick = onNamingClick,
-        modifier = modifier
+        onBackClick = onBackClick,
+        modifier = modifier,
+        onAction = onboardingSelectCatViewModel::handleEvent,
+        state = state
     )
 }
 
 @Composable
 fun OnboardingSelectCatScreen(
-    onNamingClick: () -> Unit,
+    onBackClick: () -> Unit,
+    onAction: (SelectCatEvent) -> Unit,
+    state: SelectCatState,
     modifier: Modifier = Modifier
 ) {
-    // TODO 고양이 목록 조회 API 연결
-    val cats = listOf("치즈냥", "삼색냥", "까만냥")
-
-    val context = LocalContext.current
-
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MnTheme.backgroundColorScheme.primary)
     ) {
         MnTopAppBar(
             topAppBarColors = MnAppBarColors(
@@ -73,11 +93,11 @@ fun OnboardingSelectCatScreen(
                 actionIconContentColor = MnTheme.iconColorScheme.primary
             ),
             navigationIcon = {
-                MnIconButton(onClick = { /*TODO*/ }, iconResourceId = R.drawable.ic_null)
+                MnIconButton(onClick = onBackClick, iconResourceId = R.drawable.ic_null)
             },
             content = {
                 Text(
-                    context.getString(R.string.onboarding_select),
+                    stringResource(R.string.onboarding_select),
                     style = MnTheme.typography.bodySemiBold,
                     color = MnTheme.textColorScheme.primary,
                     textAlign = TextAlign.Center
@@ -91,32 +111,38 @@ fun OnboardingSelectCatScreen(
                 .padding(top = MnSpacing.medium, bottom = MnSpacing.small)
         ) {
             Text(
-                context.getString(R.string.onboarding_select_title),
+                stringResource(R.string.onboarding_select_title),
                 style = MnTheme.typography.header3,
                 color = MnTheme.textColorScheme.primary
             )
             Text(
-                context.getString(R.string.onboarding_select_subtitle),
+                stringResource(R.string.onboarding_select_subtitle),
                 modifier = Modifier.padding(bottom = 47.dp),
                 style = MnTheme.typography.bodyRegular,
                 color = MnTheme.textColorScheme.secondary
             )
             AlarmExample(
-                title = context.getString(R.string.onboarding_select_alarm_title),
-                content = context.getString(R.string.onboarding_select_alarm_content)
-
+                title = stringResource(R.string.onboarding_select_alarm_title),
+                selectedCat = state.selectedType
             )
 
             CatRive(modifier = Modifier.padding(top = MnSpacing.medium, bottom = 43.dp))
 
-            CatCategory(catCategory = cats)
+            CatCategory(
+                cats = state.cats,
+                selectedType = state.selectedType,
+                onClickCatType = { type ->
+                    onAction(SelectCatEvent.OnSelectType(type))
+                }
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
             MnBoxButton(
                 modifier = Modifier.fillMaxWidth(),
-                text = context.getString(R.string.onboarding_select_start),
-                onClick = { /*TODO*/ },
+                text = stringResource(R.string.onboarding_select_start),
+                isEnabled = state.selectedType != null,
+                onClick = { onAction(SelectCatEvent.OnStartClick) },
                 colors = MnBoxButtonColorType.primary,
                 styles = MnBoxButtonStyles.large
             )
@@ -127,53 +153,91 @@ fun OnboardingSelectCatScreen(
 @Composable
 private fun AlarmExample(
     title: String,
-    content: String,
+    selectedCat: CatType?,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
-            .clip(
-                RoundedCornerShape(MnRadius.small)
+            .background(
+                MnTheme.backgroundColorScheme.secondary,
+                shape = RoundedCornerShape(MnRadius.xSmall)
             )
-            .background(MnTheme.backgroundColorScheme.secondary)
+            .fillMaxWidth()
             .padding(14.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.Top
-        ) {
-            Row(
-                modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(38.dp)
-                        .clip(RoundedCornerShape(8.5.dp))
-                        .background(MnTheme.backgroundColorScheme.tertiary),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(painter = painterResource(id = R.drawable.ic_null), contentDescription = "alarm_img")
-                }
-                Column {
-                    Text(
-                        title,
-                        style = MnTheme.typography.bodySemiBold,
-                        color = MnTheme.textColorScheme.primary
-                    )
-                    Text(
-                        content,
-                        style = MnTheme.typography.bodyRegular,
-                        color = MnTheme.textColorScheme.secondary
-                    )
-                }
-            }
-            Text(
-                LocalTime.now().displayAlarm(),
-                style = MnTheme.typography.bodyRegular,
-                color = MnTheme.textColorScheme.secondary
+        if (selectedCat != null) {
+            SelectedAlarmExample(
+                title = title,
+                content = selectedCat.pushContent
             )
+        } else {
+            EmptyAlarmExample()
         }
+    }
+}
+
+@Composable
+fun SelectedAlarmExample(
+    title: String,
+    content: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.Top
+    ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(38.dp)
+                    .background(
+                        MnTheme.backgroundColorScheme.tertiary,
+                        shape = RoundedCornerShape(8.5.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(painter = painterResource(id = R.drawable.ic_null), contentDescription = "alarm_img")
+            }
+
+            Column {
+                Text(
+                    title,
+                    style = MnTheme.typography.bodySemiBold,
+                    color = MnTheme.textColorScheme.primary
+                )
+                Text(
+                    content,
+                    style = MnTheme.typography.bodyRegular,
+                    color = MnTheme.textColorScheme.secondary
+                )
+            }
+        }
+        Text(
+            LocalTime.now().displayAlarm(),
+            style = MnTheme.typography.bodyRegular,
+            color = MnTheme.textColorScheme.secondary
+        )
+    }
+}
+
+@Composable
+fun EmptyAlarmExample(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            stringResource(R.string.onboarding_select_alarm_empty),
+            style = MnTheme.typography.bodyRegular,
+            color = MnColor.Gray400,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -185,7 +249,7 @@ private fun CatRive(
         modifier = modifier
             .height(240.dp)
             .fillMaxWidth()
-            .background(MnColor.Gray200),
+            .background(MnTheme.backgroundColorScheme.secondary),
         contentAlignment = Alignment.Center
     ) {
         Text("image")
@@ -194,14 +258,16 @@ private fun CatRive(
 
 @Composable
 private fun CatCategory(
-    catCategory: List<String>,
+    cats: List<CatSelectionContent>,
+    selectedType: CatType?,
+    onClickCatType: (CatType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
     ) {
-        catCategory.map { cat ->
+        cats.map { cat ->
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -209,18 +275,20 @@ private fun CatCategory(
             ) {
                 MnSelectButton(
                     modifier = Modifier.fillMaxSize(),
-                    onClick = { /*TODO*/ },
+                    isSelected = selectedType == cat.type,
+                    onClick = { onClickCatType(cat.type) },
                     subTitleContent = {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(cat)
+                            Text(cat.no.toString())
+                            // TODO 긍정, 응원 등 타입 지정 API Response 변경 요청 또는 로컬 고정
                             MnXSmallIcon(resourceId = R.drawable.ic_null)
                         }
                     },
                     titleContent = {
-                        Text(cat)
+                        Text(cat.name)
                     }
                 )
             }
@@ -231,17 +299,18 @@ private fun CatCategory(
 @Preview
 @Composable
 fun PreviewAlarmExample() {
-    AlarmExample(title = "알람", content = "알람 텍스트")
-}
-
-@Preview
-@Composable
-fun PreviewCatCategory() {
-    CatCategory(catCategory = listOf("1", "2", "3"))
+    AlarmExample(
+        title = "알람",
+        selectedCat = CatType.CHEESE
+    )
 }
 
 @Preview
 @Composable
 fun PreviewOnboardingSelectScreen() {
-    OnboardingSelectCatScreen(onNamingClick = { /*TODO*/ })
+    OnboardingSelectCatScreen(
+        onBackClick = {},
+        state = SelectCatState(),
+        onAction = { _ -> }
+    )
 }
