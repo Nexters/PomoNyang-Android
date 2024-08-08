@@ -1,10 +1,8 @@
-package com.pomonyang.mohanyang.data.remote.service
+package com.pomonyang.mohanyang.data.repository.cat
 
 import com.pomonyang.mohanyang.data.remote.model.response.CatTypeResponse
-import retrofit2.http.GET
 
-interface MohaNyangService {
-
-    @GET("/api/v1/cats")
+interface CatSettingRepository {
     suspend fun getCatTypes(): Result<List<CatTypeResponse>>
+    suspend fun setCatName(name: String)
 }
