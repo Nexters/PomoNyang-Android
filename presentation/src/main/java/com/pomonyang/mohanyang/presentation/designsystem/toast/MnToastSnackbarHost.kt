@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
@@ -44,7 +45,9 @@ fun MnToastSnackbarHost(
 ) {
     SnackbarHost(
         hostState = hostState,
-        modifier = modifier.alpha(0.9f)
+        modifier = modifier
+            .padding(start = MnSpacing.xLarge, end = MnSpacing.xLarge, bottom = 30.dp)
+            .alpha(0.9f)
     ) { data ->
         Card(
             shape = RoundedCornerShape(MnRadius.small),

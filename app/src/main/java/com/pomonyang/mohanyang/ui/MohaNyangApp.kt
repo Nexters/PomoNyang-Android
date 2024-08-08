@@ -1,9 +1,10 @@
 package com.pomonyang.mohanyang.ui
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration.Short
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.runtime.Composable
@@ -13,6 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pomonyang.mohanyang.navigation.MohaNyangNavHost
+import com.pomonyang.mohanyang.presentation.designsystem.toast.MnToastSnackbarHost
+import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
 @Composable
 internal fun MohaNyangApp(
@@ -34,7 +37,9 @@ private fun MohaNyangApp(
 ) {
     Scaffold(
         modifier = modifier,
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        containerColor = MnTheme.backgroundColorScheme.primary,
+        contentWindowInsets = WindowInsets.navigationBars,
+        snackbarHost = { MnToastSnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
 
         val isOffline by mohaNyangAppState.isOffline.collectAsStateWithLifecycle()

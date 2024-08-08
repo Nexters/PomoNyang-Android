@@ -39,7 +39,7 @@ internal abstract class NetworkModule {
         fun provideJsonBuilder(): Json = Json {
             ignoreUnknownKeys = true // dto 정의되어 있지 않은 필드도 허락
             coerceInputValues = true // 해당 타입의 기본값으로 세팅되게
-            isLenient = true // String이지만 Int로 들어올 때 등등 자동으로 파싱
+            isLenient = true // Json 규격에 안맞게 ex) "" 없이 들어온 경우에도 파싱 가능
             if (BuildConfig.DEBUG) prettyPrint = true
         }
 

@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object PomodoroSetting
 
-fun NavGraphBuilder.pomodoroSettingScreen(isNewUser: Boolean) {
+fun NavGraphBuilder.pomodoroSettingScreen(isNewUser: Boolean, onShowSnackbar: suspend (String, String?) -> Boolean) {
     composable<PomodoroSetting> {
-        PomodoroSettingRoute(isNewUser)
+        PomodoroRoute(isNewUser, onShowSnackbar)
     }
 }
