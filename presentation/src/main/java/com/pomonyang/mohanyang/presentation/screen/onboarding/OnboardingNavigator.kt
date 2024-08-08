@@ -49,7 +49,7 @@ fun NavGraphBuilder.onboardingScreen(
         composable<OnboardingNamingCat> {
             OnboardingNamingCatRoute(
                 onBackClick = { navHostController.popBackStack() },
-                onHomeClick = {
+                onNavToHome = {
                     navHostController.navigate(
                         route = Home,
                         navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(false).build()
