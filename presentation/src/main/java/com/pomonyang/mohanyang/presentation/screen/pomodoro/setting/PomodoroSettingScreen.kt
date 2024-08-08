@@ -100,7 +100,7 @@ fun PomodoroSettingScreen(
     modifier: Modifier = Modifier
 ) {
     val pomodoroSelectedCategoryModel by remember(state.selectedCategoryNo) {
-        mutableStateOf(state.categoryList.find { it.no == state.selectedCategoryNo })
+        mutableStateOf(state.categoryList.find { it.categoryNo == state.selectedCategoryNo })
     }
 
     LaunchedEffect(Unit) {
@@ -168,8 +168,8 @@ private fun PomodoroCategoryBottomSheet(
                     containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = pomodoroCategoryModel.title,
-                    onClick = { currentSelectedCategoryNo = pomodoroCategoryModel.no },
-                    isSelected = pomodoroCategoryModel.no == currentSelectedCategoryNo,
+                    onClick = { currentSelectedCategoryNo = pomodoroCategoryModel.categoryNo },
+                    isSelected = pomodoroCategoryModel.categoryNo == currentSelectedCategoryNo,
                     restTime = stringResource(R.string.minute, pomodoroCategoryModel.restTime),
                     focusTime = stringResource(R.string.minute, pomodoroCategoryModel.focusTime),
                     modifier = Modifier.fillMaxWidth()
@@ -358,7 +358,7 @@ fun PomodoroStarterScreenPreview() {
         state = PomodoroState(
             categoryList = listOf(
                 PomodoroCategoryModel(
-                    no = 0,
+                    categoryNo = 0,
                     title = "집중",
                     focusTime = 25,
                     restTime = 10
@@ -382,7 +382,7 @@ fun FocusBoxPreview() {
         onAction = {},
         isNewUser = false,
         selectedCategoryData = PomodoroCategoryModel(
-            no = 0,
+            categoryNo = 0,
             title = "집중",
             focusTime = 25,
             restTime = 10
