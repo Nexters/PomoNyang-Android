@@ -50,12 +50,13 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 fun MnWheelMinutePicker(
     items: PersistentList<Int>,
+    initialItem: Int,
     halfDisplayCount: Int,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = MnTheme.typography.header2,
     mnWheelPickerColor: MnWheelPickerColor = MnWheelPickerDefaults.colors()
 ) {
-    val scrollState = rememberLazyListState()
+    val scrollState = rememberLazyListState(items.indexOf(initialItem))
     val itemHeightPx = MnWheelPickerDefaults.itemHeight.dpToPx()
     val wheelHalfHeight by rememberUpdatedState(((2 * halfDisplayCount + 1) * itemHeightPx) / 2)
     val brushColor = mnWheelPickerColor.fadeColor
@@ -205,7 +206,8 @@ fun MnWheelPickerPreview() {
         )
         MnWheelMinutePicker(
             items = (5..60 step 5).toPersistentList(),
-            halfDisplayCount = 3
+            halfDisplayCount = 3,
+            initialItem = 25
         )
     }
 }
