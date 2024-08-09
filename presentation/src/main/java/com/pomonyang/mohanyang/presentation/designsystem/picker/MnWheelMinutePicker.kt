@@ -139,10 +139,11 @@ private fun BoxScope.WheelItemList(
     itemHeightPx: Float,
     halfDisplayCount: Int,
     textStyle: TextStyle,
-    textColor: Color
+    textColor: Color,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .matchParentSize()
             .zIndex(1f),
         contentPadding = PaddingValues(vertical = itemHeightPx.pxToDp() * halfDisplayCount),
