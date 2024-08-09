@@ -1,0 +1,48 @@
+name: "[CD] Deploy Firebase App Distribution"
+
+on:
+  push:
+    branches:
+      - feature/cat-101
+  workflow_dispatch:
+jobs:
+  firebase-app-distribution:
+    environment: Debug
+    name: Firebase App Distribution
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Development Environment
+        uses: ./.github/actions/setup-development-environment
+        with:
+          google-services: ${{ secrets.GOOGLE_SERVICES }}
+          test-mode: debug
+          debug-properties: ${{ secrets.DEBUG_PROPERTIES }}
+
+      - name: Setup Signed Key Environment
+        uses: ./.github/actions/setup-key-environment
+        with:
+          key-properties: ${{ secrets.KEY_PROPERTIES }}
+          key-file: ${{ secrets.SIGNED_KEY }}
+
+      - name: Build App
+        run: ./gradlew ":app:assembleDebug"
+
+      - name: Set APK path
+        id: apk
+        run: |
+          echo "NAME=$(find ./ -type f -name "*.apk" -print -quit)" >> $GITHUB_OUTPUT
+      - name: Create Firebase Credentials
+        run: |
+          echo -n "${{ secrets.FIREBASE_CREDENTIALS }}" | base64 --decode > firebase_credentials.json
+      - name: Upload App Artifact To Firebase App Distribution
+        uses: ./.github/actions/firebase-app-distribution
+        timeout-minutes: 10
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFile: ./firebase_credentials.json
+          groups: 뽀모냥
+          file: ${{ steps.apk.outputs.NAME }}
+          debug: true
