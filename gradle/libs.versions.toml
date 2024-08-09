@@ -125,7 +125,8 @@ androidx-compose = [
     "androidx-compose-material",
     "androidx-compose-runtime",
     "androidx-compose-toolingPreview",
-    "androidx-lifecycle-runtime-compose"
+    "androidx-lifecycle-runtime-compose",
+    "kotlin-collections-immutable"
 ]
 
 androidx-compose-navigation = [

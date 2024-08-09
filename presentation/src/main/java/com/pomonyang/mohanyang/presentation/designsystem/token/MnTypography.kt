@@ -61,7 +61,6 @@ data class MnTypography(
         fontSize = 34.sp,
         lineHeight = 41.sp,
         lineHeightStyle = setDefaultLineHeight(),
-
         letterSpacing = (-0.02).em
     ),
     val header3: TextStyle = TextStyle(
