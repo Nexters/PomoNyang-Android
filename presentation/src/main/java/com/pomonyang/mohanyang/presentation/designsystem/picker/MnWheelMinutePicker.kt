@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -121,8 +122,7 @@ private fun BoxScope.CenterHighlightBox(
 ) {
     Box(
         modifier
-            .fillMaxWidth()
-            .padding(horizontal = 83.dp)
+            .width(200.dp)
             .height(itemHeightPx.pxToDp())
             .align(Alignment.Center)
             .background(highlightColor, RoundedCornerShape(MnRadius.medium)),
@@ -173,7 +173,7 @@ private fun BoxScope.WheelItemList(
             }
 
             val scale by animateFloatAsState(
-                targetValue = if (isCentralItem) 1.3f else 1f,
+                targetValue = if (isCentralItem) 1.2f else 1f,
                 animationSpec = tween(durationMillis = 100),
                 label = "scaleAnimation"
             )
@@ -181,7 +181,7 @@ private fun BoxScope.WheelItemList(
             Box(
                 modifier = Modifier
                     .height(itemHeightPx.pxToDp())
-                    .padding(start = 22.dp)
+                    .padding(start = 24.dp)
                     .fillMaxWidth()
                     .scale(scale),
                 contentAlignment = Alignment.Center
