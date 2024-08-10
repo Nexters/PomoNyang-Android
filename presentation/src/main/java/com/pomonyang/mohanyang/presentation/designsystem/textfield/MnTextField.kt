@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -49,7 +50,7 @@ fun MnTextField(
     modifier: Modifier = Modifier,
     isSingleLine: Boolean = true,
     textColor: Color = MnTheme.textColorScheme.primary,
-    textStyle: TextStyle = MnTheme.typography.subBodySemiBold,
+    textStyle: TextStyle = MnTheme.typography.bodySemiBold,
     counterMaxLength: Int = 0,
     readOnly: Boolean = false,
     isEnabled: Boolean = true,
@@ -77,6 +78,10 @@ fun MnTextField(
         backgroundColor = Color.Transparent
     )
 ) {
+    val height = 56.dp
+    val containerColor = if (isEnabled) backgroundColor else MnTheme.backgroundColorScheme.secondary
+    val contentColor = if (isEnabled) textColor else MnTheme.textColorScheme.disabled
+
     val isFocused by interactionSource.collectIsFocusedAsState()
 
     CompositionLocalProvider(
@@ -84,7 +89,9 @@ fun MnTextField(
     ) {
         Column(modifier = modifier) {
             BasicTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(height),
                 value = value,
                 onValueChange = {
                     val newValue = if (counterMaxLength > 0) {
@@ -97,7 +104,7 @@ fun MnTextField(
 
                 enabled = isEnabled,
                 readOnly = readOnly,
-                textStyle = textStyle.copy(textColor),
+                textStyle = textStyle.copy(contentColor),
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
                 singleLine = isSingleLine,
@@ -106,10 +113,10 @@ fun MnTextField(
                 cursorBrush = SolidColor(MnTheme.backgroundColorScheme.accent1),
                 decorationBox = @Composable { innerTextField ->
                     Surface(
-                        color = backgroundColor,
+                        color = containerColor,
                         border = BorderStroke(
                             borderWidth,
-                            if (isFocused || isError) borderColor else backgroundColor
+                            if (isFocused || isError) borderColor else containerColor
                         ),
                         shape = RoundedCornerShape(MnRadius.small)
 
@@ -117,7 +124,7 @@ fun MnTextField(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(MnRadius.small))
-                                .background(backgroundColor)
+                                .background(containerColor)
                                 .padding(MnSpacing.large),
                             contentAlignment = Alignment.CenterStart
                         ) {
@@ -178,8 +185,8 @@ fun PreviewMnTextField() {
                 value = text.value,
                 onValueChange = { value -> text.value = value },
                 hint = "hint",
-                isEnabled = true,
-                isError = true,
+                isEnabled = false,
+                isError = false,
                 textColor = MnColor.Gray400,
                 errorMessage = "에러났다냥"
             )
