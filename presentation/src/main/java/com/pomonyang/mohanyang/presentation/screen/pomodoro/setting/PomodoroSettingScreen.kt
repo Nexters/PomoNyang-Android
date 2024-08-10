@@ -67,7 +67,7 @@ fun PomodoroRoute(
     pomodoroViewModel: PomodoroViewModel = hiltViewModel()
 ) {
     val state by pomodoroViewModel.state.collectAsStateWithLifecycle()
-    pomodoroViewModel.effects.collectWithLifecycle { effect ->
+    pomodoroViewModel.effects.collectLatestWithLifecycle { effect ->
         Timber.tag("koni").d("handleEffect > $effect")
         when (effect) {
             is PomodoroSideEffect.ShowSnackBar -> {
