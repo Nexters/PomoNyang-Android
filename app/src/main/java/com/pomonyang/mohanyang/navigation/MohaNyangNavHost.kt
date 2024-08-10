@@ -8,7 +8,7 @@ import com.pomonyang.mohanyang.presentation.screen.home.Home
 import com.pomonyang.mohanyang.presentation.screen.home.homeScreen
 import com.pomonyang.mohanyang.presentation.screen.onboarding.Onboarding
 import com.pomonyang.mohanyang.presentation.screen.onboarding.onboardingScreen
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.pomodoroSettingScreen
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.pomodoroScreen
 import com.pomonyang.mohanyang.ui.MohaNyangAppState
 
 @Composable
@@ -42,6 +42,10 @@ internal fun MohaNyangNavHost(
             navHostController = mohaNyangAppState.navHostController
         )
 
-        pomodoroSettingScreen(isNewUser = mohaNyangAppState.isNewUser, onShowSnackbar = onShowSnackbar)
+        pomodoroScreen(
+            isNewUser = mohaNyangAppState.isNewUser,
+            navHostController = mohaNyangAppState.navHostController,
+            onShowSnackbar = onShowSnackbar
+        )
     }
 }
