@@ -18,7 +18,10 @@ data class PomodoroState(
     val categoryList: List<PomodoroCategoryModel> = emptyList(),
     val selectedCategoryNo: Int = 0,
     val showCategoryBottomSheet: Boolean = false
-) : ViewState
+) : ViewState {
+    fun getFocusTime() = categoryList.find { it.categoryNo == selectedCategoryNo }?.focusTime ?: 0
+    fun getRestTime() = categoryList.find { it.categoryNo == selectedCategoryNo }?.restTime ?: 0
+}
 
 sealed interface PomodoroEvent : ViewEvent {
     data object Init : PomodoroEvent
@@ -33,6 +36,10 @@ sealed interface PomodoroEvent : ViewEvent {
 
 sealed interface PomodoroSideEffect : ViewSideEffect {
     data class ShowSnackBar(val message: String) : PomodoroSideEffect
+    data class GoTimeSetting(
+        val isFocusTime: Boolean,
+        val time: Long
+    ) : PomodoroSideEffect
 }
 
 @HiltViewModel
@@ -50,9 +57,13 @@ class PomodoroViewModel @Inject constructor(
                 updateState { copy(showCategoryBottomSheet = true) }
             }
 
-            PomodoroEvent.ClickFocusTime -> TODO()
+            PomodoroEvent.ClickFocusTime -> {
+                setEffect(PomodoroSideEffect.GoTimeSetting(isFocusTime = true, time = state.value.getFocusTime()))
+            }
             PomodoroEvent.ClickMyInfo -> TODO()
-            PomodoroEvent.ClickRestTime -> TODO()
+            PomodoroEvent.ClickRestTime -> {
+                setEffect(PomodoroSideEffect.GoTimeSetting(isFocusTime = false, time = state.value.getRestTime()))
+            }
             PomodoroEvent.ClickStartPomodoro -> TODO()
             PomodoroEvent.Init -> {
                 collectCategoryData()
