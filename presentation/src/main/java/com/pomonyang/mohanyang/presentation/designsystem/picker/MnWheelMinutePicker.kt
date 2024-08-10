@@ -53,6 +53,7 @@ fun MnWheelMinutePicker(
     items: PersistentList<Int>,
     initialItem: Int,
     halfDisplayCount: Int,
+    onChangePickTime: (Int) -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = MnTheme.typography.header2,
     mnWheelPickerColor: MnWheelPickerColor = MnWheelPickerDefaults.colors()
@@ -81,7 +82,8 @@ fun MnWheelMinutePicker(
             halfDisplayCount = halfDisplayCount,
             textStyle = textStyle,
             selectedTextColor = mnWheelPickerColor.selectedTextColor,
-            unSelectedTextColor = mnWheelPickerColor.unSelectedTextColor
+            unSelectedTextColor = mnWheelPickerColor.unSelectedTextColor,
+            onChangePickTime = onChangePickTime
         )
     }
 }
@@ -142,6 +144,7 @@ private fun BoxScope.WheelItemList(
     textStyle: TextStyle,
     selectedTextColor: Color,
     unSelectedTextColor: Color,
+    onChangePickTime: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -172,6 +175,10 @@ private fun BoxScope.WheelItemList(
                         false
                     }
                 }
+            }
+
+            if (isCentralItem) {
+                onChangePickTime(item)
             }
 
             val scale by animateFloatAsState(
@@ -210,6 +217,7 @@ fun MnWheelPickerPreview() {
         MnWheelMinutePicker(
             items = (5..60 step 5).toPersistentList(),
             halfDisplayCount = 3,
+            onChangePickTime = {},
             initialItem = 25
         )
     }
