@@ -1,7 +1,6 @@
 package com.pomonyang.mohanyang.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.pomonyang.mohanyang.presentation.screen.home.Home
@@ -13,11 +12,10 @@ import com.pomonyang.mohanyang.ui.MohaNyangAppState
 
 @Composable
 internal fun MohaNyangNavHost(
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackbar: (String, String?) -> Unit,
     mohaNyangAppState: MohaNyangAppState,
     modifier: Modifier = Modifier
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val navHostController = mohaNyangAppState.navHostController
     val navigateUp: () -> Unit = { navHostController.navigateUp() }
 

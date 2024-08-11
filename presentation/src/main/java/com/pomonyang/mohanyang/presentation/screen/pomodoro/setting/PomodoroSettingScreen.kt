@@ -57,7 +57,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.tooltip.tooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.TimeSetting
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
-import com.pomonyang.mohanyang.presentation.util.collectLatestWithLifecycle
+import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -67,12 +67,12 @@ import timber.log.Timber
 fun PomodoroRoute(
     isNewUser: Boolean,
     navHostController: NavHostController,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackbar: suspend (String, String?) -> Unit,
     modifier: Modifier = Modifier,
     pomodoroViewModel: PomodoroViewModel = hiltViewModel()
 ) {
     val state by pomodoroViewModel.state.collectAsStateWithLifecycle()
-    pomodoroViewModel.effects.collectLatestWithLifecycle { effect ->
+    pomodoroViewModel.effects.collectWithLifecycle { effect ->
         Timber.tag("koni").d("handleEffect > $effect")
         when (effect) {
             is PomodoroSideEffect.ShowSnackBar -> {
@@ -83,7 +83,10 @@ fun PomodoroRoute(
                 navHostController.navigate(
                     TimeSetting(
                         isFocusTime = effect.isFocusTime,
-                        minute = effect.time
+                        type = effect.type,
+                        focusMinute = effect.focusMinute,
+                        restMinute = effect.restMinute,
+                        categoryNo = effect.categoryNo
                     )
                 )
             }
