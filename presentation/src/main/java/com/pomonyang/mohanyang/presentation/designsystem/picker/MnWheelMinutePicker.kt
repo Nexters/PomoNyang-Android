@@ -80,7 +80,8 @@ fun MnWheelMinutePicker(
             itemHeightPx = itemHeightPx,
             halfDisplayCount = halfDisplayCount,
             textStyle = textStyle,
-            textColor = mnWheelPickerColor.textColor
+            selectedTextColor = mnWheelPickerColor.selectedTextColor,
+            unSelectedTextColor = mnWheelPickerColor.unSelectedTextColor
         )
     }
 }
@@ -90,9 +91,9 @@ private fun Modifier.fadeEdge(color: Color): Modifier {
     val fadeEdgeBrushColor = remember {
         arrayOf(
             0f to color.copy(alpha = 0.95f),
-            0.25f to color.copy(alpha = 0.8f),
+            0.25f to color.copy(alpha = 0.3f),
             0.5f to Color.Transparent,
-            0.75f to color.copy(alpha = 0.8f),
+            0.75f to color.copy(alpha = 0.3f),
             1f to color.copy(alpha = 0.95f)
         )
     }
@@ -139,7 +140,8 @@ private fun BoxScope.WheelItemList(
     itemHeightPx: Float,
     halfDisplayCount: Int,
     textStyle: TextStyle,
-    textColor: Color,
+    selectedTextColor: Color,
+    unSelectedTextColor: Color,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -189,7 +191,7 @@ private fun BoxScope.WheelItemList(
                 Text(
                     text = "$item:00",
                     style = textStyle,
-                    color = textColor
+                    color = if (isCentralItem) selectedTextColor else unSelectedTextColor
                 )
             }
         }

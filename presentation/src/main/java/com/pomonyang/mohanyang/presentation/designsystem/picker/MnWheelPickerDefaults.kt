@@ -13,15 +13,18 @@ object MnWheelPickerDefaults {
     @Composable
     fun colors(
         fadeColor: Color = MnTheme.backgroundColorScheme.inverse,
-        textColor: Color = MnTheme.textColorScheme.primary
+        selectedTextColor: Color = MnTheme.textColorScheme.primary,
+        unSelectedTextColor: Color = MnTheme.textColorScheme.disabled
     ) = MnWheelPickerColor(
         fadeColor = fadeColor,
-        textColor = textColor
+        selectedTextColor = selectedTextColor,
+        unSelectedTextColor = unSelectedTextColor
     )
 }
 
 @Stable
 data class MnWheelPickerColor(
     val fadeColor: Color,
-    val textColor: Color
+    val selectedTextColor: Color,
+    val unSelectedTextColor: Color
 )
