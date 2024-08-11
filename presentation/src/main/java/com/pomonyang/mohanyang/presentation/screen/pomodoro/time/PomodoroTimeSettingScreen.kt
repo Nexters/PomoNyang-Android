@@ -1,10 +1,8 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.time
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -80,25 +78,21 @@ private fun PomodoroTimeSettingScreen(
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TimeSettingTopAppBar { /* TODO */ }
 
         CategoryBox(isFocusTime = isFocusTime)
 
-        Spacer(modifier = Modifier.weight(1f))
-
         MnWheelMinutePicker(
+            modifier = Modifier.padding(top = 16.dp),
             items = (5..60 step 5).toPersistentList(),
             initialItem = initialSettingTime,
             onChangePickTime = { onAction(PomodoroTimeSettingEvent.ChangePickTime(time = it)) }
         )
 
-        Spacer(modifier = Modifier.weight(1f))
-
         SettingButton(
-            modifier = Modifier.padding(bottom = 55.dp),
+            modifier = Modifier.padding(top = 40.dp),
             backgroundColor = MnTheme.backgroundColorScheme.inverse,
             onClick = {
                 onAction(PomodoroTimeSettingEvent.Submit)
@@ -147,7 +141,9 @@ private fun CategoryBox(
         )
         Text(
             modifier = Modifier.padding(start = MnSpacing.small),
-            text = stringResource(id = text)
+            text = stringResource(id = text),
+            style = MnTheme.typography.bodySemiBold,
+            color = MnTheme.textColorScheme.secondary
         )
     }
 }

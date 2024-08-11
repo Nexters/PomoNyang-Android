@@ -2,8 +2,6 @@
 
 package com.pomonyang.mohanyang.presentation.designsystem.picker
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
@@ -23,7 +21,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -31,25 +28,25 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
-import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
-import com.pomonyang.mohanyang.presentation.util.dpToPx
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -61,14 +58,14 @@ fun MnWheelMinutePicker(
     initialItem: Int,
     onChangePickTime: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    textStyle: TextStyle = MnTheme.typography.header2,
-    mnWheelPickerColor: MnWheelPickerColor = MnWheelPickerDefaults.colors()
+    mnWheelPickerColor: MnWheelPickerColor = MnWheelPickerDefaults.colors(),
+    mnWheelPickerStyles: MnWheelPickerStyles = MnWheelPickerDefaults.styles()
 ) {
-    val screenHeightPixel = LocalConfiguration.current.screenHeightDp.dp.dpToPx()
+    val screenHeightPixel = LocalConfiguration.current.screenHeightDp
     val halfDisplayCount = when {
-        screenHeightPixel <= 640f -> 1
-        screenHeightPixel in 641f..740f -> 2
-        screenHeightPixel in 741f..812f -> 3
+        screenHeightPixel <= 640 -> 1
+        screenHeightPixel in 641..740 -> 2
+        screenHeightPixel in 741..812 -> 3
         else -> 4
     }
     val scrollState = rememberLazyListState(items.indexOf(initialItem))
@@ -95,7 +92,8 @@ fun MnWheelMinutePicker(
             itemHeight = itemHeight,
             focusItemHeight = focusItemHeight,
             halfDisplayCount = halfDisplayCount,
-            textStyle = textStyle,
+            selectedTextStyle = mnWheelPickerStyles.selectedTextStyle,
+            unSelectedTextStyle = mnWheelPickerStyles.unSelectedTextStyle,
             selectedTextColor = mnWheelPickerColor.selectedTextColor,
             unSelectedTextColor = mnWheelPickerColor.unSelectedTextColor,
             onItemClick = { index ->
@@ -152,7 +150,7 @@ private fun BoxScope.CenterHighlightBox(
 ) {
     Box(
         modifier = modifier
-            .width(200.dp)
+            .width(209.dp)
             .height(itemHeight)
             .align(Alignment.Center)
             .background(highlightColor, RoundedCornerShape(MnRadius.medium)),
@@ -169,7 +167,8 @@ private fun BoxScope.WheelItemList(
     itemHeight: Dp,
     focusItemHeight: Dp,
     halfDisplayCount: Int,
-    textStyle: TextStyle,
+    selectedTextStyle: TextStyle,
+    unSelectedTextStyle: TextStyle,
     selectedTextColor: Color,
     unSelectedTextColor: Color,
     onChangePickTime: (item: Int) -> Unit,
@@ -177,25 +176,21 @@ private fun BoxScope.WheelItemList(
     onScrollEnd: (index: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isScrollInProgress by remember {
-        derivedStateOf { scrollState.isScrollInProgress }
-    }
-
-    LaunchedEffect(isScrollInProgress) {
-        if (isScrollInProgress.not()) {
-            val centralItemIndex = scrollState.getCentralItemIndex() ?: 0
-            if (scrollState.firstVisibleItemIndex != centralItemIndex) {
-                onScrollEnd(centralItemIndex)
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                scrollState.getCentralItemIndex()?.let(onScrollEnd)
+                return super.onPostFling(consumed, available)
             }
         }
     }
-
     LazyColumn(
         modifier = modifier
             .matchParentSize()
-            .zIndex(1f),
+            .zIndex(1f)
+            .nestedScroll(nestedScrollConnection),
         contentPadding = PaddingValues(vertical = itemHeight * halfDisplayCount),
-        verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
+        verticalArrangement = Arrangement.spacedBy(28.dp),
         state = scrollState,
         flingBehavior = rememberSnapFlingBehavior(scrollState)
     ) {
@@ -213,24 +208,17 @@ private fun BoxScope.WheelItemList(
                 onChangePickTime(item)
             }
 
-            val scale by animateFloatAsState(
-                targetValue = if (isCentralItem) 1.2f else 1f,
-                animationSpec = tween(durationMillis = 100),
-                label = "scaleAnimation"
-            )
-
             Box(
                 modifier = Modifier
                     .height(if (isCentralItem) focusItemHeight else itemHeight)
-                    .padding(start = 24.dp)
+                    .padding(start = if (isCentralItem) 36.dp else 0.dp)
                     .fillMaxWidth()
-                    .scale(scale)
                     .noRippleClickable { onItemClick(index) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "$item:00",
-                    style = textStyle,
+                    style = if (isCentralItem) selectedTextStyle else unSelectedTextStyle,
                     color = if (isCentralItem) selectedTextColor else unSelectedTextColor
                 )
             }
@@ -239,7 +227,6 @@ private fun BoxScope.WheelItemList(
 }
 
 private fun LazyListState.getCentralItemIndex(): Int? {
-    val layoutInfo = layoutInfo
     val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
     val centralItemInfo = layoutInfo.visibleItemsInfo.find { itemInfo ->
         val itemCenter = (itemInfo.offset + itemInfo.size / 2)
