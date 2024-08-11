@@ -18,12 +18,15 @@ data object PomodoroSetting
 @Serializable
 data class TimeSetting(
     val isFocusTime: Boolean,
-    val minute: Long
+    val type: String,
+    val focusMinute: Long,
+    val restMinute: Long,
+    val categoryNo: Int
 )
 
 fun NavGraphBuilder.pomodoroScreen(
     isNewUser: Boolean,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackbar: (String, String?) -> Unit,
     navHostController: NavHostController
 ) {
     navigation<Pomodoro>(
@@ -40,8 +43,12 @@ fun NavGraphBuilder.pomodoroScreen(
         composable<TimeSetting> { backStackEntry ->
             val routeData = backStackEntry.toRoute<TimeSetting>()
             PomodoroTimeSettingRoute(
-                initialSettingTime = routeData.minute.toInt(),
-                isFocusTime = routeData.isFocusTime
+                initialFocusTime = routeData.focusMinute.toInt(),
+                initialRestTime = routeData.restMinute.toInt(),
+                type = routeData.type,
+                categoryNo = routeData.categoryNo,
+                isFocusTime = routeData.isFocusTime,
+                onShowSnackbar = onShowSnackbar
             ) {
                 navHostController.popBackStack()
             }

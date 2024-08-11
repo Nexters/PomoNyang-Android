@@ -12,15 +12,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 data class PomodoroState(
     val categoryList: List<PomodoroCategoryModel> = emptyList(),
     val selectedCategoryNo: Int = 0,
     val showCategoryBottomSheet: Boolean = false
 ) : ViewState {
-    fun getFocusTime() = categoryList.find { it.categoryNo == selectedCategoryNo }?.focusTime ?: 0
-    fun getRestTime() = categoryList.find { it.categoryNo == selectedCategoryNo }?.restTime ?: 0
+    fun getSelectedCategory() = categoryList.find { it.categoryNo == selectedCategoryNo }
 }
 
 sealed interface PomodoroEvent : ViewEvent {
@@ -38,7 +36,10 @@ sealed interface PomodoroSideEffect : ViewSideEffect {
     data class ShowSnackBar(val message: String) : PomodoroSideEffect
     data class GoTimeSetting(
         val isFocusTime: Boolean,
-        val time: Long
+        val type: String,
+        val focusMinute: Long,
+        val restMinute: Long,
+        val categoryNo: Int
     ) : PomodoroSideEffect
 }
 
@@ -51,20 +52,23 @@ class PomodoroViewModel @Inject constructor(
     override fun setInitialState(): PomodoroState = PomodoroState()
 
     override fun handleEvent(event: PomodoroEvent) {
-        Timber.tag("koni").d("handleEvent > $event")
         when (event) {
             PomodoroEvent.ClickCategory -> {
                 updateState { copy(showCategoryBottomSheet = true) }
             }
 
             PomodoroEvent.ClickFocusTime -> {
-                setEffect(PomodoroSideEffect.GoTimeSetting(isFocusTime = true, time = state.value.getFocusTime()))
+                handleTimeSetting(isFocusTime = true)
             }
-            PomodoroEvent.ClickMyInfo -> TODO()
+
             PomodoroEvent.ClickRestTime -> {
-                setEffect(PomodoroSideEffect.GoTimeSetting(isFocusTime = false, time = state.value.getRestTime()))
+                handleTimeSetting(isFocusTime = false)
             }
+
+            PomodoroEvent.ClickMyInfo -> TODO()
+
             PomodoroEvent.ClickStartPomodoro -> TODO()
+
             PomodoroEvent.Init -> {
                 collectCategoryData()
             }
@@ -89,6 +93,20 @@ class PomodoroViewModel @Inject constructor(
             // TODO 지훈 여기 나중에 리소스로 변경
             setEffect(PomodoroSideEffect.ShowSnackBar("$title 카테고리로 변경했어요"))
         }
+    }
+
+    private fun handleTimeSetting(isFocusTime: Boolean) {
+        state.value.getSelectedCategory()?.let {
+            setEffect(
+                PomodoroSideEffect.GoTimeSetting(
+                    isFocusTime = isFocusTime,
+                    type = it.title,
+                    focusMinute = it.focusTime,
+                    restMinute = it.restTime,
+                    categoryNo = it.categoryNo
+                )
+            )
+        } ?: setEffect(PomodoroSideEffect.ShowSnackBar("카테고리를 설정해주세요"))
     }
 
     private fun collectCategoryData() {

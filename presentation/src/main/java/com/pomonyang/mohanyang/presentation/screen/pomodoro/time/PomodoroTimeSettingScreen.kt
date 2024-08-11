@@ -12,11 +12,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.picker.MnWheelMinutePicker
@@ -24,23 +26,48 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.SettingButton
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun PomodoroTimeSettingRoute(
-    initialSettingTime: Int,
+    initialFocusTime: Int,
     isFocusTime: Boolean,
+    initialRestTime: Int,
+    categoryNo: Int,
+    type: String,
     modifier: Modifier = Modifier,
-    onEndSettingClick: (time: Int) -> Unit
+    viewModel: PomodoroTimeSettingViewModel = hiltViewModel(),
+    onShowSnackbar: (String, String?) -> Unit,
+    onEndSettingClick: () -> Unit
 ) {
+    viewModel.effects.collectWithLifecycle { effect ->
+        when (effect) {
+            is PomodoroTimeSettingEffect.GoToPomodoroSettingScreen -> {
+                val message = if (isFocusTime) "집중" else "휴식"
+                onShowSnackbar("${message}시간을 변경했어요", null)
+                onEndSettingClick()
+            }
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.handleEvent(
+            PomodoroTimeSettingEvent.Init(
+                isFocusTime = isFocusTime,
+                categoryNo = categoryNo,
+                titleName = type,
+                focusTime = initialFocusTime,
+                restTime = initialRestTime
+            )
+        )
+    }
+
     PomodoroTimeSettingScreen(
         modifier = modifier,
         isFocusTime = isFocusTime,
-        initialSettingTime = initialSettingTime,
-        onEndSettingClick = {
-            onEndSettingClick(it)
-        }
+        initialSettingTime = if (isFocusTime) initialFocusTime else initialRestTime,
+        onAction = viewModel::handleEvent
     )
 }
 
@@ -48,10 +75,9 @@ fun PomodoroTimeSettingRoute(
 private fun PomodoroTimeSettingScreen(
     initialSettingTime: Int,
     isFocusTime: Boolean,
-    onEndSettingClick: (Int) -> Unit,
+    onAction: (PomodoroTimeSettingEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var currentPickTime: Int = initialSettingTime
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -66,7 +92,7 @@ private fun PomodoroTimeSettingScreen(
         MnWheelMinutePicker(
             items = (5..60 step 5).toPersistentList(),
             initialItem = initialSettingTime,
-            onChangePickTime = { currentPickTime = it }
+            onChangePickTime = { onAction(PomodoroTimeSettingEvent.ChangePickTime(time = it)) }
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -75,7 +101,7 @@ private fun PomodoroTimeSettingScreen(
             modifier = Modifier.padding(bottom = 55.dp),
             backgroundColor = MnTheme.backgroundColorScheme.inverse,
             onClick = {
-                onEndSettingClick(currentPickTime)
+                onAction(PomodoroTimeSettingEvent.Submit)
             }
         )
     }
@@ -133,7 +159,7 @@ private fun PomodoroTimeSettingScreenPreview() {
         PomodoroTimeSettingScreen(
             initialSettingTime = 25,
             isFocusTime = true,
-            onEndSettingClick = {}
+            onAction = {}
         )
     }
 }

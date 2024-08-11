@@ -5,6 +5,7 @@ import com.pomonyang.mohanyang.data.local.room.dao.PomodoroSettingDao
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
 import com.pomonyang.mohanyang.data.remote.datasource.pomodoro.PomodoroSettingRemoteDataSource
 import com.pomonyang.mohanyang.data.remote.model.response.toEntity
+import java.time.Duration
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEmpty
@@ -39,18 +40,25 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
     override suspend fun updatePomodoroCategoryTimes(
         categoryNo: Int,
         titleName: String,
-        focusTime: String,
-        restTime: String
+        focusTime: Int,
+        restTime: Int
     ): Result<Unit> {
-        updateLocalPomodoroSetting(categoryNo, titleName, focusTime, restTime)
+        val focusTimeDuration = Duration.ofMinutes(focusTime.toLong()).toString()
+        val restTimeDuration = Duration.ofMinutes(restTime.toLong()).toString()
+        updateLocalPomodoroSetting(categoryNo, titleName, focusTimeDuration, restTimeDuration)
         return pomodoroSettingRemoteDataSource.updatePomodoroCategoryTimes(
             categoryNo = categoryNo,
-            focusTime = focusTime,
-            restTime = restTime
+            focusTime = focusTimeDuration,
+            restTime = restTimeDuration
         )
     }
 
-    private suspend fun updateLocalPomodoroSetting(categoryNo: Int, titleName: String, focusTime: String, restTime: String) {
+    private suspend fun updateLocalPomodoroSetting(
+        categoryNo: Int,
+        titleName: String,
+        focusTime: String,
+        restTime: String
+    ) {
         pomodoroSettingDao.updatePomodoroSettingData(
             pomodoroSettingEntity = PomodoroSettingEntity(
                 categoryNo = categoryNo,
