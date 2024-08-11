@@ -2,7 +2,9 @@ package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.model.PomodoroCategoryModel
+import com.pomonyang.mohanyang.domain.model.toModel
 import com.pomonyang.mohanyang.domain.usecase.GetPomodoroSettingListUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
@@ -16,7 +18,8 @@ import kotlinx.coroutines.launch
 data class PomodoroState(
     val categoryList: List<PomodoroCategoryModel> = emptyList(),
     val selectedCategoryNo: Int = 0,
-    val showCategoryBottomSheet: Boolean = false
+    val showCategoryBottomSheet: Boolean = false,
+    val catName: String = ""
 ) : ViewState {
     fun getSelectedCategory() = categoryList.find { it.categoryNo == selectedCategoryNo }
 }
@@ -46,7 +49,8 @@ sealed interface PomodoroSettingSideEffect : ViewSideEffect {
 @HiltViewModel
 class PomodoroSettingViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
-    private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase
+    private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase,
+    private val userRepository: UserRepository
 ) : BaseViewModel<PomodoroState, PomodoroEvent, PomodoroSettingSideEffect>() {
 
     override fun setInitialState(): PomodoroState = PomodoroState()
@@ -71,6 +75,7 @@ class PomodoroSettingViewModel @Inject constructor(
 
             PomodoroEvent.Init -> {
                 collectCategoryData()
+                getMyCatInfo()
             }
 
             PomodoroEvent.DismissCategoryDialog -> {
@@ -116,6 +121,18 @@ class PomodoroSettingViewModel @Inject constructor(
                 .collect { result ->
                     val (data, recentCategoryNo) = result
                     updateState { copy(categoryList = data, selectedCategoryNo = recentCategoryNo) }
+                }
+        }
+    }
+
+    private fun getMyCatInfo() {
+        viewModelScope.launch {
+            userRepository.getMyInfo()
+                .onSuccess {
+                    updateState { copy(catName = it.toModel().cat.name) }
+                }
+                .onFailure {
+                    setEffect(PomodoroSideEffect.ShowSnackBar("$it"))
                 }
         }
     }
