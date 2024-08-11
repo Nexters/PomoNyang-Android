@@ -149,12 +149,14 @@ fun PomodoroSettingScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(top = 119.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(25.dp)
+            verticalArrangement = Arrangement.spacedBy(
+                space = 40.dp,
+                alignment = Alignment.CenterVertically
+            )
         ) {
-            CatRive()
+            CatRive(catName = state.catName)
             PomodoroDetailSetting(
                 onAction = onAction,
                 isNewUser = isNewUser,
@@ -209,21 +211,32 @@ private fun PomodoroCategoryBottomSheet(
 
 @Composable
 private fun CatRive(
-    showTooltip: Boolean = false
+    showTooltip: Boolean = false,
+    catName: String
 ) {
-    Box(
-        modifier = Modifier
-            .size(240.dp)
-            .background(MnTheme.backgroundColorScheme.secondary)
-            .tooltip(
-                modifier = Modifier.padding(top = 20.dp),
-                enabled = showTooltip,
-                content = stringResource(R.string.tooltip_rest_content),
-                showOverlay = false,
-                highlightComponent = false
-            )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // TODO
+        Box(
+            modifier = Modifier
+                .size(240.dp)
+                .background(MnTheme.backgroundColorScheme.secondary)
+                .tooltip(
+                    modifier = Modifier.padding(top = 20.dp),
+                    enabled = showTooltip,
+                    content = stringResource(R.string.tooltip_rest_content),
+                    showOverlay = false,
+                    highlightComponent = false
+                )
+        ) {
+            /* TODO */
+        }
+        Text(
+            modifier = Modifier.padding(top = 20.dp),
+            text = catName,
+            style = MnTheme.typography.header4,
+            color = MnTheme.textColorScheme.tertiary
+        )
     }
 }
 
@@ -239,7 +252,6 @@ private fun PomodoroDetailSetting(
     val coroutineScope = rememberCoroutineScope()
 
     Column(
-        modifier = modifier.padding(vertical = MnSpacing.large),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CategoryBox(
@@ -403,7 +415,7 @@ fun PomodoroStarterScreenPreview() {
 @Composable
 @Preview
 fun CatImagePreview() {
-    CatRive()
+    CatRive(catName = "치즈냥", showTooltip = false)
 }
 
 @Composable
@@ -414,7 +426,7 @@ fun FocusBoxPreview() {
         isNewUser = false,
         selectedCategoryData = PomodoroCategoryModel(
             categoryNo = 0,
-            title = "집중",
+            title = "기본",
             focusTime = 25,
             restTime = 10
         )
