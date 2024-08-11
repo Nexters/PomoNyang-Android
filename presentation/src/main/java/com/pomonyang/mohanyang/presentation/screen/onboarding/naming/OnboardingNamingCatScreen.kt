@@ -48,6 +48,7 @@ fun OnboardingNamingCatRoute(
     onNavToHome: () -> Unit,
     modifier: Modifier = Modifier,
     onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel()
+    catNo: Int,
 ) {
     onboardingNamingCatViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
@@ -58,6 +59,7 @@ fun OnboardingNamingCatRoute(
     }
 
     OnboardingNamingCatScreen(
+        catNo = catNo,
         onAction = onboardingNamingCatViewModel::handleEvent,
         onBackClick = onBackClick,
         modifier = modifier

@@ -24,7 +24,7 @@ sealed interface SelectCatEvent : ViewEvent {
 }
 
 sealed interface SelectCatSideEffect : ViewSideEffect {
-    data object OnNavToNaming : SelectCatSideEffect
+    data class OnNavToNaming(val no: Int) : SelectCatSideEffect
 }
 
 @HiltViewModel
@@ -41,7 +41,11 @@ class OnboardingSelectCatViewModel @Inject constructor(
             }
 
             is SelectCatEvent.OnStartClick -> {
-                setEffect(SelectCatSideEffect.OnNavToNaming)
+                with(state.value) {
+                    cats.find { it.type == selectedType }?.no
+                }?.let { selectedNo ->
+                    setEffect(SelectCatSideEffect.OnNavToNaming(selectedNo))
+                }
             }
         }
     }

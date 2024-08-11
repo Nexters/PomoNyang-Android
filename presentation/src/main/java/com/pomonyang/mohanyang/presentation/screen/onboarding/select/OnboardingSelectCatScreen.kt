@@ -46,7 +46,7 @@ import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 @Composable
 fun OnboardingSelectCatRoute(
     onBackClick: () -> Unit,
-    onNavToNaming: () -> Unit,
+    onNavToNaming: (Int) -> Unit,
     modifier: Modifier = Modifier,
     onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel()
 ) {
@@ -55,7 +55,7 @@ fun OnboardingSelectCatRoute(
     onboardingSelectCatViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is SelectCatSideEffect.OnNavToNaming -> {
-                onNavToNaming()
+                onNavToNaming(effect.no)
             }
         }
     }
