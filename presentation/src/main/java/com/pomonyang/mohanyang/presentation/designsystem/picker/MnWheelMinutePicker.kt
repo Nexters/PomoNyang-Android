@@ -47,6 +47,7 @@ import androidx.compose.ui.zIndex
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
+import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.dpToPx
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
@@ -194,7 +195,7 @@ private fun BoxScope.WheelItemList(
             .matchParentSize()
             .zIndex(1f),
         contentPadding = PaddingValues(vertical = itemHeight * halfDisplayCount),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
         state = scrollState,
         flingBehavior = rememberSnapFlingBehavior(scrollState)
     ) {
