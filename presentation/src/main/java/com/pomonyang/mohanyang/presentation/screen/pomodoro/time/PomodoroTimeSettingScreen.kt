@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -43,7 +44,6 @@ fun PomodoroTimeSettingRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PomodoroTimeSettingScreen(
     initialSettingTime: Int,
@@ -57,44 +57,19 @@ private fun PomodoroTimeSettingScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        MnTopAppBar(
-            actions = {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .noRippleClickable { },
-                    contentAlignment = Alignment.Center
-                ) {
-                    MnMediumIcon(
-                        resourceId = R.drawable.ic_null,
-                        tint = TopAppBarDefaults.topAppBarColors().navigationIconContentColor
-                    )
-                }
-            }
-        )
-        Row(
-            modifier = Modifier.padding(
-                vertical = MnSpacing.small,
-                horizontal = MnSpacing.large
-            )
-        ) {
-            val resId = if (isFocusTime) R.drawable.ic_null else R.drawable.ic_null
-            val text = if (isFocusTime) R.string.focus else R.string.rest
-            MnMediumIcon(
-                resourceId = resId
-            )
-            Text(
-                modifier = Modifier.padding(start = MnSpacing.xSmall),
-                text = stringResource(id = text)
-            )
-        }
+        TimeSettingTopAppBar { /* TODO */ }
+
+        CategoryBox(isFocusTime = isFocusTime)
+
+        Spacer(modifier = Modifier.weight(1f))
+
         MnWheelMinutePicker(
-            modifier = Modifier.weight(1f),
             items = (5..60 step 5).toPersistentList(),
             initialItem = initialSettingTime,
-            halfDisplayCount = 3,
             onChangePickTime = { currentPickTime = it }
         )
+
+        Spacer(modifier = Modifier.weight(1f))
 
         SettingButton(
             modifier = Modifier.padding(bottom = 55.dp),
@@ -102,6 +77,51 @@ private fun PomodoroTimeSettingScreen(
             onClick = {
                 onEndSettingClick(currentPickTime)
             }
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun TimeSettingTopAppBar(
+    onActionClick: () -> Unit
+) {
+    MnTopAppBar(
+        actions = {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .noRippleClickable { onActionClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                MnMediumIcon(
+                    resourceId = R.drawable.ic_null,
+                    tint = TopAppBarDefaults.topAppBarColors().navigationIconContentColor
+                )
+            }
+        }
+    )
+}
+
+@Composable
+private fun CategoryBox(
+    isFocusTime: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.padding(
+            vertical = MnSpacing.small,
+            horizontal = MnSpacing.large
+        )
+    ) {
+        val resId = if (isFocusTime) R.drawable.ic_null else R.drawable.ic_null
+        val text = if (isFocusTime) R.string.focus else R.string.rest
+        MnMediumIcon(
+            resourceId = resId
+        )
+        Text(
+            modifier = Modifier.padding(start = MnSpacing.small),
+            text = stringResource(id = text)
         )
     }
 }
