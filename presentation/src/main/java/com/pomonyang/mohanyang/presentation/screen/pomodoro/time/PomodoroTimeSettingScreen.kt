@@ -140,10 +140,10 @@ private fun CategoryBox(
             horizontal = MnSpacing.large
         )
     ) {
-        val resId = if (isFocusTime) R.drawable.ic_null else R.drawable.ic_null
+        val iconResId = if (isFocusTime) R.drawable.ic_null else R.drawable.ic_null
         val text = if (isFocusTime) R.string.focus else R.string.rest
         MnMediumIcon(
-            resourceId = resId
+            resourceId = iconResId
         )
         Text(
             modifier = Modifier.padding(start = MnSpacing.small),
