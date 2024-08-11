@@ -23,5 +23,6 @@
         <item>일정 시간 집중과 휴식을 반복해 번아웃을 방지하고\n
             짧은 시간의 몰입을 경험해보세요.</item>
     </string-array>
-    <string name="naming_cat">고양이의 이름을 지어주세요</string>
+    <string name="naming_cat">내 고양이의 이름</string>
+    <string name="naming_cat_tooltip">반갑다냥! 내 이름을 지어줄래냥?</string>
 </resources>

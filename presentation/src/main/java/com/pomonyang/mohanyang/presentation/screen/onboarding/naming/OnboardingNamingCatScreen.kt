@@ -3,15 +3,12 @@ package com.pomonyang.mohanyang.presentation.screen.onboarding.naming
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,10 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
@@ -42,7 +37,9 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.tooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import kotlinx.coroutines.delay
 
 @Composable
 fun OnboardingNamingCatRoute(
@@ -55,14 +52,10 @@ fun OnboardingNamingCatRoute(
 
     val state by onboardingNamingCatViewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            onboardingNamingCatViewModel.effects.collect { effect ->
-                when (effect) {
-                    is NamingSideEffect.NavToHome -> {
-                        onNavToHome()
-                    }
-                }
+    onboardingNamingCatViewModel.effects.collectWithLifecycle { effect ->
+        when (effect) {
+            is NamingSideEffect.NavToHome -> {
+                onNavToHome()
             }
         }
     }
@@ -82,12 +75,16 @@ fun OnboardingNamingCatScreen(
     state: NamingState,
     modifier: Modifier = Modifier
 ) {
-    var name by rememberSaveable { mutableStateOf("") }
-
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val listState = rememberLazyListState()
+    var name by rememberSaveable { mutableStateOf("") }
+    val debounceTime = 300L
+
+    LaunchedEffect(name) {
+        delay(debounceTime)
+        onAction(NamingEvent.OnChangedName(name))
+    }
 
     Column(
         modifier = modifier
@@ -106,48 +103,41 @@ fun OnboardingNamingCatScreen(
             )
         })
 
-        LazyColumn(
-            state = listState,
+        Column(
             modifier = Modifier
-                .padding(
-                    horizontal = MnSpacing.xLarge
-                )
+                .padding(horizontal = MnSpacing.xLarge)
+                .padding(bottom = MnSpacing.small)
         ) {
-            item {
-                CatRive(modifier = Modifier.padding(top = 130.dp))
-                Text(
-                    modifier = Modifier.padding(
-                        top = MnSpacing.twoXLarge,
-                        bottom = MnSpacing.small
-                    ),
-                    text = stringResource(R.string.naming_cat),
-                    style = MnTheme.typography.subBodyRegular,
-                    color = MnTheme.textColorScheme.secondary
-                )
-                MnTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = name,
-                    isError = state.isError && name.isNotEmpty(),
-                    errorMessage = state.errorMessage,
-                    backgroundColor = MnColor.White,
-                    onValueChange = { value -> name = value }
-                )
-            }
+            CatRive(modifier = Modifier.padding(top = 130.dp))
+            Text(
+                modifier = Modifier.padding(
+                    top = MnSpacing.twoXLarge,
+                    bottom = MnSpacing.small
+                ),
+                text = stringResource(R.string.naming_cat),
+                style = MnTheme.typography.subBodyRegular,
+                color = MnTheme.textColorScheme.secondary
+            )
+            MnTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = name,
+                isError = state.isError && name.isNotEmpty(),
+                errorMessage = state.errorMessage,
+                backgroundColor = MnColor.White,
+                onValueChange = { value -> name = value }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            MnBoxButton(
+                text = stringResource(R.string.complete),
+                onClick = { onAction(NamingEvent.OnComplete(name)) },
+                isEnabled = name.isNotEmpty() && !state.isError,
+                modifier = Modifier.fillMaxWidth(),
+                colors = MnBoxButtonColorType.primary,
+                styles = MnBoxButtonStyles.large
+            )
         }
-        Spacer(modifier = Modifier.weight(1f))
-        MnBoxButton(
-            text = stringResource(R.string.complete),
-            onClick = { onAction(NamingEvent.OnComplete(name)) },
-            containerPadding = PaddingValues(
-                start = MnSpacing.xLarge,
-                end = MnSpacing.xLarge,
-                bottom = MnSpacing.small
-            ),
-            isEnabled = name.isNotEmpty(),
-            modifier = Modifier.fillMaxWidth(),
-            colors = MnBoxButtonColorType.primary,
-            styles = MnBoxButtonStyles.large
-        )
     }
 }
 

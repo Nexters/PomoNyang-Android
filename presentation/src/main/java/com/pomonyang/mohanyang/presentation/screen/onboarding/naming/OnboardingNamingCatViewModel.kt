@@ -13,6 +13,7 @@ data class NamingState(
 ) : ViewState
 
 sealed interface NamingEvent : ViewEvent {
+    data class OnChangedName(val name: String) : NamingEvent
     data class OnComplete(val name: String) : NamingEvent
 }
 
@@ -27,21 +28,21 @@ class OnboardingNamingCatViewModel @Inject constructor() : BaseViewModel<NamingS
 
     override fun handleEvent(event: NamingEvent) {
         when (event) {
-            is NamingEvent.OnComplete -> {
-                val verifyResult = catNameVerifier.verifyName(name = event.name)
+            is NamingEvent.OnChangedName -> {
+                if (event.name.isEmpty()) return
+                validateName(event.name)
+            }
 
-                if (verifyResult.isValid) {
-                    setEffect(NamingSideEffect.NavToHome)
-                } else {
-                    updateState {
-                        state.value.copy(
-                            isError = true,
-                            errorMessage = verifyResult.message
-                        )
-                    }
-                }
+            is NamingEvent.OnComplete -> {
+                setEffect(NamingSideEffect.NavToHome)
             }
         }
+    }
+
+    private fun validateName(name: String) {
+        val verifyResult = catNameVerifier.verifyName(name)
+        if (!state.value.isError && verifyResult.isValid) return
+        updateState { copy(isError = !verifyResult.isValid, errorMessage = verifyResult.message) }
     }
 
     companion object {
