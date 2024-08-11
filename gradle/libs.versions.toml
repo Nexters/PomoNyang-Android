@@ -39,6 +39,7 @@ dagger = "2.51.1"
 collections-immutable = "0.3.7"
 secrets = "2.0.1"
 google-services = "4.4.2"
+permission = "0.35.1-alpha"
 
 [libraries]
 # Compose
@@ -102,6 +103,7 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material3" }
 gradle-secrets = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "permission" }
 
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

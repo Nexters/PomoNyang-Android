@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.onboarding.select
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.domain.model.cat.CatSelectionContent
 import com.pomonyang.mohanyang.domain.model.cat.CatType
@@ -59,6 +63,7 @@ fun OnboardingSelectCatRoute(
             }
         }
     }
+    NotificationPermissionEffect()
 
     LaunchedEffect(Unit) {
         onboardingSelectCatViewModel.getCatTypes()
@@ -300,13 +305,19 @@ private fun CatCategory(
     }
 }
 
-@Preview
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PreviewAlarmExample() {
-    AlarmExample(
-        title = "알람",
-        selectedCat = CatType.CHEESE
+private fun NotificationPermissionEffect() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+    val notificationsPermissionState = rememberPermissionState(
+        android.Manifest.permission.POST_NOTIFICATIONS
     )
+    LaunchedEffect(notificationsPermissionState) {
+        val status = notificationsPermissionState.status
+        if (status is PermissionStatus.Denied && !status.shouldShowRationale) {
+            notificationsPermissionState.launchPermissionRequest()
+        }
+    }
 }
 
 @Preview
