@@ -28,11 +28,12 @@
 
     <string name="onboarding_select">고양이 선택</string>
     <string name="onboarding_select_title">어떤 고양이와 함께할까요?</string>
-    <string name="onboarding_select_subtitle">언제든지 다른 고양이와 함께할 수 있어요</string>
-    <string name="onboarding_select_start">이 고양이와 시작하기</string>
+    <string name="onboarding_select_subtitle">언제든지 다른 고양이와 선택할 수 있어요</string>
+    <string name="onboarding_select_start">이 고양이와 함꼐하기</string>
     <string name="onboarding_select_alarm_title">모하냥</string>
     <string name="onboarding_select_alarm_empty">고양이를 선택하면\n
 딴 짓 방해알림 예시를 보여드려요</string>
+    <string name="onboarding_select_alarm_time">지금</string>
 
 
 </resources>

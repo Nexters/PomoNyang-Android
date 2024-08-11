@@ -1,9 +1,9 @@
 package com.pomonyang.mohanyang.data.remote.service
 
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCategoryInfoRequest
+import com.pomonyang.mohanyang.data.remote.model.response.CatTypeResponse
 import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingResponse
 import retrofit2.http.Body
-import com.pomonyang.mohanyang.data.remote.model.response.CatTypeResponse
 import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path

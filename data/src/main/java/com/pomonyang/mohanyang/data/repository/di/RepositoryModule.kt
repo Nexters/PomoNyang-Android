@@ -1,5 +1,7 @@
 package com.pomonyang.mohanyang.data.repository.di
 
+import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepository
+import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepositoryImpl
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepositoryImpl
 import com.pomonyang.mohanyang.data.repository.user.UserRepository

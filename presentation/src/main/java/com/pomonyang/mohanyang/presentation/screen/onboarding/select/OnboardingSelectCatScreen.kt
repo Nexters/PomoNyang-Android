@@ -42,8 +42,6 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnAppBarColor
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.displayAlarm
-import java.time.LocalTime
 
 @Composable
 fun OnboardingSelectCatRoute(
@@ -117,7 +115,7 @@ fun OnboardingSelectCatScreen(
             )
             Text(
                 stringResource(R.string.onboarding_select_subtitle),
-                modifier = Modifier.padding(bottom = 47.dp),
+                modifier = Modifier.padding(bottom = 42.dp),
                 style = MnTheme.typography.bodyRegular,
                 color = MnTheme.textColorScheme.secondary
             )
@@ -126,7 +124,12 @@ fun OnboardingSelectCatScreen(
                 selectedCat = state.selectedType
             )
 
-            CatRive(modifier = Modifier.padding(top = MnSpacing.medium, bottom = 43.dp))
+            CatRive(
+                modifier = Modifier.padding(
+                    top = MnSpacing.medium,
+                    bottom = 42.dp
+                )
+            )
 
             CatCategory(
                 cats = state.cats,
@@ -163,6 +166,7 @@ private fun AlarmExample(
                 shape = RoundedCornerShape(MnRadius.xSmall)
             )
             .fillMaxWidth()
+            .height(72.dp)
             .padding(14.dp)
     ) {
         if (selectedCat != null) {
@@ -217,7 +221,7 @@ fun SelectedAlarmExample(
             }
         }
         Text(
-            LocalTime.now().displayAlarm(),
+            stringResource(id = R.string.onboarding_select_alarm_time),
             style = MnTheme.typography.bodyRegular,
             color = MnTheme.textColorScheme.secondary
         )
@@ -271,7 +275,7 @@ private fun CatCategory(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .height(100.dp)
+                    .height(80.dp)
             ) {
                 MnSelectButton(
                     modifier = Modifier.fillMaxSize(),
