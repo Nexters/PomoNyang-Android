@@ -46,6 +46,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnAppBarColor
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun OnboardingSelectCatRoute(
@@ -138,7 +140,7 @@ fun OnboardingSelectCatScreen(
             )
 
             CatCategory(
-                cats = state.cats,
+                cats = state.cats.toPersistentList(),
                 selectedType = state.selectedType,
                 onClickCatType = { type ->
                     onAction(SelectCatEvent.OnSelectType(type))
@@ -268,7 +270,7 @@ private fun CatRive(
 
 @Composable
 private fun CatCategory(
-    cats: List<CatSelectionContent>,
+    cats: PersistentList<CatSelectionContent>,
     selectedType: CatType?,
     onClickCatType: (CatType) -> Unit,
     modifier: Modifier = Modifier
