@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -50,6 +51,7 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -63,17 +65,22 @@ fun MnWheelMinutePicker(
 ) {
     val screenHeightPixel = LocalConfiguration.current.screenHeightDp
     val halfDisplayCount = when {
-        screenHeightPixel <= 640 -> 1
-        screenHeightPixel in 641..740 -> 2
-        screenHeightPixel in 741..812 -> 3
-        else -> 4
+        screenHeightPixel <= 700 -> 2
+        screenHeightPixel in 701..950 -> 3
+        screenHeightPixel in 950..1150 -> 4
+        else -> 5
     }
     val scrollState = rememberLazyListState(items.indexOf(initialItem))
     val coroutineScope = rememberCoroutineScope()
     val itemHeight = MnWheelPickerDefaults.itemHeight
     val focusItemHeight = MnWheelPickerDefaults.focusItemHeight
-    val wheelHeight = (2 * halfDisplayCount) * itemHeight + focusItemHeight
+    val wheelHeight = (2 * halfDisplayCount) * (itemHeight + MnWheelPickerDefaults.itemSpacing) + focusItemHeight
     val brushColor = mnWheelPickerColor.fadeColor
+
+    LaunchedEffect(Unit) {
+        delay(100)
+        scrollState.animateScrollToItem(items.indexOf(initialItem))
+    }
 
     Box(
         modifier = modifier
@@ -189,8 +196,8 @@ private fun BoxScope.WheelItemList(
             .matchParentSize()
             .zIndex(1f)
             .nestedScroll(nestedScrollConnection),
-        contentPadding = PaddingValues(vertical = itemHeight * halfDisplayCount),
-        verticalArrangement = Arrangement.spacedBy(28.dp),
+        contentPadding = PaddingValues(vertical = (itemHeight + MnWheelPickerDefaults.itemSpacing) * halfDisplayCount),
+        verticalArrangement = Arrangement.spacedBy(MnWheelPickerDefaults.itemSpacing),
         state = scrollState,
         flingBehavior = rememberSnapFlingBehavior(scrollState)
     ) {
@@ -237,7 +244,7 @@ private fun LazyListState.getCentralItemIndex(): Int? {
 
 @Preview
 @Composable
-fun MnWheelPickerPreview() {
+private fun MnWheelPickerPreview() {
     MnTheme {
         Box(
             modifier = Modifier
