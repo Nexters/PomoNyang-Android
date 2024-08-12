@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.pomonyang.mohanyang.presentation.screen.home.Home
 import com.pomonyang.mohanyang.presentation.screen.onboarding.guide.OnboardingGuideRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.naming.OnboardingNamingCatRoute
@@ -21,7 +22,9 @@ internal data object OnboardingGuide
 internal data object OnboardingSelectCat
 
 @Serializable
-internal data object OnboardingNamingCat
+internal data class OnboardingNamingCat(
+    val catNo: Int
+)
 
 fun NavGraphBuilder.onboardingScreen(
     navigateUp: () -> Unit,
@@ -40,14 +43,18 @@ fun NavGraphBuilder.onboardingScreen(
 
         composable<OnboardingSelectCat> {
             OnboardingSelectCatRoute(
-                onNamingClick = {
-                    navHostController.navigate(OnboardingNamingCat)
+                onBackClick = { navHostController.popBackStack() },
+                onNavToNaming = { catNo ->
+                    navHostController.navigate(OnboardingNamingCat(catNo = catNo))
                 }
             )
         }
 
-        composable<OnboardingNamingCat> {
+        composable<OnboardingNamingCat> { navBackStackEntry ->
+            val catNo = navBackStackEntry.toRoute<OnboardingNamingCat>().catNo
+
             OnboardingNamingCatRoute(
+                catNo = catNo,
                 onBackClick = { navHostController.popBackStack() },
                 onNavToHome = {
                     navHostController.navigate(

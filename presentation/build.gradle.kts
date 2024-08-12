@@ -12,6 +12,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.dagger.hilt.android)
     implementation(libs.bundles.androidx.compose.navigation)
+    implementation(libs.permission)
 
     // module impl
     implementation(projects.domain)
