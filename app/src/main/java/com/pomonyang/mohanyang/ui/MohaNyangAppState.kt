@@ -35,8 +35,8 @@ fun rememberMohaNyangAppState(
 class MohaNyangAppState(
     val isNewUser: Boolean,
     val navHostController: NavHostController,
-    networkMonitor: NetworkMonitor,
-    coroutineScope: CoroutineScope
+    val coroutineScope: CoroutineScope,
+    networkMonitor: NetworkMonitor
 ) {
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)

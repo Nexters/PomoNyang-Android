@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration.Short
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pomonyang.mohanyang.navigation.MohaNyangNavHost
 import com.pomonyang.mohanyang.presentation.designsystem.toast.MnToastSnackbarHost
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun MohaNyangApp(
@@ -50,11 +50,13 @@ private fun MohaNyangApp(
 
         MohaNyangNavHost(
             onShowSnackbar = { message, action ->
-                snackbarHostState.showSnackbar(
-                    message = message,
-                    actionLabel = action,
-                    duration = Short
-                ) == ActionPerformed
+                mohaNyangAppState.coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = message,
+                        actionLabel = action,
+                        duration = Short
+                    )
+                }
             },
             mohaNyangAppState = mohaNyangAppState,
             modifier = Modifier.padding(innerPadding)

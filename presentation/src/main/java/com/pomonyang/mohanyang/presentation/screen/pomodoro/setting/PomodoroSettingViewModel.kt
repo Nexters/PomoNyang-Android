@@ -12,13 +12,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 data class PomodoroState(
     val categoryList: List<PomodoroCategoryModel> = emptyList(),
     val selectedCategoryNo: Int = 0,
     val showCategoryBottomSheet: Boolean = false
-) : ViewState
+) : ViewState {
+    fun getSelectedCategory() = categoryList.find { it.categoryNo == selectedCategoryNo }
+}
 
 sealed interface PomodoroEvent : ViewEvent {
     data object Init : PomodoroEvent
@@ -31,29 +32,43 @@ sealed interface PomodoroEvent : ViewEvent {
     data class ClickCategoryConfirmButton(val confirmCategoryNo: Int) : PomodoroEvent
 }
 
-sealed interface PomodoroSideEffect : ViewSideEffect {
-    data class ShowSnackBar(val message: String) : PomodoroSideEffect
+sealed interface PomodoroSettingSideEffect : ViewSideEffect {
+    data class ShowSnackBar(val message: String) : PomodoroSettingSideEffect
+    data class GoTimeSetting(
+        val isFocusTime: Boolean,
+        val type: String,
+        val focusMinute: Long,
+        val restMinute: Long,
+        val categoryNo: Int
+    ) : PomodoroSettingSideEffect
 }
 
 @HiltViewModel
-class PomodoroViewModel @Inject constructor(
+class PomodoroSettingViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
     private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase
-) : BaseViewModel<PomodoroState, PomodoroEvent, PomodoroSideEffect>() {
+) : BaseViewModel<PomodoroState, PomodoroEvent, PomodoroSettingSideEffect>() {
 
     override fun setInitialState(): PomodoroState = PomodoroState()
 
     override fun handleEvent(event: PomodoroEvent) {
-        Timber.tag("koni").d("handleEvent > $event")
         when (event) {
             PomodoroEvent.ClickCategory -> {
                 updateState { copy(showCategoryBottomSheet = true) }
             }
 
-            PomodoroEvent.ClickFocusTime -> TODO()
+            PomodoroEvent.ClickFocusTime -> {
+                handleTimeSetting(isFocusTime = true)
+            }
+
+            PomodoroEvent.ClickRestTime -> {
+                handleTimeSetting(isFocusTime = false)
+            }
+
             PomodoroEvent.ClickMyInfo -> TODO()
-            PomodoroEvent.ClickRestTime -> TODO()
+
             PomodoroEvent.ClickStartPomodoro -> TODO()
+
             PomodoroEvent.Init -> {
                 collectCategoryData()
             }
@@ -76,14 +91,28 @@ class PomodoroViewModel @Inject constructor(
         if (state.value.selectedCategoryNo != event.confirmCategoryNo) {
             val title = state.value.categoryList.find { it.categoryNo == event.confirmCategoryNo }?.title
             // TODO 지훈 여기 나중에 리소스로 변경
-            setEffect(PomodoroSideEffect.ShowSnackBar("$title 카테고리로 변경했어요"))
+            setEffect(PomodoroSettingSideEffect.ShowSnackBar("$title 카테고리로 변경했어요"))
         }
+    }
+
+    private fun handleTimeSetting(isFocusTime: Boolean) {
+        state.value.getSelectedCategory()?.let {
+            setEffect(
+                PomodoroSettingSideEffect.GoTimeSetting(
+                    isFocusTime = isFocusTime,
+                    type = it.title,
+                    focusMinute = it.focusTime,
+                    restMinute = it.restTime,
+                    categoryNo = it.categoryNo
+                )
+            )
+        } ?: setEffect(PomodoroSettingSideEffect.ShowSnackBar("카테고리를 설정해주세요"))
     }
 
     private fun collectCategoryData() {
         viewModelScope.launch {
             getPomodoroSettingListUseCase()
-                .catch { setEffect(PomodoroSideEffect.ShowSnackBar("$it")) }
+                .catch { setEffect(PomodoroSettingSideEffect.ShowSnackBar("$it")) }
                 .collect { result ->
                     val (data, recentCategoryNo) = result
                     updateState { copy(categoryList = data, selectedCategoryNo = recentCategoryNo) }

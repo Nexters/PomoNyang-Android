@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,11 +34,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.domain.model.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
@@ -52,6 +55,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.tooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.TimeSetting
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
@@ -60,32 +64,45 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
-fun PomodoroRoute(
+fun PomodoroSettingRoute(
     isNewUser: Boolean,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    navHostController: NavHostController,
+    onShowSnackbar: suspend (String, String?) -> Unit,
     modifier: Modifier = Modifier,
-    pomodoroViewModel: PomodoroViewModel = hiltViewModel()
+    pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
-    val state by pomodoroViewModel.state.collectAsStateWithLifecycle()
-    pomodoroViewModel.effects.collectWithLifecycle { effect ->
+    val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
+    pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         Timber.tag("koni").d("handleEffect > $effect")
         when (effect) {
-            is PomodoroSideEffect.ShowSnackBar -> {
+            is PomodoroSettingSideEffect.ShowSnackBar -> {
                 onShowSnackbar(effect.message, null)
+            }
+
+            is PomodoroSettingSideEffect.GoTimeSetting -> {
+                navHostController.navigate(
+                    TimeSetting(
+                        isFocusTime = effect.isFocusTime,
+                        type = effect.type,
+                        focusMinute = effect.focusMinute,
+                        restMinute = effect.restMinute,
+                        categoryNo = effect.categoryNo
+                    )
+                )
             }
         }
     }
 
     if (state.showCategoryBottomSheet) {
         PomodoroCategoryBottomSheet(
-            onAction = pomodoroViewModel::handleEvent,
+            onAction = pomodoroSettingViewModel::handleEvent,
             categoryList = state.categoryList,
             initialCategoryNo = state.selectedCategoryNo
         )
     }
 
     PomodoroSettingScreen(
-        onAction = pomodoroViewModel::handleEvent,
+        onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
         modifier = modifier,
         isNewUser = isNewUser
@@ -143,7 +160,9 @@ fun PomodoroSettingScreen(
                 isNewUser = isNewUser,
                 selectedCategoryData = pomodoroSelectedCategoryModel
             )
-            StartButton()
+            SettingButton(
+                backgroundColor = MnTheme.backgroundColorScheme.accent1
+            ) {}
         }
     }
 }
@@ -155,7 +174,7 @@ private fun PomodoroCategoryBottomSheet(
     initialCategoryNo: Int,
     modifier: Modifier = Modifier
 ) {
-    var currentSelectedCategoryNo by remember { mutableStateOf(initialCategoryNo) }
+    var currentSelectedCategoryNo by remember { mutableIntStateOf(initialCategoryNo) }
 
     MnBottomSheet(
         onDismissRequest = { onAction(PomodoroEvent.DismissCategoryDialog) },
@@ -257,9 +276,17 @@ private fun PomodoroDetailSetting(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
-            TimeComponent(type = stringResource(R.string.focus), time = stringResource(R.string.minute, selectedCategoryData?.focusTime ?: 0))
+            TimeComponent(
+                modifier = Modifier.noRippleClickable { onAction(PomodoroEvent.ClickFocusTime) },
+                type = stringResource(R.string.focus),
+                time = stringResource(R.string.minute, selectedCategoryData?.focusTime ?: 0)
+            )
             TimeDivider()
-            TimeComponent(type = stringResource(R.string.rest), time = stringResource(R.string.minute, selectedCategoryData?.restTime ?: 0))
+            TimeComponent(
+                modifier = Modifier.noRippleClickable { onAction(PomodoroEvent.ClickRestTime) },
+                type = stringResource(R.string.rest),
+                time = stringResource(R.string.minute, selectedCategoryData?.restTime ?: 0)
+            )
         }
     }
 }
@@ -334,13 +361,17 @@ private fun TimeDivider(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun StartButton() {
+fun SettingButton(
+    backgroundColor: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(88.dp)
             .clip(CircleShape)
-            .background(color = MnTheme.backgroundColorScheme.accent1)
-            .clickable { },
+            .background(color = backgroundColor)
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         MnLargeIcon(
@@ -393,5 +424,7 @@ fun FocusBoxPreview() {
 @Composable
 @Preview(showBackground = true)
 fun StartButtonPreview() {
-    StartButton()
+    SettingButton(
+        backgroundColor = MnTheme.backgroundColorScheme.accent1
+    ) {}
 }
