@@ -19,6 +19,7 @@ data class SelectCatState(
 ) : ViewState
 
 sealed interface SelectCatEvent : ViewEvent {
+    data object Init : SelectCatEvent
     data class OnSelectType(val type: CatType) : SelectCatEvent
     data object OnStartClick : SelectCatEvent
 }
@@ -36,6 +37,10 @@ class OnboardingSelectCatViewModel @Inject constructor(
 
     override fun handleEvent(event: SelectCatEvent) {
         when (event) {
+            is SelectCatEvent.Init -> {
+                getCatTypes()
+            }
+
             is SelectCatEvent.OnSelectType -> {
                 updateState { copy(selectedType = event.type) }
             }
@@ -50,7 +55,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
         }
     }
 
-    suspend fun getCatTypes() {
+    private fun getCatTypes() {
         viewModelScope.launch {
             catSettingRepository.getCatTypes().also { response ->
                 response.onSuccess { cats ->

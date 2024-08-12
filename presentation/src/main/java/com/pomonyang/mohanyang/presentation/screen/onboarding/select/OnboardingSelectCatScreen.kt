@@ -63,11 +63,8 @@ fun OnboardingSelectCatRoute(
             }
         }
     }
-    NotificationPermissionEffect()
 
-    LaunchedEffect(Unit) {
-        onboardingSelectCatViewModel.getCatTypes()
-    }
+    NotificationPermissionEffect()
 
     OnboardingSelectCatScreen(
         onBackClick = onBackClick,
@@ -84,6 +81,10 @@ fun OnboardingSelectCatScreen(
     state: SelectCatState,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(Unit) {
+        onAction(SelectCatEvent.Init)
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
