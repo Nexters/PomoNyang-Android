@@ -18,7 +18,7 @@
         <activity
             android:name="com.pomonyang.mohanyang.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Mohanyang">
+            android:theme="@style/Theme.Mohanyang.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

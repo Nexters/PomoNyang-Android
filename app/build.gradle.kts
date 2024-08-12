@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
     implementation(libs.bundles.androidx.compose.navigation)
+    implementation(libs.androidx.core.splashscreen)
 
     // module impl
     implementation(projects.data)
