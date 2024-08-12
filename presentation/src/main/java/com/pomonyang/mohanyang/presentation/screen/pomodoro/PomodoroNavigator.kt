@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.PomodoroRoute
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.PomodoroSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.time.PomodoroTimeSettingRoute
 import kotlinx.serialization.Serializable
 
@@ -33,7 +33,7 @@ fun NavGraphBuilder.pomodoroScreen(
         startDestination = PomodoroSetting
     ) {
         composable<PomodoroSetting> {
-            PomodoroRoute(
+            PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,
                 navHostController = navHostController

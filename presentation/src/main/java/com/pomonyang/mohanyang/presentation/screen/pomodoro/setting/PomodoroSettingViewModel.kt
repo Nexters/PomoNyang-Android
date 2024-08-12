@@ -32,22 +32,22 @@ sealed interface PomodoroEvent : ViewEvent {
     data class ClickCategoryConfirmButton(val confirmCategoryNo: Int) : PomodoroEvent
 }
 
-sealed interface PomodoroSideEffect : ViewSideEffect {
-    data class ShowSnackBar(val message: String) : PomodoroSideEffect
+sealed interface PomodoroSettingSideEffect : ViewSideEffect {
+    data class ShowSnackBar(val message: String) : PomodoroSettingSideEffect
     data class GoTimeSetting(
         val isFocusTime: Boolean,
         val type: String,
         val focusMinute: Long,
         val restMinute: Long,
         val categoryNo: Int
-    ) : PomodoroSideEffect
+    ) : PomodoroSettingSideEffect
 }
 
 @HiltViewModel
-class PomodoroViewModel @Inject constructor(
+class PomodoroSettingViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
     private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase
-) : BaseViewModel<PomodoroState, PomodoroEvent, PomodoroSideEffect>() {
+) : BaseViewModel<PomodoroState, PomodoroEvent, PomodoroSettingSideEffect>() {
 
     override fun setInitialState(): PomodoroState = PomodoroState()
 
@@ -91,14 +91,14 @@ class PomodoroViewModel @Inject constructor(
         if (state.value.selectedCategoryNo != event.confirmCategoryNo) {
             val title = state.value.categoryList.find { it.categoryNo == event.confirmCategoryNo }?.title
             // TODO 지훈 여기 나중에 리소스로 변경
-            setEffect(PomodoroSideEffect.ShowSnackBar("$title 카테고리로 변경했어요"))
+            setEffect(PomodoroSettingSideEffect.ShowSnackBar("$title 카테고리로 변경했어요"))
         }
     }
 
     private fun handleTimeSetting(isFocusTime: Boolean) {
         state.value.getSelectedCategory()?.let {
             setEffect(
-                PomodoroSideEffect.GoTimeSetting(
+                PomodoroSettingSideEffect.GoTimeSetting(
                     isFocusTime = isFocusTime,
                     type = it.title,
                     focusMinute = it.focusTime,
@@ -106,13 +106,13 @@ class PomodoroViewModel @Inject constructor(
                     categoryNo = it.categoryNo
                 )
             )
-        } ?: setEffect(PomodoroSideEffect.ShowSnackBar("카테고리를 설정해주세요"))
+        } ?: setEffect(PomodoroSettingSideEffect.ShowSnackBar("카테고리를 설정해주세요"))
     }
 
     private fun collectCategoryData() {
         viewModelScope.launch {
             getPomodoroSettingListUseCase()
-                .catch { setEffect(PomodoroSideEffect.ShowSnackBar("$it")) }
+                .catch { setEffect(PomodoroSettingSideEffect.ShowSnackBar("$it")) }
                 .collect { result ->
                     val (data, recentCategoryNo) = result
                     updateState { copy(categoryList = data, selectedCategoryNo = recentCategoryNo) }

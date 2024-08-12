@@ -64,22 +64,22 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
-fun PomodoroRoute(
+fun PomodoroSettingRoute(
     isNewUser: Boolean,
     navHostController: NavHostController,
     onShowSnackbar: suspend (String, String?) -> Unit,
     modifier: Modifier = Modifier,
-    pomodoroViewModel: PomodoroViewModel = hiltViewModel()
+    pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
-    val state by pomodoroViewModel.state.collectAsStateWithLifecycle()
-    pomodoroViewModel.effects.collectWithLifecycle { effect ->
+    val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
+    pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         Timber.tag("koni").d("handleEffect > $effect")
         when (effect) {
-            is PomodoroSideEffect.ShowSnackBar -> {
+            is PomodoroSettingSideEffect.ShowSnackBar -> {
                 onShowSnackbar(effect.message, null)
             }
 
-            is PomodoroSideEffect.GoTimeSetting -> {
+            is PomodoroSettingSideEffect.GoTimeSetting -> {
                 navHostController.navigate(
                     TimeSetting(
                         isFocusTime = effect.isFocusTime,
@@ -95,14 +95,14 @@ fun PomodoroRoute(
 
     if (state.showCategoryBottomSheet) {
         PomodoroCategoryBottomSheet(
-            onAction = pomodoroViewModel::handleEvent,
+            onAction = pomodoroSettingViewModel::handleEvent,
             categoryList = state.categoryList,
             initialCategoryNo = state.selectedCategoryNo
         )
     }
 
     PomodoroSettingScreen(
-        onAction = pomodoroViewModel::handleEvent,
+        onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
         modifier = modifier,
         isNewUser = isNewUser
