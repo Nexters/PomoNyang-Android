@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang
 
+import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,6 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
@@ -52,6 +55,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val coroutineScope = rememberCoroutineScope()
+            val activity = (LocalContext.current as? Activity)
 
             val isNewUser = userRepository.isNewUser()
             var showDialog by remember { mutableStateOf(isNewUser && !networkMonitor.isConnected) }
@@ -74,6 +78,10 @@ class MainActivity : ComponentActivity() {
                 )
                 if (showDialog) {
                     MnDialog(
+                        properties = DialogProperties(
+                            dismissOnClickOutside = false,
+                            dismissOnBackPress = true
+                        ),
                         title = "네트워크 연결 실패",
                         subTitle = "네트워크 연결에 실패하였습니다.\n확인 후 다시 시도해 주세요",
                         positiveButton = {
@@ -85,7 +93,9 @@ class MainActivity : ComponentActivity() {
                                 styles = MnBoxButtonStyles.medium
                             )
                         },
-                        onDismissRequest = {}
+                        onDismissRequest = {
+                            activity?.finish()
+                        }
                     )
                 } else {
                     MohaNyangApp(mohaNyangAppState = mohaNyangAppState)
