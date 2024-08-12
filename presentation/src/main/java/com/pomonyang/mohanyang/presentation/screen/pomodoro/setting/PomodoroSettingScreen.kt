@@ -42,7 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.domain.model.PomodoroCategoryModel
+import com.pomonyang.mohanyang.domain.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType

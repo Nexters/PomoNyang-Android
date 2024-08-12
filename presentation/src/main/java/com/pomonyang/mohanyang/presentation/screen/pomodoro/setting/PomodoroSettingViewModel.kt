@@ -3,8 +3,8 @@ package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
-import com.pomonyang.mohanyang.domain.model.PomodoroCategoryModel
-import com.pomonyang.mohanyang.domain.model.toModel
+import com.pomonyang.mohanyang.domain.model.setting.PomodoroCategoryModel
+import com.pomonyang.mohanyang.domain.model.user.toModel
 import com.pomonyang.mohanyang.domain.usecase.GetPomodoroSettingListUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
