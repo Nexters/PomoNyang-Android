@@ -14,6 +14,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -24,9 +25,9 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class FocusNotificationService : Service() {
 
-    val selectedCatType = CatType.CHEESE
+    private val selectedCatType = CatType.CHEESE
 
-    private val serviceScope = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var focusNotificationJob: Job? = null
     private val focusNotifications = ArrayList<PendingIntent>()
 
@@ -38,6 +39,7 @@ class FocusNotificationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         observeLockScreen()
+
         startFocusNotify()
         return super.onStartCommand(intent, flags, startId)
     }
@@ -59,7 +61,7 @@ class FocusNotificationService : Service() {
             if (isLocked) {
                 stopNotify()
             }
-        }.launchIn(serviceScope)
+        }.launchIn(scope)
     }
 
     private fun stopNotify() {
@@ -67,43 +69,43 @@ class FocusNotificationService : Service() {
             forEach { mnAlarmManager.cancelAlarm(it) }
             clear()
         }
-        serviceScope.cancel()
+        scope.cancel()
         focusNotificationJob?.cancel()
         focusNotificationJob = null
         stopSelf()
     }
 
+    private fun addAlarm(time: LocalTime, message: String = "") {
+        mnAlarmManager.createAlarm(
+            time,
+            title = applicationContext.getString(R.string.app_name),
+            message = message
+        ).also {
+            focusNotifications.add(it)
+        }
+    }
+
     private fun startFocusNotify() {
-        focusNotificationJob = serviceScope.launch {
+        focusNotificationJob = scope.launch {
             // 10초 후 첫 알림 전송
             delay(FIRST_DELAY)
-            mnAlarmManager.createAlarm(
-                LocalTime.now(),
-                title = applicationContext.getString(R.string.app_name),
-                message = "10초 : ${selectedCatType.pushContent}"
-            ).also {
-                focusNotifications.add(it)
-            }
+            addAlarm(LocalTime.now(), "10초: ${selectedCatType.pushContent}")
+
             // 30초마다 반복 알림 전송
             repeat(MAX_NOTIFICATION_COUNT) {
                 delay(REPEAT_DELAY)
-                mnAlarmManager.createAlarm(
-                    LocalTime.now(),
-                    title = applicationContext.getString(R.string.app_name),
-                    message = "${(REPEAT_DELAY / 1000).toInt()}초 :  ${selectedCatType.pushContent}"
-                ).also { alarm ->
-                    focusNotifications.add(alarm)
-                }
+                addAlarm(LocalTime.now(), "30초: ${selectedCatType.pushContent} ${(it + 1)}/${MAX_NOTIFICATION_COUNT}")
             }
+            delay(LAST_ALARM_DISPLAY_DURATION)
             stopSelf()
         }
     }
 
     companion object {
-        private const val MAX_NOTIFICATION_COUNT = 10
-
         // TODO 최대 수가 없다고 픽스나면 while true로 변경하기
+        private const val MAX_NOTIFICATION_COUNT = 10
         private const val FIRST_DELAY = 10_000L
         private const val REPEAT_DELAY = 30_000L
+        private const val LAST_ALARM_DISPLAY_DURATION = REPEAT_DELAY * 3 // TODO 임시로 임의 지정
     }
 }
