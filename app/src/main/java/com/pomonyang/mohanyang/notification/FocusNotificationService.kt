@@ -5,8 +5,9 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.data.local.device.util.lockScreenState
-import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius.max
+import com.pomonyang.mohanyang.domain.model.cat.CatType
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalTime
 import javax.inject.Inject
@@ -22,6 +23,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FocusNotificationService : Service() {
+
+    val selectedCatType = CatType.CHEESE
 
     private val serviceScope = CoroutineScope(Dispatchers.Default)
     private var focusNotificationJob: Job? = null
@@ -74,13 +77,21 @@ class FocusNotificationService : Service() {
         focusNotificationJob = serviceScope.launch {
             // 10초 후 첫 알림 전송
             delay(FIRST_DELAY)
-            mnAlarmManager.createAlarm(LocalTime.now(), title = "첫 번째 알림", message = "10초 후 첫 번째 알림이 도착했습니다.").also {
+            mnAlarmManager.createAlarm(
+                LocalTime.now(),
+                title = applicationContext.getString(R.string.app_name),
+                message = "10초 : ${selectedCatType.pushContent}"
+            ).also {
                 focusNotifications.add(it)
             }
             // 30초마다 반복 알림 전송
             repeat(MAX_NOTIFICATION_COUNT) {
                 delay(REPEAT_DELAY)
-                mnAlarmManager.createAlarm(LocalTime.now(), title = "반복 알림", message = "${(REPEAT_DELAY / 1000).toInt()}}초마다 반복 알림이 도착했습니다. (${it + 1}/$max)").also { alarm ->
+                mnAlarmManager.createAlarm(
+                    LocalTime.now(),
+                    title = applicationContext.getString(R.string.app_name),
+                    message = "${(REPEAT_DELAY / 1000).toInt()}초 :  ${selectedCatType.pushContent}"
+                ).also { alarm ->
                     focusNotifications.add(alarm)
                 }
             }
@@ -90,7 +101,9 @@ class FocusNotificationService : Service() {
 
     companion object {
         private const val MAX_NOTIFICATION_COUNT = 10
+
+        // TODO 최대 수가 없다고 픽스나면 while true로 변경하기
         private const val FIRST_DELAY = 10_000L
-        private const val REPEAT_DELAY = 3_000L
+        private const val REPEAT_DELAY = 30_000L
     }
 }

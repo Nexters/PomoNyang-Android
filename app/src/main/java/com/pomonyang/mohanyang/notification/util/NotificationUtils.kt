@@ -38,6 +38,8 @@ fun Context.defaultNotification(
     .setPriority(NotificationCompat.PRIORITY_HIGH)
     .setAutoCancel(true)
     .setOnlyAlertOnce(true)
+    .setFullScreenIntent(pendingIntent, true)
+    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
     .setGroup(getString(R.string.channel_group_name))
 
 fun Context.summaryNotification(pendingIntent: PendingIntent? = null): NotificationCompat.Builder = this.defaultNotification(pendingIntent)
