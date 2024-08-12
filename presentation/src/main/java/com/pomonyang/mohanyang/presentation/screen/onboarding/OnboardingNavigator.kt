@@ -57,7 +57,6 @@ fun NavGraphBuilder.onboardingScreen(
                 catNo = catNo,
                 onBackClick = { navHostController.popBackStack() },
                 onNavToHome = {
-                
                     navHostController.navigate(
                         route = Home,
                         navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(false).build()

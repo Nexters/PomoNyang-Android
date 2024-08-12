@@ -12,6 +12,7 @@ import com.pomonyang.mohanyang.presentation.base.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 data class SelectCatState(
     val cats: List<CatSelectionContent> = emptyList(),
@@ -49,7 +50,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
                 with(state.value) {
                     cats.find { it.type == selectedType }?.no
                 }?.let { selectedNo ->
-                    setEffect(SelectCatSideEffect.OnNavToNaming(selectedNo))
+                    updateSelectCatType(selectedNo)
                 }
             }
         }
@@ -61,6 +62,16 @@ class OnboardingSelectCatViewModel @Inject constructor(
                 response.onSuccess { cats ->
                     updateState { copy(cats = cats.map { it.toModel() }) }
                 }
+            }
+        }
+    }
+
+    private fun updateSelectCatType(catNo: Int) {
+        viewModelScope.launch {
+            catSettingRepository.updateCatType(catNo).onSuccess {
+                setEffect(SelectCatSideEffect.OnNavToNaming(catNo))
+            }.onFailure {
+                Timber.e(it)
             }
         }
     }

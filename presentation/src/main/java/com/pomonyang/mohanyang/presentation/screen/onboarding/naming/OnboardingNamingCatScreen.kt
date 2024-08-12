@@ -44,11 +44,11 @@ import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun OnboardingNamingCatRoute(
+    catNo: Int,
     onBackClick: () -> Unit,
     onNavToHome: () -> Unit,
     modifier: Modifier = Modifier,
     onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel()
-    catNo: Int,
 ) {
     onboardingNamingCatViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
@@ -68,6 +68,7 @@ fun OnboardingNamingCatRoute(
 
 @Composable
 fun OnboardingNamingCatScreen(
+    catNo: Int,
     onAction: (NamingEvent) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -173,6 +174,7 @@ fun CatRive(modifier: Modifier = Modifier) {
 @Preview
 fun PreviewOnboardingNamingCatScreen() {
     OnboardingNamingCatScreen(
+        catNo = 1,
         onBackClick = {},
         onAction = { _ -> }
     )
