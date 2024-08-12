@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
 
     <application
         android:name="com.pomonyang.mohanyang.MohaNyangApplication"
@@ -26,6 +28,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".notification.LocalNotificationReceiver" />
+        <service android:name=".notification.FocusNotificationService" />
     </application>
 
 </manifest>
