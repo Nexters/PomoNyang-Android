@@ -47,35 +47,18 @@ private fun PomodoroTimerScreen(
     exceededTime: String,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        MnTopAppBar(
-            navigationIcon = {
-                CategoryBox(categoryName = "작업")
-            }
-        )
-        PomodoroTimerContents(
-            isFocus = isFocus,
-            time = time,
-            exceededTime = exceededTime
-        )
-    }
-}
-
-@Composable
-private fun PomodoroTimerContents(
-    modifier: Modifier = Modifier,
-    isFocus: Boolean,
-    time: String,
-    exceededTime: String
-) {
     val typeRes = if (isFocus) R.string.focus_action else R.string.rest_action
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        MnTopAppBar(
+            navigationIcon = {
+                CategoryBox(categoryName = "작업")
+            }
+        )
+
         Spacer(modifier = Modifier.weight(1f))
 
         CatRive()
