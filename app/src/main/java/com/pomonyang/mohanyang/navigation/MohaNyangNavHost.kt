@@ -3,10 +3,9 @@ package com.pomonyang.mohanyang.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.pomonyang.mohanyang.presentation.screen.home.Home
-import com.pomonyang.mohanyang.presentation.screen.home.homeScreen
 import com.pomonyang.mohanyang.presentation.screen.onboarding.Onboarding
 import com.pomonyang.mohanyang.presentation.screen.onboarding.onboardingScreen
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.pomodoroScreen
 import com.pomonyang.mohanyang.ui.MohaNyangAppState
 
@@ -22,7 +21,7 @@ internal fun MohaNyangNavHost(
     val startDestination: Any = if (mohaNyangAppState.isNewUser) {
         Onboarding
     } else {
-        Home
+        Pomodoro
     }
 
     NavHost(
@@ -31,12 +30,6 @@ internal fun MohaNyangNavHost(
         modifier = modifier
     ) {
         onboardingScreen(
-            navigateUp = navigateUp,
-            navHostController = mohaNyangAppState.navHostController
-        )
-
-        homeScreen(
-            navigateUp = navigateUp,
             navHostController = mohaNyangAppState.navHostController
         )
 

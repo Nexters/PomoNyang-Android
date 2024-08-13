@@ -65,10 +65,10 @@ fun MnWheelMinutePicker(
 ) {
     val screenHeightPixel = LocalConfiguration.current.screenHeightDp
     val halfDisplayCount = when {
-        screenHeightPixel <= 700 -> 2
-        screenHeightPixel in 701..950 -> 3
-        screenHeightPixel in 950..1150 -> 4
-        else -> 5
+        screenHeightPixel <= 700 -> 1
+        screenHeightPixel in 701..950 -> 2
+        screenHeightPixel in 950..1150 -> 3
+        else -> 4
     }
     val scrollState = rememberLazyListState(items.indexOf(initialItem))
     val coroutineScope = rememberCoroutineScope()

@@ -40,7 +40,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.domain.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
@@ -55,7 +54,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.guideTooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.TimeSetting
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
@@ -66,8 +65,9 @@ import timber.log.Timber
 @Composable
 fun PomodoroSettingRoute(
     isNewUser: Boolean,
-    navHostController: NavHostController,
     onShowSnackbar: suspend (String, String?) -> Unit,
+    goToPomodoro: (type: String, focusTime: Long, restTime: Long, categoryNo: Int) -> Unit,
+    goTimeSetting: (isFocusTime: Boolean, type: String, focusTime: Long, restTime: Long, categoryNo: Int) -> Unit,
     modifier: Modifier = Modifier,
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
@@ -80,16 +80,21 @@ fun PomodoroSettingRoute(
             }
 
             is PomodoroSettingSideEffect.GoTimeSetting -> {
-                navHostController.navigate(
-                    TimeSetting(
-                        isFocusTime = effect.isFocusTime,
-                        type = effect.type,
-                        focusMinute = effect.focusMinute,
-                        restMinute = effect.restMinute,
-                        categoryNo = effect.categoryNo
-                    )
+                goTimeSetting(
+                    effect.isFocusTime,
+                    effect.type,
+                    effect.focusMinute,
+                    effect.restMinute,
+                    effect.categoryNo
                 )
             }
+
+            is PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro(
+                effect.type,
+                effect.focusMinute,
+                effect.restMinute,
+                effect.categoryNo
+            )
         }
     }
 
@@ -163,8 +168,9 @@ fun PomodoroSettingScreen(
                 selectedCategoryData = pomodoroSelectedCategoryModel
             )
             SettingButton(
+                onClick = { onAction(PomodoroSettingEvent.ClickStartPomodoroSetting) },
                 backgroundColor = MnTheme.backgroundColorScheme.accent1
-            ) {}
+            )
         }
     }
 }
@@ -300,36 +306,6 @@ private fun PomodoroDetailSetting(
                 time = stringResource(R.string.minute, selectedCategoryData?.restTime ?: 0)
             )
         }
-    }
-}
-
-@Composable
-private fun CategoryBox(
-    categoryName: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .background(
-                color = MnTheme.backgroundColorScheme.secondary,
-                shape = RoundedCornerShape(MnRadius.xSmall)
-            )
-            .padding(
-                horizontal = MnSpacing.medium,
-                vertical = MnSpacing.small
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
-    ) {
-        MnMediumIcon(
-            resourceId = R.drawable.ic_null,
-            tint = MnTheme.iconColorScheme.primary
-        )
-        Text(
-            text = categoryName,
-            style = MnTheme.typography.subBodySemiBold,
-            color = MnTheme.textColorScheme.tertiary
-        )
     }
 }
 
