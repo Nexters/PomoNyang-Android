@@ -152,16 +152,15 @@ fun OnboardingNamingCatScreen(
 }
 
 @Composable
-fun CatRive(modifier: Modifier = Modifier) {
+private fun CatRive(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(240.dp)
             .background(MnTheme.backgroundColorScheme.secondary)
             .tooltip(
-                stringResource(id = R.string.naming_cat_tooltip),
-                showOverlay = false,
-                enabled = false // TODO 툴팁 적용시 포커스 불가문제 해결
+                content = stringResource(id = R.string.naming_cat_tooltip),
+                enabled = true // TODO 툴팁 적용시 포커스 불가문제 해결
 
             ),
         contentAlignment = Alignment.Center

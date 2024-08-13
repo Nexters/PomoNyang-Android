@@ -53,7 +53,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
-import com.pomonyang.mohanyang.presentation.designsystem.tooltip.tooltip
+import com.pomonyang.mohanyang.presentation.designsystem.tooltip.guideTooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.TimeSetting
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -221,7 +221,7 @@ private fun CatRive(
             modifier = Modifier
                 .size(240.dp)
                 .background(MnTheme.backgroundColorScheme.secondary)
-                .tooltip(
+                .guideTooltip(
                     modifier = Modifier.padding(top = 20.dp),
                     enabled = showTooltip,
                     content = stringResource(R.string.tooltip_rest_content),
@@ -260,7 +260,7 @@ private fun PomodoroDetailSetting(
                 .padding(bottom = MnSpacing.medium)
                 .clip(RoundedCornerShape(MnRadius.xSmall))
                 .clickable { onAction(PomodoroSettingEvent.ClickCategory) }
-                .tooltip(
+                .guideTooltip(
                     enabled = categoryTooltip,
                     content = stringResource(R.string.tooltip_category_content),
                     anchorPadding = PaddingValues(bottom = MnSpacing.medium),
@@ -278,7 +278,7 @@ private fun PomodoroDetailSetting(
         Row(
             modifier = Modifier
                 .padding(horizontal = MnSpacing.twoXLarge)
-                .tooltip(
+                .guideTooltip(
                     enabled = timeTooltip,
                     content = stringResource(R.string.tooltip_time_content),
                     anchorPadding = PaddingValues(bottom = MnSpacing.medium),
