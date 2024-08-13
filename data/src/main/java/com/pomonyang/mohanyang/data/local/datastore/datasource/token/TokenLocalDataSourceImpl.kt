@@ -27,6 +27,12 @@ internal class TokenLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun saveFcmToken(fcmToken: String) {
+        dataStore.edit { preferences ->
+            preferences[FCM_TOKEN_KEY] = fcmToken
+        }
+    }
+
     override suspend fun clear() {
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN_KEY] = ""
@@ -50,9 +56,18 @@ internal class TokenLocalDataSourceImpl @Inject constructor(
         }
     }.first()[REFRESH_TOKEN_KEY] ?: ""
 
+    override suspend fun getFcmToken(): String = dataStore.data.catch { exception ->
+        if (exception is IOException) {
+            emit(emptyPreferences())
+        } else {
+            throw exception
+        }
+    }.first()[FCM_TOKEN_KEY] ?: ""
+
     companion object {
         const val TOKEN_PREFERENCES_NAME = "token_preferences"
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
+        private val FCM_TOKEN_KEY = stringPreferencesKey("fcm_token")
     }
 }
