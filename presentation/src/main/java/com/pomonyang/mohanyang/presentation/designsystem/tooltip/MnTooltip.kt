@@ -55,12 +55,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toOffset
 import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -72,6 +75,79 @@ import kotlinx.coroutines.delay
 
 /**
  * 텍스트 툴팁을 표시하기 위한 Modifier 함수입니다.
+ *
+ * @param content 툴팁에 표시할 텍스트.
+ * @param tooltipColors 툴팁의 색상을 정의하는 MnTooltipColors 객체. 기본값은 MnTooltipDefaults.lightTooltipColors().
+ * @param horizontalAlignment 툴팁의 수평 정렬. 기본값은 Alignment.CenterHorizontally.
+ * @param verticalAlignment 툴팁의 수직 정렬. 기본값은 Alignment.Top.
+ * @param anchorAlignment 툴팁 앵커의 정렬. 기본값은 Alignment.BottomCenter.
+ * @param anchorPadding 앵커 주변의 패딩. 기본값은 PaddingValues().
+ * @param contentAlign 툴팁 텍스트의 정렬. 기본값은 TextAlign.Center.
+ * @param enabled 툴팁이 활성화되어 있는지 여부. 기본값은 true.
+ */
+@Composable
+fun Modifier.tooltip(
+    content: String,
+    modifier: Modifier = Modifier,
+    tooltipColors: MnTooltipColors = MnTooltipDefaults.lightTooltipColors(),
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    verticalAlignment: Alignment.Vertical = Alignment.Top,
+    anchorAlignment: Alignment = Alignment.BottomCenter,
+    anchorPadding: PaddingValues = PaddingValues(),
+    contentAlign: TextAlign = TextAlign.Center,
+    enabled: Boolean = true
+): Modifier {
+    var positionInRoot by remember { mutableStateOf(IntOffset.Zero) }
+    var tooltipContentSize by remember { mutableStateOf(IntSize(0, 0)) }
+    var componentSize by remember { mutableStateOf(IntSize(0, 0)) }
+    val transition = updateTransition(
+        targetState = enabled,
+        label = "tooltip transition"
+    )
+    if (enabled) {
+        Popup(
+            popupPositionProvider = object : PopupPositionProvider {
+                override fun calculatePosition(
+                    anchorBounds: IntRect,
+                    windowSize: IntSize,
+                    layoutDirection: LayoutDirection,
+                    popupContentSize: IntSize
+                ): IntOffset = calculateOffset(
+                    positionInRoot = positionInRoot,
+                    componentSize = componentSize,
+                    tooltipSize = popupContentSize,
+                    screenWidthPx = windowSize.width,
+                    screenHeightPx = windowSize.height,
+                    horizontalAlignment = horizontalAlignment,
+                    verticalAlignment = verticalAlignment
+                )
+            }
+        ) {
+            MnTooltipImpl(
+                modifier = modifier
+                    .onSizeChanged { tooltipContentSize = it }
+                    .animateTooltip(transition),
+                tooltipColors = tooltipColors,
+                tooltipContentSize = tooltipContentSize,
+                verticalAlignment = verticalAlignment,
+                content = content,
+                contentAlign = contentAlign,
+                arrowPadding = anchorPadding,
+                arrowAlignment = anchorAlignment
+            )
+        }
+    }
+
+    return this then Modifier.onPlaced {
+        componentSize = it.size
+        positionInRoot = it.positionInWindow().run {
+            IntOffset(this.x.toInt(), this.y.toInt())
+        }
+    }
+}
+
+/**
+ * 온보딩 및 가이드에 사용되는 Toolti을 위한 Modifier 함수입니다.
  *
  * @see com.pomonyang.mohanyang.presentation.designsystem.tooltip.MnBottomTooltipPreview
  *
@@ -89,7 +165,7 @@ import kotlinx.coroutines.delay
  * @param onDismiss 툴팁이 해제될 때 호출되는 콜백 함수.
  */
 @Composable
-fun Modifier.tooltip(
+fun Modifier.guideTooltip(
     content: String,
     modifier: Modifier = Modifier,
     tooltipColors: MnTooltipColors = MnTooltipDefaults.lightTooltipColors(),
@@ -421,7 +497,7 @@ private fun MnTopTooltipPreview() {
                 text = "Sample",
                 modifier = Modifier
                     .noRippleClickable { isShowTooltip = true }
-                    .tooltip(
+                    .guideTooltip(
                         anchorPadding = PaddingValues(bottom = 12.dp),
                         verticalAlignment = Alignment.Top,
                         enabled = isShowTooltip,
@@ -453,7 +529,7 @@ private fun MnBottomTooltipPreview() {
                 modifier = Modifier
                     .padding(start = 12.dp)
                     .noRippleClickable { isShowTooltip = true }
-                    .tooltip(
+                    .guideTooltip(
                         tooltipColors = MnTooltipDefaults.darkTooltipColors(),
                         verticalAlignment = Alignment.Bottom,
                         horizontalAlignment = Alignment.Start,

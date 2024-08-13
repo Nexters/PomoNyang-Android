@@ -52,7 +52,7 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 fun OnboardingSelectCatRoute(
     onBackClick: () -> Unit,
-    onNavToNaming: (Int) -> Unit,
+    onNavToNaming: (Int, String?) -> Unit,
     modifier: Modifier = Modifier,
     onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel()
 ) {
@@ -61,7 +61,10 @@ fun OnboardingSelectCatRoute(
     onboardingSelectCatViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is SelectCatSideEffect.OnNavToNaming -> {
-                onNavToNaming(effect.no)
+                onNavToNaming(
+                    effect.no,
+                    effect.catName
+                )
             }
         }
     }
