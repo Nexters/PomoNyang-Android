@@ -111,9 +111,9 @@ fun PomodoroSettingRoute(
 
 @Composable
 fun PomodoroSettingScreen(
-    onAction: (PomodoroEvent) -> Unit,
+    onAction: (PomodoroSettingEvent) -> Unit,
     isNewUser: Boolean,
-    state: PomodoroState,
+    state: PomodoroSettingState,
     modifier: Modifier = Modifier
 ) {
     val pomodoroSelectedCategoryModel by remember(state.selectedCategoryNo) {
@@ -121,7 +121,7 @@ fun PomodoroSettingScreen(
     }
 
     LaunchedEffect(Unit) {
-        onAction(PomodoroEvent.Init)
+        onAction(PomodoroSettingEvent.Init)
     }
 
     Scaffold(
@@ -171,7 +171,7 @@ fun PomodoroSettingScreen(
 
 @Composable
 private fun PomodoroCategoryBottomSheet(
-    onAction: (PomodoroEvent) -> Unit,
+    onAction: (PomodoroSettingEvent) -> Unit,
     categoryList: List<PomodoroCategoryModel>,
     initialCategoryNo: Int,
     modifier: Modifier = Modifier
@@ -179,7 +179,7 @@ private fun PomodoroCategoryBottomSheet(
     var currentSelectedCategoryNo by remember { mutableIntStateOf(initialCategoryNo) }
 
     MnBottomSheet(
-        onDismissRequest = { onAction(PomodoroEvent.DismissCategoryDialog) },
+        onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
         modifier = modifier.fillMaxWidth(),
         title = stringResource(R.string.change_category_title)
     ) {
@@ -202,7 +202,7 @@ private fun PomodoroCategoryBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 styles = MnBoxButtonStyles.large,
                 text = stringResource(R.string.confirm),
-                onClick = { onAction(PomodoroEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo)) },
+                onClick = { onAction(PomodoroSettingEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo)) },
                 colors = MnBoxButtonColorType.secondary
             )
         }
@@ -242,7 +242,7 @@ private fun CatRive(
 
 @Composable
 private fun PomodoroDetailSetting(
-    onAction: (PomodoroEvent) -> Unit,
+    onAction: (PomodoroSettingEvent) -> Unit,
     isNewUser: Boolean,
     selectedCategoryData: PomodoroCategoryModel?,
     modifier: Modifier = Modifier
@@ -259,7 +259,7 @@ private fun PomodoroDetailSetting(
             modifier = Modifier
                 .padding(bottom = MnSpacing.medium)
                 .clip(RoundedCornerShape(MnRadius.xSmall))
-                .clickable { onAction(PomodoroEvent.ClickCategory) }
+                .clickable { onAction(PomodoroSettingEvent.ClickCategory) }
                 .tooltip(
                     enabled = categoryTooltip,
                     content = stringResource(R.string.tooltip_category_content),
@@ -289,13 +289,13 @@ private fun PomodoroDetailSetting(
             horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
             TimeComponent(
-                modifier = Modifier.noRippleClickable { onAction(PomodoroEvent.ClickFocusTime) },
+                modifier = Modifier.noRippleClickable { onAction(PomodoroSettingEvent.ClickFocusTime) },
                 type = stringResource(R.string.focus),
                 time = stringResource(R.string.minute, selectedCategoryData?.focusTime ?: 0)
             )
             TimeDivider()
             TimeComponent(
-                modifier = Modifier.noRippleClickable { onAction(PomodoroEvent.ClickRestTime) },
+                modifier = Modifier.noRippleClickable { onAction(PomodoroSettingEvent.ClickRestTime) },
                 type = stringResource(R.string.rest),
                 time = stringResource(R.string.minute, selectedCategoryData?.restTime ?: 0)
             )
@@ -398,7 +398,7 @@ fun SettingButton(
 fun PomodoroStarterScreenPreview() {
     PomodoroSettingScreen(
         isNewUser = false,
-        state = PomodoroState(
+        state = PomodoroSettingState(
             categoryList = listOf(
                 PomodoroCategoryModel(
                     categoryNo = 0,

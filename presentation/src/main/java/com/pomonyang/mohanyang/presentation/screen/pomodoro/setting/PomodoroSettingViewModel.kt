@@ -15,7 +15,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-data class PomodoroState(
+data class PomodoroSettingState(
     val categoryList: List<PomodoroCategoryModel> = emptyList(),
     val selectedCategoryNo: Int = 0,
     val showCategoryBottomSheet: Boolean = false,
@@ -24,15 +24,15 @@ data class PomodoroState(
     fun getSelectedCategory() = categoryList.find { it.categoryNo == selectedCategoryNo }
 }
 
-sealed interface PomodoroEvent : ViewEvent {
-    data object Init : PomodoroEvent
-    data object ClickCategory : PomodoroEvent
-    data object ClickRestTime : PomodoroEvent
-    data object ClickFocusTime : PomodoroEvent
-    data object ClickStartPomodoro : PomodoroEvent
-    data object ClickMyInfo : PomodoroEvent
-    data object DismissCategoryDialog : PomodoroEvent
-    data class ClickCategoryConfirmButton(val confirmCategoryNo: Int) : PomodoroEvent
+sealed interface PomodoroSettingEvent : ViewEvent {
+    data object Init : PomodoroSettingEvent
+    data object ClickCategory : PomodoroSettingEvent
+    data object ClickRestTime : PomodoroSettingEvent
+    data object ClickFocusTime : PomodoroSettingEvent
+    data object ClickStartPomodoroSetting : PomodoroSettingEvent
+    data object ClickMyInfo : PomodoroSettingEvent
+    data object DismissCategoryDialog : PomodoroSettingEvent
+    data class ClickCategoryConfirmButton(val confirmCategoryNo: Int) : PomodoroSettingEvent
 }
 
 sealed interface PomodoroSettingSideEffect : ViewSideEffect {
@@ -51,38 +51,38 @@ class PomodoroSettingViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
     private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase,
     private val userRepository: UserRepository
-) : BaseViewModel<PomodoroState, PomodoroEvent, PomodoroSettingSideEffect>() {
+) : BaseViewModel<PomodoroSettingState, PomodoroSettingEvent, PomodoroSettingSideEffect>() {
 
-    override fun setInitialState(): PomodoroState = PomodoroState()
+    override fun setInitialState(): PomodoroSettingState = PomodoroSettingState()
 
-    override fun handleEvent(event: PomodoroEvent) {
+    override fun handleEvent(event: PomodoroSettingEvent) {
         when (event) {
-            PomodoroEvent.ClickCategory -> {
+            PomodoroSettingEvent.ClickCategory -> {
                 updateState { copy(showCategoryBottomSheet = true) }
             }
 
-            PomodoroEvent.ClickFocusTime -> {
+            PomodoroSettingEvent.ClickFocusTime -> {
                 handleTimeSetting(isFocusTime = true)
             }
 
-            PomodoroEvent.ClickRestTime -> {
+            PomodoroSettingEvent.ClickRestTime -> {
                 handleTimeSetting(isFocusTime = false)
             }
 
-            PomodoroEvent.ClickMyInfo -> TODO()
+            PomodoroSettingEvent.ClickMyInfo -> TODO()
 
-            PomodoroEvent.ClickStartPomodoro -> TODO()
+            PomodoroSettingEvent.ClickStartPomodoroSetting -> TODO()
 
-            PomodoroEvent.Init -> {
+            PomodoroSettingEvent.Init -> {
                 collectCategoryData()
                 getMyCatInfo()
             }
 
-            PomodoroEvent.DismissCategoryDialog -> {
+            PomodoroSettingEvent.DismissCategoryDialog -> {
                 updateState { copy(showCategoryBottomSheet = false) }
             }
 
-            is PomodoroEvent.ClickCategoryConfirmButton -> {
+            is PomodoroSettingEvent.ClickCategoryConfirmButton -> {
                 handleCategoryConfirmButton(event)
                 viewModelScope.launch {
                     pomodoroSettingRepository.updateRecentUseCategoryNo(event.confirmCategoryNo)
@@ -92,7 +92,7 @@ class PomodoroSettingViewModel @Inject constructor(
         }
     }
 
-    private fun handleCategoryConfirmButton(event: PomodoroEvent.ClickCategoryConfirmButton) {
+    private fun handleCategoryConfirmButton(event: PomodoroSettingEvent.ClickCategoryConfirmButton) {
         if (state.value.selectedCategoryNo != event.confirmCategoryNo) {
             val title = state.value.categoryList.find { it.categoryNo == event.confirmCategoryNo }?.title
             // TODO 지훈 여기 나중에 리소스로 변경
@@ -132,7 +132,7 @@ class PomodoroSettingViewModel @Inject constructor(
                     updateState { copy(catName = it.toModel().cat.name) }
                 }
                 .onFailure {
-                    setEffect(PomodoroSideEffect.ShowSnackBar("$it"))
+                    setEffect(PomodoroSettingSideEffect.ShowSnackBar("$it"))
                 }
         }
     }
