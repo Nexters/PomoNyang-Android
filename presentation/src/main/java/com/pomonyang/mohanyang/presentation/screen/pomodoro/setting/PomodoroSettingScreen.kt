@@ -54,6 +54,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.guideTooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
@@ -305,36 +306,6 @@ private fun PomodoroDetailSetting(
                 time = stringResource(R.string.minute, selectedCategoryData?.restTime ?: 0)
             )
         }
-    }
-}
-
-@Composable
-private fun CategoryBox(
-    categoryName: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .background(
-                color = MnTheme.backgroundColorScheme.secondary,
-                shape = RoundedCornerShape(MnRadius.xSmall)
-            )
-            .padding(
-                horizontal = MnSpacing.medium,
-                vertical = MnSpacing.small
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
-    ) {
-        MnMediumIcon(
-            resourceId = R.drawable.ic_null,
-            tint = MnTheme.iconColorScheme.primary
-        )
-        Text(
-            text = categoryName,
-            style = MnTheme.typography.subBodySemiBold,
-            color = MnTheme.textColorScheme.tertiary
-        )
     }
 }
 

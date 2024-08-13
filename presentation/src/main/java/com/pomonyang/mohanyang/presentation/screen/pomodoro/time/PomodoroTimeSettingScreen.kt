@@ -3,17 +3,16 @@ package com.pomonyang.mohanyang.presentation.screen.pomodoro.time
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,8 +20,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.picker.MnWheelMinutePicker
-import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.SettingButton
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -77,6 +76,8 @@ private fun PomodoroTimeSettingScreen(
     onAction: (PomodoroTimeSettingEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val iconResId = if (isFocusTime) R.drawable.ic_null else R.drawable.ic_null
+    val text = if (isFocusTime) R.string.focus else R.string.rest
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,7 +85,11 @@ private fun PomodoroTimeSettingScreen(
     ) {
         TimeSettingTopAppBar { /* TODO */ }
 
-        CategoryBox(isFocusTime = isFocusTime)
+        CategoryBox(
+            iconRes = iconResId,
+            categoryName = stringResource(id = text),
+            backgroundColor = Color.Transparent
+        )
 
         MnWheelMinutePicker(
             modifier = Modifier.padding(top = 16.dp),
@@ -123,31 +128,6 @@ private fun TimeSettingTopAppBar(
             }
         }
     )
-}
-
-@Composable
-private fun CategoryBox(
-    isFocusTime: Boolean,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier.padding(
-            vertical = MnSpacing.small,
-            horizontal = MnSpacing.large
-        )
-    ) {
-        val iconResId = if (isFocusTime) R.drawable.ic_null else R.drawable.ic_null
-        val text = if (isFocusTime) R.string.focus else R.string.rest
-        MnMediumIcon(
-            resourceId = iconResId
-        )
-        Text(
-            modifier = Modifier.padding(start = MnSpacing.small),
-            text = stringResource(id = text),
-            style = MnTheme.typography.bodySemiBold,
-            color = MnTheme.textColorScheme.secondary
-        )
-    }
 }
 
 @Preview(showBackground = true)
