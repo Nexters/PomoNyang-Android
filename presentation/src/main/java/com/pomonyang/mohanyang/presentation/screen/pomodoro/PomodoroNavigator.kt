@@ -24,6 +24,14 @@ data class TimeSetting(
     val categoryNo: Int
 )
 
+@Serializable
+data class PomodoroTimer(
+    val type: String,
+    val focusMinute: Long,
+    val restMinute: Long,
+    val categoryNo: Int
+)
+
 fun NavGraphBuilder.pomodoroScreen(
     isNewUser: Boolean,
     onShowSnackbar: (String, String?) -> Unit,
@@ -36,7 +44,27 @@ fun NavGraphBuilder.pomodoroScreen(
             PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,
-                navHostController = navHostController
+                goTimeSetting = { isFocusTime, type, focusMinute, restMinute, categoryNo ->
+                    navHostController.navigate(
+                        TimeSetting(
+                            isFocusTime,
+                            type,
+                            focusMinute,
+                            restMinute,
+                            categoryNo
+                        )
+                    )
+                },
+                goToPomodoro = { type, focusMinute, restMinute, categoryNo ->
+                    navHostController.navigate(
+                        PomodoroTimer(
+                            type = type,
+                            focusMinute = focusMinute,
+                            restMinute = restMinute,
+                            categoryNo = categoryNo
+                        )
+                    )
+                }
             )
         }
 
@@ -52,6 +80,10 @@ fun NavGraphBuilder.pomodoroScreen(
             ) {
                 navHostController.popBackStack()
             }
+        }
+
+        composable<PomodoroTimer> {
+            PomodoroTimerRoute()
         }
     }
 }

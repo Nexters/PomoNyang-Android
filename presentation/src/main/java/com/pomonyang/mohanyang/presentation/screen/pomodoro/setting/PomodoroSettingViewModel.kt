@@ -36,6 +36,13 @@ sealed interface PomodoroSettingEvent : ViewEvent {
 }
 
 sealed interface PomodoroSettingSideEffect : ViewSideEffect {
+    data class GoToPomodoro(
+        val type: String,
+        val focusMinute: Long,
+        val restMinute: Long,
+        val categoryNo: Int
+    ) : PomodoroSettingSideEffect
+
     data class ShowSnackBar(val message: String) : PomodoroSettingSideEffect
     data class GoTimeSetting(
         val isFocusTime: Boolean,
@@ -71,7 +78,18 @@ class PomodoroSettingViewModel @Inject constructor(
 
             PomodoroSettingEvent.ClickMyInfo -> TODO()
 
-            PomodoroSettingEvent.ClickStartPomodoroSetting -> TODO()
+            PomodoroSettingEvent.ClickStartPomodoroSetting -> {
+                state.value.getSelectedCategory()?.let {
+                    setEffect(
+                        PomodoroSettingSideEffect.GoToPomodoro(
+                            type = it.title,
+                            focusMinute = it.focusTime,
+                            restMinute = it.restTime,
+                            categoryNo = state.value.selectedCategoryNo
+                        )
+                    )
+                } ?: setEffect(PomodoroSettingSideEffect.ShowSnackBar("카테고리를 설정해주세요"))
+            }
 
             PomodoroSettingEvent.Init -> {
                 collectCategoryData()

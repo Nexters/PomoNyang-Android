@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.time
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -78,7 +79,8 @@ private fun PomodoroTimeSettingScreen(
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         TimeSettingTopAppBar { /* TODO */ }
 
@@ -92,7 +94,7 @@ private fun PomodoroTimeSettingScreen(
         )
 
         SettingButton(
-            modifier = Modifier.padding(top = 40.dp),
+            modifier = Modifier.padding(bottom = 40.dp),
             backgroundColor = MnTheme.backgroundColorScheme.inverse,
             onClick = {
                 onAction(PomodoroTimeSettingEvent.Submit)
