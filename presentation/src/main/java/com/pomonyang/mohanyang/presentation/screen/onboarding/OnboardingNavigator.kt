@@ -6,10 +6,10 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.pomonyang.mohanyang.presentation.screen.home.Home
 import com.pomonyang.mohanyang.presentation.screen.onboarding.guide.OnboardingGuideRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.naming.OnboardingNamingCatRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.select.OnboardingSelectCatRoute
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -28,7 +28,6 @@ internal data class OnboardingNamingCat(
 )
 
 fun NavGraphBuilder.onboardingScreen(
-    navigateUp: () -> Unit,
     navHostController: NavHostController
 ) {
     navigation<Onboarding>(
@@ -62,7 +61,7 @@ fun NavGraphBuilder.onboardingScreen(
                 onBackClick = { navHostController.popBackStack() },
                 onNavToHome = {
                     navHostController.navigate(
-                        route = Home,
+                        route = Pomodoro,
                         navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(false).build()
                     )
                 }
