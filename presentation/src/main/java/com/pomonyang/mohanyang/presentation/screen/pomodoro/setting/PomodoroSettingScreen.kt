@@ -168,7 +168,7 @@ fun PomodoroSettingScreen(
                 selectedCategoryData = pomodoroSelectedCategoryModel
             )
             SettingButton(
-                onClick = { onAction(PomodoroEvent.ClickStartPomodoro) },
+                onClick = { onAction(PomodoroSettingEvent.ClickStartPomodoroSetting) },
                 backgroundColor = MnTheme.backgroundColorScheme.accent1
             )
         }
