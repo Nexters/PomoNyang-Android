@@ -1,5 +1,7 @@
 package com.pomonyang.mohanyang
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -21,13 +23,13 @@ import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.usecase.GetTokenByDeviceIdUseCase
+import com.pomonyang.mohanyang.notification.FocusNotificationService
+import com.pomonyang.mohanyang.notification.util.createNotificationChannel
+import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.dialog.MnDialog
-import com.pomonyang.mohanyang.notification.FocusNotificationService
-import com.pomonyang.mohanyang.notification.util.createNotificationChannel
-import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.ui.MohaNyangApp
 import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
@@ -55,6 +57,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         createNotificationChannel()
+        handleSplashScreen()
 
         enableEdgeToEdge()
         setContent {
