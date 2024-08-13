@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.data.remote.service
 
+import com.pomonyang.mohanyang.data.remote.model.request.RegisterPushTokenRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCatInfoRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCatTypeRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCategoryInfoRequest
@@ -7,7 +8,9 @@ import com.pomonyang.mohanyang.data.remote.model.response.CatTypeResponse
 import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingResponse
 import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
@@ -41,4 +44,18 @@ interface MohaNyangService {
 
     @GET("/api/v1/users/me")
     suspend fun getMyInfo(): Result<UserInfoResponse>
+
+    @POST("/api/v1/device-tokens")
+    suspend fun registerPushToken(
+        @Body registerPushTokenRequest: RegisterPushTokenRequest
+    ): Result<Unit>
+
+    @DELETE("/api/v1/device-tokens")
+    suspend fun unRegisterPushToken(): Result<Unit>
+
+    @POST("/api/v1/notifications")
+    suspend fun subscribeNotification(): Result<Unit>
+
+    @DELETE("/api/v1/notifications")
+    suspend fun unSubscribeNotification(): Result<Unit>
 }
