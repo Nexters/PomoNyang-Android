@@ -82,8 +82,14 @@ fun NavGraphBuilder.pomodoroScreen(
             }
         }
 
-        composable<PomodoroTimer> {
-            PomodoroTimerRoute()
+        composable<PomodoroTimer> { backStackEntry ->
+            val routeData = backStackEntry.toRoute<PomodoroTimer>()
+            PomodoroTimerRoute(
+                type = routeData.type,
+                focusMinute = routeData.focusMinute,
+                restMinute = routeData.restMinute,
+                categoryNo = routeData.categoryNo
+            )
         }
     }
 }

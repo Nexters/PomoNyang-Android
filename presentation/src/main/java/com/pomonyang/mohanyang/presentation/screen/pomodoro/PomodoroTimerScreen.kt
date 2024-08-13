@@ -30,10 +30,15 @@ import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 
 @Composable
 fun PomodoroTimerRoute(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    type: String,
+    focusMinute: Long,
+    restMinute: Long,
+    categoryNo: Int
 ) {
     PomodoroTimerScreen(
         modifier = modifier,
+        type = type,
         isFocus = true,
         time = "25:00",
         exceededTime = "00:05"
@@ -43,6 +48,7 @@ fun PomodoroTimerRoute(
 @Composable
 private fun PomodoroTimerScreen(
     isFocus: Boolean,
+    type: String,
     time: String,
     exceededTime: String,
     modifier: Modifier = Modifier
@@ -55,7 +61,7 @@ private fun PomodoroTimerScreen(
     ) {
         MnTopAppBar(
             navigationIcon = {
-                CategoryBox(categoryName = "작업")
+                CategoryBox(categoryName = type, modifier = Modifier.padding(start = 12.dp))
             }
         )
 
@@ -140,6 +146,6 @@ fun Timer(
 @Composable
 private fun PomodoroTimerScreenPreview() {
     MnTheme {
-        PomodoroTimerRoute()
+        PomodoroTimerRoute(type = "공부", focusMinute = 25, restMinute = 25, categoryNo = 25)
     }
 }
