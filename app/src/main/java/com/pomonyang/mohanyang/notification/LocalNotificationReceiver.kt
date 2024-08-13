@@ -35,7 +35,6 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
             context.defaultNotification(pendingIntent)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setFullScreenIntent(pendingIntent, true)
                 .build()
 
         val summaryNotification =

@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import com.pomonyang.mohanyang.BuildConfig
 import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.data.local.device.util.lockScreenState
 import com.pomonyang.mohanyang.domain.model.cat.CatType
@@ -29,7 +30,7 @@ class FocusNotificationService : Service() {
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var focusNotificationJob: Job? = null
-    private val focusNotifications = ArrayList<PendingIntent>()
+    private val focusNotifications = mutableListOf<PendingIntent>()
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private val isLocked: Flow<Boolean> = this.lockScreenState()
@@ -39,7 +40,6 @@ class FocusNotificationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         observeLockScreen()
-
         startFocusNotify()
         return super.onStartCommand(intent, flags, startId)
     }
@@ -104,8 +104,8 @@ class FocusNotificationService : Service() {
     companion object {
         // TODO 최대 수가 없다고 픽스나면 while true로 변경하기
         private const val MAX_NOTIFICATION_COUNT = 10
-        private const val FIRST_DELAY = 10_000L
-        private const val REPEAT_DELAY = 30_000L
-        private const val LAST_ALARM_DISPLAY_DURATION = REPEAT_DELAY * 3 // TODO 임시로 임의 지정
+        private val FIRST_DELAY = if (BuildConfig.DEBUG) 2_000L else 10_000L
+        private val REPEAT_DELAY = if (BuildConfig.DEBUG) 5_000L else 30_000L
+        private val LAST_ALARM_DISPLAY_DURATION = REPEAT_DELAY * 3 // TODO 임시로 임의 지정
     }
 }
