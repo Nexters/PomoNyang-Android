@@ -42,7 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.domain.model.PomodoroCategoryModel
+import com.pomonyang.mohanyang.domain.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
@@ -111,9 +111,9 @@ fun PomodoroSettingRoute(
 
 @Composable
 fun PomodoroSettingScreen(
-    onAction: (PomodoroEvent) -> Unit,
+    onAction: (PomodoroSettingEvent) -> Unit,
     isNewUser: Boolean,
-    state: PomodoroState,
+    state: PomodoroSettingState,
     modifier: Modifier = Modifier
 ) {
     val pomodoroSelectedCategoryModel by remember(state.selectedCategoryNo) {
@@ -121,7 +121,7 @@ fun PomodoroSettingScreen(
     }
 
     LaunchedEffect(Unit) {
-        onAction(PomodoroEvent.Init)
+        onAction(PomodoroSettingEvent.Init)
     }
 
     Scaffold(
@@ -149,12 +149,14 @@ fun PomodoroSettingScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(top = 119.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(25.dp)
+            verticalArrangement = Arrangement.spacedBy(
+                space = 40.dp,
+                alignment = Alignment.CenterVertically
+            )
         ) {
-            CatRive()
+            CatRive(catName = state.catName)
             PomodoroDetailSetting(
                 onAction = onAction,
                 isNewUser = isNewUser,
@@ -169,7 +171,7 @@ fun PomodoroSettingScreen(
 
 @Composable
 private fun PomodoroCategoryBottomSheet(
-    onAction: (PomodoroEvent) -> Unit,
+    onAction: (PomodoroSettingEvent) -> Unit,
     categoryList: List<PomodoroCategoryModel>,
     initialCategoryNo: Int,
     modifier: Modifier = Modifier
@@ -177,7 +179,7 @@ private fun PomodoroCategoryBottomSheet(
     var currentSelectedCategoryNo by remember { mutableIntStateOf(initialCategoryNo) }
 
     MnBottomSheet(
-        onDismissRequest = { onAction(PomodoroEvent.DismissCategoryDialog) },
+        onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
         modifier = modifier.fillMaxWidth(),
         title = stringResource(R.string.change_category_title)
     ) {
@@ -200,7 +202,7 @@ private fun PomodoroCategoryBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 styles = MnBoxButtonStyles.large,
                 text = stringResource(R.string.confirm),
-                onClick = { onAction(PomodoroEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo)) },
+                onClick = { onAction(PomodoroSettingEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo)) },
                 colors = MnBoxButtonColorType.secondary
             )
         }
@@ -209,27 +211,38 @@ private fun PomodoroCategoryBottomSheet(
 
 @Composable
 private fun CatRive(
-    showTooltip: Boolean = false
+    showTooltip: Boolean = false,
+    catName: String
 ) {
-    Box(
-        modifier = Modifier
-            .size(240.dp)
-            .background(MnTheme.backgroundColorScheme.secondary)
-            .tooltip(
-                modifier = Modifier.padding(top = 20.dp),
-                enabled = showTooltip,
-                content = stringResource(R.string.tooltip_rest_content),
-                showOverlay = false,
-                highlightComponent = false
-            )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // TODO
+        Box(
+            modifier = Modifier
+                .size(240.dp)
+                .background(MnTheme.backgroundColorScheme.secondary)
+                .tooltip(
+                    modifier = Modifier.padding(top = 20.dp),
+                    enabled = showTooltip,
+                    content = stringResource(R.string.tooltip_rest_content),
+                    showOverlay = false,
+                    highlightComponent = false
+                )
+        ) {
+            /* TODO */
+        }
+        Text(
+            modifier = Modifier.padding(top = 20.dp),
+            text = catName,
+            style = MnTheme.typography.header4,
+            color = MnTheme.textColorScheme.tertiary
+        )
     }
 }
 
 @Composable
 private fun PomodoroDetailSetting(
-    onAction: (PomodoroEvent) -> Unit,
+    onAction: (PomodoroSettingEvent) -> Unit,
     isNewUser: Boolean,
     selectedCategoryData: PomodoroCategoryModel?,
     modifier: Modifier = Modifier
@@ -239,7 +252,6 @@ private fun PomodoroDetailSetting(
     val coroutineScope = rememberCoroutineScope()
 
     Column(
-        modifier = modifier.padding(vertical = MnSpacing.large),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CategoryBox(
@@ -247,7 +259,7 @@ private fun PomodoroDetailSetting(
             modifier = Modifier
                 .padding(bottom = MnSpacing.medium)
                 .clip(RoundedCornerShape(MnRadius.xSmall))
-                .clickable { onAction(PomodoroEvent.ClickCategory) }
+                .clickable { onAction(PomodoroSettingEvent.ClickCategory) }
                 .tooltip(
                     enabled = categoryTooltip,
                     content = stringResource(R.string.tooltip_category_content),
@@ -277,13 +289,13 @@ private fun PomodoroDetailSetting(
             horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
             TimeComponent(
-                modifier = Modifier.noRippleClickable { onAction(PomodoroEvent.ClickFocusTime) },
+                modifier = Modifier.noRippleClickable { onAction(PomodoroSettingEvent.ClickFocusTime) },
                 type = stringResource(R.string.focus),
                 time = stringResource(R.string.minute, selectedCategoryData?.focusTime ?: 0)
             )
             TimeDivider()
             TimeComponent(
-                modifier = Modifier.noRippleClickable { onAction(PomodoroEvent.ClickRestTime) },
+                modifier = Modifier.noRippleClickable { onAction(PomodoroSettingEvent.ClickRestTime) },
                 type = stringResource(R.string.rest),
                 time = stringResource(R.string.minute, selectedCategoryData?.restTime ?: 0)
             )
@@ -386,7 +398,7 @@ fun SettingButton(
 fun PomodoroStarterScreenPreview() {
     PomodoroSettingScreen(
         isNewUser = false,
-        state = PomodoroState(
+        state = PomodoroSettingState(
             categoryList = listOf(
                 PomodoroCategoryModel(
                     categoryNo = 0,
@@ -403,7 +415,7 @@ fun PomodoroStarterScreenPreview() {
 @Composable
 @Preview
 fun CatImagePreview() {
-    CatRive()
+    CatRive(catName = "치즈냥", showTooltip = false)
 }
 
 @Composable
@@ -414,7 +426,7 @@ fun FocusBoxPreview() {
         isNewUser = false,
         selectedCategoryData = PomodoroCategoryModel(
             categoryNo = 0,
-            title = "집중",
+            title = "기본",
             focusTime = 25,
             restTime = 10
         )

@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.domain.model
+package com.pomonyang.mohanyang.domain.model.setting
 
 import androidx.compose.runtime.Immutable
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity

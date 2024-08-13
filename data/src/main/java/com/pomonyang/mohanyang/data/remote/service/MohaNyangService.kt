@@ -5,6 +5,7 @@ import com.pomonyang.mohanyang.data.remote.model.request.UpdateCatTypeRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCategoryInfoRequest
 import com.pomonyang.mohanyang.data.remote.model.response.CatTypeResponse
 import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingResponse
+import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PUT
@@ -37,4 +38,7 @@ interface MohaNyangService {
     suspend fun updateCatInfo(
         @Body updateCatInfoRequest: UpdateCatInfoRequest
     ): Result<Unit>
+
+    @GET("/api/v1/users/me")
+    suspend fun getMyInfo(): Result<UserInfoResponse>
 }
