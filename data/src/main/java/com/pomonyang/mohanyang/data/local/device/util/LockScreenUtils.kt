@@ -9,6 +9,7 @@ import android.os.Build
 import com.pomonyang.mohanyang.data.local.device.receiver.LockScreenBroadcastReceiver
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 fun Context.lockScreenState() = callbackFlow {
     val lockScreenReceiver = LockScreenBroadcastReceiver { isLocked ->
@@ -37,4 +38,4 @@ fun Context.lockScreenState() = callbackFlow {
     awaitClose {
         applicationContext.unregisterReceiver(lockScreenReceiver)
     }
-}
+}.distinctUntilChanged()
