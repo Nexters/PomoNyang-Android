@@ -5,7 +5,10 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.pomonyang.mohanyang.R
 import java.time.LocalDate
 import java.time.LocalTime
@@ -53,3 +56,7 @@ fun getTriggerTimeInMillis(time: LocalTime): Long {
         .toInstant()
         .toEpochMilli()
 }
+
+fun Context.isNotificationGranted(): Boolean = (
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && PackageManager.PERMISSION_DENIED == ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+    )

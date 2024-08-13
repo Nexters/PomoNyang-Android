@@ -8,6 +8,7 @@ import android.content.Intent
 import com.pomonyang.mohanyang.MainActivity
 import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.notification.util.defaultNotification
+import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import com.pomonyang.mohanyang.notification.util.summaryNotification
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -17,6 +18,8 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent == null || context == null) return
+
+        if (!context.isNotificationGranted()) return
 
         val notificationId = intent.getIntExtra(context.getString(R.string.local_notification_id), 0)
         val title = intent.getStringExtra(context.getString(R.string.local_notification_title)) ?: ""

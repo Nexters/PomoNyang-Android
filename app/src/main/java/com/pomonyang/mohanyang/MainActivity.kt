@@ -27,6 +27,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonS
 import com.pomonyang.mohanyang.presentation.designsystem.dialog.MnDialog
 import com.pomonyang.mohanyang.notification.FocusNotificationService
 import com.pomonyang.mohanyang.notification.util.createNotificationChannel
+import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.ui.MohaNyangApp
 import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
@@ -118,11 +119,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        stopService(Intent(this, FocusNotificationService::class.java))
+        if (isNotificationGranted()) stopService(Intent(this, FocusNotificationService::class.java))
     }
 
     override fun onPause() {
         super.onPause()
-        startService(Intent(this, FocusNotificationService::class.java))
+        if (isNotificationGranted()) startService(Intent(this, FocusNotificationService::class.java))
     }
 }
