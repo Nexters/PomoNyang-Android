@@ -8,26 +8,34 @@ import androidx.compose.ui.tooling.preview.Preview
     name = "LightTheme",
     group = "Theme",
     showBackground = true,
-    backgroundColor = 0xFFFFFFFF,
+    backgroundColor = 0xFFFAF6F3,
     uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Preview(
     name = "DarkTheme",
     group = "Theme",
     showBackground = true,
-    backgroundColor = 0xFF000000,
+    backgroundColor = 0xFFFAF6F3,
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 annotation class ThemePreviews
 
 @Preview(
     name = "Normal",
-    device = "spec:shape=Normal,width=1440,height=3200,unit=px,dpi=515",
-    showSystemUi = true
+    device = "spec:shape=Normal,width=1440,height=2800,unit=px,dpi=515",
+    showBackground = true,
+    backgroundColor = 0xFFFAF6F3
+)
+@Preview(
+    name = "Short",
+    device = "spec:shape=Normal,width=1440,height=2000,unit=px,dpi=515",
+    showBackground = true,
+    backgroundColor = 0xFFFAF6F3
 )
 @Preview(
     name = "Foldable",
     device = Devices.FOLDABLE,
-    showSystemUi = true
+    showBackground = true,
+    backgroundColor = 0xFFFAF6F3
 )
 annotation class DevicePreviews
