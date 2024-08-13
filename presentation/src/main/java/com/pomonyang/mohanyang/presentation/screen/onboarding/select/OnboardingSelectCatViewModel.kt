@@ -26,7 +26,7 @@ sealed interface SelectCatEvent : ViewEvent {
 }
 
 sealed interface SelectCatSideEffect : ViewSideEffect {
-    data class OnNavToNaming(val no: Int) : SelectCatSideEffect
+    data class OnNavToNaming(val no: Int, val catName: String?) : SelectCatSideEffect
 }
 
 @HiltViewModel
@@ -69,7 +69,8 @@ class OnboardingSelectCatViewModel @Inject constructor(
     private fun updateSelectCatType(catNo: Int) {
         viewModelScope.launch {
             catSettingRepository.updateCatType(catNo).onSuccess {
-                setEffect(SelectCatSideEffect.OnNavToNaming(catNo))
+                val catName = state.value.cats.find { it.no == catNo }
+                setEffect(SelectCatSideEffect.OnNavToNaming(catNo, catName?.name))
             }.onFailure {
                 Timber.e(it)
             }

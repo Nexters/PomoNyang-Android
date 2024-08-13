@@ -45,6 +45,7 @@ import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 @Composable
 fun OnboardingNamingCatRoute(
     catNo: Int,
+    catName: String?,
     onBackClick: () -> Unit,
     onNavToHome: () -> Unit,
     modifier: Modifier = Modifier,
@@ -60,6 +61,7 @@ fun OnboardingNamingCatRoute(
 
     OnboardingNamingCatScreen(
         catNo = catNo,
+        catName = catName,
         onAction = onboardingNamingCatViewModel::handleEvent,
         onBackClick = onBackClick,
         modifier = modifier
@@ -69,6 +71,7 @@ fun OnboardingNamingCatRoute(
 @Composable
 fun OnboardingNamingCatScreen(
     catNo: Int,
+    catName: String?,
     onAction: (NamingEvent) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -77,7 +80,7 @@ fun OnboardingNamingCatScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val listState = rememberLazyListState()
 
-    var name by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf(catName ?: "") }
     val catNameValidator = remember { CatNameVerifier() }
     var nameValidationResult by remember {
         mutableStateOf(ValidationResult(true))
@@ -158,11 +161,7 @@ private fun CatRive(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .height(240.dp)
             .background(MnTheme.backgroundColorScheme.secondary)
-            .tooltip(
-                content = stringResource(id = R.string.naming_cat_tooltip),
-                enabled = true // TODO 툴팁 적용시 포커스 불가문제 해결
-
-            ),
+            .tooltip(content = stringResource(id = R.string.naming_cat_tooltip)),
         contentAlignment = Alignment.Center
     ) {
         Text(text = "image")
@@ -174,7 +173,8 @@ private fun CatRive(modifier: Modifier = Modifier) {
 fun PreviewOnboardingNamingCatScreen() {
     OnboardingNamingCatScreen(
         catNo = 1,
-        onBackClick = {},
-        onAction = { _ -> }
+        catName = "삼색이",
+        onAction = { _ -> },
+        onBackClick = {}
     )
 }
