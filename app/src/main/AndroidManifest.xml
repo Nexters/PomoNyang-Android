@@ -18,7 +18,8 @@
         <activity
             android:name="com.pomonyang.mohanyang.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Mohanyang.Splash">
+            android:theme="@style/Theme.Mohanyang.Splash"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
