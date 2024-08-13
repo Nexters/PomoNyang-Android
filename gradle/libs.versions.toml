@@ -33,6 +33,7 @@ firebase-crashlytics-gradle = "3.0.2"
 firebase-pref-gradle = "1.4.2"
 firebase-appdistribution-gradle = "5.0.0"
 firebase-bom = "33.1.2"
+firebaes-messaging = "23.2.1"
 
 # etc
 timber = "5.0.1"
@@ -99,6 +100,7 @@ firebase-appdistribution-gradle = { group = "com.google.firebase", name = "fireb
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaes-messaging" }
 
 # etc
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
