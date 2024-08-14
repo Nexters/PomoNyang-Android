@@ -13,11 +13,15 @@ class PushAlarmRepositoryImpl @Inject constructor(
 
     override suspend fun getFcmToken(): String = tokenLocalDataSource.getFcmToken()
 
-    override suspend fun registerPushToken(fcmToken: String): Result<Unit> = mohaNyangService.registerPushToken(RegisterPushTokenRequest(fcmToken))
+    override suspend fun registerPushToken(fcmToken: String): Result<Unit> = mohaNyangService.registerPushToken(RegisterPushTokenRequest(deviceToken = fcmToken, deviceType = DEVICE_TYPE))
 
     override suspend fun unRegisterPushToken(): Result<Unit> = mohaNyangService.unRegisterPushToken()
 
     override suspend fun subscribeNotification(): Result<Unit> = mohaNyangService.subscribeNotification()
 
     override suspend fun unSubscribeNotification(): Result<Unit> = mohaNyangService.unSubscribeNotification()
+
+    companion object {
+        private const val DEVICE_TYPE = "ANDROID"
+    }
 }

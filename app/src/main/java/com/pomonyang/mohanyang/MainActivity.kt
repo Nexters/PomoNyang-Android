@@ -39,7 +39,6 @@ import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -66,12 +65,10 @@ class MainActivity : ComponentActivity() {
 
         createNotificationChannel()
         handleSplashScreen()
+        initializeFCM()
 
         enableEdgeToEdge()
 
-        // createNotificationChannel()
-        initializeFCM()
-        runBlocking { userRepository.getDeviceId() }.also { Timber.d("$it") }
         setContent {
             val coroutineScope = rememberCoroutineScope()
             val activity = (LocalContext.current as? Activity)
