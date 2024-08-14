@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class UserInfoResponse(
-    val registeredDeviceNo: Int,
-    val isPushEnabled: Boolean,
-    val cat: CatTypeResponse
+    val registeredDeviceNo: Int = -1,
+    val isPushEnabled: Boolean = false,
+    val cat: CatTypeResponse = CatTypeResponse()
 )
