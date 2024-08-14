@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">moha-nyang</string>
+    <string name="channel_id">moha-nyang-channel</string>
+    <string name="channel_name">moha-nyang</string>
+    <string name="channel_group_name">moha-nyang-pomodoro</string>
+    <string name="local_notification_id">local_notification_id</string>
+    <string name="local_notification_title">local_notification_title</string>
+    <string name="local_notification_message">local_notification_message</string>
+
 </resources>

@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -22,6 +23,9 @@ import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.usecase.GetTokenByDeviceIdUseCase
+import com.pomonyang.mohanyang.notification.FocusNotificationService
+import com.pomonyang.mohanyang.notification.util.createNotificationChannel
+import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -51,7 +55,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        createNotificationChannel()
         handleSplashScreen()
+
         enableEdgeToEdge()
         setContent {
             val coroutineScope = rememberCoroutineScope()
@@ -111,5 +118,15 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         private const val SPLASH_DELAY = 2000L
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isNotificationGranted()) stopService(Intent(this, FocusNotificationService::class.java))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (isNotificationGranted()) startService(Intent(this, FocusNotificationService::class.java))
     }
 }
