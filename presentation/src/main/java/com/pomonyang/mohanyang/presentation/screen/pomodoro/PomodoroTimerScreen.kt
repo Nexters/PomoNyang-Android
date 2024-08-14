@@ -11,10 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
@@ -31,17 +35,20 @@ import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 @Composable
 fun PomodoroTimerRoute(
     modifier: Modifier = Modifier,
-    type: String,
-    focusMinute: Long,
-    restMinute: Long,
-    categoryNo: Int
+    pomodoroTimerViewModel: PomodoroTimerViewModel = hiltViewModel()
 ) {
+    val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        pomodoroTimerViewModel.handleEvent(PomodoroTimerEvent.Init)
+    }
+
     PomodoroTimerScreen(
         modifier = modifier,
-        type = type,
+        type = state.type,
         isFocus = true,
-        time = "25:00",
-        exceededTime = "00:05"
+        time = state.focusTime,
+        exceededTime = state.exceededTime
     )
 }
 
@@ -49,8 +56,8 @@ fun PomodoroTimerRoute(
 private fun PomodoroTimerScreen(
     isFocus: Boolean,
     type: String,
-    time: String,
-    exceededTime: String,
+    time: Int,
+    exceededTime: Int,
     modifier: Modifier = Modifier
 ) {
     val typeRes = if (isFocus) R.string.focus_action else R.string.rest_action
@@ -71,8 +78,8 @@ private fun PomodoroTimerScreen(
 
         Timer(
             title = stringResource(id = typeRes),
-            time = time,
-            exceededTime = exceededTime,
+            time = time.toString(),
+            exceededTime = exceededTime.toString(),
             modifier = Modifier.padding(top = MnSpacing.xLarge)
         )
 
@@ -83,7 +90,7 @@ private fun PomodoroTimerScreen(
             styles = MnBoxButtonStyles.large,
             text = "휴식하기",
             onClick = { },
-            colors = if (exceededTime.isNotEmpty()) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
+            colors = if (exceededTime.toString().isNotEmpty()) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
         )
 
         MnTextButton(
@@ -146,6 +153,11 @@ fun Timer(
 @Composable
 private fun PomodoroTimerScreenPreview() {
     MnTheme {
-        PomodoroTimerRoute(type = "공부", focusMinute = 25, restMinute = 25, categoryNo = 25)
+        PomodoroTimerScreen(
+            type = "공부",
+            time = 25,
+            exceededTime = 25,
+            isFocus = true
+        )
     }
 }
