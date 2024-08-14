@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PomodoroSettingResponse(
-    val no: Int,
-    val title: String,
-    val focusTime: String,
-    val restTime: String
+    val no: Int = -1,
+    val title: String = "",
+    val focusTime: String = "",
+    val restTime: String = ""
 )
 
 internal fun PomodoroSettingResponse.toEntity() = PomodoroSettingEntity(
