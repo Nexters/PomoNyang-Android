@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.pomonyang.mohanyang.presentation.screen.mypage.myPageScreen
 import com.pomonyang.mohanyang.presentation.screen.onboarding.Onboarding
 import com.pomonyang.mohanyang.presentation.screen.onboarding.onboardingScreen
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
@@ -56,5 +57,7 @@ internal fun MohaNyangNavHost(
             navHostController = mohaNyangAppState.navHostController,
             onShowSnackbar = onShowSnackbar
         )
+
+        myPageScreen(navHostController = navHostController)
     }
 }
