@@ -123,7 +123,7 @@ fun PomodoroSettingScreen(
                     Box(
                         modifier = Modifier
                             .size(40.dp)
-                            .noRippleClickable { },
+                            .noRippleClickable { onAction(PomodoroSettingEvent.ClickMenu) },
                         contentAlignment = Alignment.Center
                     ) {
                         MnMediumIcon(

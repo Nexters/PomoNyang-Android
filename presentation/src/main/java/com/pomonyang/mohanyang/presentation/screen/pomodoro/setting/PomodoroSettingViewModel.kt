@@ -36,6 +36,7 @@ sealed interface PomodoroSettingEvent : ViewEvent {
     data object DismissCategoryDialog : PomodoroSettingEvent
     data object DismissOnBoardingTooltip : PomodoroSettingEvent
     data class ClickCategoryConfirmButton(val confirmCategoryNo: Int) : PomodoroSettingEvent
+    data object ClickMenu : PomodoroSettingEvent
 }
 
 sealed interface PomodoroSettingSideEffect : ViewSideEffect {
@@ -51,6 +52,8 @@ sealed interface PomodoroSettingSideEffect : ViewSideEffect {
         val initialTime: Int,
         val category: String
     ) : PomodoroSettingSideEffect
+
+    data object GoToMyPage : PomodoroSettingSideEffect
 }
 
 @HiltViewModel
@@ -103,6 +106,10 @@ class PomodoroSettingViewModel @Inject constructor(
 
             PomodoroSettingEvent.DismissOnBoardingTooltip -> {
                 updateState { copy(isEndOnBoardingTooltip = true) }
+            }
+
+            PomodoroSettingEvent.ClickMenu -> {
+                setEffect(PomodoroSettingSideEffect.GoToMyPage)
             }
         }
     }

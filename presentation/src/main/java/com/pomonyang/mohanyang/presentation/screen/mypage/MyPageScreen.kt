@@ -6,9 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,14 +26,32 @@ import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
-fun MyPageScreen(
-    isOffline: Boolean
+fun MyPageRoute(
+    onBackClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    MyPageScreen(
+        onBackClick = onBackClick,
+        onProfileClick = onProfileClick,
+        isOffline = false
+    )
+}
+
+@Composable
+fun MyPageScreen(
+    onBackClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    isOffline: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val listState = rememberLazyListState()
+
+    Column(modifier = modifier) {
         MnTopAppBar(
             navigationIcon = {
                 MnIconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = onBackClick,
                     iconResourceId = R.drawable.ic_null
                 )
             },
@@ -45,17 +64,18 @@ fun MyPageScreen(
             }
         )
 
-        Column(
+        LazyColumn(
+            state = listState,
             modifier = Modifier.padding(
                 horizontal = MnSpacing.xLarge,
                 vertical = MnSpacing.medium
             ),
             verticalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
-            ProfileBox()
-            FocusStatisticBox(isOffline = isOffline)
-            NotificationBox()
-            SuggestionBox()
+            item { ProfileBox(onClick = onProfileClick) }
+            item { FocusStatisticBox(isOffline = isOffline) }
+            item { NotificationBox() }
+            item { SuggestionBox() }
         }
     }
 }
@@ -122,9 +142,13 @@ fun FocusNotificationBox(
 ) {
     Row(
         modifier = modifier.padding(MnSpacing.xLarge),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = "집중시간 알림받기",
                 color = MnTheme.textColorScheme.primary,
@@ -146,9 +170,13 @@ fun InterruptNotificationBox(
 ) {
     Row(
         modifier = modifier.padding(MnSpacing.xLarge),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = "딴 짓 방해하기",
                 color = MnTheme.textColorScheme.primary,
@@ -197,7 +225,11 @@ fun SuggestionBox(
 @Composable
 fun MyPageScreenPreview() {
     MnTheme {
-        MyPageScreen(isOffline = false)
+        MyPageScreen(
+            onBackClick = {},
+            onProfileClick = {},
+            isOffline = false
+        )
     }
 }
 
@@ -205,6 +237,10 @@ fun MyPageScreenPreview() {
 @Composable
 fun MyPageScreenOfflinePreview() {
     MnTheme {
-        MyPageScreen(isOffline = true)
+        MyPageScreen(
+            onBackClick = {},
+            onProfileClick = {},
+            isOffline = true
+        )
     }
 }

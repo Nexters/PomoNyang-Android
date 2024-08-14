@@ -51,7 +51,7 @@ private fun CatProfileScreen(
         MnTopAppBar(
             navigationIcon = {
                 MnIconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = onBackClick,
                     iconResourceId = R.drawable.ic_null
                 )
             },
