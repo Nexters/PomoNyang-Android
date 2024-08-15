@@ -66,8 +66,8 @@ import timber.log.Timber
 fun PomodoroSettingRoute(
     isNewUser: Boolean,
     onShowSnackbar: suspend (String, String?) -> Unit,
-    goToPomodoro: (type: String, focusTime: Long, restTime: Long, categoryNo: Int) -> Unit,
-    goTimeSetting: (isFocusTime: Boolean, type: String, focusTime: Long, restTime: Long, categoryNo: Int) -> Unit,
+    goToPomodoro: () -> Unit,
+    goTimeSetting: (isFocusTime: Boolean) -> Unit,
     modifier: Modifier = Modifier,
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
@@ -80,21 +80,10 @@ fun PomodoroSettingRoute(
             }
 
             is PomodoroSettingSideEffect.GoTimeSetting -> {
-                goTimeSetting(
-                    effect.isFocusTime,
-                    effect.type,
-                    effect.focusMinute,
-                    effect.restMinute,
-                    effect.categoryNo
-                )
+                goTimeSetting(effect.isFocusTime)
             }
 
-            is PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro(
-                effect.type,
-                effect.focusMinute,
-                effect.restMinute,
-                effect.categoryNo
-            )
+            PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro()
         }
     }
 

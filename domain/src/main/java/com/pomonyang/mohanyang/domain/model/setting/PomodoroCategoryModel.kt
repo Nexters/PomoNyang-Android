@@ -8,13 +8,13 @@ import java.time.Duration
 data class PomodoroCategoryModel(
     val categoryNo: Int,
     val title: String,
-    val focusTime: Long,
-    val restTime: Long
+    val focusTime: Int,
+    val restTime: Int
 )
 
 fun PomodoroSettingEntity.toModel() = PomodoroCategoryModel(
     categoryNo = categoryNo,
     title = title,
-    focusTime = Duration.parse(focusTime).toMinutes(),
-    restTime = Duration.parse(restTime).toMinutes()
+    focusTime = Duration.parse(focusTime).toMinutes().toInt(),
+    restTime = Duration.parse(restTime).toMinutes().toInt()
 )

@@ -11,10 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
@@ -24,6 +28,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel.Companion.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
@@ -31,17 +36,20 @@ import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 @Composable
 fun PomodoroTimerRoute(
     modifier: Modifier = Modifier,
-    type: String,
-    focusMinute: Long,
-    restMinute: Long,
-    categoryNo: Int
+    pomodoroTimerViewModel: PomodoroTimerViewModel = hiltViewModel()
 ) {
+    val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        pomodoroTimerViewModel.handleEvent(PomodoroTimerEvent.Init)
+    }
+
     PomodoroTimerScreen(
         modifier = modifier,
-        type = type,
+        type = state.type,
         isFocus = true,
-        time = "25:00",
-        exceededTime = "00:05"
+        time = state.focusTime,
+        exceededTime = state.exceededTime
     )
 }
 
@@ -53,7 +61,7 @@ private fun PomodoroTimerScreen(
     exceededTime: String,
     modifier: Modifier = Modifier
 ) {
-    val typeRes = if (isFocus) R.string.focus_action else R.string.rest_action
+    val typeRes = if (isFocus) R.string.focus_time else R.string.rest_time
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -81,7 +89,7 @@ private fun PomodoroTimerScreen(
         MnBoxButton(
             modifier = Modifier.size(200.dp, 60.dp),
             styles = MnBoxButtonStyles.large,
-            text = "휴식하기",
+            text = stringResource(id = R.string.rest_action),
             onClick = { },
             colors = if (exceededTime.isNotEmpty()) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
         )
@@ -89,7 +97,7 @@ private fun PomodoroTimerScreen(
         MnTextButton(
             modifier = Modifier.padding(bottom = MnSpacing.xLarge),
             styles = MnTextButtonStyles.large,
-            text = "집중 끝내기",
+            text = stringResource(id = R.string.focus_end),
             onClick = {}
         )
     }
@@ -121,7 +129,7 @@ fun Timer(
             MnSmallIcon(resourceId = R.drawable.ic_null)
             Text(
                 modifier = Modifier.padding(MnSpacing.xSmall),
-                text = "휴식하기",
+                text = title,
                 style = MnTheme.typography.header5,
                 color = MnTheme.textColorScheme.secondary
             )
@@ -132,7 +140,7 @@ fun Timer(
             style = MnTheme.typography.header1,
             color = MnTheme.textColorScheme.primary
         )
-        if (exceededTime.isNotEmpty()) {
+        if (exceededTime != DEFAULT_TIME) {
             Text(
                 text = "$exceededTime 초과",
                 style = MnTheme.typography.header4,
@@ -146,6 +154,11 @@ fun Timer(
 @Composable
 private fun PomodoroTimerScreenPreview() {
     MnTheme {
-        PomodoroTimerRoute(type = "공부", focusMinute = 25, restMinute = 25, categoryNo = 25)
+        PomodoroTimerScreen(
+            type = "공부",
+            time = "25:00",
+            exceededTime = "00:00",
+            isFocus = true
+        )
     }
 }

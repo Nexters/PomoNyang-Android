@@ -13,24 +13,13 @@ import kotlinx.serialization.Serializable
 data object Pomodoro
 
 @Serializable
-data object PomodoroSetting
+internal data object PomodoroSetting
 
 @Serializable
-data class TimeSetting(
-    val isFocusTime: Boolean,
-    val type: String,
-    val focusMinute: Long,
-    val restMinute: Long,
-    val categoryNo: Int
-)
+internal data class TimeSetting(val isFocusTime: Boolean)
 
 @Serializable
-data class PomodoroTimer(
-    val type: String,
-    val focusMinute: Long,
-    val restMinute: Long,
-    val categoryNo: Int
-)
+internal data object PomodoroTimer
 
 fun NavGraphBuilder.pomodoroScreen(
     isNewUser: Boolean,
@@ -44,26 +33,13 @@ fun NavGraphBuilder.pomodoroScreen(
             PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,
-                goTimeSetting = { isFocusTime, type, focusMinute, restMinute, categoryNo ->
+                goTimeSetting = { isFocusTime ->
                     navHostController.navigate(
-                        TimeSetting(
-                            isFocusTime,
-                            type,
-                            focusMinute,
-                            restMinute,
-                            categoryNo
-                        )
+                        TimeSetting(isFocusTime)
                     )
                 },
-                goToPomodoro = { type, focusMinute, restMinute, categoryNo ->
-                    navHostController.navigate(
-                        PomodoroTimer(
-                            type = type,
-                            focusMinute = focusMinute,
-                            restMinute = restMinute,
-                            categoryNo = categoryNo
-                        )
-                    )
+                goToPomodoro = {
+                    navHostController.navigate(PomodoroTimer)
                 }
             )
         }
@@ -71,10 +47,6 @@ fun NavGraphBuilder.pomodoroScreen(
         composable<TimeSetting> { backStackEntry ->
             val routeData = backStackEntry.toRoute<TimeSetting>()
             PomodoroTimeSettingRoute(
-                initialFocusTime = routeData.focusMinute.toInt(),
-                initialRestTime = routeData.restMinute.toInt(),
-                type = routeData.type,
-                categoryNo = routeData.categoryNo,
                 isFocusTime = routeData.isFocusTime,
                 onShowSnackbar = onShowSnackbar
             ) {
@@ -83,13 +55,7 @@ fun NavGraphBuilder.pomodoroScreen(
         }
 
         composable<PomodoroTimer> { backStackEntry ->
-            val routeData = backStackEntry.toRoute<PomodoroTimer>()
-            PomodoroTimerRoute(
-                type = routeData.type,
-                focusMinute = routeData.focusMinute,
-                restMinute = routeData.restMinute,
-                categoryNo = routeData.categoryNo
-            )
+            PomodoroTimerRoute()
         }
     }
 }
