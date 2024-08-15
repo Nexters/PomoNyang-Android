@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.bundles.androidx.compose.navigation)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.firebase.messaging)
 
     // module impl
     implementation(projects.data)

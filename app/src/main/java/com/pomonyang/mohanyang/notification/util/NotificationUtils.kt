@@ -58,5 +58,5 @@ fun getTriggerTimeInMillis(time: LocalTime): Long {
 }
 
 fun Context.isNotificationGranted(): Boolean = (
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && PackageManager.PERMISSION_DENIED == ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
     )

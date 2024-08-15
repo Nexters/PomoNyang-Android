@@ -19,8 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
+import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.usecase.GetTokenByDeviceIdUseCase
 import com.pomonyang.mohanyang.notification.FocusNotificationService
@@ -36,6 +39,7 @@ import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -49,6 +53,9 @@ class MainActivity : ComponentActivity() {
     lateinit var pomodoroSettingRepository: PomodoroSettingRepository
 
     @Inject
+    lateinit var pushAlarmRepository: PushAlarmRepository
+
+    @Inject
     lateinit var getTokenByDeviceIdUseCase: GetTokenByDeviceIdUseCase
 
     private var keepSplashOnScreen = true
@@ -58,8 +65,10 @@ class MainActivity : ComponentActivity() {
 
         createNotificationChannel()
         handleSplashScreen()
+        initializeFCM()
 
         enableEdgeToEdge()
+
         setContent {
             val coroutineScope = rememberCoroutineScope()
             val activity = (LocalContext.current as? Activity)
@@ -128,5 +137,18 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         if (isNotificationGranted()) startService(Intent(this, FocusNotificationService::class.java))
+    }
+
+    private fun initializeFCM() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Timber.w("Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+                val token = task.result
+                Timber.d("FCM : $token")
+            }
+        )
     }
 }
