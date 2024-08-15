@@ -5,7 +5,7 @@
     <string name="focus_time">집중 시간</string>
     <string name="rest">휴식</string>
     <string name="rest_action">휴식하기</string>
-    <string name="rest_time">휴식하기</string>
+    <string name="rest_start">휴식 시작하기</string>
     <string name="complete">완료</string>
     <string name="tooltip_category_content">눌러서 카테고리를 변경할 수 있어요</string>
     <string name="tooltip_time_content">눌러서 시간을 조정할 수 있어요</string>
@@ -40,4 +40,6 @@
     <string name="focus_cat_tooltip">잘 집중하고 있는 거냥?</string>
     <string name="exceed_cat_tooltip">이제 나랑 놀자냥?</string>
     <string name="welcome_cat_tooltip">오랜만이다냥</string>
+    <string name="five_minutes">5분</string>
+    <string name="change_focus_time_prompt">다음부터 집중 시간을 바꿀까요?</string>
 </resources>

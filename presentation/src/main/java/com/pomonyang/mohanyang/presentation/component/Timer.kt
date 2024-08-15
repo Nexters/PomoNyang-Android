@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel.Companion.DEFAULT_TIME
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
 @Composable
