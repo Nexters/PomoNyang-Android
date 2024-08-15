@@ -39,9 +39,10 @@ import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 
 @Composable
 fun PomodoroRestRoute(
+    onShowSnackbar: suspend (String, String?) -> Unit,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
-    pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel(),
-    onBackPressed: () -> Unit
+    pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel()
 ) {
     val state by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
     var showTooltip by remember { mutableStateOf(true) }
@@ -60,6 +61,10 @@ fun PomodoroRestRoute(
         type = state.type,
         time = state.displayRestTime(),
         showTooltip = showTooltip,
+        plusButtonSelected = state.plusButtonSelected,
+        minusButtonSelected = state.minusButtonSelected,
+        plusButtonEnabled = state.plusButtonEnabled,
+        minusButtonEnabled = state.minusButtonEnabled,
         exceededTime = state.displayExceedTime(),
         onAction = remember { pomodoroRestViewModel::handleEvent }
     )
@@ -71,6 +76,10 @@ private fun PomodoroRestScreen(
     time: String,
     showTooltip: Boolean,
     exceededTime: String,
+    plusButtonSelected: Boolean,
+    minusButtonSelected: Boolean,
+    plusButtonEnabled: Boolean,
+    minusButtonEnabled: Boolean,
     onAction: (PomodoroRestEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -96,23 +105,25 @@ private fun PomodoroRestScreen(
             tooltipMessage = stringResource(id = tooltipMessage)
         )
 
-        TimerSelectedButtons(
-            plusButtonSelected = true,
-            minusButtonSelected = true,
-            plusButtonEnabled = true,
-            minusButtonEnabled = true,
-            title = stringResource(R.string.change_focus_time_prompt),
-            onPlusButtonClick = { /*onAction(PomodoroRestWaitingEvent.OnPlusButtonClick(plusButtonSelected.not())) */ },
-            onMinusButtonClick = { /*onAction(PomodoroRestWaitingEvent.OnMinusButtonClick(minusButtonSelected.not()))*/ }
-        )
-
         TimerType(type = stringResource(id = R.string.rest_time))
 
         Timer(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier,
             time = time,
             exceededTime = exceededTime
         )
+
+        TimerSelectedButtons(
+            plusButtonSelected = plusButtonSelected,
+            minusButtonSelected = minusButtonSelected,
+            plusButtonEnabled = plusButtonEnabled,
+            minusButtonEnabled = minusButtonEnabled,
+            title = stringResource(R.string.change_focus_time_prompt),
+            onPlusButtonClick = { onAction(PomodoroRestEvent.OnPlusButtonClick(plusButtonSelected.not())) },
+            onMinusButtonClick = { onAction(PomodoroRestEvent.OnMinusButtonClick(minusButtonSelected.not())) }
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
 
         MnBoxButton(
             modifier = Modifier.size(200.dp, 60.dp),
@@ -140,6 +151,10 @@ private fun PomodoroTimerScreenPreview() {
             time = "25:00",
             showTooltip = true,
             exceededTime = "00:00",
+            plusButtonSelected = false,
+            minusButtonSelected = true,
+            plusButtonEnabled = true,
+            minusButtonEnabled = true,
             onAction = {}
         )
     }
@@ -154,6 +169,10 @@ private fun PomodoroTimerExceedScreenPreview() {
             time = "25:00",
             showTooltip = true,
             exceededTime = "10:00",
+            plusButtonSelected = false,
+            minusButtonSelected = true,
+            plusButtonEnabled = true,
+            minusButtonEnabled = true,
             onAction = {}
         )
     }

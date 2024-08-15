@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestWaitingRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.PomodoroSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.time.PomodoroTimeSettingRoute
@@ -29,6 +30,9 @@ internal data class PomodoroRestWaiting(
     val focusTime: Int,
     val exceededTime: Int
 )
+
+@Serializable
+internal data object PomodoroRest
 
 fun NavGraphBuilder.pomodoroScreen(
     isNewUser: Boolean,
@@ -106,8 +110,13 @@ fun NavGraphBuilder.pomodoroScreen(
                         launchSingleTop = true
                     }
                 },
+                goToPomodoroRest = { navHostController.navigate(PomodoroRest) },
                 onShowSnackbar = onShowSnackbar
             )
+        }
+
+        composable<PomodoroRest> {
+            PomodoroRestRoute(onBackPressed = onBackPressed, onShowSnackbar = onShowSnackbar)
         }
     }
 }

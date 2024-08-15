@@ -7,6 +7,8 @@ import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_REST_MINUTES
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MIN_REST_MINUTES
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
 import com.pomonyang.mohanyang.presentation.util.formatTime
@@ -25,17 +27,25 @@ data class PomodoroRestState(
     val currentRestTime: Int = 0,
     val exceededTime: Int = 0,
     val type: String = "",
-    val categoryNo: Int = -1
+    val categoryNo: Int = -1,
+    val plusButtonSelected: Boolean = false,
+    val minusButtonSelected: Boolean = false,
+    val plusButtonEnabled: Boolean = true,
+    val minusButtonEnabled: Boolean = true
 ) : ViewState {
     fun displayRestTime(): String = currentRestTime.formatTime()
     fun displayExceedTime(): String = exceededTime.formatTime()
 }
 
 sealed interface PomodoroRestEvent : ViewEvent {
+    data class OnPlusButtonClick(val isPlusButtonSelected: Boolean) : PomodoroRestEvent
+    data class OnMinusButtonClick(val isMinusButtonSelected: Boolean) : PomodoroRestEvent
     data object Init : PomodoroRestEvent
 }
 
-sealed interface PomodoroRestEffect : ViewSideEffect
+sealed interface PomodoroRestEffect : ViewSideEffect {
+    data class ShowSnackbar(val message: String) : PomodoroRestEffect
+}
 
 @HiltViewModel
 class PomodoroRestViewModel @Inject constructor(
@@ -54,10 +64,28 @@ class PomodoroRestViewModel @Inject constructor(
                     copy(
                         type = selectedPomodoroSetting.title,
                         maxRestTime = (selectedPomodoroSetting.focusTime.times(60)),
-                        categoryNo = selectedPomodoroSetting.categoryNo
+                        categoryNo = selectedPomodoroSetting.categoryNo,
+                        plusButtonEnabled = selectedPomodoroSetting.restTime < MAX_REST_MINUTES,
+                        minusButtonEnabled = selectedPomodoroSetting.restTime > MIN_REST_MINUTES
                     )
                 }
                 startTimer()
+            }
+
+            is PomodoroRestEvent.OnPlusButtonClick -> {
+                if (state.value.plusButtonEnabled.not()) {
+                    setEffect(PomodoroRestEffect.ShowSnackbar("최대 30분까지만 휴식할 수 있어요"))
+                } else {
+                    updateState { copy(plusButtonSelected = event.isPlusButtonSelected, minusButtonSelected = false) }
+                }
+            }
+
+            is PomodoroRestEvent.OnMinusButtonClick -> {
+                if (state.value.plusButtonEnabled.not()) {
+                    setEffect(PomodoroRestEffect.ShowSnackbar("5분은 휴식해야 다음에 집중할 수 있어요"))
+                } else {
+                    updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
+                }
             }
         }
     }
