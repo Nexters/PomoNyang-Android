@@ -1,11 +1,14 @@
 package com.pomonyang.mohanyang.notification
 
 import android.Manifest
+import android.app.PendingIntent
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.pomonyang.mohanyang.MainActivity
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.notification.util.defaultNotification
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,7 +49,15 @@ internal class MnFirebaseMessagingService : FirebaseMessagingService() {
 
         val notification = remoteMessage.notification ?: return
 
-        val builder = applicationContext.defaultNotification()
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            UUID.randomUUID().hashCode(),
+            Intent(applicationContext, MainActivity::class.java),
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE // 일회용 펜딩 인텐트
+        )
+
+        val builder = applicationContext.defaultNotification(pendingIntent)
+
         builder.apply {
             setContentTitle(notification.title)
             setContentText(notification.body)
