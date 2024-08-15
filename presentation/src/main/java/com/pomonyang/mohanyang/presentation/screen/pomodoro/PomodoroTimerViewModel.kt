@@ -6,7 +6,6 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
-import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ENDED_FOCUS_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
@@ -25,13 +24,14 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 data class PomodoroTimerState(
-    val focusTime: Int = 0,
+    val maxFocusTime: Int = 0,
+    val currentFocusTime: Int = 0,
     val exceededTime: Int = 0,
     val title: String = "",
     val type: PomodoroCategoryType = PomodoroCategoryType.DEFAULT,
     val categoryNo: Int = -1
 ) : ViewState {
-    fun displayFocusTime(): String = focusTime.formatTime()
+    fun displayFocusTime(): String = currentFocusTime.formatTime()
     fun displayExceedTime(): String = exceededTime.formatTime()
 }
 
@@ -69,7 +69,7 @@ class PomodoroTimerViewModel @Inject constructor(
                     copy(
                         title = selectedPomodoroSetting.title,
                         type = selectedPomodoroSetting.categoryType,
-                        focusTime = (selectedPomodoroSetting.focusTime.times(60)),
+                        maxFocusTime = (selectedPomodoroSetting.focusTime.times(60)),
                         categoryNo = selectedPomodoroSetting.categoryNo
                     )
                 }
@@ -79,7 +79,7 @@ class PomodoroTimerViewModel @Inject constructor(
             PomodoroTimerEvent.ClickRest -> setEffect(
                 PomodoroTimerEffect.GoToPomodoroRest(
                     type = state.value.type,
-                    focusTime = state.value.focusTime,
+                    focusTime = state.value.currentFocusTime,
                     exceededTime = state.value.exceededTime
                 )
             )
@@ -94,8 +94,8 @@ class PomodoroTimerViewModel @Inject constructor(
             while (isActive) {
                 delay(TIMER_DELAY)
                 updateState {
-                    if (focusTime > ENDED_FOCUS_TIME) {
-                        copy(focusTime = focusTime - ONE_SECOND)
+                    if (currentFocusTime < maxFocusTime) {
+                        copy(currentFocusTime = currentFocusTime + ONE_SECOND)
                     } else {
                         val newExceedTime = exceededTime + ONE_SECOND
                         if (newExceedTime >= MAX_EXCEEDED_TIME) {
@@ -103,7 +103,7 @@ class PomodoroTimerViewModel @Inject constructor(
                             setEffect(
                                 PomodoroTimerEffect.GoToPomodoroRest(
                                     type = state.value.type,
-                                    focusTime = state.value.focusTime,
+                                    focusTime = state.value.currentFocusTime,
                                     exceededTime = state.value.exceededTime
                                 )
                             )

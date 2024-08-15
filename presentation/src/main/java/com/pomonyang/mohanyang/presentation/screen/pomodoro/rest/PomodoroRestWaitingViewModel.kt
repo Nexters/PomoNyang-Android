@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-data class PomodoroRestState(
+data class PomodoroRestWaitingState(
     val plusButtonSelected: Boolean = false,
     val minusButtonSelected: Boolean = false,
     val plusButtonEnabled: Boolean = true,
@@ -36,26 +36,26 @@ sealed interface PomodoroRestWaitingEvent : ViewEvent {
     data class OnMinusButtonClick(val isMinusButtonSelected: Boolean) : PomodoroRestWaitingEvent
 }
 
-sealed interface PomodoroRestSideEffect : ViewSideEffect {
-    data object GoToPomodoroSetting : PomodoroRestSideEffect
-    object GoToPomodoroRest : PomodoroRestSideEffect
-    data class ShowSnackbar(val message: String) : PomodoroRestSideEffect
+sealed interface PomodoroRestWaitingSideEffect : ViewSideEffect {
+    data object GoToPomodoroSettingWaiting : PomodoroRestWaitingSideEffect
+    data object GoToPomodoroRestWaiting : PomodoroRestWaitingSideEffect
+    data class ShowSnackbar(val message: String) : PomodoroRestWaitingSideEffect
 }
 
 @HiltViewModel
-class PomodoroRestViewModel @Inject constructor(
+class PomodoroRestWaitingViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
     private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase
-) : BaseViewModel<PomodoroRestState, PomodoroRestWaitingEvent, PomodoroRestSideEffect>() {
+) : BaseViewModel<PomodoroRestWaitingState, PomodoroRestWaitingEvent, PomodoroRestWaitingSideEffect>() {
 
-    override fun setInitialState(): PomodoroRestState = PomodoroRestState()
+    override fun setInitialState(): PomodoroRestWaitingState = PomodoroRestWaitingState()
 
     override fun handleEvent(event: PomodoroRestWaitingEvent) {
         Timber.tag("koni").d("handleEvent > $event")
         when (event) {
             is PomodoroRestWaitingEvent.Init -> {
                 if (event.exceedTime != 0) {
-                    setEffect(PomodoroRestSideEffect.GoToPomodoroSetting)
+                    setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroSettingWaiting)
                 }
 
                 viewModelScope.launch {
@@ -70,12 +70,12 @@ class PomodoroRestViewModel @Inject constructor(
             }
 
             PomodoroRestWaitingEvent.OnNavigationClick -> {
-                setEffect(PomodoroRestSideEffect.GoToPomodoroSetting)
+                setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroSettingWaiting)
             }
 
             is PomodoroRestWaitingEvent.OnPlusButtonClick -> {
                 if (state.value.plusButtonEnabled.not()) {
-                    setEffect(PomodoroRestSideEffect.ShowSnackbar("10분은 집중해야 해요"))
+                    setEffect(PomodoroRestWaitingSideEffect.ShowSnackbar("최대 60분까지만 집중할 수 있어요"))
                 } else {
                     updateState { copy(plusButtonSelected = event.isPlusButtonSelected, minusButtonSelected = false) }
                 }
@@ -83,7 +83,7 @@ class PomodoroRestViewModel @Inject constructor(
 
             is PomodoroRestWaitingEvent.OnMinusButtonClick -> {
                 if (state.value.minusButtonEnabled.not()) {
-                    setEffect(PomodoroRestSideEffect.ShowSnackbar("최대 60분까지만 집중할 수 있어요"))
+                    setEffect(PomodoroRestWaitingSideEffect.ShowSnackbar("10분은 집중해야 해요"))
                 } else {
                     updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
                 }
@@ -98,11 +98,11 @@ class PomodoroRestViewModel @Inject constructor(
                         )
                     }
                 }
-                setEffect(PomodoroRestSideEffect.GoToPomodoroSetting)
+                setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroSettingWaiting)
             }
 
             PomodoroRestWaitingEvent.OnStartRestClick -> {
-                setEffect(PomodoroRestSideEffect.GoToPomodoroRest)
+                setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroRestWaiting)
             }
         }
     }

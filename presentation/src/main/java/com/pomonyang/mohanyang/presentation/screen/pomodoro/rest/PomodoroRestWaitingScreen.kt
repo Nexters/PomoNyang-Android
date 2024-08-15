@@ -44,22 +44,22 @@ fun PomodoroRestWaitingRoute(
     exceedTime: Int,
     goToPomodoroSetting: () -> Unit,
     modifier: Modifier = Modifier,
-    pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel(),
+    pomodoroRestWaitingViewModel: PomodoroRestWaitingViewModel = hiltViewModel(),
     onShowSnackbar: (String, String?) -> Unit
 ) {
-    val state by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
-    pomodoroRestViewModel.effects.collectWithLifecycle { effect ->
+    val state by pomodoroRestWaitingViewModel.state.collectAsStateWithLifecycle()
+    pomodoroRestWaitingViewModel.effects.collectWithLifecycle { effect ->
         Timber.tag("koni").d("effect > $effect")
         when (effect) {
-            PomodoroRestSideEffect.GoToPomodoroSetting -> goToPomodoroSetting()
-            is PomodoroRestSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, null)
-            PomodoroRestSideEffect.GoToPomodoroRest -> {
+            PomodoroRestWaitingSideEffect.GoToPomodoroSettingWaiting -> goToPomodoroSetting()
+            is PomodoroRestWaitingSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, null)
+            PomodoroRestWaitingSideEffect.GoToPomodoroRestWaiting -> {
             }
         }
     }
 
     LaunchedEffect(Unit) {
-        pomodoroRestViewModel.handleEvent(
+        pomodoroRestWaitingViewModel.handleEvent(
             PomodoroRestWaitingEvent.Init(
                 type = type,
                 exceedTime = exceedTime,
@@ -76,7 +76,7 @@ fun PomodoroRestWaitingRoute(
         minusButtonSelected = state.minusButtonSelected,
         plusButtonEnabled = state.plusButtonEnabled,
         minusButtonEnabled = state.minusButtonEnabled,
-        onAction = { pomodoroRestViewModel.handleEvent(it) },
+        onAction = { pomodoroRestWaitingViewModel.handleEvent(it) },
         modifier = modifier
     )
 }
@@ -166,19 +166,7 @@ private fun FocusTimerSelectedButtons(
         modifier = modifier.padding(top = MnSpacing.medium),
         horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
     ) {
-        MnSelectButton(
-            modifier = Modifier.padding(
-                vertical = MnSpacing.small,
-                horizontal = MnSpacing.medium
-            ),
-            isEnabled = plusButtonEnabled,
-            isSelected = plusButtonSelected,
-            onClick = { onAction(PomodoroRestWaitingEvent.OnPlusButtonClick(plusButtonSelected.not())) },
-            leftIconResourceId = R.drawable.ic_null,
-            subTitleContent = {
-                Text(text = stringResource(R.string.five_minutes))
-            }
-        )
+        // TODO [코니] +- 아이콘으로 적용 필요
         MnSelectButton(
             modifier = Modifier.padding(
                 vertical = MnSpacing.small,
@@ -187,9 +175,21 @@ private fun FocusTimerSelectedButtons(
             isEnabled = minusButtonEnabled,
             isSelected = minusButtonSelected,
             onClick = { onAction(PomodoroRestWaitingEvent.OnMinusButtonClick(minusButtonSelected.not())) },
-            leftIconResourceId = R.drawable.ic_null,
             subTitleContent = {
-                Text(text = stringResource(R.string.five_minutes))
+                Text(text = "- ${stringResource(R.string.five_minutes)}")
+            }
+        )
+
+        MnSelectButton(
+            modifier = Modifier.padding(
+                vertical = MnSpacing.small,
+                horizontal = MnSpacing.medium
+            ),
+            isEnabled = plusButtonEnabled,
+            isSelected = plusButtonSelected,
+            onClick = { onAction(PomodoroRestWaitingEvent.OnPlusButtonClick(plusButtonSelected.not())) },
+            subTitleContent = {
+                Text(text = "+ ${stringResource(R.string.five_minutes)}")
             }
         )
     }
