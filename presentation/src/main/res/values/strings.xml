@@ -2,9 +2,11 @@
 <resources>
     <string name="focus">집중</string>
     <string name="focus_end">집중 끝내기</string>
-    <string name="focus_time">집중 시간</string>
+    <string name="focus_time">집중시간</string>
+    <string name="rest_time">휴식시간</string>
     <string name="rest">휴식</string>
     <string name="rest_action">휴식하기</string>
+    <string name="one_more_focus">한 번 더 집중하기</string>
     <string name="rest_start">휴식 시작하기</string>
     <string name="complete">완료</string>
     <string name="tooltip_category_content">눌러서 카테고리를 변경할 수 있어요</string>
@@ -39,7 +41,10 @@
     <string name="onboarding_select_alarm_time">지금</string>
     <string name="focus_cat_tooltip">잘 집중하고 있는 거냥?</string>
     <string name="exceed_cat_tooltip">이제 나랑 놀자냥?</string>
+    <string name="rest_cat_tooltip">쉬는 게 제일 좋다냥</string>
+    <string name="rest_exceed_cat_tooltip">이제 다시 사냥놀이 하자냥!</string>
     <string name="welcome_cat_tooltip">오랜만이다냥</string>
     <string name="five_minutes">5분</string>
     <string name="change_focus_time_prompt">다음부터 집중 시간을 바꿀까요?</string>
+    <string name="change_rest_time_prompt">다음부터 집중 시간을 바꿀까요?</string>
 </resources>

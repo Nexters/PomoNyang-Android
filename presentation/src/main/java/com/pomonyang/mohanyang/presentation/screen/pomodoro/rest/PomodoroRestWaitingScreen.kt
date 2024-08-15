@@ -1,14 +1,11 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,11 +19,11 @@ import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.component.Timer
+import com.pomonyang.mohanyang.presentation.component.TimerSelectedButtons
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButton
-import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
@@ -120,14 +117,15 @@ private fun PomodoroRestWaitingScreen(
             modifier = Modifier.padding(top = MnSpacing.xLarge)
         )
 
-        FocusTimerSelectedButtons(
-            onAction = onAction,
+        TimerSelectedButtons(
             plusButtonSelected = plusButtonSelected,
             minusButtonSelected = minusButtonSelected,
             plusButtonEnabled = plusButtonEnabled,
-            minusButtonEnabled = minusButtonEnabled
+            minusButtonEnabled = minusButtonEnabled,
+            title = stringResource(R.string.change_focus_time_prompt),
+            onPlusButtonClick = { onAction(PomodoroRestWaitingEvent.OnPlusButtonClick(plusButtonSelected.not())) },
+            onMinusButtonClick = { onAction(PomodoroRestWaitingEvent.OnMinusButtonClick(minusButtonSelected.not())) }
         )
-
         Spacer(modifier = Modifier.weight(1f))
 
         MnBoxButton(
@@ -143,54 +141,6 @@ private fun PomodoroRestWaitingScreen(
             containerPadding = PaddingValues(bottom = MnSpacing.xLarge),
             text = stringResource(id = R.string.focus_end),
             onClick = { onAction(PomodoroRestWaitingEvent.OnEndFocusClick) }
-        )
-    }
-}
-
-@Composable
-private fun FocusTimerSelectedButtons(
-    modifier: Modifier = Modifier,
-    onAction: (PomodoroRestWaitingEvent) -> Unit,
-    plusButtonSelected: Boolean,
-    minusButtonSelected: Boolean,
-    plusButtonEnabled: Boolean,
-    minusButtonEnabled: Boolean
-) {
-    Text(
-        modifier = Modifier.padding(top = MnSpacing.xLarge),
-        text = stringResource(R.string.change_focus_time_prompt),
-        style = MnTheme.typography.bodySemiBold,
-        color = MnTheme.textColorScheme.disabled
-    )
-    Row(
-        modifier = modifier.padding(top = MnSpacing.medium),
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
-    ) {
-        // TODO [코니] +- 아이콘으로 적용 필요
-        MnSelectButton(
-            modifier = Modifier.padding(
-                vertical = MnSpacing.small,
-                horizontal = MnSpacing.medium
-            ),
-            isEnabled = minusButtonEnabled,
-            isSelected = minusButtonSelected,
-            onClick = { onAction(PomodoroRestWaitingEvent.OnMinusButtonClick(minusButtonSelected.not())) },
-            subTitleContent = {
-                Text(text = "- ${stringResource(R.string.five_minutes)}")
-            }
-        )
-
-        MnSelectButton(
-            modifier = Modifier.padding(
-                vertical = MnSpacing.small,
-                horizontal = MnSpacing.medium
-            ),
-            isEnabled = plusButtonEnabled,
-            isSelected = plusButtonSelected,
-            onClick = { onAction(PomodoroRestWaitingEvent.OnPlusButtonClick(plusButtonSelected.not())) },
-            subTitleContent = {
-                Text(text = "+ ${stringResource(R.string.five_minutes)}")
-            }
         )
     }
 }
