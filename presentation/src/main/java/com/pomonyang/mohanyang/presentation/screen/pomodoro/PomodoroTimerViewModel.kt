@@ -6,15 +6,17 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel.Companion.DEFAULT_TIME
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class PomodoroTimerState(
     val type: String = "",
-    val focusTime: Int = 0,
-    val exceededTime: Int = 0,
+    val focusTime: String = DEFAULT_TIME,
+    val exceededTime: String = DEFAULT_TIME,
     val categoryNo: Int = -1
 ) : ViewState
 
@@ -33,15 +35,26 @@ class PomodoroTimerViewModel @Inject constructor(
     override fun handleEvent(event: PomodoroTimerEvent) {
         when (event) {
             PomodoroTimerEvent.Init -> viewModelScope.launch {
-                val pomodoroSettingData = getSelectedPomodoroSettingUseCase().first()
-                updateState {
-                    copy(
-                        type = pomodoroSettingData?.title ?: "",
-                        focusTime = pomodoroSettingData?.focusTime?.toInt() ?: 0,
-                        categoryNo = pomodoroSettingData?.categoryNo ?: -1
-                    )
-                }
+                getSelectedPomodoroSettingUseCase().first()?.let {
+                    updateState {
+                        copy(
+                            type = it.title,
+                            focusTime = (it.focusTime.times(60)).formatTime(),
+                            categoryNo = it.categoryNo
+                        )
+                    }
+                } ?: run { /* TODO 예외 처리 필요할지 고민 */ }
             }
         }
+    }
+
+    private fun Int.formatTime(): String {
+        val minutesPart = this / 60
+        val secondsPart = this % 60
+        return String.format(Locale.KOREAN, "%02d:%02d", minutesPart, secondsPart)
+    }
+
+    companion object {
+        const val DEFAULT_TIME = "00:00"
     }
 }

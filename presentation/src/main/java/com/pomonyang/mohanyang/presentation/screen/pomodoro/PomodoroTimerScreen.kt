@@ -28,6 +28,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel.Companion.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
@@ -56,11 +57,11 @@ fun PomodoroTimerRoute(
 private fun PomodoroTimerScreen(
     isFocus: Boolean,
     type: String,
-    time: Int,
-    exceededTime: Int,
+    time: String,
+    exceededTime: String,
     modifier: Modifier = Modifier
 ) {
-    val typeRes = if (isFocus) R.string.focus_action else R.string.rest_action
+    val typeRes = if (isFocus) R.string.focus_time else R.string.rest_time
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,8 +79,8 @@ private fun PomodoroTimerScreen(
 
         Timer(
             title = stringResource(id = typeRes),
-            time = time.toString(),
-            exceededTime = exceededTime.toString(),
+            time = time,
+            exceededTime = exceededTime,
             modifier = Modifier.padding(top = MnSpacing.xLarge)
         )
 
@@ -88,15 +89,15 @@ private fun PomodoroTimerScreen(
         MnBoxButton(
             modifier = Modifier.size(200.dp, 60.dp),
             styles = MnBoxButtonStyles.large,
-            text = "휴식하기",
+            text = stringResource(id = R.string.rest_action),
             onClick = { },
-            colors = if (exceededTime.toString().isNotEmpty()) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
+            colors = if (exceededTime.isNotEmpty()) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
         )
 
         MnTextButton(
             modifier = Modifier.padding(bottom = MnSpacing.xLarge),
             styles = MnTextButtonStyles.large,
-            text = "집중 끝내기",
+            text = stringResource(id = R.string.focus_end),
             onClick = {}
         )
     }
@@ -128,7 +129,7 @@ fun Timer(
             MnSmallIcon(resourceId = R.drawable.ic_null)
             Text(
                 modifier = Modifier.padding(MnSpacing.xSmall),
-                text = "휴식하기",
+                text = title,
                 style = MnTheme.typography.header5,
                 color = MnTheme.textColorScheme.secondary
             )
@@ -139,7 +140,7 @@ fun Timer(
             style = MnTheme.typography.header1,
             color = MnTheme.textColorScheme.primary
         )
-        if (exceededTime.isNotEmpty()) {
+        if (exceededTime != DEFAULT_TIME) {
             Text(
                 text = "$exceededTime 초과",
                 style = MnTheme.typography.header4,
@@ -155,8 +156,8 @@ private fun PomodoroTimerScreenPreview() {
     MnTheme {
         PomodoroTimerScreen(
             type = "공부",
-            time = 25,
-            exceededTime = 25,
+            time = "25:00",
+            exceededTime = "00:00",
             isFocus = true
         )
     }
