@@ -93,10 +93,12 @@ fun Modifier.tooltip(
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
     anchorAlignment: Alignment = Alignment.BottomCenter,
+    tooltipPadding: PaddingValues = PaddingValues(),
     anchorPadding: PaddingValues = PaddingValues(),
     contentAlign: TextAlign = TextAlign.Center,
     enabled: Boolean = true
 ): Modifier {
+    val density = LocalDensity.current
     var positionInRoot by remember { mutableStateOf(IntOffset.Zero) }
     var tooltipContentSize by remember { mutableStateOf(IntSize(0, 0)) }
     var componentSize by remember { mutableStateOf(IntSize(0, 0)) }
@@ -112,15 +114,30 @@ fun Modifier.tooltip(
                     windowSize: IntSize,
                     layoutDirection: LayoutDirection,
                     popupContentSize: IntSize
-                ): IntOffset = calculateOffset(
-                    positionInRoot = positionInRoot,
-                    componentSize = componentSize,
-                    tooltipSize = popupContentSize,
-                    screenWidthPx = windowSize.width,
-                    screenHeightPx = windowSize.height,
-                    horizontalAlignment = horizontalAlignment,
-                    verticalAlignment = verticalAlignment
-                )
+                ): IntOffset {
+                    val offset = calculateOffset(
+                        positionInRoot = positionInRoot,
+                        componentSize = componentSize,
+                        tooltipSize = popupContentSize,
+                        screenWidthPx = windowSize.width,
+                        screenHeightPx = windowSize.height,
+                        horizontalAlignment = horizontalAlignment,
+                        verticalAlignment = verticalAlignment
+                    )
+                    val horizontalPadding = with(density) {
+                        tooltipPadding.calculateLeftPadding(layoutDirection).roundToPx() -
+                            tooltipPadding.calculateRightPadding(layoutDirection).roundToPx()
+                    }
+                    val verticalPadding = with(density) {
+                        tooltipPadding.calculateTopPadding().roundToPx() -
+                            tooltipPadding.calculateBottomPadding().roundToPx()
+                    }
+
+                    return IntOffset(
+                        x = offset.x + horizontalPadding,
+                        y = offset.y + verticalPadding
+                    )
+                }
             }
         ) {
             MnTooltipImpl(
@@ -290,7 +307,11 @@ private fun MnTooltipImpl(
                 TooltipAnchor(
                     modifier = Modifier
                         .padding(arrowPadding)
-                        .width(tooltipContentSize.width.toFloat().pxToDp()),
+                        .width(
+                            tooltipContentSize.width
+                                .toFloat()
+                                .pxToDp()
+                        ),
                     anchorColor = tooltipColors.containerColor,
                     direction = arrowAlignment
                 )
@@ -300,7 +321,11 @@ private fun MnTooltipImpl(
                 TooltipAnchor(
                     modifier = Modifier
                         .padding(arrowPadding)
-                        .width(tooltipContentSize.width.toFloat().pxToDp()),
+                        .width(
+                            tooltipContentSize.width
+                                .toFloat()
+                                .pxToDp()
+                        ),
                     anchorColor = tooltipColors.containerColor,
                     direction = arrowAlignment
                 )

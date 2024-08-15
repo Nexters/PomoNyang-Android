@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.picker.MnWheelMinutePicker
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.SettingButton
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle

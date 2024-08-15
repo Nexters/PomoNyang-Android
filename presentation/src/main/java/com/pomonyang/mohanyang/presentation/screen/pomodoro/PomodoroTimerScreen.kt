@@ -1,9 +1,9 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
-import androidx.compose.foundation.background
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.presentation.component.CatRive
+import com.pomonyang.mohanyang.presentation.component.CategoryBox
+import com.pomonyang.mohanyang.presentation.component.Timer
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -29,16 +35,39 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel.Companion.DEFAULT_TIME
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
+import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 
 @Composable
 fun PomodoroTimerRoute(
     modifier: Modifier = Modifier,
-    pomodoroTimerViewModel: PomodoroTimerViewModel = hiltViewModel()
+    pomodoroTimerViewModel: PomodoroTimerViewModel = hiltViewModel(),
+    goToRest: () -> Unit,
+    goToPomodoroSetting: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
     val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
+    var showTooltip by remember { mutableStateOf(true) }
+
+    pomodoroTimerViewModel.effects.collectWithLifecycle {
+        when (it) {
+            PomodoroTimerEffect.GoToPomodoroRest -> {
+                showTooltip = false
+                goToRest()
+            }
+
+            PomodoroTimerEffect.GoToPomodoroSetting -> {
+                showTooltip = false
+                goToPomodoroSetting()
+            }
+        }
+    }
+
+    BackHandler {
+        showTooltip = false
+        onBackPressed()
+    }
 
     LaunchedEffect(Unit) {
         pomodoroTimerViewModel.handleEvent(PomodoroTimerEvent.Init)
@@ -47,21 +76,23 @@ fun PomodoroTimerRoute(
     PomodoroTimerScreen(
         modifier = modifier,
         type = state.type,
-        isFocus = true,
-        time = state.focusTime,
-        exceededTime = state.exceededTime
+        time = state.displayFocusTime(),
+        showTooltip = showTooltip,
+        exceededTime = state.displayRestTime(),
+        onAction = remember { pomodoroTimerViewModel::handleEvent }
     )
 }
 
 @Composable
 private fun PomodoroTimerScreen(
-    isFocus: Boolean,
     type: String,
     time: String,
+    showTooltip: Boolean,
     exceededTime: String,
+    onAction: (PomodoroTimerEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val typeRes = if (isFocus) R.string.focus_time else R.string.rest_time
+    val tooltipMessage = if (exceededTime != DEFAULT_TIME) R.string.exceed_cat_tooltip else R.string.focus_cat_tooltip
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,84 +100,53 @@ private fun PomodoroTimerScreen(
     ) {
         MnTopAppBar(
             navigationIcon = {
-                CategoryBox(categoryName = type, modifier = Modifier.padding(start = 12.dp))
+                CategoryBox(
+                    categoryName = type,
+                    modifier = Modifier.padding(start = 12.dp)
+                )
             }
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        CatRive()
-
-        Timer(
-            title = stringResource(id = typeRes),
-            time = time,
-            exceededTime = exceededTime,
-            modifier = Modifier.padding(top = MnSpacing.xLarge)
+        CatRive(
+            showTooltip = showTooltip,
+            tooltipMessage = stringResource(id = tooltipMessage)
         )
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        MnBoxButton(
-            modifier = Modifier.size(200.dp, 60.dp),
-            styles = MnBoxButtonStyles.large,
-            text = stringResource(id = R.string.rest_action),
-            onClick = { },
-            colors = if (exceededTime.isNotEmpty()) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
-        )
-
-        MnTextButton(
-            modifier = Modifier.padding(bottom = MnSpacing.xLarge),
-            styles = MnTextButtonStyles.large,
-            text = stringResource(id = R.string.focus_end),
-            onClick = {}
-        )
-    }
-}
-
-@Composable
-private fun CatRive(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(240.dp)
-            .background(MnTheme.backgroundColorScheme.secondary),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "image")
-    }
-}
-
-@Composable
-fun Timer(
-    title: String,
-    time: String,
-    exceededTime: String,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
+            modifier = Modifier.padding(top = MnSpacing.xLarge),
             verticalAlignment = Alignment.CenterVertically
         ) {
             MnSmallIcon(resourceId = R.drawable.ic_null)
             Text(
                 modifier = Modifier.padding(MnSpacing.xSmall),
-                text = title,
+                text = stringResource(id = R.string.focus_time),
                 style = MnTheme.typography.header5,
                 color = MnTheme.textColorScheme.secondary
             )
         }
 
-        Text(
-            text = time,
-            style = MnTheme.typography.header1,
-            color = MnTheme.textColorScheme.primary
+        Timer(
+            modifier = Modifier.weight(1f),
+            time = time,
+            exceededTime = exceededTime
         )
-        if (exceededTime != DEFAULT_TIME) {
-            Text(
-                text = "$exceededTime 초과",
-                style = MnTheme.typography.header4,
-                color = MnTheme.backgroundColorScheme.accent1
-            )
-        }
+
+        MnBoxButton(
+            modifier = Modifier.size(200.dp, 60.dp),
+            styles = MnBoxButtonStyles.large,
+            text = stringResource(id = R.string.rest_action),
+            onClick = { onAction(PomodoroTimerEvent.ClickRest) },
+            colors = if (exceededTime.isNotEmpty()) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
+        )
+
+        MnTextButton(
+            styles = MnTextButtonStyles.large,
+            containerPadding = PaddingValues(bottom = MnSpacing.xLarge),
+            text = stringResource(id = R.string.focus_end),
+            onClick = { onAction(PomodoroTimerEvent.ClickHome) }
+        )
     }
 }
 
@@ -157,8 +157,23 @@ private fun PomodoroTimerScreenPreview() {
         PomodoroTimerScreen(
             type = "공부",
             time = "25:00",
+            showTooltip = true,
             exceededTime = "00:00",
-            isFocus = true
+            onAction = {}
+        )
+    }
+}
+
+@DevicePreviews
+@Composable
+private fun PomodoroTimerExceedScreenPreview() {
+    MnTheme {
+        PomodoroTimerScreen(
+            type = "공부",
+            time = "25:00",
+            showTooltip = true,
+            exceededTime = "10:00",
+            onAction = {}
         )
     }
 }

@@ -1,13 +1,11 @@
 package com.pomonyang.mohanyang.presentation.screen.onboarding.naming
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -29,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -36,7 +34,6 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButto
 import com.pomonyang.mohanyang.presentation.designsystem.textfield.MnTextField
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
-import com.pomonyang.mohanyang.presentation.designsystem.tooltip.tooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -48,20 +45,30 @@ fun OnboardingNamingCatRoute(
     catName: String?,
     onBackClick: () -> Unit,
     onNavToHome: () -> Unit,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel()
 ) {
+    var showNamingCatTooltip by remember { mutableStateOf(true) }
+
     onboardingNamingCatViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is NamingSideEffect.NavToHome -> {
+                showNamingCatTooltip = false
                 onNavToHome()
             }
         }
     }
 
+    BackHandler {
+        showNamingCatTooltip = false
+        onBackPressed()
+    }
+
     OnboardingNamingCatScreen(
         catNo = catNo,
         catName = catName,
+        showNamingCatTooltip = showNamingCatTooltip,
         onAction = onboardingNamingCatViewModel::handleEvent,
         onBackClick = onBackClick,
         modifier = modifier
@@ -72,6 +79,7 @@ fun OnboardingNamingCatRoute(
 fun OnboardingNamingCatScreen(
     catNo: Int,
     catName: String?,
+    showNamingCatTooltip: Boolean,
     onAction: (NamingEvent) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -116,7 +124,13 @@ fun OnboardingNamingCatScreen(
 
         ) {
             item {
-                CatRive(modifier = Modifier.padding(top = 130.dp))
+                CatRive(
+                    modifier = Modifier
+                        .padding(top = 130.dp)
+                        .fillMaxWidth(),
+                    tooltipMessage = stringResource(id = R.string.naming_cat_tooltip),
+                    showTooltip = showNamingCatTooltip
+                )
                 Text(
                     modifier = Modifier.padding(
                         top = MnSpacing.twoXLarge,
@@ -155,25 +169,12 @@ fun OnboardingNamingCatScreen(
 }
 
 @Composable
-private fun CatRive(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(240.dp)
-            .background(MnTheme.backgroundColorScheme.secondary)
-            .tooltip(content = stringResource(id = R.string.naming_cat_tooltip)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "image")
-    }
-}
-
-@Composable
-@Preview
+@Preview(showBackground = true)
 fun PreviewOnboardingNamingCatScreen() {
     OnboardingNamingCatScreen(
         catNo = 1,
         catName = "삼색이",
+        showNamingCatTooltip = true,
         onAction = { _ -> },
         onBackClick = {}
     )

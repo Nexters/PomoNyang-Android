@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.component
+package com.pomonyang.mohanyang.presentation.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background

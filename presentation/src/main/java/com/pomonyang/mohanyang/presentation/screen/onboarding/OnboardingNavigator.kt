@@ -28,7 +28,8 @@ internal data class OnboardingNamingCat(
 )
 
 fun NavGraphBuilder.onboardingScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    onBackPressed: () -> Unit
 ) {
     navigation<Onboarding>(
         startDestination = OnboardingGuide
@@ -58,6 +59,7 @@ fun NavGraphBuilder.onboardingScreen(
             OnboardingNamingCatRoute(
                 catNo = catNo,
                 catName = catName,
+                onBackPressed = onBackPressed,
                 onBackClick = { navHostController.popBackStack() },
                 onNavToHome = {
                     navHostController.navigate(
