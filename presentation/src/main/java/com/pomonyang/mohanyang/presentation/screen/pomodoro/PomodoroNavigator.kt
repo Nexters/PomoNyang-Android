@@ -1,10 +1,12 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.PomodoroSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.time.PomodoroTimeSettingRoute
 import kotlinx.serialization.Serializable
@@ -20,6 +22,9 @@ internal data class TimeSetting(val isFocusTime: Boolean)
 
 @Serializable
 internal data object PomodoroTimer
+
+@Serializable
+internal data object PomodoroRest
 
 fun NavGraphBuilder.pomodoroScreen(
     isNewUser: Boolean,
@@ -54,8 +59,30 @@ fun NavGraphBuilder.pomodoroScreen(
             }
         }
 
-        composable<PomodoroTimer> { backStackEntry ->
-            PomodoroTimerRoute()
+        composable<PomodoroTimer> {
+            PomodoroTimerRoute(
+                goToRest = {
+                    navHostController.navigate(PomodoroRest) {
+                        popUpTo(navHostController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        popUpTo(PomodoroTimer) {
+                            inclusive = true
+                        }
+                        restoreState = true
+                    }
+                },
+                goToPomodoroSetting = {
+                    navHostController.navigate(PomodoroSetting) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable<PomodoroRest> {
+            PomodoroRestRoute()
         }
     }
 }

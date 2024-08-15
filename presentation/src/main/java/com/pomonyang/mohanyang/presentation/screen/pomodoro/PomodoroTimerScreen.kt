@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -31,7 +32,6 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel.Companion.DEFAULT_TIME
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -40,12 +40,16 @@ import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 fun PomodoroTimerRoute(
     modifier: Modifier = Modifier,
     pomodoroTimerViewModel: PomodoroTimerViewModel = hiltViewModel(),
-    goToRest: () -> Unit
+    goToRest: () -> Unit,
+    goToPomodoroSetting: () -> Unit
 ) {
     val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
 
     pomodoroTimerViewModel.effects.collectWithLifecycle {
-        goToRest()
+        when (it) {
+            PomodoroTimerEffect.GoToPomodoroRest -> goToRest()
+            PomodoroTimerEffect.GoToPomodoroSetting -> goToPomodoroSetting()
+        }
     }
 
     LaunchedEffect(Unit) {

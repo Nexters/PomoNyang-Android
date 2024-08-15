@@ -42,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.domain.model.setting.PomodoroCategoryModel
+import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
@@ -54,7 +55,6 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.guideTooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
