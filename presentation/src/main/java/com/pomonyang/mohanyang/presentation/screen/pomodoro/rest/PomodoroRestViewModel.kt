@@ -40,11 +40,15 @@ data class PomodoroRestState(
 sealed interface PomodoroRestEvent : ViewEvent {
     data class OnPlusButtonClick(val isPlusButtonSelected: Boolean) : PomodoroRestEvent
     data class OnMinusButtonClick(val isMinusButtonSelected: Boolean) : PomodoroRestEvent
+    data object OnEndPomodoroClick : PomodoroRestEvent
+    data object OnFocusClick : PomodoroRestEvent
     data object Init : PomodoroRestEvent
 }
 
 sealed interface PomodoroRestEffect : ViewSideEffect {
     data class ShowSnackbar(val message: String) : PomodoroRestEffect
+    data object GoToHome : PomodoroRestEffect
+    data object GoToPomodoroFocus : PomodoroRestEffect
 }
 
 @HiltViewModel
@@ -87,6 +91,9 @@ class PomodoroRestViewModel @Inject constructor(
                     updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
                 }
             }
+
+            PomodoroRestEvent.OnEndPomodoroClick -> setEffect(PomodoroRestEffect.GoToHome)
+            PomodoroRestEvent.OnFocusClick -> setEffect(PomodoroRestEffect.GoToPomodoroFocus)
         }
     }
 

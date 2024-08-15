@@ -43,7 +43,7 @@ fun PomodoroTimerRoute(
     modifier: Modifier = Modifier,
     pomodoroTimerViewModel: PomodoroTimerViewModel = hiltViewModel(),
     goToRest: (type: String, focusTime: Int, exceededTime: Int) -> Unit,
-    goToPomodoroSetting: () -> Unit,
+    goToHome: () -> Unit,
     onBackPressed: () -> Unit
 ) {
     val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
@@ -58,7 +58,7 @@ fun PomodoroTimerRoute(
 
             PomodoroTimerEffect.GoToPomodoroSetting -> {
                 showTooltip = false
-                goToPomodoroSetting()
+                goToHome()
             }
         }
     }

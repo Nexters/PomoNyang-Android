@@ -36,16 +36,33 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
+import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 
 @Composable
 fun PomodoroRestRoute(
     onShowSnackbar: suspend (String, String?) -> Unit,
     onBackPressed: () -> Unit,
+    goToHome: () -> Unit,
+    goToFocus: () -> Unit,
     modifier: Modifier = Modifier,
     pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel()
 ) {
     val state by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
     var showTooltip by remember { mutableStateOf(true) }
+    pomodoroRestViewModel.effects.collectWithLifecycle { effect ->
+        when (effect) {
+            is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, null)
+            PomodoroRestEffect.GoToHome -> {
+                showTooltip = false
+                goToHome()
+            }
+
+            PomodoroRestEffect.GoToPomodoroFocus -> {
+                showTooltip = false
+                goToFocus()
+            }
+        }
+    }
 
     BackHandler {
         showTooltip = false
@@ -118,7 +135,7 @@ private fun PomodoroRestScreen(
             minusButtonSelected = minusButtonSelected,
             plusButtonEnabled = plusButtonEnabled,
             minusButtonEnabled = minusButtonEnabled,
-            title = stringResource(R.string.change_focus_time_prompt),
+            title = stringResource(R.string.change_rest_time_prompt),
             onPlusButtonClick = { onAction(PomodoroRestEvent.OnPlusButtonClick(plusButtonSelected.not())) },
             onMinusButtonClick = { onAction(PomodoroRestEvent.OnMinusButtonClick(minusButtonSelected.not())) }
         )
@@ -129,7 +146,7 @@ private fun PomodoroRestScreen(
             modifier = Modifier.size(200.dp, 60.dp),
             styles = MnBoxButtonStyles.large,
             text = stringResource(id = R.string.one_more_focus),
-            onClick = { },
+            onClick = { onAction(PomodoroRestEvent.OnFocusClick) },
             colors = if (exceededTime != DEFAULT_TIME) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
         )
 
@@ -137,7 +154,7 @@ private fun PomodoroRestScreen(
             styles = MnTextButtonStyles.large,
             containerPadding = PaddingValues(bottom = MnSpacing.xLarge),
             text = stringResource(id = R.string.focus_end),
-            onClick = { }
+            onClick = { onAction(PomodoroRestEvent.OnEndPomodoroClick) }
         )
     }
 }

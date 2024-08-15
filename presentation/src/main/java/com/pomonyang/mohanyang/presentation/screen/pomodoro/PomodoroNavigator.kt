@@ -1,8 +1,8 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
@@ -74,25 +74,17 @@ fun NavGraphBuilder.pomodoroScreen(
                 onBackPressed = onBackPressed,
                 goToRest = { type, focusTime, exceededTime ->
                     navHostController.navigate(
-                        PomodoroRestWaiting(
+                        route = PomodoroRestWaiting(
                             type = type,
                             focusTime = focusTime,
                             exceededTime = exceededTime
-                        )
-                    ) {
-                        popUpTo(navHostController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        popUpTo(PomodoroTimer) {
-                            inclusive = true
-                        }
-                        restoreState = true
-                    }
+                        ),
+                        navOptions = NavOptions.Builder().setPopUpTo<PomodoroTimer>(true).build()
+                    )
                 },
-                goToPomodoroSetting = {
+                goToHome = {
                     navHostController.navigate(PomodoroSetting) {
-                        popUpTo(0) { inclusive = true }
-                        launchSingleTop = true
+                        popUpTo(PomodoroSetting)
                     }
                 }
             )
@@ -104,11 +96,14 @@ fun NavGraphBuilder.pomodoroScreen(
                 type = routeData.type,
                 focusTime = routeData.focusTime,
                 exceedTime = routeData.exceededTime,
-                goToPomodoroSetting = {
-                    navHostController.navigate(PomodoroSetting) {
-                        popUpTo(0) { inclusive = true }
-                        launchSingleTop = true
-                    }
+                goToHome = {
+                    navHostController.navigate(
+                        route = PomodoroSetting,
+                        navOptions = NavOptions.Builder()
+                            .setPopUpTo<PomodoroRestWaiting>(inclusive = true)
+                            .setLaunchSingleTop(true)
+                            .build()
+                    )
                 },
                 goToPomodoroRest = { navHostController.navigate(PomodoroRest) },
                 onShowSnackbar = onShowSnackbar
@@ -116,7 +111,24 @@ fun NavGraphBuilder.pomodoroScreen(
         }
 
         composable<PomodoroRest> {
-            PomodoroRestRoute(onBackPressed = onBackPressed, onShowSnackbar = onShowSnackbar)
+            PomodoroRestRoute(
+                onBackPressed = onBackPressed,
+                onShowSnackbar = onShowSnackbar,
+                goToHome = {
+                    navHostController.navigate(PomodoroSetting) {
+                        popUpTo(PomodoroSetting)
+                    }
+                },
+                goToFocus = {
+                    navHostController.navigate(
+                        route = PomodoroTimer,
+                        navOptions = NavOptions.Builder()
+                            .setPopUpTo<PomodoroRest>(inclusive = true)
+                            .setLaunchSingleTop(true)
+                            .build()
+                    )
+                }
+            )
         }
     }
 }

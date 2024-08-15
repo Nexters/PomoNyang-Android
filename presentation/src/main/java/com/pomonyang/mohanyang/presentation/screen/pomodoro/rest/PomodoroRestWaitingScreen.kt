@@ -39,7 +39,7 @@ fun PomodoroRestWaitingRoute(
     type: String,
     focusTime: Int,
     exceedTime: Int,
-    goToPomodoroSetting: () -> Unit,
+    goToHome: () -> Unit,
     goToPomodoroRest: () -> Unit,
     modifier: Modifier = Modifier,
     pomodoroRestWaitingViewModel: PomodoroRestWaitingViewModel = hiltViewModel(),
@@ -49,7 +49,7 @@ fun PomodoroRestWaitingRoute(
     pomodoroRestWaitingViewModel.effects.collectWithLifecycle { effect ->
         Timber.tag("koni").d("effect > $effect")
         when (effect) {
-            PomodoroRestWaitingSideEffect.GoToPomodoroSettingWaiting -> goToPomodoroSetting()
+            PomodoroRestWaitingSideEffect.GoToPomodoroSettingWaiting -> goToHome()
             is PomodoroRestWaitingSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, null)
             PomodoroRestWaitingSideEffect.GoToPomodoroRest -> goToPomodoroRest()
         }
