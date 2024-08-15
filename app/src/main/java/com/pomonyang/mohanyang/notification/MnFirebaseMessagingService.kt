@@ -3,17 +3,19 @@ package com.pomonyang.mohanyang.notification
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
+import com.pomonyang.mohanyang.notification.util.defaultNotification
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 internal class MnFirebaseMessagingService : FirebaseMessagingService() {
@@ -44,8 +46,15 @@ internal class MnFirebaseMessagingService : FirebaseMessagingService() {
 
         val notification = remoteMessage.notification ?: return
 
-        // TODO notify 로직 추가
-        Timber.d("FCM notification : ${notification.title}\n${notification.body}")
+        val builder = applicationContext.defaultNotification()
+        builder.apply {
+            setContentTitle(notification.title)
+            setContentText(notification.body)
+        }
+
+        val id = UUID.randomUUID().hashCode()
+
+        NotificationManagerCompat.from(this).notify(id, builder.build())
     }
 
     override fun onDestroy() {
