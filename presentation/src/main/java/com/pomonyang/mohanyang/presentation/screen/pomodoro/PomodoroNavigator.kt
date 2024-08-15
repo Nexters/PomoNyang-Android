@@ -99,7 +99,14 @@ fun NavGraphBuilder.pomodoroScreen(
             PomodoroRestWaitingRoute(
                 type = routeData.type,
                 focusTime = routeData.focusTime,
-                exceedTime = routeData.exceededTime
+                exceedTime = routeData.exceededTime,
+                goToPomodoroSetting = {
+                    navHostController.navigate(PomodoroSetting) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onShowSnackbar = onShowSnackbar
             )
         }
     }

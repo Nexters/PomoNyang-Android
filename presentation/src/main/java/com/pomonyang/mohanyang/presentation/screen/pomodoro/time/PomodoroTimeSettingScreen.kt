@@ -88,7 +88,7 @@ private fun PomodoroTimeSettingScreen(
 
         MnWheelMinutePicker(
             modifier = Modifier.padding(top = 16.dp),
-            items = (5..60 step 5).toPersistentList(),
+            items = (10..60 step 5).toPersistentList(),
             initialItem = initialSettingTime,
             onChangePickTime = remember { { onAction(PomodoroTimeSettingEvent.ChangePickTime(time = it)) } }
         )

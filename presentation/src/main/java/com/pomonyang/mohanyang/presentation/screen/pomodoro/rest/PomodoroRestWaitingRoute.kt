@@ -33,17 +33,28 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
+import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.formatTime
+import timber.log.Timber
 
 @Composable
 fun PomodoroRestWaitingRoute(
     type: String,
     focusTime: Int,
     exceedTime: Int,
+    goToPomodoroSetting: () -> Unit,
     modifier: Modifier = Modifier,
-    pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel()
+    pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel(),
+    onShowSnackbar: (String, String?) -> Unit
 ) {
     val state by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
+    pomodoroRestViewModel.effects.collectWithLifecycle { effect ->
+        Timber.tag("koni").d("effect > $effect")
+        when (effect) {
+            PomodoroRestSideEffect.GoToPomodoroSetting -> goToPomodoroSetting()
+            is PomodoroRestSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, null)
+        }
+    }
 
     LaunchedEffect(Unit) {
         pomodoroRestViewModel.handleEvent(
@@ -160,7 +171,7 @@ private fun FocusTimerSelectedButtons(
             ),
             isEnabled = plusButtonEnabled,
             isSelected = plusButtonSelected,
-            onClick = { onAction(PomodoroRestWaitingEvent.OnPlusButtonClick) },
+            onClick = { onAction(PomodoroRestWaitingEvent.OnPlusButtonClick(plusButtonSelected.not())) },
             leftIconResourceId = R.drawable.ic_null,
             subTitleContent = {
                 Text(text = stringResource(R.string.five_minutes))
@@ -173,7 +184,7 @@ private fun FocusTimerSelectedButtons(
             ),
             isEnabled = minusButtonEnabled,
             isSelected = minusButtonSelected,
-            onClick = { onAction(PomodoroRestWaitingEvent.OnMinusButtonClick) },
+            onClick = { onAction(PomodoroRestWaitingEvent.OnMinusButtonClick(minusButtonSelected.not())) },
             leftIconResourceId = R.drawable.ic_null,
             subTitleContent = {
                 Text(text = stringResource(R.string.five_minutes))

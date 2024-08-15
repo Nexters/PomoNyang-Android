@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 data class PomodoroRestState(
     val plusButtonSelected: Boolean = false,
@@ -28,12 +29,13 @@ sealed interface PomodoroRestWaitingEvent : ViewEvent {
     ) : PomodoroRestWaitingEvent
 
     data object OnNavigationClick : PomodoroRestWaitingEvent
-    data object OnPlusButtonClick : PomodoroRestWaitingEvent
-    data object OnMinusButtonClick : PomodoroRestWaitingEvent
+    data class OnPlusButtonClick(val isPlusButtonSelected: Boolean) : PomodoroRestWaitingEvent
+    data class OnMinusButtonClick(val isMinusButtonSelected: Boolean) : PomodoroRestWaitingEvent
 }
 
 sealed interface PomodoroRestSideEffect : ViewSideEffect {
     data object GoToPomodoroSetting : PomodoroRestSideEffect
+    data class ShowSnackbar(val message: String) : PomodoroRestSideEffect
 }
 
 @HiltViewModel
@@ -44,6 +46,7 @@ class PomodoroRestViewModel @Inject constructor(
     override fun setInitialState(): PomodoroRestState = PomodoroRestState()
 
     override fun handleEvent(event: PomodoroRestWaitingEvent) {
+        Timber.tag("koni").d("handleEvent > $event")
         when (event) {
             is PomodoroRestWaitingEvent.Init -> {
                 if (event.exceedTime != 0) {
@@ -66,12 +69,20 @@ class PomodoroRestViewModel @Inject constructor(
                 setEffect(PomodoroRestSideEffect.GoToPomodoroSetting)
             }
 
-            PomodoroRestWaitingEvent.OnMinusButtonClick -> {
-                updateState { copy(minusButtonSelected = true, plusButtonSelected = false) }
+            is PomodoroRestWaitingEvent.OnPlusButtonClick -> {
+                if (state.value.plusButtonEnabled.not()) {
+                    setEffect(PomodoroRestSideEffect.ShowSnackbar("10분은 집중해야 해요"))
+                } else {
+                    updateState { copy(plusButtonSelected = event.isPlusButtonSelected, minusButtonSelected = false) }
+                }
             }
 
-            PomodoroRestWaitingEvent.OnPlusButtonClick -> {
-                updateState { copy(plusButtonSelected = true, minusButtonSelected = false) }
+            is PomodoroRestWaitingEvent.OnMinusButtonClick -> {
+                if (state.value.minusButtonEnabled.not()) {
+                    setEffect(PomodoroRestSideEffect.ShowSnackbar("최대 60분까지만 집중할 수 있어요"))
+                } else {
+                    updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
+                }
             }
         }
     }
