@@ -29,6 +29,7 @@ internal data object PomodoroRest
 fun NavGraphBuilder.pomodoroScreen(
     isNewUser: Boolean,
     onShowSnackbar: (String, String?) -> Unit,
+    onBackPressed: () -> Unit,
     navHostController: NavHostController
 ) {
     navigation<Pomodoro>(
@@ -38,6 +39,7 @@ fun NavGraphBuilder.pomodoroScreen(
             PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,
+                onBackPressed = onBackPressed,
                 goTimeSetting = { isFocusTime ->
                     navHostController.navigate(
                         TimeSetting(isFocusTime)
@@ -61,6 +63,7 @@ fun NavGraphBuilder.pomodoroScreen(
 
         composable<PomodoroTimer> {
             PomodoroTimerRoute(
+                onBackPressed = onBackPressed,
                 goToRest = {
                     navHostController.navigate(PomodoroRest) {
                         popUpTo(navHostController.graph.findStartDestination().id) {

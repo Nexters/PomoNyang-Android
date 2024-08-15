@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -155,7 +156,7 @@ private fun OnboardingGuideContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MnSpacing.threeXLarge)
     ) {
-        CatRiveBox()
+        CatRive()
         TextGuide(content)
     }
 }
@@ -183,17 +184,6 @@ private fun TextGuide(
             color = MnTheme.textColorScheme.secondary
         )
     }
-}
-
-@Composable
-private fun CatRiveBox(
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .size(240.dp)
-            .background(MnTheme.backgroundColorScheme.secondary)
-    )
 }
 
 @Composable
@@ -231,12 +221,6 @@ private fun PageIndicator(
             )
         }
     }
-}
-
-@Preview
-@Composable
-private fun CatRivePreview() {
-    CatRiveBox()
 }
 
 @Preview

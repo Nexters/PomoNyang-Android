@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.domain.model.setting.PomodoroCategoryModel
+import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
@@ -65,6 +67,7 @@ import timber.log.Timber
 @Composable
 fun PomodoroSettingRoute(
     isNewUser: Boolean,
+    onBackPressed: () -> Unit,
     onShowSnackbar: suspend (String, String?) -> Unit,
     goToPomodoro: () -> Unit,
     goTimeSetting: (isFocusTime: Boolean) -> Unit,
@@ -72,6 +75,7 @@ fun PomodoroSettingRoute(
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
+    var showTooltip by remember { mutableStateOf(true) }
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         Timber.tag("koni").d("handleEffect > $effect")
         when (effect) {
@@ -80,11 +84,20 @@ fun PomodoroSettingRoute(
             }
 
             is PomodoroSettingSideEffect.GoTimeSetting -> {
+                showTooltip = false
                 goTimeSetting(effect.isFocusTime)
             }
 
-            PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro()
+            PomodoroSettingSideEffect.GoToPomodoro -> {
+                showTooltip = false
+                goToPomodoro()
+            }
         }
+    }
+
+    BackHandler {
+        showTooltip = false
+        onBackPressed()
     }
 
     if (state.showCategoryBottomSheet) {
@@ -99,7 +112,8 @@ fun PomodoroSettingRoute(
         onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
         modifier = modifier,
-        isNewUser = isNewUser
+        isNewUser = isNewUser,
+        showTooltip = showTooltip
     )
 }
 
@@ -107,6 +121,7 @@ fun PomodoroSettingRoute(
 fun PomodoroSettingScreen(
     onAction: (PomodoroSettingEvent) -> Unit,
     isNewUser: Boolean,
+    showTooltip: Boolean,
     state: PomodoroSettingState,
     modifier: Modifier = Modifier
 ) {
@@ -150,7 +165,11 @@ fun PomodoroSettingScreen(
                 alignment = Alignment.CenterVertically
             )
         ) {
-            CatRive(catName = state.catName)
+            CatRive(
+                catName = state.catName,
+                showTooltip = showTooltip,
+                tooltipMessage = stringResource(R.string.welcome_cat_tooltip)
+            )
             PomodoroDetailSetting(
                 onAction = onAction,
                 isNewUser = isNewUser,
@@ -205,37 +224,6 @@ private fun PomodoroCategoryBottomSheet(
 }
 
 @Composable
-private fun CatRive(
-    showTooltip: Boolean = false,
-    catName: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .size(240.dp)
-                .background(MnTheme.backgroundColorScheme.secondary)
-                .guideTooltip(
-                    modifier = Modifier.padding(top = 20.dp),
-                    enabled = showTooltip,
-                    content = stringResource(R.string.tooltip_rest_content),
-                    showOverlay = false,
-                    highlightComponent = false
-                )
-        ) {
-            /* TODO */
-        }
-        Text(
-            modifier = Modifier.padding(top = 20.dp),
-            text = catName,
-            style = MnTheme.typography.header4,
-            color = MnTheme.textColorScheme.tertiary
-        )
-    }
-}
-
-@Composable
 private fun PomodoroDetailSetting(
     onAction: (PomodoroSettingEvent) -> Unit,
     isNewUser: Boolean,
@@ -247,6 +235,7 @@ private fun PomodoroDetailSetting(
     val coroutineScope = rememberCoroutineScope()
 
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CategoryBox(
@@ -362,7 +351,9 @@ fun SettingButton(
 @Preview
 fun PomodoroStarterScreenPreview() {
     PomodoroSettingScreen(
+        onAction = {},
         isNewUser = false,
+        showTooltip = true,
         state = PomodoroSettingState(
             categoryList = listOf(
                 PomodoroCategoryModel(
@@ -372,15 +363,8 @@ fun PomodoroStarterScreenPreview() {
                     restTime = 10
                 )
             )
-        ),
-        onAction = {}
+        )
     )
-}
-
-@Composable
-@Preview
-fun CatImagePreview() {
-    CatRive(catName = "치즈냥", showTooltip = false)
 }
 
 @Composable

@@ -37,5 +37,7 @@
     <string name="onboarding_select_alarm_title">모하냥</string>
     <string name="onboarding_select_alarm_empty">고양이를 선택하면\n딴 짓 방해알림 예시를 보여드려요</string>
     <string name="onboarding_select_alarm_time">지금</string>
-
+    <string name="focus_cat_tooltip">잘 집중하고 있는 거냥?</string>
+    <string name="exceed_cat_tooltip">이제 나랑 놀자냥?</string>
+    <string name="welcome_cat_tooltip">오랜만이다냥</string>
 </resources>

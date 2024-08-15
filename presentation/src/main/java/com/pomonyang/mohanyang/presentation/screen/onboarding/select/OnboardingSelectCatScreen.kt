@@ -33,6 +33,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.domain.model.cat.CatSelectionContent
 import com.pomonyang.mohanyang.domain.model.cat.CatType
+import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -136,10 +137,12 @@ fun OnboardingSelectCatScreen(
             )
 
             CatRive(
-                modifier = Modifier.padding(
-                    top = MnSpacing.medium,
-                    bottom = 42.dp
-                )
+                modifier = Modifier
+                    .padding(
+                        top = MnSpacing.medium,
+                        bottom = 42.dp
+                    )
+                    .fillMaxWidth()
             )
 
             CatCategory(
@@ -253,21 +256,6 @@ fun EmptyAlarmExample(
             color = MnColor.Gray400,
             textAlign = TextAlign.Center
         )
-    }
-}
-
-@Composable
-private fun CatRive(
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .height(240.dp)
-            .fillMaxWidth()
-            .background(MnTheme.backgroundColorScheme.secondary),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("image")
     }
 }
 
