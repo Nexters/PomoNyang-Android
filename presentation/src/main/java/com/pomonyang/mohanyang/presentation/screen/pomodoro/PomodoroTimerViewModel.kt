@@ -35,15 +35,14 @@ class PomodoroTimerViewModel @Inject constructor(
     override fun handleEvent(event: PomodoroTimerEvent) {
         when (event) {
             PomodoroTimerEvent.Init -> viewModelScope.launch {
-                getSelectedPomodoroSettingUseCase().first()?.let {
-                    updateState {
-                        copy(
-                            type = it.title,
-                            focusTime = (it.focusTime.times(60)).formatTime(),
-                            categoryNo = it.categoryNo
-                        )
-                    }
-                } ?: run { /* TODO 예외 처리 필요할지 고민 */ }
+                val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first()
+                updateState {
+                    copy(
+                        type = selectedPomodoroSetting.title,
+                        focusTime = (selectedPomodoroSetting.focusTime.times(60)).formatTime(),
+                        categoryNo = selectedPomodoroSetting.categoryNo
+                    )
+                }
             }
         }
     }

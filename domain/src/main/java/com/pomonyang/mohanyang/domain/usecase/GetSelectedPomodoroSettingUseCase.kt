@@ -12,13 +12,13 @@ class GetSelectedPomodoroSettingUseCase @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository
 ) {
 
-    operator fun invoke(): Flow<PomodoroCategoryModel?> {
+    operator fun invoke(): Flow<PomodoroCategoryModel> {
         val settingListFlow = pomodoroSettingRepository.getPomodoroSettingList()
             .map { list -> list.map { it.toModel() } }
         val recentUseCategoryNoFlow = pomodoroSettingRepository.getRecentUseCategoryNo()
 
         return settingListFlow.zip(recentUseCategoryNoFlow) { settingList, recentUseCategoryNo ->
-            settingList.find { it.categoryNo == recentUseCategoryNo }
+            settingList.find { it.categoryNo == recentUseCategoryNo } ?: settingList.first()
         }
     }
 }

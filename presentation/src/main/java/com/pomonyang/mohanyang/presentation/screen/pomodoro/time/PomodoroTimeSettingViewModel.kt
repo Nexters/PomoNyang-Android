@@ -48,18 +48,15 @@ class PomodoroTimeSettingViewModel @Inject constructor(
         when (event) {
             is PomodoroTimeSettingEvent.Init -> {
                 viewModelScope.launch {
-                    getSelectedPomodoroSettingUseCase().first()?.let {
-                        updateState {
-                            copy(
-                                categoryNo = it.categoryNo,
-                                titleName = it.title,
-                                initialFocusTime = it.focusTime,
-                                initialRestTime = it.restTime,
-                                isFocus = event.isFocusTime
-                            )
-                        }
-                    } ?: run {
-                        // TODO 로컬에 데이터가 없는 경우 처리가 필요할까? 없는 경우가 있을까 고민 중
+                    val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first()
+                    updateState {
+                        copy(
+                            categoryNo = selectedPomodoroSetting.categoryNo,
+                            titleName = selectedPomodoroSetting.title,
+                            initialFocusTime = selectedPomodoroSetting.focusTime,
+                            initialRestTime = selectedPomodoroSetting.restTime,
+                            isFocus = event.isFocusTime
+                        )
                     }
                 }
             }

@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.onboarding.naming
 
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepository
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
@@ -23,7 +24,8 @@ sealed interface NamingSideEffect : ViewSideEffect {
 
 @HiltViewModel
 class OnboardingNamingCatViewModel @Inject constructor(
-    private val catSettingRepository: CatSettingRepository
+    private val catSettingRepository: CatSettingRepository,
+    private val pomodoroSettingRepository: PomodoroSettingRepository
 ) : BaseViewModel<NamingState, NamingEvent, NamingSideEffect>() {
 
     override fun setInitialState(): NamingState = NamingState
@@ -31,6 +33,9 @@ class OnboardingNamingCatViewModel @Inject constructor(
     override fun handleEvent(event: NamingEvent) {
         when (event) {
             is NamingEvent.OnComplete -> {
+                viewModelScope.launch {
+                    pomodoroSettingRepository.fetchPomodoroSettingList()
+                }
                 updateCatName(event.name)
             }
         }
