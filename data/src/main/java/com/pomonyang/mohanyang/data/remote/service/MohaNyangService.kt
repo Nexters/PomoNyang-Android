@@ -10,6 +10,7 @@ import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -23,7 +24,7 @@ interface MohaNyangService {
         @Path("no") no: Int
     ): Result<PomodoroSettingResponse>
 
-    @PUT("/api/v1/categories/{no}")
+    @PATCH("/api/v1/categories/{no}")
     suspend fun updatePomodoroSetting(
         @Path("no") no: Int,
         @Body updateCategoryInfoRequest: UpdateCategoryInfoRequest
