@@ -84,7 +84,6 @@ class PomodoroTimeSettingViewModel @Inject constructor(
         viewModelScope.launch {
             pomodoroSettingRepository.updatePomodoroCategoryTimes(
                 categoryNo = state.value.categoryNo,
-                titleName = state.value.titleName,
                 focusTime = state.value.pickFocusTime,
                 restTime = state.value.pickRestTime
             )

@@ -53,6 +53,8 @@ fun PomodoroRestWaitingRoute(
         when (effect) {
             PomodoroRestSideEffect.GoToPomodoroSetting -> goToPomodoroSetting()
             is PomodoroRestSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, null)
+            PomodoroRestSideEffect.GoToPomodoroRest -> {
+            }
         }
     }
 
@@ -132,7 +134,7 @@ private fun PomodoroRestWaitingScreen(
             modifier = Modifier.size(200.dp, 60.dp),
             styles = MnBoxButtonStyles.large,
             text = stringResource(id = R.string.rest_start),
-            onClick = { },
+            onClick = { onAction(PomodoroRestWaitingEvent.OnStartRestClick) },
             colors = MnBoxButtonColorType.primary
         )
 
@@ -140,7 +142,7 @@ private fun PomodoroRestWaitingScreen(
             styles = MnTextButtonStyles.large,
             containerPadding = PaddingValues(bottom = MnSpacing.xLarge),
             text = stringResource(id = R.string.focus_end),
-            onClick = { }
+            onClick = { onAction(PomodoroRestWaitingEvent.OnEndFocusClick) }
         )
     }
 }

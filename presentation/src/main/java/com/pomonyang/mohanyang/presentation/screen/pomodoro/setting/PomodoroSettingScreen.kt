@@ -166,11 +166,13 @@ fun PomodoroSettingScreen(
                 alignment = Alignment.CenterVertically
             )
         ) {
-            CatRive(
-                catName = state.catName,
-                showTooltip = showTooltip,
-                tooltipMessage = stringResource(R.string.welcome_cat_tooltip)
-            )
+            Box {
+                CatRive(
+                    catName = state.catName,
+                    showTooltip = showTooltip,
+                    tooltipMessage = stringResource(R.string.welcome_cat_tooltip)
+                )
+            }
             PomodoroDetailSetting(
                 onAction = onAction,
                 isNewUser = isNewUser,

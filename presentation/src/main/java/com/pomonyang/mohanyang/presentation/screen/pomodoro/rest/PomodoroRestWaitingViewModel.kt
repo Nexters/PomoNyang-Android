@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
 import androidx.lifecycle.viewModelScope
+import com.pomonyang.mohanyang.domain.usecase.AdjustPomodoroTimeUseCase
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
@@ -29,18 +30,22 @@ sealed interface PomodoroRestWaitingEvent : ViewEvent {
     ) : PomodoroRestWaitingEvent
 
     data object OnNavigationClick : PomodoroRestWaitingEvent
+    data object OnEndFocusClick : PomodoroRestWaitingEvent
+    data object OnStartRestClick : PomodoroRestWaitingEvent
     data class OnPlusButtonClick(val isPlusButtonSelected: Boolean) : PomodoroRestWaitingEvent
     data class OnMinusButtonClick(val isMinusButtonSelected: Boolean) : PomodoroRestWaitingEvent
 }
 
 sealed interface PomodoroRestSideEffect : ViewSideEffect {
     data object GoToPomodoroSetting : PomodoroRestSideEffect
+    object GoToPomodoroRest : PomodoroRestSideEffect
     data class ShowSnackbar(val message: String) : PomodoroRestSideEffect
 }
 
 @HiltViewModel
 class PomodoroRestViewModel @Inject constructor(
-    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase
+    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
+    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase
 ) : BaseViewModel<PomodoroRestState, PomodoroRestWaitingEvent, PomodoroRestSideEffect>() {
 
     override fun setInitialState(): PomodoroRestState = PomodoroRestState()
@@ -83,6 +88,22 @@ class PomodoroRestViewModel @Inject constructor(
                 } else {
                     updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
                 }
+            }
+
+            PomodoroRestWaitingEvent.OnEndFocusClick -> {
+                if (state.value.plusButtonSelected || state.value.minusButtonSelected) {
+                    viewModelScope.launch {
+                        adjustPomodoroTimeUseCase(
+                            isFocusTime = true,
+                            isIncrease = state.value.plusButtonSelected
+                        )
+                    }
+                }
+                setEffect(PomodoroRestSideEffect.GoToPomodoroSetting)
+            }
+
+            PomodoroRestWaitingEvent.OnStartRestClick -> {
+                setEffect(PomodoroRestSideEffect.GoToPomodoroRest)
             }
         }
     }
