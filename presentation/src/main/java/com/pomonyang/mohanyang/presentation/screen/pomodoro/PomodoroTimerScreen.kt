@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
+import com.pomonyang.mohanyang.presentation.component.Timer
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -31,7 +32,6 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel.Companion.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -91,11 +91,22 @@ private fun PomodoroTimerScreen(
 
         CatRive()
 
+        Row(
+            modifier = Modifier.padding(top = MnSpacing.xLarge),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MnSmallIcon(resourceId = R.drawable.ic_null)
+            Text(
+                modifier = Modifier.padding(MnSpacing.xSmall),
+                text = stringResource(id = typeRes),
+                style = MnTheme.typography.header5,
+                color = MnTheme.textColorScheme.secondary
+            )
+        }
+
         Timer(
-            title = stringResource(id = typeRes),
             time = time,
-            exceededTime = exceededTime,
-            modifier = Modifier.padding(top = MnSpacing.xLarge)
+            exceededTime = exceededTime
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -126,41 +137,6 @@ private fun CatRive(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         Text(text = "image")
-    }
-}
-
-@Composable
-fun Timer(
-    title: String,
-    time: String,
-    exceededTime: String,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            MnSmallIcon(resourceId = R.drawable.ic_null)
-            Text(
-                modifier = Modifier.padding(MnSpacing.xSmall),
-                text = title,
-                style = MnTheme.typography.header5,
-                color = MnTheme.textColorScheme.secondary
-            )
-        }
-
-        Text(
-            text = time,
-            style = MnTheme.typography.header1,
-            color = MnTheme.textColorScheme.primary
-        )
-        if (exceededTime != DEFAULT_TIME) {
-            Text(
-                text = "$exceededTime 초과",
-                style = MnTheme.typography.header4,
-                color = MnTheme.backgroundColorScheme.accent1
-            )
-        }
     }
 }
 
