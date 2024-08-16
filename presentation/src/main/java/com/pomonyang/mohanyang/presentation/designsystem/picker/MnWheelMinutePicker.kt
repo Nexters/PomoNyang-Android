@@ -59,6 +59,7 @@ fun MnWheelMinutePicker(
     items: PersistentList<Int>,
     initialItem: Int,
     onChangePickTime: (Int) -> Unit,
+    selectedIconResId: Int,
     modifier: Modifier = Modifier,
     mnWheelPickerColor: MnWheelPickerColor = MnWheelPickerDefaults.colors(),
     mnWheelPickerStyles: MnWheelPickerStyles = MnWheelPickerDefaults.styles()
@@ -90,7 +91,8 @@ fun MnWheelMinutePicker(
     ) {
         CenterHighlightBox(
             itemHeight = focusItemHeight,
-            highlightColor = MnTheme.backgroundColorScheme.secondary
+            highlightColor = MnTheme.backgroundColorScheme.secondary,
+            iconResId = selectedIconResId
         )
 
         WheelItemList(
@@ -153,6 +155,7 @@ private fun Modifier.fadeEdge(color: Color): Modifier {
 private fun BoxScope.CenterHighlightBox(
     itemHeight: Dp,
     highlightColor: Color,
+    iconResId: Int,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -163,7 +166,11 @@ private fun BoxScope.CenterHighlightBox(
             .background(highlightColor, RoundedCornerShape(MnRadius.medium)),
         contentAlignment = Alignment.CenterStart
     ) {
-        MnMediumIcon(resourceId = R.drawable.ic_null, modifier = Modifier.padding(start = 20.dp))
+        MnMediumIcon(
+            resourceId = iconResId,
+            modifier = Modifier.padding(start = 20.dp),
+            tint = Color.Unspecified
+        )
     }
 }
 
@@ -254,7 +261,8 @@ private fun MnWheelPickerPreview() {
         MnWheelMinutePicker(
             items = (5..60 step 5).toPersistentList(),
             onChangePickTime = {},
-            initialItem = 25
+            initialItem = 25,
+            selectedIconResId = R.drawable.ic_null
         )
     }
 }
