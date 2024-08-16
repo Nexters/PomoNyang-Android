@@ -25,9 +25,8 @@ internal class TokenRefreshInterceptor @Inject constructor(
             val request =
                 origin
                     .newBuilder()
-                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                    .addHeader("Accept", "*/*")
-                    .addHeader("Authorization", "Bearer $accessToken")
+                    .removeHeader("Authorization")
+                    .header("Authorization", "Bearer $accessToken")
                     .build()
 
             val accessRefreshResponse = chain.proceed(request)
@@ -40,9 +39,7 @@ internal class TokenRefreshInterceptor @Inject constructor(
                 if (refreshedToken != null) {
                     val refreshAllTokenRequest = origin
                         .newBuilder()
-                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                        .addHeader("Accept", "*/*")
-                        .addHeader("Authorization", "Bearer $refreshedToken")
+                        .removeHeader("Authorization").header("Authorization", "Bearer $refreshedToken")
                         .build()
 
                     return chain.proceed(refreshAllTokenRequest)

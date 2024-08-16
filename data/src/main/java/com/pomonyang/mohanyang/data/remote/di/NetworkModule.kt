@@ -50,7 +50,7 @@ internal abstract class NetworkModule {
             Timber.tag("ApiService").d(message)
         }.apply {
             level = if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor.Level.HEADERS
+                HttpLoggingInterceptor.Level.BODY
             } else {
                 HttpLoggingInterceptor.Level.NONE
             }
