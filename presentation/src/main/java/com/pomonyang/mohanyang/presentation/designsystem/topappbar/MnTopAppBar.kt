@@ -31,7 +31,7 @@ fun MnTopAppBar(
     modifier: Modifier = Modifier,
     contentStyle: TextStyle = MnTheme.typography.bodySemiBold,
     topAppBarColors: MnAppBarColors = MnTopAppBarDefaults.topAppBarColors(),
-    windowInsets: WindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+    windowInsets: WindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal),
     content: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable () -> Unit = {}
