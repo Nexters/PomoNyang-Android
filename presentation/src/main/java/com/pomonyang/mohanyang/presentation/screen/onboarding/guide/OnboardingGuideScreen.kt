@@ -77,7 +77,7 @@ private fun OnboardingGuideScreen(
         modifier = modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
         OnboardingSlider(
             modifier = Modifier.padding(top = topPadding),
