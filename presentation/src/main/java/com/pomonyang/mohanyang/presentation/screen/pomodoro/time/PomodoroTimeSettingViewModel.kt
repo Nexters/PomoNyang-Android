@@ -7,6 +7,7 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -48,7 +49,7 @@ class PomodoroTimeSettingViewModel @Inject constructor(
         when (event) {
             is PomodoroTimeSettingEvent.Init -> {
                 viewModelScope.launch {
-                    val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first()
+                    val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
                     updateState {
                         copy(
                             categoryNo = selectedPomodoroSetting.categoryNo,

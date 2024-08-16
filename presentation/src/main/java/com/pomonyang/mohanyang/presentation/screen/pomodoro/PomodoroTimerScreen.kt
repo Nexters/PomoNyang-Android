@@ -34,6 +34,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel.Companion.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
@@ -75,6 +76,7 @@ fun PomodoroTimerRoute(
 
     PomodoroTimerScreen(
         modifier = modifier,
+        title = state.title,
         type = state.type,
         time = state.displayFocusTime(),
         showTooltip = showTooltip,
@@ -85,7 +87,8 @@ fun PomodoroTimerRoute(
 
 @Composable
 private fun PomodoroTimerScreen(
-    type: String,
+    title: String,
+    type: PomodoroCategoryType,
     time: String,
     showTooltip: Boolean,
     exceededTime: String,
@@ -101,7 +104,8 @@ private fun PomodoroTimerScreen(
         MnTopAppBar(
             navigationIcon = {
                 CategoryBox(
-                    categoryName = type,
+                    iconRes = type.iconRes,
+                    categoryName = title,
                     modifier = Modifier.padding(start = 12.dp)
                 )
             }
@@ -155,7 +159,8 @@ private fun PomodoroTimerScreen(
 private fun PomodoroTimerScreenPreview() {
     MnTheme {
         PomodoroTimerScreen(
-            type = "공부",
+            title = "공부",
+            type = PomodoroCategoryType.DEFAULT,
             time = "25:00",
             showTooltip = true,
             exceededTime = "00:00",
@@ -169,7 +174,8 @@ private fun PomodoroTimerScreenPreview() {
 private fun PomodoroTimerExceedScreenPreview() {
     MnTheme {
         PomodoroTimerScreen(
-            type = "공부",
+            title = "공부",
+            type = PomodoroCategoryType.DEFAULT,
             time = "25:00",
             showTooltip = true,
             exceededTime = "10:00",

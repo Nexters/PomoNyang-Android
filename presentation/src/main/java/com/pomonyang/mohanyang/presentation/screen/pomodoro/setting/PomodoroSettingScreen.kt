@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.domain.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
@@ -57,6 +56,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.guideTooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
@@ -201,7 +202,7 @@ private fun PomodoroCategoryBottomSheet(
             categoryList.forEach { pomodoroCategoryModel ->
                 MnSelectListItem(
                     containerPadding = PaddingValues(bottom = MnSpacing.small),
-                    iconResource = R.drawable.ic_null,
+                    iconResource = pomodoroCategoryModel.categoryType.iconRes,
                     categoryType = pomodoroCategoryModel.title,
                     onClick = { currentSelectedCategoryNo = pomodoroCategoryModel.categoryNo },
                     isSelected = pomodoroCategoryModel.categoryNo == currentSelectedCategoryNo,
@@ -239,6 +240,7 @@ private fun PomodoroDetailSetting(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CategoryBox(
+            iconRes = selectedCategoryData?.categoryType?.iconRes ?: R.drawable.ic_null,
             categoryName = selectedCategoryData?.title ?: "",
             modifier = Modifier
                 .padding(bottom = MnSpacing.medium)
@@ -359,6 +361,7 @@ fun PomodoroStarterScreenPreview() {
                 PomodoroCategoryModel(
                     categoryNo = 0,
                     title = "집중",
+                    categoryType = PomodoroCategoryType.DEFAULT,
                     focusTime = 25,
                     restTime = 10
                 )
@@ -377,7 +380,8 @@ fun FocusBoxPreview() {
             categoryNo = 0,
             title = "기본",
             focusTime = 25,
-            restTime = 10
+            restTime = 10,
+            categoryType = PomodoroCategoryType.DEFAULT
         )
     )
 }

@@ -7,6 +7,8 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,7 +24,8 @@ import timber.log.Timber
 data class PomodoroTimerState(
     val focusTime: Int = 0,
     val exceededTime: Int = 0,
-    val type: String = "",
+    val title: String = "",
+    val type: PomodoroCategoryType = PomodoroCategoryType.DEFAULT,
     val categoryNo: Int = -1
 ) : ViewState {
     fun displayFocusTime(): String = focusTime.formatTime()
@@ -53,10 +56,11 @@ class PomodoroTimerViewModel @Inject constructor(
         Timber.tag("koni").d("handleEvent > $event")
         when (event) {
             PomodoroTimerEvent.Init -> viewModelScope.launch {
-                val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first()
+                val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
                 updateState {
                     copy(
-                        type = selectedPomodoroSetting.title,
+                        title = selectedPomodoroSetting.title,
+                        type = selectedPomodoroSetting.categoryType,
                         focusTime = (selectedPomodoroSetting.focusTime.times(60)),
                         categoryNo = selectedPomodoroSetting.categoryNo
                     )

@@ -1,20 +1,17 @@
 package com.pomonyang.mohanyang.domain.usecase
 
+import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
-import com.pomonyang.mohanyang.domain.model.setting.PomodoroCategoryModel
-import com.pomonyang.mohanyang.domain.model.setting.toModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 
 class GetPomodoroSettingListUseCase @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository
 ) {
 
-    operator fun invoke(): Flow<Pair<List<PomodoroCategoryModel>, Int>> {
+    operator fun invoke(): Flow<Pair<List<PomodoroSettingEntity>, Int>> {
         val settingListFlow = pomodoroSettingRepository.getPomodoroSettingList()
-            .map { list -> list.map { it.toModel() } }
         val recentUseCategoryNoFlow = pomodoroSettingRepository.getRecentUseCategoryNo()
 
         return combine(settingListFlow, recentUseCategoryNoFlow) { settingList, recentUseCategoryNo ->
