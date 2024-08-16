@@ -18,7 +18,7 @@ data object Pomodoro
 internal data object PomodoroSetting
 
 @Serializable
-internal data class TimeSetting(val isFocusTime: Boolean)
+internal data class TimeSetting(val isFocusTime: Boolean, val initialTime: Int)
 
 @Serializable
 internal data object PomodoroTimer
@@ -43,10 +43,9 @@ fun NavGraphBuilder.pomodoroScreen(
             PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,
-                onBackPressed = onBackPressed,
-                goTimeSetting = { isFocusTime ->
+                goTimeSetting = { isFocusTime, initialTime ->
                     navHostController.navigate(
-                        TimeSetting(isFocusTime)
+                        TimeSetting(isFocusTime, initialTime)
                     )
                 },
                 goToPomodoro = {
@@ -59,6 +58,7 @@ fun NavGraphBuilder.pomodoroScreen(
             val routeData = backStackEntry.toRoute<TimeSetting>()
             PomodoroTimeSettingRoute(
                 isFocusTime = routeData.isFocusTime,
+                initialSettingTime = routeData.initialTime,
                 onShowSnackbar = onShowSnackbar
             ) {
                 navHostController.popBackStack()
