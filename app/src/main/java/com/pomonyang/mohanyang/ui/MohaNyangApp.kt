@@ -1,18 +1,33 @@
 package com.pomonyang.mohanyang.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration.Short
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.navigation.MohaNyangNavHost
+import com.pomonyang.mohanyang.presentation.designsystem.icon.MnXSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.toast.MnToastSnackbarHost
+import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
+import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
+import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,11 +55,9 @@ private fun MohaNyangApp(
     ) { innerPadding ->
 
         val isOffline by mohaNyangAppState.isOffline.collectAsStateWithLifecycle()
-
-        LaunchedEffect(isOffline) {
-            if (isOffline) snackbarHostState.showSnackbar("offline 상태입니다.")
+        if (isOffline) {
+            OfflinePopup()
         }
-
         MohaNyangNavHost(
             onShowSnackbar = { message, action ->
                 mohaNyangAppState.coroutineScope.launch {
@@ -59,4 +72,41 @@ private fun MohaNyangApp(
             modifier = Modifier.padding(innerPadding)
         )
     }
+}
+
+@Composable
+private fun OfflinePopup(
+    modifier: Modifier = Modifier
+) {
+    Popup(alignment = Alignment.TopCenter) {
+        Row(
+            modifier = modifier
+                .padding(10.dp)
+                .shadow(
+                    elevation = 6.dp,
+                    shape = RoundedCornerShape(MnRadius.max),
+                    clip = true
+                )
+                .background(
+                    color = MnColor.White,
+                    shape = RoundedCornerShape(MnRadius.max)
+                )
+                .padding(horizontal = MnSpacing.xLarge, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            MnXSmallIcon(resourceId = com.mohanyang.presentation.R.drawable.ic_null)
+            Text(
+                text = stringResource(R.string.offline_mode_message),
+                style = MnTheme.typography.bodySemiBold,
+                color = MnTheme.textColorScheme.secondary
+            )
+        }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun NetworkErrorMessagePreview() {
+    OfflinePopup()
 }
