@@ -6,11 +6,11 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
-import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -43,7 +43,7 @@ sealed interface PomodoroTimerEvent : ViewEvent {
 
 sealed interface PomodoroTimerEffect : ViewSideEffect {
     data class GoToPomodoroRest(
-        val type: String,
+        val title: String,
         val focusTime: Int,
         val exceededTime: Int
     ) : PomodoroTimerEffect
@@ -78,7 +78,7 @@ class PomodoroTimerViewModel @Inject constructor(
 
             PomodoroTimerEvent.ClickRest -> setEffect(
                 PomodoroTimerEffect.GoToPomodoroRest(
-                    type = state.value.type,
+                    title = state.value.title,
                     focusTime = state.value.currentFocusTime,
                     exceededTime = state.value.exceededTime
                 )
@@ -102,7 +102,7 @@ class PomodoroTimerViewModel @Inject constructor(
                             timerJob?.cancel()
                             setEffect(
                                 PomodoroTimerEffect.GoToPomodoroRest(
-                                    type = state.value.type,
+                                    title = state.value.title,
                                     focusTime = state.value.currentFocusTime,
                                     exceededTime = state.value.exceededTime
                                 )

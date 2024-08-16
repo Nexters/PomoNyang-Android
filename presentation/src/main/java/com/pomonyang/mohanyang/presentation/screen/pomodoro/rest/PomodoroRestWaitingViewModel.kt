@@ -7,6 +7,7 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_FOCUS_MINUTES
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MIN_FOCUS_MINUTES
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,7 +60,7 @@ class PomodoroRestWaitingViewModel @Inject constructor(
                 }
 
                 viewModelScope.launch {
-                    val pomodoroSetting = getSelectedPomodoroSettingUseCase().first()
+                    val pomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
                     updateState {
                         copy(
                             plusButtonEnabled = pomodoroSetting.focusTime < MAX_FOCUS_MINUTES,

@@ -55,7 +55,7 @@ fun PomodoroTimerRoute(
         when (it) {
             is PomodoroTimerEffect.GoToPomodoroRest -> {
                 showTooltip = false
-                goToRest(it.type, it.focusTime, it.exceededTime)
+                goToRest(it.title, it.focusTime, it.exceededTime)
             }
 
             PomodoroTimerEffect.GoToPomodoroSetting -> {
