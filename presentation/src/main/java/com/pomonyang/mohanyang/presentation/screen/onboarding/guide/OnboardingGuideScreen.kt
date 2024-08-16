@@ -22,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,13 +65,24 @@ private fun OnboardingGuideScreen(
 ) {
     val onboardingContents = LocalContext.current.getOnBoardingContents()
 
+    val screenHeightPixel = LocalConfiguration.current.screenHeightDp
+    val topPadding = when {
+        screenHeightPixel <= 640 -> 40.dp
+        screenHeightPixel in 641..740 -> 60.dp
+        screenHeightPixel in 741..812 -> 100.dp
+        else -> 141.dp
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        OnboardingSlider(contents = onboardingContents)
+        OnboardingSlider(
+            modifier = Modifier.padding(top = topPadding),
+            contents = onboardingContents
+        )
         MnBoxButton(
             modifier = Modifier.width(200.dp),
             text = LocalContext.current.getString(R.string.onboarding_start),
