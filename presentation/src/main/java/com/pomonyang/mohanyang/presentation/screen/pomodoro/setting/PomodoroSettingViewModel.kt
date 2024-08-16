@@ -40,7 +40,10 @@ sealed interface PomodoroSettingSideEffect : ViewSideEffect {
     data object GoToPomodoro : PomodoroSettingSideEffect
 
     data class ShowSnackBar(val message: String) : PomodoroSettingSideEffect
-    data class GoTimeSetting(val isFocusTime: Boolean) : PomodoroSettingSideEffect
+    data class GoTimeSetting(
+        val isFocusTime: Boolean,
+        val initialTime: Int
+    ) : PomodoroSettingSideEffect
 }
 
 @HiltViewModel
@@ -103,8 +106,9 @@ class PomodoroSettingViewModel @Inject constructor(
 
     private fun handleTimeSetting(isFocusTime: Boolean) {
         state.value.getSelectedCategory()?.let {
+            val initialTime = if (isFocusTime) it.focusTime else it.restTime
             setEffect(
-                PomodoroSettingSideEffect.GoTimeSetting(isFocusTime = isFocusTime)
+                PomodoroSettingSideEffect.GoTimeSetting(isFocusTime = isFocusTime, initialTime = initialTime)
             )
         } ?: setEffect(PomodoroSettingSideEffect.ShowSnackBar("카테고리를 설정해주세요"))
     }

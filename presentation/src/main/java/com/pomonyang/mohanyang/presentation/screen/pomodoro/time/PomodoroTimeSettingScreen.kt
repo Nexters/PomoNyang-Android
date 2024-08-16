@@ -10,7 +10,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
@@ -30,17 +28,17 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.toPersistentList
+import timber.log.Timber
 
 @Composable
 fun PomodoroTimeSettingRoute(
     isFocusTime: Boolean,
+    initialSettingTime: Int,
     modifier: Modifier = Modifier,
     viewModel: PomodoroTimeSettingViewModel = hiltViewModel(),
     onShowSnackbar: (String, String?) -> Unit,
     onEndSettingClick: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val initialSettingTime = if (isFocusTime) state.initialFocusTime else state.initialRestTime
     viewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is PomodoroTimeSettingEffect.GoToPomodoroSettingScreen -> {
@@ -86,6 +84,7 @@ private fun PomodoroTimeSettingScreen(
             backgroundColor = Color.Transparent
         )
 
+        Timber.tag("koni").d("PomodoroTimeSettingScreen > $initialSettingTime")
         MnWheelMinutePicker(
             modifier = Modifier.padding(top = 16.dp),
             items = (10..60 step 5).toPersistentList(),
