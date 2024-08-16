@@ -1,13 +1,44 @@
 package com.pomonyang.mohanyang.domain.model.cat
 
+import androidx.compose.runtime.Immutable
+import com.mohanyang.domain.R
 import kotlinx.serialization.Serializable
 
-// TODO push 및 타입 등 지정 or API
+@Immutable
 @Serializable
-enum class CatType(val pushContent: String) {
-    CHEESE("어디갔냐옹..."),
-    BLACK("어디갔냐옹..."),
-    THREE_COLOR("내가 여기있는데 어디갔냐옹!");
+enum class CatType(
+    val kor: Int,
+    val personality: Int,
+    val personalityIcon: Int,
+    val timerEndPushContent: Int,
+    val restEndPushContent: Int,
+    val backgroundPushContent: Int
+
+) {
+    CHEESE(
+        kor = R.string.cat_cheese_kor,
+        personality = R.string.cat_cheese_personality,
+        personalityIcon = R.drawable.ic_star,
+        timerEndPushContent = R.string.cat_cheese_timer_end_push,
+        restEndPushContent = R.string.cat_cheese_rest_end_push,
+        backgroundPushContent = R.string.cat_cheese_background_push
+    ),
+    BLACK(
+        kor = R.string.cat_black_kor,
+        personality = R.string.cat_black_personality,
+        personalityIcon = R.drawable.ic_heart,
+        timerEndPushContent = R.string.cat_black_timer_end_push,
+        restEndPushContent = R.string.cat_black_rest_end_push,
+        backgroundPushContent = R.string.cat_black_background_push
+    ),
+    THREE_COLOR(
+        kor = R.string.cat_three_kor,
+        personality = R.string.cat_three_personality,
+        personalityIcon = R.drawable.ic_focus,
+        timerEndPushContent = R.string.cat_three_timer_end_push,
+        restEndPushContent = R.string.cat_cheese_rest_end_push,
+        backgroundPushContent = R.string.cat_three_background_push
+    );
 
     companion object {
         fun safeValueOf(type: String, default: CatType = CHEESE): CatType = try {

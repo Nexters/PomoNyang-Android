@@ -89,12 +89,12 @@ class FocusNotificationService : Service() {
         focusNotificationJob = scope.launch {
             // 10초 후 첫 알림 전송
             delay(FIRST_DELAY)
-            addAlarm(LocalTime.now(), "10초: ${selectedCatType.pushContent}")
+            addAlarm(LocalTime.now(), "10초: ${getString(selectedCatType.backgroundPushContent)}")
 
             // 30초마다 반복 알림 전송
             repeat(MAX_NOTIFICATION_COUNT) {
                 delay(REPEAT_DELAY)
-                addAlarm(LocalTime.now(), "30초: ${selectedCatType.pushContent} ${(it + 1)}/${MAX_NOTIFICATION_COUNT}")
+                addAlarm(LocalTime.now(), "30초: ${getString(selectedCatType.backgroundPushContent)} ${(it + 1)}/${MAX_NOTIFICATION_COUNT}")
             }
             delay(LAST_ALARM_DISPLAY_DURATION)
             stopSelf()

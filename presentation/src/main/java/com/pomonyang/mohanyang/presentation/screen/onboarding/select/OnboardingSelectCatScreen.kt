@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -103,7 +104,7 @@ fun OnboardingSelectCatScreen(
                 actionIconContentColor = MnTheme.iconColorScheme.primary
             ),
             navigationIcon = {
-                MnIconButton(onClick = onBackClick, iconResourceId = R.drawable.ic_null)
+                MnIconButton(onClick = onBackClick, iconResourceId = com.mohanyang.domain.R.drawable.ic_chevron_left)
             },
             content = {
                 Text(
@@ -186,7 +187,7 @@ private fun AlarmExample(
         if (selectedCat != null) {
             SelectedAlarmExample(
                 title = title,
-                content = selectedCat.pushContent
+                content = stringResource(selectedCat.backgroundPushContent)
             )
         } else {
             EmptyAlarmExample()
@@ -285,9 +286,13 @@ private fun CatCategory(
                             horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(cat.no.toString())
-                            // TODO 긍정, 응원 등 타입 지정 API Response 변경 요청 또는 로컬 고정
-                            MnXSmallIcon(resourceId = R.drawable.ic_null)
+                            Text(
+                                stringResource(cat.type.personality),
+                                color = MnTheme.textColorScheme.tertiary,
+                                style = MnTheme.typography.subBodyRegular
+                            )
+
+                            MnXSmallIcon(resourceId = cat.type.personalityIcon, tint = Color.Unspecified)
                         }
                     },
                     titleContent = {
