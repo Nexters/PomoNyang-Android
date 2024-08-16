@@ -22,31 +22,27 @@ internal class TokenRefreshInterceptor @Inject constructor(
             response.close()
 
             val accessToken = runBlocking { getNewAccessToken() }
-            val request =
-                origin
-                    .newBuilder()
-                    .removeHeader("Authorization")
-                    .header("Authorization", "Bearer $accessToken")
-                    .build()
 
-            val accessRefreshResponse = chain.proceed(request)
-
-            if (accessRefreshResponse.code == 400) {
-                accessRefreshResponse.close()
-
+            if (accessToken != null) {
+                val request =
+                    origin
+                        .newBuilder()
+                        .removeHeader("Authorization")
+                        .header("Authorization", "Bearer $accessToken")
+                        .build()
+                return chain.proceed(request)
+            } else {
+                /*  Refresh Token 만료로 인한 갱신 에러 발생 시 */
                 val refreshedToken = runBlocking { refreshAllTokensWithDeviceId() }
 
-                if (refreshedToken != null) {
+                refreshedToken?.let {
                     val refreshAllTokenRequest = origin
                         .newBuilder()
                         .removeHeader("Authorization").header("Authorization", "Bearer $refreshedToken")
                         .build()
-
                     return chain.proceed(refreshAllTokenRequest)
                 }
             }
-
-            return accessRefreshResponse
         }
         return response
     }
@@ -56,13 +52,11 @@ internal class TokenRefreshInterceptor @Inject constructor(
         val newAccessToken = runBlocking {
             authRemoteDataSource.refreshAccessToken(refreshToken)
         }.getOrNull()
+
         return newAccessToken?.let {
             tokenLocalDataSource.saveAccessToken(it.accessToken)
             tokenLocalDataSource.saveRefreshToken(it.refreshToken)
             it.accessToken
-        } ?: run {
-            authRemoteDataSource.logout()
-            null
         }
     }
 
