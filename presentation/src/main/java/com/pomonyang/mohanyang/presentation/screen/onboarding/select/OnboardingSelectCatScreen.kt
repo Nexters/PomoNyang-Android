@@ -32,7 +32,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.domain.model.cat.CatSelectionContent
+import com.pomonyang.mohanyang.domain.model.cat.CatInfoModel
 import com.pomonyang.mohanyang.domain.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
@@ -262,7 +262,7 @@ fun EmptyAlarmExample(
 
 @Composable
 private fun CatCategory(
-    cats: PersistentList<CatSelectionContent>,
+    cats: PersistentList<CatInfoModel>,
     selectedType: CatType?,
     onClickCatType: (CatType) -> Unit,
     modifier: Modifier = Modifier

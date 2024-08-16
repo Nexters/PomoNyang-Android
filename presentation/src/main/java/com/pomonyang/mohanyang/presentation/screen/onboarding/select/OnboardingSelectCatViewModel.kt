@@ -2,7 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.onboarding.select
 
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepository
-import com.pomonyang.mohanyang.domain.model.cat.CatSelectionContent
+import com.pomonyang.mohanyang.domain.model.cat.CatInfoModel
 import com.pomonyang.mohanyang.domain.model.cat.CatType
 import com.pomonyang.mohanyang.domain.model.cat.toModel
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 data class SelectCatState(
-    val cats: List<CatSelectionContent> = emptyList(),
+    val cats: List<CatInfoModel> = emptyList(),
     val selectedType: CatType? = null
 ) : ViewState
 
