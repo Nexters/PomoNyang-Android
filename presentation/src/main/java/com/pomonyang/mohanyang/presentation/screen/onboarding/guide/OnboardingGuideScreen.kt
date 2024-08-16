@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,13 +68,25 @@ private fun OnboardingGuideScreen(
 ) {
     val onboardingContents = LocalContext.current.getOnBoardingContents()
 
+    val screenHeightPixel = LocalConfiguration.current.screenHeightDp
+    val topPadding = when {
+        screenHeightPixel <= 640 -> 40.dp
+        screenHeightPixel in 641..740 -> 60.dp
+        screenHeightPixel in 741..812 -> 100.dp
+        else -> 141.dp
+    }
+
     Column(
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
-        OnboardingSlider(contents = onboardingContents)
+        OnboardingSlider(
+            modifier = Modifier.padding(top = topPadding),
+            contents = onboardingContents
+        )
         MnBoxButton(
             modifier = Modifier.width(200.dp),
             text = LocalContext.current.getString(R.string.onboarding_start),
