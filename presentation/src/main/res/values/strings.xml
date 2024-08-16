@@ -46,5 +46,5 @@
     <string name="welcome_cat_tooltip">오랜만이다냥</string>
     <string name="five_minutes">5분</string>
     <string name="change_focus_time_prompt">다음부터 집중 시간을 바꿀까요?</string>
-    <string name="change_rest_time_prompt">다음부터 집중 시간을 바꿀까요?</string>
+    <string name="change_rest_time_prompt">다음부터 휴식 시간을 바꿀까요?</string>
 </resources>
