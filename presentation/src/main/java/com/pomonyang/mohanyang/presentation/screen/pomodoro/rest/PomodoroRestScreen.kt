@@ -38,7 +38,7 @@ import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 
 @Composable
 fun PomodoroRestRoute(
-    onShowSnackbar: suspend (String, String?) -> Unit,
+    onShowSnackbar: suspend (String, Int?) -> Unit,
     goToHome: () -> Unit,
     goToFocus: () -> Unit,
     modifier: Modifier = Modifier,
@@ -47,7 +47,7 @@ fun PomodoroRestRoute(
     val state by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
     pomodoroRestViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
-            is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, null)
+            is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestEffect.GoToHome -> goToHome()
             PomodoroRestEffect.GoToPomodoroFocus -> goToFocus()
         }

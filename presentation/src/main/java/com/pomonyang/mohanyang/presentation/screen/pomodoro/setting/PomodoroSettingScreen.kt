@@ -67,7 +67,7 @@ import timber.log.Timber
 @Composable
 fun PomodoroSettingRoute(
     isNewUser: Boolean,
-    onShowSnackbar: suspend (String, String?) -> Unit,
+    onShowSnackbar: suspend (String, Int?) -> Unit,
     goToPomodoro: () -> Unit,
     goTimeSetting: (isFocusTime: Boolean, initialTime: Int, categoryName: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -77,7 +77,7 @@ fun PomodoroSettingRoute(
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         Timber.tag("koni").d("handleEffect > $effect")
         when (effect) {
-            is PomodoroSettingSideEffect.ShowSnackBar -> onShowSnackbar(effect.message, null)
+            is PomodoroSettingSideEffect.ShowSnackBar -> onShowSnackbar(effect.message, effect.iconRes)
             is PomodoroSettingSideEffect.GoTimeSetting -> goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
             PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro()
         }

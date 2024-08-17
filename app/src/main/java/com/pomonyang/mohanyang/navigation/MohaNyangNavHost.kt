@@ -11,7 +11,7 @@ import com.pomonyang.mohanyang.ui.MohaNyangAppState
 
 @Composable
 internal fun MohaNyangNavHost(
-    onShowSnackbar: (String, String?) -> Unit,
+    onShowSnackbar: (String, Int?) -> Unit,
     mohaNyangAppState: MohaNyangAppState,
     modifier: Modifier = Modifier
 ) {

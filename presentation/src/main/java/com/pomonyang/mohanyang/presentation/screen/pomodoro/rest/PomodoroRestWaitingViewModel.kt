@@ -1,6 +1,8 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope
+import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.domain.usecase.AdjustPomodoroTimeUseCase
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
@@ -40,7 +42,10 @@ sealed interface PomodoroRestWaitingEvent : ViewEvent {
 sealed interface PomodoroRestWaitingSideEffect : ViewSideEffect {
     data object GoToPomodoroSettingWaiting : PomodoroRestWaitingSideEffect
     data object GoToPomodoroRest : PomodoroRestWaitingSideEffect
-    data class ShowSnackbar(val message: String) : PomodoroRestWaitingSideEffect
+    data class ShowSnackbar(
+        val message: String,
+        @DrawableRes val iconRes: Int
+    ) : PomodoroRestWaitingSideEffect
 }
 
 @HiltViewModel
@@ -76,7 +81,12 @@ class PomodoroRestWaitingViewModel @Inject constructor(
 
             is PomodoroRestWaitingEvent.OnPlusButtonClick -> {
                 if (state.value.plusButtonEnabled.not()) {
-                    setEffect(PomodoroRestWaitingSideEffect.ShowSnackbar("최대 60분까지만 집중할 수 있어요"))
+                    setEffect(
+                        PomodoroRestWaitingSideEffect.ShowSnackbar(
+                            message = "최대 60분까지만 집중할 수 있어요",
+                            iconRes = R.drawable.ic_clock
+                        )
+                    )
                 } else {
                     updateState { copy(plusButtonSelected = event.isPlusButtonSelected, minusButtonSelected = false) }
                 }
@@ -84,7 +94,12 @@ class PomodoroRestWaitingViewModel @Inject constructor(
 
             is PomodoroRestWaitingEvent.OnMinusButtonClick -> {
                 if (state.value.minusButtonEnabled.not()) {
-                    setEffect(PomodoroRestWaitingSideEffect.ShowSnackbar("10분은 집중해야 해요"))
+                    setEffect(
+                        PomodoroRestWaitingSideEffect.ShowSnackbar(
+                            message = "10분은 집중해야 해요",
+                            iconRes = R.drawable.ic_clock
+                        )
+                    )
                 } else {
                     updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
                 }
