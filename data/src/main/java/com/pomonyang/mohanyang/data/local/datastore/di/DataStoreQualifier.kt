@@ -13,3 +13,7 @@ annotation class DeviceIdDataStore
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class PomodoroDataStore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class UserDataStore
