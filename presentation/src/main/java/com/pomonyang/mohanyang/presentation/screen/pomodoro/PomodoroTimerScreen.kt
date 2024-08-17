@@ -35,7 +35,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel.Companion.DEFAULT_TIME
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -44,7 +44,7 @@ import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 fun PomodoroTimerRoute(
     modifier: Modifier = Modifier,
     pomodoroTimerViewModel: PomodoroTimerViewModel = hiltViewModel(),
-    goToRest: () -> Unit,
+    goToRest: (type: String, focusTime: Int, exceededTime: Int) -> Unit,
     goToPomodoroSetting: () -> Unit,
     onBackPressed: () -> Unit
 ) {
@@ -53,9 +53,9 @@ fun PomodoroTimerRoute(
 
     pomodoroTimerViewModel.effects.collectWithLifecycle {
         when (it) {
-            PomodoroTimerEffect.GoToPomodoroRest -> {
+            is PomodoroTimerEffect.GoToPomodoroRest -> {
                 showTooltip = false
-                goToRest()
+                goToRest(it.title, it.focusTime, it.exceededTime)
             }
 
             PomodoroTimerEffect.GoToPomodoroSetting -> {
@@ -80,7 +80,7 @@ fun PomodoroTimerRoute(
         type = state.type,
         time = state.displayFocusTime(),
         showTooltip = showTooltip,
-        exceededTime = state.displayRestTime(),
+        exceededTime = state.displayExceedTime(),
         onAction = remember { pomodoroTimerViewModel::handleEvent }
     )
 }

@@ -16,10 +16,10 @@ import kotlinx.coroutines.launch
 data class PomodoroTimeSettingState(
     val categoryNo: Int = 0,
     val titleName: String = "",
-    val initialFocusTime: Int = 5,
-    val initialRestTime: Int = 5,
-    val pickFocusTime: Int = 5,
-    val pickRestTime: Int = 5,
+    val initialFocusTime: Int = 10,
+    val initialRestTime: Int = 10,
+    val pickFocusTime: Int = 10,
+    val pickRestTime: Int = 10,
     val isFocus: Boolean = false
 ) : ViewState
 
@@ -84,7 +84,6 @@ class PomodoroTimeSettingViewModel @Inject constructor(
         viewModelScope.launch {
             pomodoroSettingRepository.updatePomodoroCategoryTimes(
                 categoryNo = state.value.categoryNo,
-                titleName = state.value.titleName,
                 focusTime = state.value.pickFocusTime,
                 restTime = state.value.pickRestTime
             )

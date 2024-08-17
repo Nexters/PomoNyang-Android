@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -68,10 +67,9 @@ import timber.log.Timber
 @Composable
 fun PomodoroSettingRoute(
     isNewUser: Boolean,
-    onBackPressed: () -> Unit,
     onShowSnackbar: suspend (String, String?) -> Unit,
     goToPomodoro: () -> Unit,
-    goTimeSetting: (isFocusTime: Boolean) -> Unit,
+    goTimeSetting: (isFocusTime: Boolean, initialTime: Int) -> Unit,
     modifier: Modifier = Modifier,
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
@@ -86,7 +84,7 @@ fun PomodoroSettingRoute(
 
             is PomodoroSettingSideEffect.GoTimeSetting -> {
                 showTooltip = false
-                goTimeSetting(effect.isFocusTime)
+                goTimeSetting(effect.isFocusTime, effect.initialTime)
             }
 
             PomodoroSettingSideEffect.GoToPomodoro -> {
@@ -94,11 +92,6 @@ fun PomodoroSettingRoute(
                 goToPomodoro()
             }
         }
-    }
-
-    BackHandler {
-        showTooltip = false
-        onBackPressed()
     }
 
     if (state.showCategoryBottomSheet) {
@@ -166,11 +159,13 @@ fun PomodoroSettingScreen(
                 alignment = Alignment.CenterVertically
             )
         ) {
-            CatRive(
-                catName = state.catName,
-                showTooltip = showTooltip,
-                tooltipMessage = stringResource(R.string.welcome_cat_tooltip)
-            )
+            Box {
+                CatRive(
+                    catName = state.catName,
+                    showTooltip = showTooltip,
+                    tooltipMessage = stringResource(R.string.welcome_cat_tooltip)
+                )
+            }
             PomodoroDetailSetting(
                 onAction = onAction,
                 isNewUser = isNewUser,

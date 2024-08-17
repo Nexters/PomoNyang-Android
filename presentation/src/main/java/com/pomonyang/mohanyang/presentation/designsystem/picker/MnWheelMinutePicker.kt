@@ -77,9 +77,9 @@ fun MnWheelMinutePicker(
     val wheelHeight = (2 * halfDisplayCount) * (itemHeight + MnWheelPickerDefaults.itemSpacing) + focusItemHeight
     val brushColor = mnWheelPickerColor.fadeColor
 
-    LaunchedEffect(initialItem) {
+    LaunchedEffect(Unit) {
         delay(100)
-        scrollState.animateScrollToItem(items.indexOf(initialItem))
+        scrollState.scrollToItem(items.indexOf(initialItem))
     }
 
     Box(

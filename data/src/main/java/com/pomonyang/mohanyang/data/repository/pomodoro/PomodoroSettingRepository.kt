@@ -15,7 +15,6 @@ interface PomodoroSettingRepository {
 
     suspend fun updatePomodoroCategoryTimes(
         categoryNo: Int,
-        titleName: String,
         focusTime: Int,
         restTime: Int
     ): Result<Unit>

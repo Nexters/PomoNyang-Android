@@ -39,13 +39,12 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
 
     override suspend fun updatePomodoroCategoryTimes(
         categoryNo: Int,
-        titleName: String,
         focusTime: Int,
         restTime: Int
     ): Result<Unit> {
         val focusTimeDuration = Duration.ofMinutes(focusTime.toLong()).toString()
         val restTimeDuration = Duration.ofMinutes(restTime.toLong()).toString()
-        updateLocalPomodoroSetting(categoryNo, titleName, focusTimeDuration, restTimeDuration)
+        updateLocalPomodoroSetting(categoryNo, focusTimeDuration, restTimeDuration)
         return pomodoroSettingRemoteDataSource.updatePomodoroCategoryTimes(
             categoryNo = categoryNo,
             focusTime = focusTimeDuration,
@@ -55,17 +54,13 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
 
     private suspend fun updateLocalPomodoroSetting(
         categoryNo: Int,
-        titleName: String,
         focusTime: String,
         restTime: String
     ) {
-        pomodoroSettingDao.updatePomodoroSettingData(
-            pomodoroSettingEntity = PomodoroSettingEntity(
-                categoryNo = categoryNo,
-                title = titleName,
-                focusTime = focusTime,
-                restTime = restTime
-            )
+        pomodoroSettingDao.updateTimes(
+            categoryNo = categoryNo,
+            focusTime = focusTime,
+            restTime = restTime
         )
     }
 }

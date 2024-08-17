@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "pomodoro_setting")
 data class PomodoroSettingEntity(
     @PrimaryKey
-    val categoryNo: Int = 0,
+    val categoryNo: Int,
     val title: String,
     val focusTime: String,
     val restTime: String

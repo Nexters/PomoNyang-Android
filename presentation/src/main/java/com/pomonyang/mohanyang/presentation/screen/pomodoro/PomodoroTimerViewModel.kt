@@ -1,7 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
 import androidx.lifecycle.viewModelScope
-import com.mohanyang.presentation.BuildConfig
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
@@ -9,6 +8,9 @@ import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.model.setting.toModel
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,14 +24,15 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 data class PomodoroTimerState(
-    val focusTime: Int = 0,
+    val maxFocusTime: Int = 0,
+    val currentFocusTime: Int = 0,
     val exceededTime: Int = 0,
     val title: String = "",
     val type: PomodoroCategoryType = PomodoroCategoryType.DEFAULT,
     val categoryNo: Int = -1
 ) : ViewState {
-    fun displayFocusTime(): String = focusTime.formatTime()
-    fun displayRestTime(): String = exceededTime.formatTime()
+    fun displayFocusTime(): String = currentFocusTime.formatTime()
+    fun displayExceedTime(): String = exceededTime.formatTime()
 }
 
 sealed interface PomodoroTimerEvent : ViewEvent {
@@ -39,7 +42,12 @@ sealed interface PomodoroTimerEvent : ViewEvent {
 }
 
 sealed interface PomodoroTimerEffect : ViewSideEffect {
-    data object GoToPomodoroRest : PomodoroTimerEffect
+    data class GoToPomodoroRest(
+        val title: String,
+        val focusTime: Int,
+        val exceededTime: Int
+    ) : PomodoroTimerEffect
+
     data object GoToPomodoroSetting : PomodoroTimerEffect
 }
 
@@ -61,14 +69,21 @@ class PomodoroTimerViewModel @Inject constructor(
                     copy(
                         title = selectedPomodoroSetting.title,
                         type = selectedPomodoroSetting.categoryType,
-                        focusTime = (selectedPomodoroSetting.focusTime.times(60)),
+                        maxFocusTime = (selectedPomodoroSetting.focusTime.times(60)),
                         categoryNo = selectedPomodoroSetting.categoryNo
                     )
                 }
                 startTimer()
             }
 
-            PomodoroTimerEvent.ClickRest -> setEffect(PomodoroTimerEffect.GoToPomodoroRest)
+            PomodoroTimerEvent.ClickRest -> setEffect(
+                PomodoroTimerEffect.GoToPomodoroRest(
+                    title = state.value.title,
+                    focusTime = state.value.currentFocusTime,
+                    exceededTime = state.value.exceededTime
+                )
+            )
+
             PomodoroTimerEvent.ClickHome -> setEffect(PomodoroTimerEffect.GoToPomodoroSetting)
         }
     }
@@ -79,26 +94,24 @@ class PomodoroTimerViewModel @Inject constructor(
             while (isActive) {
                 delay(TIMER_DELAY)
                 updateState {
-                    if (focusTime > MIN_FOCUS_TIME) {
-                        copy(focusTime = focusTime - ONE_SECOND)
+                    if (currentFocusTime < maxFocusTime) {
+                        copy(currentFocusTime = currentFocusTime + ONE_SECOND)
                     } else {
                         val newExceedTime = exceededTime + ONE_SECOND
                         if (newExceedTime >= MAX_EXCEEDED_TIME) {
                             timerJob?.cancel()
-                            setEffect(PomodoroTimerEffect.GoToPomodoroRest)
+                            setEffect(
+                                PomodoroTimerEffect.GoToPomodoroRest(
+                                    title = state.value.title,
+                                    focusTime = state.value.currentFocusTime,
+                                    exceededTime = state.value.exceededTime
+                                )
+                            )
                         }
                         copy(exceededTime = newExceedTime)
                     }
                 }
             }
         }
-    }
-
-    companion object {
-        private val TIMER_DELAY = if (BuildConfig.DEBUG) 10L else 1_000L
-        private val MAX_EXCEEDED_TIME = if (BuildConfig.DEBUG) 600 else 3600
-        private const val MIN_FOCUS_TIME = 0
-        private const val ONE_SECOND = 1
-        const val DEFAULT_TIME = "00:00"
     }
 }
