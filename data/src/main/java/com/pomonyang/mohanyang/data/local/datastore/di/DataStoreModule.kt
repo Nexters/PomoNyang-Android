@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.pomonyang.mohanyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSourceImpl
+import com.pomonyang.mohanyang.data.local.datastore.datasource.notification.NotificationLocalDataSourceImpl
 import com.pomonyang.mohanyang.data.local.datastore.datasource.pomodoro.PomodoroLocalDataSourceImpl
 import com.pomonyang.mohanyang.data.local.datastore.datasource.token.TokenLocalDataSourceImpl
 import com.pomonyang.mohanyang.data.local.datastore.datasource.user.UserLocalDataSourceImpl
@@ -93,6 +94,24 @@ internal object DataStoreModule {
             produceFile = {
                 context.preferencesDataStoreFile(
                     UserLocalDataSourceImpl.USER_PREFERENCES_NAME
+                )
+            }
+        )
+
+    @NotificationDataStore
+    @Provides
+    @Singleton
+    internal fun provideNotificationDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { emptyPreferences() }
+            ),
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            produceFile = {
+                context.preferencesDataStoreFile(
+                    NotificationLocalDataSourceImpl.NOTIFICATION_PREFERENCES_NAME
                 )
             }
         )

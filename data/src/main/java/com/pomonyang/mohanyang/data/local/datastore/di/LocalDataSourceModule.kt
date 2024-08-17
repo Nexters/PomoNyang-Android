@@ -2,6 +2,8 @@ package com.pomonyang.mohanyang.data.local.datastore.di
 
 import com.pomonyang.mohanyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSource
 import com.pomonyang.mohanyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSourceImpl
+import com.pomonyang.mohanyang.data.local.datastore.datasource.notification.NotificationLocalDataSource
+import com.pomonyang.mohanyang.data.local.datastore.datasource.notification.NotificationLocalDataSourceImpl
 import com.pomonyang.mohanyang.data.local.datastore.datasource.pomodoro.PomodoroLocalDataSource
 import com.pomonyang.mohanyang.data.local.datastore.datasource.pomodoro.PomodoroLocalDataSourceImpl
 import com.pomonyang.mohanyang.data.local.datastore.datasource.token.TokenLocalDataSource
@@ -32,4 +34,8 @@ internal abstract class LocalDataSourceModule {
     @Binds
     @Singleton
     abstract fun provideUserDataSource(userLocalDataSourceImpl: UserLocalDataSourceImpl): UserLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun provideNotificationDataSource(notificationDataSourceImpl: NotificationLocalDataSourceImpl): NotificationLocalDataSource
 }
