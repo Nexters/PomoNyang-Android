@@ -39,7 +39,7 @@ sealed interface PomodoroRestWaitingEvent : ViewEvent {
 
 sealed interface PomodoroRestWaitingSideEffect : ViewSideEffect {
     data object GoToPomodoroSettingWaiting : PomodoroRestWaitingSideEffect
-    data object GoToPomodoroRestWaiting : PomodoroRestWaitingSideEffect
+    data object GoToPomodoroRest : PomodoroRestWaitingSideEffect
     data class ShowSnackbar(val message: String) : PomodoroRestWaitingSideEffect
 }
 
@@ -103,7 +103,7 @@ class PomodoroRestWaitingViewModel @Inject constructor(
             }
 
             PomodoroRestWaitingEvent.OnStartRestClick -> {
-                setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroRestWaiting)
+                setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroRest)
             }
         }
     }
