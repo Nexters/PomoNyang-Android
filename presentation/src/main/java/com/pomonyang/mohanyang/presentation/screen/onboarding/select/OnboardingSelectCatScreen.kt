@@ -94,7 +94,7 @@ fun OnboardingSelectCatScreen(
 
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize().background(MnTheme.backgroundColorScheme.primary)
     ) {
         MnTopAppBar(
             topAppBarColors = MnAppBarColors(
