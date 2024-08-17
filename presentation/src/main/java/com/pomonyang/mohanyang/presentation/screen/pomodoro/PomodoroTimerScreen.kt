@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,9 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,29 +40,20 @@ fun PomodoroTimerRoute(
     modifier: Modifier = Modifier,
     pomodoroTimerViewModel: PomodoroTimerViewModel = hiltViewModel(),
     goToRest: (type: String, focusTime: Int, exceededTime: Int) -> Unit,
-    goToHome: () -> Unit,
-    onBackPressed: () -> Unit
+    goToHome: () -> Unit
 ) {
     val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
-    var showTooltip by remember { mutableStateOf(true) }
 
     pomodoroTimerViewModel.effects.collectWithLifecycle {
         when (it) {
             is PomodoroTimerEffect.GoToPomodoroRest -> {
-                showTooltip = false
                 goToRest(it.title, it.focusTime, it.exceededTime)
             }
 
             PomodoroTimerEffect.GoToPomodoroSetting -> {
-                showTooltip = false
                 goToHome()
             }
         }
-    }
-
-    BackHandler {
-        showTooltip = false
-        onBackPressed()
     }
 
     LaunchedEffect(Unit) {
@@ -77,7 +65,6 @@ fun PomodoroTimerRoute(
         title = state.title,
         type = state.type,
         time = state.displayFocusTime(),
-        showTooltip = showTooltip,
         exceededTime = state.displayExceedTime(),
         onAction = remember { pomodoroTimerViewModel::handleEvent }
     )
@@ -88,7 +75,6 @@ private fun PomodoroTimerScreen(
     title: String,
     type: PomodoroCategoryType,
     time: String,
-    showTooltip: Boolean,
     exceededTime: String,
     onAction: (PomodoroTimerEvent) -> Unit,
     modifier: Modifier = Modifier
@@ -111,10 +97,7 @@ private fun PomodoroTimerScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        CatRive(
-            showTooltip = showTooltip,
-            tooltipMessage = stringResource(id = tooltipMessage)
-        )
+        CatRive(tooltipMessage = stringResource(id = tooltipMessage))
 
         TimerType(type = stringResource(id = R.string.focus_time), iconRes = R.drawable.ic_focus)
 
@@ -149,7 +132,6 @@ private fun PomodoroTimerScreenPreview() {
             title = "공부",
             type = PomodoroCategoryType.DEFAULT,
             time = "25:00",
-            showTooltip = true,
             exceededTime = "00:00",
             onAction = {}
         )
@@ -164,7 +146,6 @@ private fun PomodoroTimerExceedScreenPreview() {
             title = "공부",
             type = PomodoroCategoryType.DEFAULT,
             time = "25:00",
-            showTooltip = true,
             exceededTime = "10:00",
             onAction = {}
         )

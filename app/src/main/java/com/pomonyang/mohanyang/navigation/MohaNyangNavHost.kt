@@ -1,7 +1,6 @@
 package com.pomonyang.mohanyang.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.pomonyang.mohanyang.presentation.screen.onboarding.Onboarding
@@ -18,7 +17,6 @@ internal fun MohaNyangNavHost(
 ) {
     val navHostController = mohaNyangAppState.navHostController
     val navigateUp: () -> Unit = { navHostController.navigateUp() }
-    val onBackPressed: () -> Unit = remember { { navHostController.popBackStack() } }
 
     val startDestination: Any = if (mohaNyangAppState.isNewUser) {
         Onboarding
@@ -32,14 +30,12 @@ internal fun MohaNyangNavHost(
         modifier = modifier
     ) {
         onboardingScreen(
-            navHostController = mohaNyangAppState.navHostController,
-            onBackPressed = onBackPressed
+            navHostController = mohaNyangAppState.navHostController
         )
 
         pomodoroScreen(
             isNewUser = mohaNyangAppState.isNewUser,
             navHostController = mohaNyangAppState.navHostController,
-            onBackPressed = onBackPressed,
             onShowSnackbar = onShowSnackbar
         )
     }

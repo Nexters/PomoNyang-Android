@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,9 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,32 +39,18 @@ import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 @Composable
 fun PomodoroRestRoute(
     onShowSnackbar: suspend (String, String?) -> Unit,
-    onBackPressed: () -> Unit,
     goToHome: () -> Unit,
     goToFocus: () -> Unit,
     modifier: Modifier = Modifier,
     pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel()
 ) {
     val state by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
-    var showTooltip by remember { mutableStateOf(true) }
     pomodoroRestViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, null)
-            PomodoroRestEffect.GoToHome -> {
-                showTooltip = false
-                goToHome()
-            }
-
-            PomodoroRestEffect.GoToPomodoroFocus -> {
-                showTooltip = false
-                goToFocus()
-            }
+            PomodoroRestEffect.GoToHome -> goToHome()
+            PomodoroRestEffect.GoToPomodoroFocus -> goToFocus()
         }
-    }
-
-    BackHandler {
-        showTooltip = false
-        onBackPressed()
     }
 
     LaunchedEffect(Unit) {
@@ -78,7 +61,6 @@ fun PomodoroRestRoute(
         modifier = modifier,
         type = state.type,
         time = state.displayRestTime(),
-        showTooltip = showTooltip,
         plusButtonSelected = state.plusButtonSelected,
         minusButtonSelected = state.minusButtonSelected,
         plusButtonEnabled = state.plusButtonEnabled,
@@ -92,7 +74,6 @@ fun PomodoroRestRoute(
 private fun PomodoroRestScreen(
     type: String,
     time: String,
-    showTooltip: Boolean,
     exceededTime: String,
     plusButtonSelected: Boolean,
     minusButtonSelected: Boolean,
@@ -119,10 +100,7 @@ private fun PomodoroRestScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        CatRive(
-            showTooltip = showTooltip,
-            tooltipMessage = stringResource(id = tooltipMessage)
-        )
+        CatRive(tooltipMessage = stringResource(id = tooltipMessage))
 
         TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)
 
@@ -168,7 +146,6 @@ private fun PomodoroTimerScreenPreview() {
         PomodoroRestScreen(
             type = "공부",
             time = "25:00",
-            showTooltip = true,
             exceededTime = "00:00",
             plusButtonSelected = false,
             minusButtonSelected = true,
@@ -186,7 +163,6 @@ private fun PomodoroTimerExceedScreenPreview() {
         PomodoroRestScreen(
             type = "공부",
             time = "25:00",
-            showTooltip = true,
             exceededTime = "10:00",
             plusButtonSelected = false,
             minusButtonSelected = true,

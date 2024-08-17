@@ -24,12 +24,11 @@ internal data object OnboardingSelectCat
 @Serializable
 internal data class OnboardingNamingCat(
     val catNo: Int,
-    val catName: String?
+    val catName: String
 )
 
 fun NavGraphBuilder.onboardingScreen(
-    navHostController: NavHostController,
-    onBackPressed: () -> Unit
+    navHostController: NavHostController
 ) {
     navigation<Onboarding>(
         startDestination = OnboardingGuide
@@ -53,13 +52,10 @@ fun NavGraphBuilder.onboardingScreen(
 
         composable<OnboardingNamingCat> { navBackStackEntry ->
             val namingCat = navBackStackEntry.toRoute<OnboardingNamingCat>()
-            val catNo = namingCat.catNo
             val catName = namingCat.catName
 
             OnboardingNamingCatRoute(
-                catNo = catNo,
                 catName = catName,
-                onBackPressed = onBackPressed,
                 onBackClick = { navHostController.popBackStack() },
                 onNavToHome = {
                     navHostController.navigate(

@@ -1,13 +1,10 @@
 package com.pomonyang.mohanyang.presentation.screen.onboarding.naming
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -44,35 +40,22 @@ import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun OnboardingNamingCatRoute(
-    catNo: Int,
-    catName: String?,
+    catName: String,
     onBackClick: () -> Unit,
     onNavToHome: () -> Unit,
-    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel()
 ) {
-    var showNamingCatTooltip by remember { mutableStateOf(true) }
-
     onboardingNamingCatViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is NamingSideEffect.NavToHome -> {
-                showNamingCatTooltip = false
                 onNavToHome()
             }
         }
     }
 
-    BackHandler {
-        showNamingCatTooltip = false
-        onBackPressed()
-    }
-
     OnboardingNamingCatScreen(
-        catNo = catNo,
         catName = catName,
-        showNamingCatTooltip = showNamingCatTooltip,
-        setNamingCatTooltipVisible = { isVisible -> showNamingCatTooltip = isVisible },
         onAction = onboardingNamingCatViewModel::handleEvent,
         onBackClick = onBackClick,
         modifier = modifier
@@ -81,21 +64,16 @@ fun OnboardingNamingCatRoute(
 
 @Composable
 fun OnboardingNamingCatScreen(
-    catNo: Int,
-    catName: String?,
-    showNamingCatTooltip: Boolean,
-    setNamingCatTooltipVisible: (Boolean) -> Unit,
+    catName: String,
     onAction: (NamingEvent) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
-    val isKeyboardShow = WindowInsets.ime.getBottom(LocalDensity.current) > 0
-
     val keyboardController = LocalSoftwareKeyboardController.current
     val listState = rememberLazyListState()
 
-    var name by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf(catName) }
     val catNameValidator = remember { CatNameVerifier() }
     var nameValidationResult by remember {
         mutableStateOf(ValidationResult(true))
@@ -105,10 +83,6 @@ fun OnboardingNamingCatScreen(
         if (name.isNotEmpty()) {
             nameValidationResult = catNameValidator.verifyName(name)
         }
-    }
-
-    LaunchedEffect(isKeyboardShow) {
-        setNamingCatTooltipVisible(!isKeyboardShow)
     }
 
     Column(
@@ -139,8 +113,7 @@ fun OnboardingNamingCatScreen(
                     modifier = Modifier
                         .padding(top = 130.dp)
                         .fillMaxWidth(),
-                    tooltipMessage = stringResource(id = R.string.naming_cat_tooltip),
-                    showTooltip = showNamingCatTooltip
+                    tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
                 )
                 Text(
                     modifier = Modifier.padding(
@@ -184,11 +157,8 @@ fun OnboardingNamingCatScreen(
 @Preview(showBackground = true)
 fun PreviewOnboardingNamingCatScreen() {
     OnboardingNamingCatScreen(
-        catNo = 1,
         catName = "삼색이",
-        showNamingCatTooltip = true,
         onAction = { _ -> },
-        onBackClick = {},
-        setNamingCatTooltipVisible = {}
+        onBackClick = {}
     )
 }
