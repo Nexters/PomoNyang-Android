@@ -1,7 +1,9 @@
 package com.pomonyang.mohanyang.presentation.designsystem.bottomsheet
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,6 +13,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,8 +22,10 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectListItem
+import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +48,7 @@ fun MnBottomSheet(
             title = title,
             subTitle = subTitle,
             textStyles = textStyles,
+            onCloseClick = onDismissRequest,
             colors = colors
         ) {
             Column(modifier = Modifier.padding(horizontal = MnSpacing.large)) {
@@ -56,19 +62,35 @@ fun MnBottomSheet(
 private fun BottomSheetContent(
     textStyles: MnBottomSheetTextStyles,
     colors: MnBottomSheetColors,
+    onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
     subTitle: String? = null,
     contents: @Composable () -> Unit
 ) {
     Column(modifier = modifier) {
-        title?.let {
-            Text(
-                text = it,
-                style = textStyles.titleTextStyle,
-                color = colors.titleColor,
-                modifier = Modifier.padding(start = 20.dp),
-                maxLines = 1
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            title?.let {
+                Text(
+                    text = it,
+                    style = textStyles.titleTextStyle,
+                    color = colors.titleColor,
+                    modifier = Modifier.padding(start = 20.dp),
+                    maxLines = 1
+                )
+            }
+
+            MnMediumIcon(
+                resourceId = R.drawable.ic_close,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .noRippleClickable { onCloseClick() }
             )
         }
 
