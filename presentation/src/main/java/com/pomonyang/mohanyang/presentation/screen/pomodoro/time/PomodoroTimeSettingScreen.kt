@@ -101,6 +101,7 @@ private fun PomodoroTimeSettingScreen(
         )
 
         SettingButton(
+            iconRes = R.drawable.ic_check,
             modifier = Modifier.padding(bottom = 40.dp),
             backgroundColor = MnTheme.backgroundColorScheme.inverse,
             onClick = {
