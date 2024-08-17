@@ -53,7 +53,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MnWheelMinutePicker(
-    items: PersistentList<Int>,
+    minTime: Int,
+    maxTime: Int,
     initialItem: Int,
     onChangePickTime: (Int) -> Unit,
     selectedIconResId: Int,
@@ -61,6 +62,7 @@ fun MnWheelMinutePicker(
     mnWheelPickerColor: MnWheelPickerColor = MnWheelPickerDefaults.colors(),
     mnWheelPickerStyles: MnWheelPickerStyles = MnWheelPickerDefaults.styles()
 ) {
+    val items = (minTime..maxTime step 5).toPersistentList()
     val screenHeightPixel = LocalConfiguration.current.screenHeightDp
     val halfDisplayCount = when {
         screenHeightPixel <= 700 -> 1
@@ -250,7 +252,8 @@ private fun MnWheelPickerPreview() {
                 .background(MnTheme.backgroundColorScheme.primary)
         )
         MnWheelMinutePicker(
-            items = (5..60 step 5).toPersistentList(),
+            minTime = 5,
+            maxTime = 60,
             onChangePickTime = {},
             initialItem = 25,
             selectedIconResId = R.drawable.ic_null

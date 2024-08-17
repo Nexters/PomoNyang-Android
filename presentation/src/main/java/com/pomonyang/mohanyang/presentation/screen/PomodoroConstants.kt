@@ -8,8 +8,7 @@ object PomodoroConstants {
     const val MAX_FOCUS_MINUTES = 60
     const val MAX_REST_MINUTES = 30
     const val MIN_FOCUS_MINUTES = 10
-    const val MIN_REST_MINUTES = 10
-    const val ENDED_FOCUS_TIME = 0
+    const val MIN_REST_MINUTES = 5
     const val ONE_SECOND = 1
     const val DEFAULT_TIME = "00:00"
 }

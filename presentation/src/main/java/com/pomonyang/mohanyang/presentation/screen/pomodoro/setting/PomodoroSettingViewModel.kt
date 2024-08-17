@@ -12,7 +12,6 @@ import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.toModel
-import com.pomonyang.mohanyang.presentation.model.user.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -136,9 +135,8 @@ class PomodoroSettingViewModel @Inject constructor(
 
     private fun getMyCatInfo() {
         viewModelScope.launch {
-            userRepository.getMyInfo().let {
-                updateState { copy(catName = it.toModel().cat.name) }
-            }
+            val catName = userRepository.getMyInfo().cat.name
+            updateState { copy(catName = catName) }
         }
     }
 }

@@ -93,7 +93,7 @@ class PomodoroRestViewModel @Inject constructor(
             }
 
             is PomodoroRestEvent.OnMinusButtonClick -> {
-                if (state.value.plusButtonEnabled.not()) {
+                if (state.value.minusButtonEnabled.not()) {
                     setEffect(
                         PomodoroRestEffect.ShowSnackbar(
                             message = "5분은 휴식해야 다음에 집중할 수 있어요",
