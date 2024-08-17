@@ -324,7 +324,13 @@ private fun NotificationPermissionEffect() {
 fun PreviewOnboardingSelectScreen() {
     OnboardingSelectCatScreen(
         onBackClick = {},
-        state = SelectCatState(),
+        state = SelectCatState(
+            cats = listOf(
+                CatInfoModel(1, "이이오", type = CatType.CHEESE),
+                CatInfoModel(1, "까만냥", type = CatType.BLACK),
+                CatInfoModel(1, "삼색냥", type = CatType.THREE_COLOR)
+            )
+        ),
         onAction = { _ -> }
     )
 }

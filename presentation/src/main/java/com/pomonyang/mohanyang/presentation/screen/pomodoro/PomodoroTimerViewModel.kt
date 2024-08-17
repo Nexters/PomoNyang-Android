@@ -117,7 +117,7 @@ class PomodoroTimerViewModel @Inject constructor(
                                 PomodoroTimerEffect.GoToPomodoroRest(
                                     title = state.value.title,
                                     focusTime = state.value.currentFocusTime,
-                                    exceededTime = state.value.exceededTime
+                                    exceededTime = newExceedTime
                                 )
                             )
                         }
