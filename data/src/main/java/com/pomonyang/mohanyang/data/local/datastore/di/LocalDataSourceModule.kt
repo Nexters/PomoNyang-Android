@@ -6,6 +6,8 @@ import com.pomonyang.mohanyang.data.local.datastore.datasource.pomodoro.Pomodoro
 import com.pomonyang.mohanyang.data.local.datastore.datasource.pomodoro.PomodoroLocalDataSourceImpl
 import com.pomonyang.mohanyang.data.local.datastore.datasource.token.TokenLocalDataSource
 import com.pomonyang.mohanyang.data.local.datastore.datasource.token.TokenLocalDataSourceImpl
+import com.pomonyang.mohanyang.data.local.datastore.datasource.user.UserLocalDataSource
+import com.pomonyang.mohanyang.data.local.datastore.datasource.user.UserLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,5 +27,9 @@ internal abstract class LocalDataSourceModule {
 
     @Binds
     @Singleton
-    abstract fun provideUserRepository(pomodoroLocalDataSourceImpl: PomodoroLocalDataSourceImpl): PomodoroLocalDataSource
+    abstract fun providePomodoroDataSource(pomodoroLocalDataSourceImpl: PomodoroLocalDataSourceImpl): PomodoroLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun provideUserDataSource(userLocalDataSourceImpl: UserLocalDataSourceImpl): UserLocalDataSource
 }

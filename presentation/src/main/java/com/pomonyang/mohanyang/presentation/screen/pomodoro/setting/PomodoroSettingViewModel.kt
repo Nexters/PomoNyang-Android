@@ -137,10 +137,9 @@ class PomodoroSettingViewModel @Inject constructor(
 
     private fun getMyCatInfo() {
         viewModelScope.launch {
-            userRepository.getMyInfo()
-                .onSuccess {
-                    updateState { copy(catName = it.toModel().cat.name) }
-                }
+            userRepository.getMyInfo().let {
+                updateState { copy(catName = it.toModel().cat.name) }
+            }
         }
     }
 }

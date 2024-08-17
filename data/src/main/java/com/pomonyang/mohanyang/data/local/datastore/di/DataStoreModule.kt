@@ -10,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.pomonyang.mohanyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSourceImpl
 import com.pomonyang.mohanyang.data.local.datastore.datasource.pomodoro.PomodoroLocalDataSourceImpl
 import com.pomonyang.mohanyang.data.local.datastore.datasource.token.TokenLocalDataSourceImpl
+import com.pomonyang.mohanyang.data.local.datastore.datasource.user.UserLocalDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -74,6 +75,24 @@ internal object DataStoreModule {
             produceFile = {
                 context.preferencesDataStoreFile(
                     PomodoroLocalDataSourceImpl.POMODORO_PREFERENCES_NAME
+                )
+            }
+        )
+
+    @UserDataStore
+    @Provides
+    @Singleton
+    internal fun provideUserDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { emptyPreferences() }
+            ),
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            produceFile = {
+                context.preferencesDataStoreFile(
+                    UserLocalDataSourceImpl.USER_PREFERENCES_NAME
                 )
             }
         )

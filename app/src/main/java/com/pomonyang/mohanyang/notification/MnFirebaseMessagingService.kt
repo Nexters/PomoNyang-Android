@@ -10,6 +10,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.pomonyang.mohanyang.MainActivity
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.notification.util.defaultNotification
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -19,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 internal class MnFirebaseMessagingService : FirebaseMessagingService() {
@@ -27,14 +29,17 @@ internal class MnFirebaseMessagingService : FirebaseMessagingService() {
     @Inject
     lateinit var pushAlarmRepository: PushAlarmRepository
 
-    private val isPushEnabled = true // TODO 사용자 정보 가져오기
+    @Inject
+    lateinit var userRepository: UserRepository
 
     override fun onNewToken(token: String) {
-        if (isPushEnabled) {
-            scope.launch {
-                pushAlarmRepository.apply {
-                    saveFcmToken(token)
-                    registerPushToken(token)
+        scope.launch {
+            userRepository.getMyInfo().let {
+                if (it.isPushEnabled) {
+                    pushAlarmRepository.apply {
+                        saveFcmToken(token)
+                        registerPushToken(token)
+                    }
                 }
             }
         }
@@ -45,6 +50,7 @@ internal class MnFirebaseMessagingService : FirebaseMessagingService() {
             return
         }
 
+        val isPushEnabled = runBlocking { userRepository.getMyInfo().isPushEnabled }
         if (!isPushEnabled) return
 
         val notification = remoteMessage.notification ?: return
