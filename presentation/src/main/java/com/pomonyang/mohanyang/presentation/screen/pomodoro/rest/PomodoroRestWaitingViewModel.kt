@@ -3,6 +3,7 @@ package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.domain.usecase.AdjustPomodoroTimeUseCase
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
@@ -51,7 +52,8 @@ sealed interface PomodoroRestWaitingSideEffect : ViewSideEffect {
 @HiltViewModel
 class PomodoroRestWaitingViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
-    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase
+    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase,
+    private val pomodoroTimerRepository: PomodoroTimerRepository
 ) : BaseViewModel<PomodoroRestWaitingState, PomodoroRestWaitingEvent, PomodoroRestWaitingSideEffect>() {
 
     override fun setInitialState(): PomodoroRestWaitingState = PomodoroRestWaitingState()
@@ -103,6 +105,10 @@ class PomodoroRestWaitingViewModel @Inject constructor(
 
             PomodoroRestWaitingEvent.OnEndFocusClick -> {
                 adjustFocusTime()
+                viewModelScope.launch {
+                    pomodoroTimerRepository.updatePomodoroDone()
+                    pomodoroTimerRepository.savePomodoroCacheData()
+                }
                 setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroSetting)
             }
 

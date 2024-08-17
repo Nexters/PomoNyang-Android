@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.usecase.GetTokenByDeviceIdUseCase
@@ -38,10 +39,13 @@ import com.pomonyang.mohanyang.ui.MohaNyangApp
 import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
+@OptIn(DelicateCoroutinesApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
@@ -59,6 +63,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var getTokenByDeviceIdUseCase: GetTokenByDeviceIdUseCase
 
+    @Inject
+    lateinit var pomodoroTimerRepository: PomodoroTimerRepository
+
     private var keepSplashOnScreen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +73,7 @@ class MainActivity : ComponentActivity() {
 
         createNotificationChannel()
         registerNotificationService()
-
+        GlobalScope.launch { pomodoroTimerRepository.savePomodoroCacheData() }
         handleSplashScreen()
         initializeFCM()
         enableEdgeToEdge()
@@ -133,13 +140,14 @@ class MainActivity : ComponentActivity() {
         Handler(Looper.getMainLooper()).postDelayed({ keepSplashOnScreen = false }, Companion.SPLASH_DELAY)
     }
 
-    companion object {
-        private const val SPLASH_DELAY = 2000L
-    }
-
     override fun onResume() {
         super.onResume()
         MnNotificationManager.stopInterrupt(this)
+    }
+
+    override fun onDestroy() {
+        GlobalScope.launch { pomodoroTimerRepository.updatePomodoroDone() }
+        super.onDestroy()
     }
 
     private fun initializeFCM() {
@@ -159,8 +167,11 @@ class MainActivity : ComponentActivity() {
         val intentFilters = IntentFilter().apply {
             MnNotificationManager.intents.map { addAction(it) }
         }
-        Timber.tag("koni").d("registerNotificationService > ")
         val receiver = LocalNotificationReceiver()
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilters)
+    }
+
+    companion object {
+        private const val SPLASH_DELAY = 2000L
     }
 }
