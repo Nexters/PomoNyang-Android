@@ -22,13 +22,13 @@ data class PomodoroSettingState(
     val selectedCategoryNo: Int = 0,
     val showCategoryBottomSheet: Boolean = false,
     val catName: String = "",
-    val showOnboardingTooltip: Boolean = false
+    val isEndOnBoardingTooltip: Boolean = false
 ) : ViewState {
     fun getSelectedCategory() = categoryList.find { it.categoryNo == selectedCategoryNo }
 }
 
 sealed interface PomodoroSettingEvent : ViewEvent {
-    data class Init(val isNewUser: Boolean) : PomodoroSettingEvent
+    data object Init : PomodoroSettingEvent
     data object ClickCategory : PomodoroSettingEvent
     data object ClickRestTime : PomodoroSettingEvent
     data object ClickFocusTime : PomodoroSettingEvent
@@ -88,7 +88,6 @@ class PomodoroSettingViewModel @Inject constructor(
             is PomodoroSettingEvent.Init -> {
                 collectCategoryData()
                 getMyCatInfo()
-                updateState { copy(showOnboardingTooltip = event.isNewUser) }
             }
 
             PomodoroSettingEvent.DismissCategoryDialog -> {
@@ -104,7 +103,7 @@ class PomodoroSettingViewModel @Inject constructor(
             }
 
             PomodoroSettingEvent.DismissOnBoardingTooltip -> {
-                updateState { copy(showOnboardingTooltip = false) }
+                updateState { copy(isEndOnBoardingTooltip = true) }
             }
         }
     }

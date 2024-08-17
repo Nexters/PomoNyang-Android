@@ -84,7 +84,7 @@ fun PomodoroSettingRoute(
     }
 
     LaunchedEffect(Unit) {
-        pomodoroSettingViewModel.handleEvent(PomodoroSettingEvent.Init(isNewUser))
+        pomodoroSettingViewModel.handleEvent(PomodoroSettingEvent.Init)
     }
 
     if (state.showCategoryBottomSheet) {
@@ -99,7 +99,7 @@ fun PomodoroSettingRoute(
         onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
         modifier = modifier,
-        showOnboardingTooltip = state.showOnboardingTooltip
+        showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not()
     )
 }
 
