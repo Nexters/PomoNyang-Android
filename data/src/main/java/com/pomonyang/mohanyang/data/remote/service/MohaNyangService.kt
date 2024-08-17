@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.data.remote.service
 
+import com.pomonyang.mohanyang.data.remote.model.request.PomodoroTimerRequest
 import com.pomonyang.mohanyang.data.remote.model.request.RegisterPushTokenRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCatInfoRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCatTypeRequest
@@ -18,11 +19,6 @@ import retrofit2.http.Path
 interface MohaNyangService {
     @GET("/api/v1/categories")
     suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
-
-    @GET("/api/v1/categories/{no}")
-    suspend fun getMohaNyang(
-        @Path("no") no: Int
-    ): Result<PomodoroSettingResponse>
 
     @PATCH("/api/v1/categories/{no}")
     suspend fun updatePomodoroSetting(
@@ -59,4 +55,9 @@ interface MohaNyangService {
 
     @DELETE("/api/v1/notifications")
     suspend fun unSubscribeNotification(): Result<Unit>
+
+    @POST("/api/v1/focus-times")
+    suspend fun saveFocusTime(
+        @Body pomodoroTimerRequest: List<PomodoroTimerRequest>
+    ): Result<Unit>
 }

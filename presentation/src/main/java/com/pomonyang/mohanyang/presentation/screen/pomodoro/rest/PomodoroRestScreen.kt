@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,6 +57,10 @@ fun PomodoroRestRoute(
             PomodoroRestEffect.GoToPomodoroFocus -> goToFocus()
             PomodoroRestEffect.SendEndRestAlarm -> notifyFocusEnd(context)
         }
+    }
+
+    BackHandler {
+        // NOTHING
     }
 
     LaunchedEffect(Unit) {

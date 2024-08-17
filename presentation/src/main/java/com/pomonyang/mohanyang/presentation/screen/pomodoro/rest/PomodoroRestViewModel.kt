@@ -3,6 +3,7 @@ package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.domain.usecase.AdjustPomodoroTimeUseCase
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
@@ -59,7 +60,8 @@ sealed interface PomodoroRestEffect : ViewSideEffect {
 @HiltViewModel
 class PomodoroRestViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
-    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase
+    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase,
+    private val pomodoroTimerRepository: PomodoroTimerRepository
 ) : BaseViewModel<PomodoroRestState, PomodoroRestEvent, PomodoroRestEffect>() {
 
     private var timerJob: Job? = null
@@ -109,13 +111,23 @@ class PomodoroRestViewModel @Inject constructor(
             }
 
             PomodoroRestEvent.OnEndPomodoroClick -> {
+                savePomodoroData()
                 adjustRestTime()
                 setEffect(PomodoroRestEffect.GoToHome)
             }
+
             PomodoroRestEvent.OnFocusClick -> {
+                savePomodoroData()
                 adjustRestTime()
                 setEffect(PomodoroRestEffect.GoToPomodoroFocus)
             }
+        }
+    }
+
+    private fun savePomodoroData() {
+        viewModelScope.launch {
+            pomodoroTimerRepository.updatePomodoroDone()
+            pomodoroTimerRepository.savePomodoroCacheData()
         }
     }
 
@@ -137,7 +149,11 @@ class PomodoroRestViewModel @Inject constructor(
                 delay(TIMER_DELAY)
                 updateState {
                     if (currentRestTime < maxRestTime) {
-                        copy(currentRestTime = currentRestTime + ONE_SECOND)
+                        val newRestTime = currentRestTime + ONE_SECOND
+                        viewModelScope.launch {
+                            pomodoroTimerRepository.updateRestedTime(newRestTime)
+                        }
+                        copy(currentRestTime = newRestTime)
                     } else {
                         if (exceededTime == 0) setEffect(PomodoroRestEffect.SendEndRestAlarm)
                         val newExceedTime = exceededTime + ONE_SECOND

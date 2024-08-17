@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
 import androidx.lifecycle.viewModelScope
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
@@ -59,7 +60,8 @@ sealed interface PomodoroTimerEffect : ViewSideEffect {
 
 @HiltViewModel
 class PomodoroTimerViewModel @Inject constructor(
-    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase
+    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
+    private val pomodoroTimerRepository: PomodoroTimerRepository
 ) : BaseViewModel<PomodoroTimerState, PomodoroTimerEvent, PomodoroTimerEffect>() {
 
     private var timerJob: Job? = null
@@ -79,6 +81,7 @@ class PomodoroTimerViewModel @Inject constructor(
                         categoryNo = selectedPomodoroSetting.categoryNo
                     )
                 }
+                pomodoroTimerRepository.insertPomodoroTimerInitData(selectedPomodoroSetting.categoryNo)
                 startTimer()
             }
 
@@ -90,7 +93,13 @@ class PomodoroTimerViewModel @Inject constructor(
                 )
             )
 
-            PomodoroTimerEvent.ClickHome -> setEffect(PomodoroTimerEffect.GoToPomodoroSetting)
+            PomodoroTimerEvent.ClickHome -> {
+                viewModelScope.launch {
+                    pomodoroTimerRepository.updatePomodoroDone()
+                    pomodoroTimerRepository.savePomodoroCacheData()
+                }
+                setEffect(PomodoroTimerEffect.GoToPomodoroSetting)
+            }
             PomodoroTimerEvent.Pause -> setEffect(PomodoroTimerEffect.StartFocusAlarm)
             PomodoroTimerEvent.Resume -> setEffect(PomodoroTimerEffect.StopFocusAlarm)
             PomodoroTimerEvent.Dispose -> setEffect(PomodoroTimerEffect.StopFocusAlarm)
@@ -104,6 +113,10 @@ class PomodoroTimerViewModel @Inject constructor(
                 delay(TIMER_DELAY)
                 updateState {
                     if (currentFocusTime < maxFocusTime) {
+                        val newFocusTime = currentFocusTime + ONE_SECOND
+                        viewModelScope.launch {
+                            pomodoroTimerRepository.updateFocusTime(newFocusTime)
+                        }
                         copy(currentFocusTime = currentFocusTime + ONE_SECOND)
                     } else {
                         if (exceededTime == 0) {

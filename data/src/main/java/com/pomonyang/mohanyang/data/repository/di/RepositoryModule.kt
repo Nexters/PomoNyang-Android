@@ -4,6 +4,8 @@ import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepository
 import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepositoryImpl
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepositoryImpl
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepositoryImpl
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepositoryImpl
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
@@ -41,4 +43,10 @@ internal abstract class RepositoryModule {
     internal abstract fun providePushAlarmRepository(
         pushAlarmRepositoryImpl: PushAlarmRepositoryImpl
     ): PushAlarmRepository
+
+    @Binds
+    @Singleton
+    internal abstract fun providePomodoroTimerRepository(
+        pomodoroTimerRepositoryImpl: PomodoroTimerRepositoryImpl
+    ): PomodoroTimerRepository
 }

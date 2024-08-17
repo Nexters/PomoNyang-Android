@@ -8,8 +8,8 @@ import java.util.*
 data class PomodoroTimerEntity(
     @PrimaryKey
     val focusTimeId: String = UUID.randomUUID().toString(),
-    val focusedTime: String = "PT0M",
-    val restedTime: String = "PT0M",
-    val categoryNo: Int,
-    val doneAt: String
+    val focusedTime: Int = 0,
+    val restedTime: Int = 0,
+    val doneAt: String = "",
+    val categoryNo: Int
 )

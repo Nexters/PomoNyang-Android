@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,10 @@ fun PomodoroTimerRoute(
 ) {
     val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    BackHandler {
+        // NOTHING
+    }
 
     pomodoroTimerViewModel.effects.collectWithLifecycle {
         when (it) {

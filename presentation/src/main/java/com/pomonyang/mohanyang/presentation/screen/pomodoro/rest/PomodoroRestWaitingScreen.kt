@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -53,6 +54,10 @@ fun PomodoroRestWaitingRoute(
             is PomodoroRestWaitingSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestWaitingSideEffect.GoToPomodoroRest -> goToPomodoroRest()
         }
+    }
+
+    BackHandler {
+        // NOTHING
     }
 
     LaunchedEffect(Unit) {
