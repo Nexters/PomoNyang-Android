@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
-import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +37,7 @@ import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.notifyFocusEnd
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.startInterrupt
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.stopInterrupt
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -51,8 +51,6 @@ fun PomodoroTimerRoute(
 ) {
     val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-
-    val context = LocalContext.current as Activity
 
     pomodoroTimerViewModel.effects.collectWithLifecycle {
         when (it) {
@@ -70,6 +68,10 @@ fun PomodoroTimerRoute(
 
             PomodoroTimerEffect.StopFocusAlarm -> {
                 stopInterrupt(context)
+            }
+
+            PomodoroTimerEffect.SendEndFocusAlarm -> {
+                notifyFocusEnd(context)
             }
         }
     }
