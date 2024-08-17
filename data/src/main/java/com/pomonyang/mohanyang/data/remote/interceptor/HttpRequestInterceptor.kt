@@ -19,7 +19,8 @@ internal class HttpRequestInterceptor @Inject constructor(
                 .newBuilder()
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Accept", "*/*")
-                .addHeader("Authorization", "Bearer $accessToken")
+                .removeHeader("Authorization")
+                .header("Authorization", "Bearer $accessToken")
                 .build()
         return chain.proceed(request)
     }

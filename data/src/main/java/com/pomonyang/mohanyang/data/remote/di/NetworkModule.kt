@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.data.remote.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mohanyang.data.BuildConfig
+import com.pomonyang.mohanyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSource
 import com.pomonyang.mohanyang.data.local.datastore.datasource.token.TokenLocalDataSource
 import com.pomonyang.mohanyang.data.remote.datasource.auth.AuthRemoteDataSource
 import com.pomonyang.mohanyang.data.remote.interceptor.HttpRequestInterceptor
@@ -65,8 +66,9 @@ internal abstract class NetworkModule {
         @Singleton
         fun provideTokenRefreshInterceptor(
             authRemoteDataSource: AuthRemoteDataSource,
-            tokenLocalDataSource: TokenLocalDataSource
-        ): TokenRefreshInterceptor = TokenRefreshInterceptor(authRemoteDataSource, tokenLocalDataSource)
+            tokenLocalDataSource: TokenLocalDataSource,
+            deviceIdLocalDataSource: DeviceIdLocalDataSource
+        ): TokenRefreshInterceptor = TokenRefreshInterceptor(authRemoteDataSource, tokenLocalDataSource, deviceIdLocalDataSource)
 
         @Provides
         @Singleton
