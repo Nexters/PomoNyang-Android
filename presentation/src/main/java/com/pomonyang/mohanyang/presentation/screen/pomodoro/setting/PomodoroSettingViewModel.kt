@@ -130,9 +130,6 @@ class PomodoroSettingViewModel @Inject constructor(
                 .onSuccess {
                     updateState { copy(catName = it.toModel().cat.name) }
                 }
-                .onFailure {
-                    setEffect(PomodoroSettingSideEffect.ShowSnackBar("$it"))
-                }
         }
     }
 }
