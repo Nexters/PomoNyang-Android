@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.notification.util.getTriggerTimeInMillis
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalTime
 import java.util.*
@@ -29,6 +30,7 @@ class MnAlarmManager @Inject constructor(
                     putExtra(getString(R.string.local_notification_id), id)
                     putExtra(getString(R.string.local_notification_title), title)
                     putExtra(getString(R.string.local_notification_message), message)
+                    action = MnNotificationManager.INTENT_SEND_MESSAGE
                 }
 
             val pendingIntent =

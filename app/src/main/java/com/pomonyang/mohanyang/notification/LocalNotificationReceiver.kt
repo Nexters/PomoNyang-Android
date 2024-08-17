@@ -7,23 +7,73 @@ import android.content.Context
 import android.content.Intent
 import com.pomonyang.mohanyang.MainActivity
 import com.pomonyang.mohanyang.R
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.notification.util.defaultNotification
 import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import com.pomonyang.mohanyang.notification.util.summaryNotification
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
 
+    @Inject
+    lateinit var userRepository: UserRepository
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent == null || context == null) return
 
-        if (!context.isNotificationGranted()) return
+        scope.launch {
+            val cat = CatType.safeValueOf(userRepository.getMyInfo().cat.type)
 
-        val notificationId = intent.getIntExtra(context.getString(R.string.local_notification_id), 0)
-        val title = intent.getStringExtra(context.getString(R.string.local_notification_title)) ?: ""
-        val message = intent.getStringExtra(context.getString(R.string.local_notification_message)) ?: ""
+            when (intent.action) {
+                MnNotificationManager.INTENT_SEND_MESSAGE -> {
+                    val notificationId = intent.getIntExtra(context.getString(R.string.local_notification_id), 0)
+                    val title = intent.getStringExtra(context.getString(R.string.local_notification_title)) ?: ""
+                    val message = intent.getStringExtra(context.getString(R.string.local_notification_message)) ?: ""
+                    notifyMessage(context, notificationId, title, message)
+                }
+
+                MnNotificationManager.INTENT_NOTIFY_REST_MESSAGE -> {
+                    val id = UUID.randomUUID().hashCode()
+                    notifyMessage(
+                        context,
+                        notificationId = id,
+                        message = context.getString(cat.restEndPushContent)
+                    )
+                }
+
+                MnNotificationManager.INTENT_NOTIFY_FOCUS_MESSAGE -> {
+                    val id = UUID.randomUUID().hashCode()
+                    notifyMessage(
+                        context,
+                        notificationId = id,
+                        message = context.getString(cat.timerEndPushContent)
+                    )
+                }
+
+                MnNotificationManager.INTENT_START_INTERRUPT_MESSAGE -> {
+                    context.startService(Intent(context, FocusNotificationService::class.java))
+                }
+
+                MnNotificationManager.INTENT_STOP_INTERRUPT_MESSAGE -> {
+                    context.stopService(Intent(context, FocusNotificationService::class.java))
+                }
+            }
+        }
+    }
+
+    private fun notifyMessage(context: Context, notificationId: Int, title: String = context.getString(R.string.app_name), message: String) {
+        if (!context.isNotificationGranted()) return
 
         val notificationIntent = Intent(context, MainActivity::class.java)
         val pendingIntent =
