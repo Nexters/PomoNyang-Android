@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.onboarding.naming
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -88,6 +89,7 @@ fun OnboardingNamingCatScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(MnTheme.backgroundColorScheme.primary)
             .noRippleClickable {
                 focusManager.clearFocus(true)
                 keyboardController?.hide()
