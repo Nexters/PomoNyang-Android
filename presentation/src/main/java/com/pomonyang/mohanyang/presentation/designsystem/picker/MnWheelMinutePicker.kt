@@ -82,7 +82,7 @@ fun MnWheelMinutePicker(
             .fadeEdge(brushColor)
     ) {
         CenterHighlightBox(
-            itemHeight = 75.dp,
+            itemHeight = itemHeight,
             highlightColor = MnTheme.backgroundColorScheme.secondary,
             iconResId = selectedIconResId
         )
@@ -99,7 +99,7 @@ fun MnWheelMinutePicker(
             unSelectedTextColor = mnWheelPickerColor.unSelectedTextColor,
             onItemClick = { index ->
                 coroutineScope.launch {
-                    scrollState.scrollToItem(index)
+                    scrollState.animateScrollToItem(index)
                 }
             },
             onChangePickTime = { item ->
