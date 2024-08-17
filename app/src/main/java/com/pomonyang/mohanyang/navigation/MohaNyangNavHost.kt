@@ -23,7 +23,7 @@ internal fun MohaNyangNavHost(
     val startDestination: Any = if (mohaNyangAppState.isNewUser) {
         Onboarding
     } else {
-        Pomodoro
+        Pomodoro(false)
     }
 
     NavHost(

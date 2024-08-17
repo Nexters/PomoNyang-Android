@@ -12,7 +12,9 @@ import com.pomonyang.mohanyang.presentation.screen.pomodoro.time.PomodoroTimeSet
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object Pomodoro
+data class Pomodoro(
+    val isNewUser: Boolean
+)
 
 @Serializable
 internal data object PomodoroSetting
