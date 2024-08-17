@@ -3,7 +3,6 @@ package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
-import com.pomonyang.mohanyang.domain.model.user.toModel
 import com.pomonyang.mohanyang.domain.usecase.GetPomodoroSettingListUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
@@ -11,6 +10,7 @@ import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.toModel
+import com.pomonyang.mohanyang.presentation.model.user.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
@@ -42,7 +42,8 @@ sealed interface PomodoroSettingSideEffect : ViewSideEffect {
     data class ShowSnackBar(val message: String) : PomodoroSettingSideEffect
     data class GoTimeSetting(
         val isFocusTime: Boolean,
-        val initialTime: Int
+        val initialTime: Int,
+        val category: String
     ) : PomodoroSettingSideEffect
 }
 
@@ -108,7 +109,7 @@ class PomodoroSettingViewModel @Inject constructor(
         state.value.getSelectedCategory()?.let {
             val initialTime = if (isFocusTime) it.focusTime else it.restTime
             setEffect(
-                PomodoroSettingSideEffect.GoTimeSetting(isFocusTime = isFocusTime, initialTime = initialTime)
+                PomodoroSettingSideEffect.GoTimeSetting(isFocusTime = isFocusTime, initialTime = initialTime, category = it.title)
             )
         } ?: setEffect(PomodoroSettingSideEffect.ShowSnackBar("카테고리를 설정해주세요"))
     }

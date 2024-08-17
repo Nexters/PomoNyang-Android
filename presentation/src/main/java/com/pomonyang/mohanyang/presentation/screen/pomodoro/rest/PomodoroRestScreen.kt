@@ -33,6 +33,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
@@ -110,7 +111,8 @@ private fun PomodoroRestScreen(
             navigationIcon = {
                 CategoryBox(
                     categoryName = type,
-                    modifier = Modifier.padding(start = 12.dp)
+                    modifier = Modifier.padding(start = 12.dp),
+                    iconRes = PomodoroCategoryType.safeValueOf(type).iconRes
                 )
             }
         )
@@ -122,7 +124,7 @@ private fun PomodoroRestScreen(
             tooltipMessage = stringResource(id = tooltipMessage)
         )
 
-        TimerType(type = stringResource(id = R.string.rest_time))
+        TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)
 
         Timer(
             modifier = Modifier,

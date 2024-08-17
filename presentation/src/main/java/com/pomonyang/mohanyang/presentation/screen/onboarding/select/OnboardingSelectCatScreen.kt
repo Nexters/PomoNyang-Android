@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -31,8 +32,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.domain.model.cat.CatSelectionContent
-import com.pomonyang.mohanyang.domain.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
@@ -45,6 +44,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnAppBarColors
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import kotlinx.collections.immutable.PersistentList
@@ -103,7 +104,7 @@ fun OnboardingSelectCatScreen(
                 actionIconContentColor = MnTheme.iconColorScheme.primary
             ),
             navigationIcon = {
-                MnIconButton(onClick = onBackClick, iconResourceId = R.drawable.ic_null)
+                MnIconButton(onClick = onBackClick, iconResourceId = R.drawable.ic_chevron_left)
             },
             content = {
                 Text(
@@ -186,7 +187,7 @@ private fun AlarmExample(
         if (selectedCat != null) {
             SelectedAlarmExample(
                 title = title,
-                content = selectedCat.pushContent
+                content = stringResource(selectedCat.backgroundPushContent)
             )
         } else {
             EmptyAlarmExample()
@@ -261,7 +262,7 @@ fun EmptyAlarmExample(
 
 @Composable
 private fun CatCategory(
-    cats: PersistentList<CatSelectionContent>,
+    cats: PersistentList<CatInfoModel>,
     selectedType: CatType?,
     onClickCatType: (CatType) -> Unit,
     modifier: Modifier = Modifier
@@ -285,9 +286,13 @@ private fun CatCategory(
                             horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(cat.no.toString())
-                            // TODO 긍정, 응원 등 타입 지정 API Response 변경 요청 또는 로컬 고정
-                            MnXSmallIcon(resourceId = R.drawable.ic_null)
+                            Text(
+                                stringResource(cat.type.personality),
+                                color = MnTheme.textColorScheme.tertiary,
+                                style = MnTheme.typography.subBodyRegular
+                            )
+
+                            MnXSmallIcon(resourceId = cat.type.personalityIcon, tint = Color.Unspecified)
                         }
                     },
                     titleContent = {

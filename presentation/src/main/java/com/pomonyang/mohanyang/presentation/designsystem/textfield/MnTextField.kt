@@ -116,7 +116,7 @@ fun MnTextField(
                         color = containerColor,
                         border = BorderStroke(
                             borderWidth,
-                            if (isFocused || isError) borderColor else containerColor
+                            if (isError) borderColor else containerColor
                         ),
                         shape = RoundedCornerShape(MnRadius.small)
 

@@ -2,11 +2,26 @@ package com.pomonyang.mohanyang.presentation.model.setting
 
 import com.mohanyang.presentation.R
 
-enum class PomodoroCategoryType(val iconRes: Int) {
-    DEFAULT(R.drawable.ic_null),
-    READ_BOOK(R.drawable.ic_null),
-    STUDY(R.drawable.ic_null),
-    WORK(R.drawable.ic_null);
+enum class PomodoroCategoryType(
+    val iconRes: Int,
+    val kor: Int
+) {
+    DEFAULT(
+        iconRes = R.drawable.ic_category_default,
+        kor = R.string.category_default_kor
+    ),
+    READ_BOOK(
+        iconRes = R.drawable.ic_book,
+        kor = R.string.category_book_kor
+    ),
+    STUDY(
+        iconRes = R.drawable.ic_memo,
+        kor = R.string.category_study_kor
+    ),
+    WORK(
+        iconRes = R.drawable.ic_monitor,
+        kor = R.string.category_work_kor
+    );
 
     companion object {
         fun safeValueOf(title: String): PomodoroCategoryType {

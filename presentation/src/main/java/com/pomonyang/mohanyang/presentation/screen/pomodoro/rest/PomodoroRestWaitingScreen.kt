@@ -28,6 +28,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -98,14 +99,14 @@ private fun PomodoroRestWaitingScreen(
             navigationIcon = {
                 MnIconButton(
                     onClick = { onAction(PomodoroRestWaitingEvent.OnNavigationClick) },
-                    iconResourceId = R.drawable.ic_null
+                    iconResourceId = R.drawable.ic_chevron_left
                 )
             }
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        CategoryBox(categoryName = type)
+        CategoryBox(categoryName = type, iconRes = PomodoroCategoryType.safeValueOf(type).iconRes)
 
         Timer(
             modifier = Modifier.padding(top = MnSpacing.small),

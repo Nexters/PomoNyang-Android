@@ -40,7 +40,7 @@ fun CategoryBox(
     ) {
         MnMediumIcon(
             resourceId = iconRes,
-            tint = MnTheme.iconColorScheme.primary
+            tint = Color.Unspecified
         )
         Text(
             text = categoryName,

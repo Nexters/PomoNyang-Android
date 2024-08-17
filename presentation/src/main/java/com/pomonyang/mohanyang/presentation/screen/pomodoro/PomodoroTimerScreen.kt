@@ -116,7 +116,7 @@ private fun PomodoroTimerScreen(
             tooltipMessage = stringResource(id = tooltipMessage)
         )
 
-        TimerType(type = stringResource(id = R.string.focus_time))
+        TimerType(type = stringResource(id = R.string.focus_time), iconRes = R.drawable.ic_focus)
 
         Timer(
             modifier = Modifier.weight(1f),
