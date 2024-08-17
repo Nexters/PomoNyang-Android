@@ -32,8 +32,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.domain.model.cat.CatInfoModel
-import com.pomonyang.mohanyang.domain.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
@@ -46,6 +44,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnAppBarColors
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import kotlinx.collections.immutable.PersistentList
@@ -104,7 +104,7 @@ fun OnboardingSelectCatScreen(
                 actionIconContentColor = MnTheme.iconColorScheme.primary
             ),
             navigationIcon = {
-                MnIconButton(onClick = onBackClick, iconResourceId = com.mohanyang.domain.R.drawable.ic_chevron_left)
+                MnIconButton(onClick = onBackClick, iconResourceId = R.drawable.ic_chevron_left)
             },
             content = {
                 Text(

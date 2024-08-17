@@ -338,7 +338,7 @@ fun SettingButton(
         contentAlignment = Alignment.Center
     ) {
         MnLargeIcon(
-            resourceId = com.mohanyang.domain.R.drawable.ic_check,
+            resourceId = R.drawable.ic_check,
             tint = MnTheme.iconColorScheme.inverse
         )
     }

@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.domain.model.cat
+package com.pomonyang.mohanyang.presentation.model.cat
 
 import com.pomonyang.mohanyang.data.remote.model.response.CatTypeResponse
 

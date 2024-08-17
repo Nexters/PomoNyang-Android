@@ -69,7 +69,7 @@ private fun PomodoroTimeSettingScreen(
     onAction: (PomodoroTimeSettingEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val iconResId = if (isFocusTime) com.mohanyang.domain.R.drawable.ic_focus else com.mohanyang.domain.R.drawable.ic_rest
+    val iconResId = if (isFocusTime) R.drawable.ic_focus else R.drawable.ic_rest
 
     val text = if (isFocusTime) R.string.focus else R.string.rest
     Column(
@@ -118,7 +118,7 @@ private fun TimeSettingTopAppBar(
                 contentAlignment = Alignment.Center
             ) {
                 MnMediumIcon(
-                    resourceId = com.mohanyang.domain.R.drawable.ic_close,
+                    resourceId = R.drawable.ic_close,
                     tint = TopAppBarDefaults.topAppBarColors().navigationIconContentColor
                 )
             }

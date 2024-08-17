@@ -47,4 +47,30 @@
     <string name="five_minutes">5분</string>
     <string name="change_focus_time_prompt">다음부터 집중 시간을 바꿀까요?</string>
     <string name="change_rest_time_prompt">다음부터 휴식 시간을 바꿀까요?</string>
+
+    <string name="cat_cheese_kor">치즈냥</string>
+    <string name="cat_cheese_personality">응원</string>
+    <string name="cat_cheese_timer_end_push">집중이 끝났다냥! 이제 나랑 놀아달라냥</string>
+    <string name="cat_cheese_rest_end_push">이제 다시 집중해볼까냥?</string>
+    <string name="cat_cheese_background_push">날 두고 어디갔냥..</string>
+
+
+    <string name="cat_black_kor">까만냥</string>
+    <string name="cat_black_personality">긍정</string>
+    <string name="cat_black_timer_end_push">집중이 끝났다냥! 이제 나랑 놀아달라냥</string>
+    <string name="cat_black_rest_end_push">날 두고 어디갔냥..</string>
+    <string name="cat_black_background_push">날 두고 어디갔냥..</string>
+
+    <string name="cat_three_kor">삼색냥</string>
+    <string name="cat_three_personality">자극</string>
+    <string name="cat_three_timer_end_push">집중이 끝났다냥! 원하는 만큼 집중했냥?</string>
+    <string name="cat_three_rest_end_push">집중할 시간이다냥! 빨리 들어오라냥</string>
+    <string name="cat_three_background_push">지금 뭐하고 있냥? 내가 감시하고 있다냥</string>
+
+    <string name="category_default_kor">기본</string>
+    <string name="category_work_kor">작업</string>
+    <string name="category_study_kor">공부</string>
+    <string name="category_book_kor">독서</string>
+
+
 </resources>

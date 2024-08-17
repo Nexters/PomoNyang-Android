@@ -8,7 +8,7 @@ import android.os.IBinder
 import com.pomonyang.mohanyang.BuildConfig
 import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.data.local.device.util.lockScreenState
-import com.pomonyang.mohanyang.domain.model.cat.CatType
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalTime
 import javax.inject.Inject

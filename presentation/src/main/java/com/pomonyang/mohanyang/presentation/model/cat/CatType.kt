@@ -1,7 +1,7 @@
-package com.pomonyang.mohanyang.domain.model.cat
+package com.pomonyang.mohanyang.presentation.model.cat
 
 import androidx.compose.runtime.Immutable
-import com.mohanyang.domain.R
+import com.mohanyang.presentation.R
 import kotlinx.serialization.Serializable
 
 @Immutable

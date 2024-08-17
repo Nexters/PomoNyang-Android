@@ -1,8 +1,8 @@
-package com.pomonyang.mohanyang.domain.model.user
+package com.pomonyang.mohanyang.presentation.model.user
 
 import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
-import com.pomonyang.mohanyang.domain.model.cat.CatInfoModel
-import com.pomonyang.mohanyang.domain.model.cat.toModel
+import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
+import com.pomonyang.mohanyang.presentation.model.cat.toModel
 
 data class UserInfoModel(
     val registeredDeviceNo: Int,

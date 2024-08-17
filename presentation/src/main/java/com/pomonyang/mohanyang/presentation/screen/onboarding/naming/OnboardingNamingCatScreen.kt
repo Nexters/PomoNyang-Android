@@ -124,7 +124,7 @@ fun OnboardingNamingCatScreen(
         MnTopAppBar(navigationIcon = {
             MnIconButton(
                 onClick = onBackClick,
-                iconResourceId = com.mohanyang.domain.R.drawable.ic_chevron_left
+                iconResourceId = R.drawable.ic_chevron_left
             )
         })
 
