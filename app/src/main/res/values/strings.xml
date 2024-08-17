@@ -6,5 +6,6 @@
     <string name="local_notification_id">local_notification_id</string>
     <string name="local_notification_title">local_notification_title</string>
     <string name="local_notification_message">local_notification_message</string>
+    <string name="offline_mode_message">오프라인 모드</string>
 
 </resources>
