@@ -41,7 +41,7 @@ fun MnToastSnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     leadingIconResourceId: Int? = null,
-    leadingIconColor: Color = MnTheme.iconColorScheme.inverse
+    leadingIconColor: Color = Color.Unspecified
 ) {
     SnackbarHost(
         hostState = hostState,

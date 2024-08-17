@@ -11,7 +11,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -48,26 +50,31 @@ private fun MohaNyangApp(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
+    var snackbarIconRes by remember { mutableStateOf<Int?>(null) }
+
     Scaffold(
         modifier = modifier,
         containerColor = MnTheme.backgroundColorScheme.primary,
-        snackbarHost = { MnToastSnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = { MnToastSnackbarHost(hostState = snackbarHostState, leadingIconResourceId = snackbarIconRes) }
     ) { innerPadding ->
-
         val isOffline by mohaNyangAppState.isOffline.collectAsStateWithLifecycle()
+        val showSnackbar: (String, Int?) -> Unit = remember {
+            { message, iconRes ->
+                snackbarIconRes = iconRes
+                mohaNyangAppState.coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = message,
+                        duration = Short
+                    )
+                }
+            }
+        }
+
         if (isOffline) {
             OfflinePopup()
         }
         MohaNyangNavHost(
-            onShowSnackbar = { message, action ->
-                mohaNyangAppState.coroutineScope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = message,
-                        actionLabel = action,
-                        duration = Short
-                    )
-                }
-            },
+            onShowSnackbar = showSnackbar,
             mohaNyangAppState = mohaNyangAppState,
             modifier = Modifier.padding(innerPadding)
         )

@@ -37,7 +37,7 @@ internal data object PomodoroRest
 
 fun NavGraphBuilder.pomodoroScreen(
     isNewUser: Boolean,
-    onShowSnackbar: (String, String?) -> Unit,
+    onShowSnackbar: (String, Int?) -> Unit,
     navHostController: NavHostController
 ) {
     navigation<Pomodoro>(

@@ -38,14 +38,14 @@ fun PomodoroTimeSettingRoute(
     initialSettingTime: Int,
     modifier: Modifier = Modifier,
     viewModel: PomodoroTimeSettingViewModel = hiltViewModel(),
-    onShowSnackbar: (String, String?) -> Unit,
+    onShowSnackbar: (String, Int?) -> Unit,
     onEndSettingClick: () -> Unit
 ) {
     viewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is PomodoroTimeSettingEffect.GoToPomodoroSettingScreen -> {
                 val message = if (isFocusTime) "집중" else "휴식"
-                onShowSnackbar("${message}시간을 변경했어요", null)
+                onShowSnackbar("${message}시간을 변경했어요", R.drawable.ic_check)
                 onEndSettingClick()
             }
 

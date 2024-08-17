@@ -1,6 +1,8 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope
+import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
@@ -47,7 +49,7 @@ sealed interface PomodoroRestEvent : ViewEvent {
 }
 
 sealed interface PomodoroRestEffect : ViewSideEffect {
-    data class ShowSnackbar(val message: String) : PomodoroRestEffect
+    data class ShowSnackbar(val message: String, @DrawableRes val iconRes: Int) : PomodoroRestEffect
     data object GoToHome : PomodoroRestEffect
     data object GoToPomodoroFocus : PomodoroRestEffect
 }
@@ -79,7 +81,12 @@ class PomodoroRestViewModel @Inject constructor(
 
             is PomodoroRestEvent.OnPlusButtonClick -> {
                 if (state.value.plusButtonEnabled.not()) {
-                    setEffect(PomodoroRestEffect.ShowSnackbar("최대 30분까지만 휴식할 수 있어요"))
+                    setEffect(
+                        PomodoroRestEffect.ShowSnackbar(
+                            message = "최대 30분까지만 휴식할 수 있어요",
+                            iconRes = R.drawable.ic_clock
+                        )
+                    )
                 } else {
                     updateState { copy(plusButtonSelected = event.isPlusButtonSelected, minusButtonSelected = false) }
                 }
@@ -87,7 +94,12 @@ class PomodoroRestViewModel @Inject constructor(
 
             is PomodoroRestEvent.OnMinusButtonClick -> {
                 if (state.value.plusButtonEnabled.not()) {
-                    setEffect(PomodoroRestEffect.ShowSnackbar("5분은 휴식해야 다음에 집중할 수 있어요"))
+                    setEffect(
+                        PomodoroRestEffect.ShowSnackbar(
+                            message = "5분은 휴식해야 다음에 집중할 수 있어요",
+                            iconRes = R.drawable.ic_clock
+                        )
+                    )
                 } else {
                     updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
                 }
