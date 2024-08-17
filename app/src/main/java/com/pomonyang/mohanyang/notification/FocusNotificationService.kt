@@ -43,8 +43,7 @@ class FocusNotificationService : Service() {
     private val isLocked: Flow<Boolean> = this.lockScreenState()
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val isPushEnabled = applicationContext.isNotificationGranted() && runBlocking { userRepository.getMyInfo().isPushEnabled }
-
+        val isPushEnabled = applicationContext.isNotificationGranted()
         if (isPushEnabled) {
             observeLockScreen()
             startFocusNotify()

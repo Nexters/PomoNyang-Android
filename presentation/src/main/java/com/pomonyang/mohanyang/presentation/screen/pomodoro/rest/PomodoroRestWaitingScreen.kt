@@ -24,11 +24,9 @@ import com.pomonyang.mohanyang.presentation.component.TimerSelectedButtons
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
-import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
-import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
@@ -51,7 +49,7 @@ fun PomodoroRestWaitingRoute(
     pomodoroRestWaitingViewModel.effects.collectWithLifecycle { effect ->
         Timber.tag("koni").d("effect > $effect")
         when (effect) {
-            PomodoroRestWaitingSideEffect.GoToPomodoroSettingWaiting -> goToHome()
+            PomodoroRestWaitingSideEffect.GoToPomodoroSetting -> goToHome()
             is PomodoroRestWaitingSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestWaitingSideEffect.GoToPomodoroRest -> goToPomodoroRest()
         }
@@ -98,15 +96,6 @@ private fun PomodoroRestWaitingScreen(
             .background(MnTheme.backgroundColorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        MnTopAppBar(
-            navigationIcon = {
-                MnIconButton(
-                    onClick = { onAction(PomodoroRestWaitingEvent.OnNavigationClick) },
-                    iconResourceId = R.drawable.ic_chevron_left
-                )
-            }
-        )
-
         Spacer(modifier = Modifier.weight(1f))
 
         CategoryBox(categoryName = type, iconRes = PomodoroCategoryType.safeValueOf(type).iconRes)

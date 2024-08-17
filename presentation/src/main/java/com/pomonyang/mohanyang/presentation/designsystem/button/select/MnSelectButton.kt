@@ -71,7 +71,7 @@ fun MnSelectButton(
                     CompositionLocalProvider(
                         LocalContentColor provides colors.iconColor
                     ) {
-                        MnSmallIcon(resourceId = R.drawable.ic_null)
+                        MnSmallIcon(resourceId = leftIconResourceId)
                     }
                 }
                 CompositionLocalProvider(
@@ -85,7 +85,7 @@ fun MnSelectButton(
                     CompositionLocalProvider(
                         LocalContentColor provides colors.iconColor
                     ) {
-                        MnSmallIcon(resourceId = R.drawable.ic_null)
+                        MnSmallIcon(resourceId = rightIconResourceId)
                     }
                 }
             }

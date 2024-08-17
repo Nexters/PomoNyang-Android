@@ -3,6 +3,7 @@ package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.domain.usecase.AdjustPomodoroTimeUseCase
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
@@ -52,11 +53,13 @@ sealed interface PomodoroRestEffect : ViewSideEffect {
     data class ShowSnackbar(val message: String, @DrawableRes val iconRes: Int) : PomodoroRestEffect
     data object GoToHome : PomodoroRestEffect
     data object GoToPomodoroFocus : PomodoroRestEffect
+    data object SendEndRestAlarm : PomodoroRestEffect
 }
 
 @HiltViewModel
 class PomodoroRestViewModel @Inject constructor(
-    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase
+    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
+    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase
 ) : BaseViewModel<PomodoroRestState, PomodoroRestEvent, PomodoroRestEffect>() {
 
     private var timerJob: Job? = null
@@ -93,7 +96,7 @@ class PomodoroRestViewModel @Inject constructor(
             }
 
             is PomodoroRestEvent.OnMinusButtonClick -> {
-                if (state.value.plusButtonEnabled.not()) {
+                if (state.value.minusButtonEnabled.not()) {
                     setEffect(
                         PomodoroRestEffect.ShowSnackbar(
                             message = "5분은 휴식해야 다음에 집중할 수 있어요",
@@ -105,8 +108,25 @@ class PomodoroRestViewModel @Inject constructor(
                 }
             }
 
-            PomodoroRestEvent.OnEndPomodoroClick -> setEffect(PomodoroRestEffect.GoToHome)
-            PomodoroRestEvent.OnFocusClick -> setEffect(PomodoroRestEffect.GoToPomodoroFocus)
+            PomodoroRestEvent.OnEndPomodoroClick -> {
+                adjustRestTime()
+                setEffect(PomodoroRestEffect.GoToHome)
+            }
+            PomodoroRestEvent.OnFocusClick -> {
+                adjustRestTime()
+                setEffect(PomodoroRestEffect.GoToPomodoroFocus)
+            }
+        }
+    }
+
+    private fun adjustRestTime() {
+        if (state.value.plusButtonSelected || state.value.minusButtonSelected) {
+            viewModelScope.launch {
+                adjustPomodoroTimeUseCase(
+                    isFocusTime = false,
+                    isIncrease = state.value.plusButtonSelected
+                )
+            }
         }
     }
 
@@ -119,6 +139,7 @@ class PomodoroRestViewModel @Inject constructor(
                     if (currentRestTime < maxRestTime) {
                         copy(currentRestTime = currentRestTime + ONE_SECOND)
                     } else {
+                        if (exceededTime == 0) setEffect(PomodoroRestEffect.SendEndRestAlarm)
                         val newExceedTime = exceededTime + ONE_SECOND
                         if (newExceedTime >= MAX_EXCEEDED_TIME) {
                             timerJob?.cancel()

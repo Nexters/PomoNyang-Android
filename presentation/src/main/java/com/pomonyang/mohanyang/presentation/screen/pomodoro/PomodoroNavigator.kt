@@ -84,9 +84,7 @@ fun NavGraphBuilder.pomodoroScreen(
                     }
                 },
                 goToHome = {
-                    navHostController.navigate(PomodoroSetting) {
-                        popUpTo(PomodoroSetting) { inclusive = true }
-                    }
+                    navHostController.popBackStack()
                 }
             )
         }

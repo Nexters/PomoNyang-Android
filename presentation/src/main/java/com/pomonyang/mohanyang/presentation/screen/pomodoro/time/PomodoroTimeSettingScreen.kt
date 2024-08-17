@@ -24,12 +24,11 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.picker.MnWheelMinutePicker
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.SettingButton
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
-import kotlinx.collections.immutable.toPersistentList
-import timber.log.Timber
 
 @Composable
 fun PomodoroTimeSettingRoute(
@@ -92,16 +91,17 @@ private fun PomodoroTimeSettingScreen(
             backgroundColor = Color.Transparent
         )
 
-        Timber.tag("koni").d("PomodoroTimeSettingScreen > $initialSettingTime")
         MnWheelMinutePicker(
             modifier = Modifier.padding(top = 16.dp),
-            items = (10..60 step 5).toPersistentList(),
+            minTime = if (isFocusTime) PomodoroConstants.MIN_FOCUS_MINUTES else PomodoroConstants.MIN_REST_MINUTES,
+            maxTime = if (isFocusTime) PomodoroConstants.MAX_FOCUS_MINUTES else PomodoroConstants.MAX_REST_MINUTES,
             initialItem = initialSettingTime,
             onChangePickTime = remember { { onAction(PomodoroTimeSettingEvent.ChangePickTime(time = it)) } },
             selectedIconResId = iconResId
         )
 
         SettingButton(
+            iconRes = R.drawable.ic_check,
             modifier = Modifier.padding(bottom = 40.dp),
             backgroundColor = MnTheme.backgroundColorScheme.inverse,
             onClick = {

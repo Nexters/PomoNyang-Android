@@ -39,6 +39,9 @@ sealed interface PomodoroTimerEvent : ViewEvent {
     data object Init : PomodoroTimerEvent
     data object ClickRest : PomodoroTimerEvent
     data object ClickHome : PomodoroTimerEvent
+    data object Resume : PomodoroTimerEvent
+    data object Pause : PomodoroTimerEvent
+    data object Dispose : PomodoroTimerEvent
 }
 
 sealed interface PomodoroTimerEffect : ViewSideEffect {
@@ -49,6 +52,9 @@ sealed interface PomodoroTimerEffect : ViewSideEffect {
     ) : PomodoroTimerEffect
 
     data object GoToPomodoroSetting : PomodoroTimerEffect
+    data object StartFocusAlarm : PomodoroTimerEffect
+    data object StopFocusAlarm : PomodoroTimerEffect
+    data object SendEndFocusAlarm : PomodoroTimerEffect
 }
 
 @HiltViewModel
@@ -85,6 +91,9 @@ class PomodoroTimerViewModel @Inject constructor(
             )
 
             PomodoroTimerEvent.ClickHome -> setEffect(PomodoroTimerEffect.GoToPomodoroSetting)
+            PomodoroTimerEvent.Pause -> setEffect(PomodoroTimerEffect.StartFocusAlarm)
+            PomodoroTimerEvent.Resume -> setEffect(PomodoroTimerEffect.StopFocusAlarm)
+            PomodoroTimerEvent.Dispose -> setEffect(PomodoroTimerEffect.StopFocusAlarm)
         }
     }
 
@@ -97,6 +106,10 @@ class PomodoroTimerViewModel @Inject constructor(
                     if (currentFocusTime < maxFocusTime) {
                         copy(currentFocusTime = currentFocusTime + ONE_SECOND)
                     } else {
+                        if (exceededTime == 0) {
+                            Timber.tag("koni").d("SendEndFocusAlarm > SendEndFocusAlarm")
+                            setEffect(PomodoroTimerEffect.SendEndFocusAlarm)
+                        }
                         val newExceedTime = exceededTime + ONE_SECOND
                         if (newExceedTime >= MAX_EXCEEDED_TIME) {
                             timerJob?.cancel()
@@ -104,7 +117,7 @@ class PomodoroTimerViewModel @Inject constructor(
                                 PomodoroTimerEffect.GoToPomodoroRest(
                                     title = state.value.title,
                                     focusTime = state.value.currentFocusTime,
-                                    exceededTime = state.value.exceededTime
+                                    exceededTime = newExceedTime
                                 )
                             )
                         }

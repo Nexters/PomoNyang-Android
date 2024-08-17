@@ -20,7 +20,7 @@ object MnNotificationManager {
         INTENT_SEND_MESSAGE
     )
 
-    fun notifyTimerEnd(context: Context) {
+    fun notifyFocusEnd(context: Context) {
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(INTENT_NOTIFY_FOCUS_MESSAGE))
     }
 

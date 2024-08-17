@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -175,6 +176,7 @@ fun PomodoroSettingScreen(
             )
 
             SettingButton(
+                iconRes = R.drawable.ic_play,
                 onClick = { onAction(PomodoroSettingEvent.ClickStartPomodoroSetting) },
                 backgroundColor = MnTheme.backgroundColorScheme.accent1
             )
@@ -302,6 +304,7 @@ private fun TimeDivider(modifier: Modifier = Modifier) {
 
 @Composable
 fun SettingButton(
+    @DrawableRes iconRes: Int,
     backgroundColor: Color,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -315,7 +318,7 @@ fun SettingButton(
         contentAlignment = Alignment.Center
     ) {
         MnLargeIcon(
-            resourceId = R.drawable.ic_play,
+            resourceId = iconRes,
             tint = MnTheme.iconColorScheme.inverse
         )
     }
@@ -346,6 +349,7 @@ fun PomodoroStarterScreenPreview() {
 @Preview(showBackground = true)
 fun StartButtonPreview() {
     SettingButton(
+        iconRes = 0,
         backgroundColor = MnTheme.backgroundColorScheme.accent1
     ) {}
 }

@@ -4,7 +4,7 @@ import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.flow.combine
 
 class GetSelectedPomodoroSettingUseCase @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository
@@ -14,7 +14,7 @@ class GetSelectedPomodoroSettingUseCase @Inject constructor(
         val settingListFlow = pomodoroSettingRepository.getPomodoroSettingList()
         val recentUseCategoryNoFlow = pomodoroSettingRepository.getRecentUseCategoryNo()
 
-        return settingListFlow.zip(recentUseCategoryNoFlow) { settingList, recentUseCategoryNo ->
+        return settingListFlow.combine(recentUseCategoryNoFlow) { settingList, recentUseCategoryNo ->
             settingList.find { it.categoryNo == recentUseCategoryNo } ?: settingList.first()
         }
     }

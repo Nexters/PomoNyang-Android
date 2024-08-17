@@ -9,7 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +39,7 @@ import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -77,25 +77,22 @@ class MainActivity : ComponentActivity() {
 
             val isNewUser = userRepository.isNewUser()
             var showDialog by remember { mutableStateOf(isNewUser && !networkMonitor.isConnected) }
-
-            fun initializeInfo() {
-                coroutineScope.launch {
-                    getTokenByDeviceIdUseCase().onSuccess {
+            suspend fun initializeInfo() {
+                getTokenByDeviceIdUseCase()
+                    .onSuccess {
                         userRepository.fetchMyInfo()
                         pomodoroSettingRepository.fetchPomodoroSettingList()
+                        showDialog = false
                     }.onFailure {
                         showDialog = isNewUser
                     }
-                }
             }
 
-            LaunchedEffect(Unit) {
-                initializeInfo()
-            }
+            runBlocking { initializeInfo() }
 
             MnTheme {
                 val mohaNyangAppState = rememberMohaNyangAppState(
-                    isNewUser = userRepository.isNewUser(),
+                    isNewUser = isNewUser,
                     networkMonitor = networkMonitor,
                     coroutineScope = coroutineScope
                 )
@@ -111,7 +108,11 @@ class MainActivity : ComponentActivity() {
                             MnBoxButton(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = "새로고침",
-                                onClick = { initializeInfo() },
+                                onClick = {
+                                    coroutineScope.launch {
+                                        initializeInfo()
+                                    }
+                                },
                                 colors = MnBoxButtonColorType.primary,
                                 styles = MnBoxButtonStyles.medium
                             )
@@ -141,11 +142,6 @@ class MainActivity : ComponentActivity() {
         MnNotificationManager.stopInterrupt(this)
     }
 
-    override fun onPause() {
-        super.onPause()
-        MnNotificationManager.startInterrupt(this)
-    }
-
     private fun initializeFCM() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(
             OnCompleteListener { task ->
@@ -163,6 +159,7 @@ class MainActivity : ComponentActivity() {
         val intentFilters = IntentFilter().apply {
             MnNotificationManager.intents.map { addAction(it) }
         }
+        Timber.tag("koni").d("registerNotificationService > ")
         val receiver = LocalNotificationReceiver()
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilters)
     }

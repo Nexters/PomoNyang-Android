@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
-import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,6 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
@@ -36,6 +37,9 @@ import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.notifyFocusEnd
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.startInterrupt
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.stopInterrupt
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 
 @Composable
@@ -46,8 +50,7 @@ fun PomodoroTimerRoute(
     goToHome: () -> Unit
 ) {
     val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
-
-    val context = LocalContext.current as Activity
+    val context = LocalContext.current
 
     pomodoroTimerViewModel.effects.collectWithLifecycle {
         when (it) {
@@ -58,11 +61,34 @@ fun PomodoroTimerRoute(
             PomodoroTimerEffect.GoToPomodoroSetting -> {
                 goToHome()
             }
+
+            PomodoroTimerEffect.StartFocusAlarm -> {
+                startInterrupt(context)
+            }
+
+            PomodoroTimerEffect.StopFocusAlarm -> {
+                stopInterrupt(context)
+            }
+
+            PomodoroTimerEffect.SendEndFocusAlarm -> {
+                notifyFocusEnd(context)
+            }
         }
     }
 
-    LaunchedEffect(Unit) {
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        pomodoroTimerViewModel.handleEvent(PomodoroTimerEvent.Resume)
+    }
+
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
+        pomodoroTimerViewModel.handleEvent(PomodoroTimerEvent.Pause)
+    }
+
+    DisposableEffect(key1 = Unit) {
         pomodoroTimerViewModel.handleEvent(PomodoroTimerEvent.Init)
+        onDispose {
+            stopInterrupt(context)
+        }
     }
 
     PomodoroTimerScreen(

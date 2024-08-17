@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,6 +36,7 @@ import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.notifyFocusEnd
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 
 @Composable
@@ -46,11 +48,13 @@ fun PomodoroRestRoute(
     pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel()
 ) {
     val state by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     pomodoroRestViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestEffect.GoToHome -> goToHome()
             PomodoroRestEffect.GoToPomodoroFocus -> goToFocus()
+            PomodoroRestEffect.SendEndRestAlarm -> notifyFocusEnd(context)
         }
     }
 
