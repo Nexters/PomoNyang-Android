@@ -31,10 +31,14 @@ sealed interface PomodoroTimeSettingEvent : ViewEvent {
     data class ChangePickTime(
         val time: Int
     ) : PomodoroTimeSettingEvent
+
+    data object OnCloseClick : PomodoroTimeSettingEvent
 }
 
 sealed interface PomodoroTimeSettingEffect : ViewSideEffect {
     data object GoToPomodoroSettingScreen : PomodoroTimeSettingEffect
+
+    data object ClosePomodoroTimerSettingScreen : PomodoroTimeSettingEffect
 }
 
 @HiltViewModel
@@ -76,6 +80,10 @@ class PomodoroTimeSettingViewModel @Inject constructor(
                         pickRestTime = pickResetTime
                     )
                 }
+            }
+
+            is PomodoroTimeSettingEvent.OnCloseClick -> {
+                setEffect(PomodoroTimeSettingEffect.ClosePomodoroTimerSettingScreen)
             }
         }
     }

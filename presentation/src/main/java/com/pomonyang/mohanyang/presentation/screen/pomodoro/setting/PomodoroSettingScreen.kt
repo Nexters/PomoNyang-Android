@@ -69,7 +69,7 @@ fun PomodoroSettingRoute(
     isNewUser: Boolean,
     onShowSnackbar: suspend (String, String?) -> Unit,
     goToPomodoro: () -> Unit,
-    goTimeSetting: (isFocusTime: Boolean, initialTime: Int) -> Unit,
+    goTimeSetting: (isFocusTime: Boolean, initialTime: Int, categoryName: String) -> Unit,
     modifier: Modifier = Modifier,
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
@@ -84,7 +84,7 @@ fun PomodoroSettingRoute(
 
             is PomodoroSettingSideEffect.GoTimeSetting -> {
                 showTooltip = false
-                goTimeSetting(effect.isFocusTime, effect.initialTime)
+                goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
             }
 
             PomodoroSettingSideEffect.GoToPomodoro -> {
@@ -141,7 +141,7 @@ fun PomodoroSettingScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         MnMediumIcon(
-                            resourceId = R.drawable.ic_null,
+                            resourceId = R.drawable.ic_menu,
                             tint = MnTheme.iconColorScheme.primary
                         )
                     }
