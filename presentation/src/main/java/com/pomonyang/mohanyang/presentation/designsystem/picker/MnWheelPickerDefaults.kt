@@ -9,9 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
 object MnWheelPickerDefaults {
-    val focusItemHeight: Dp = 100.dp
-    val itemHeight: Dp = 50.dp
-    val itemSpacing: Dp = 28.dp
+    val itemHeight: Dp = 98.dp
 
     @Composable
     fun colors(

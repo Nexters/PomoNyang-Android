@@ -5,7 +5,6 @@ package com.pomonyang.mohanyang.presentation.designsystem.picker
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,7 +20,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -51,7 +49,6 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -74,14 +71,9 @@ fun MnWheelMinutePicker(
     val scrollState = rememberLazyListState(items.indexOf(initialItem))
     val coroutineScope = rememberCoroutineScope()
     val itemHeight = MnWheelPickerDefaults.itemHeight
-    val focusItemHeight = MnWheelPickerDefaults.focusItemHeight
-    val wheelHeight = (2 * halfDisplayCount) * (itemHeight + MnWheelPickerDefaults.itemSpacing) + focusItemHeight
+    val focusItemHeight = MnWheelPickerDefaults.itemHeight
+    val wheelHeight = (2 * halfDisplayCount) * (itemHeight) + focusItemHeight
     val brushColor = mnWheelPickerColor.fadeColor
-
-    LaunchedEffect(Unit) {
-        delay(100)
-        scrollState.scrollToItem(items.indexOf(initialItem))
-    }
 
     Box(
         modifier = modifier
@@ -90,7 +82,7 @@ fun MnWheelMinutePicker(
             .fadeEdge(brushColor)
     ) {
         CenterHighlightBox(
-            itemHeight = focusItemHeight,
+            itemHeight = 75.dp,
             highlightColor = MnTheme.backgroundColorScheme.secondary,
             iconResId = selectedIconResId
         )
@@ -161,7 +153,7 @@ private fun BoxScope.CenterHighlightBox(
     Box(
         modifier = modifier
             .width(209.dp)
-            .height(itemHeight)
+            .height(itemHeight * 1.2f)
             .align(Alignment.Center)
             .background(highlightColor, RoundedCornerShape(MnRadius.medium)),
         contentAlignment = Alignment.CenterStart
@@ -203,8 +195,7 @@ private fun BoxScope.WheelItemList(
             .matchParentSize()
             .zIndex(1f)
             .nestedScroll(nestedScrollConnection),
-        contentPadding = PaddingValues(vertical = (itemHeight + MnWheelPickerDefaults.itemSpacing) * halfDisplayCount),
-        verticalArrangement = Arrangement.spacedBy(MnWheelPickerDefaults.itemSpacing),
+        contentPadding = PaddingValues(vertical = (itemHeight) * halfDisplayCount),
         state = scrollState,
         flingBehavior = rememberSnapFlingBehavior(scrollState)
     ) {
