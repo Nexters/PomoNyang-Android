@@ -20,19 +20,21 @@ data class PomodoroSettingState(
     val categoryList: List<PomodoroCategoryModel> = emptyList(),
     val selectedCategoryNo: Int = 0,
     val showCategoryBottomSheet: Boolean = false,
-    val catName: String = ""
+    val catName: String = "",
+    val showOnboardingTooltip: Boolean = false
 ) : ViewState {
     fun getSelectedCategory() = categoryList.find { it.categoryNo == selectedCategoryNo }
 }
 
 sealed interface PomodoroSettingEvent : ViewEvent {
-    data object Init : PomodoroSettingEvent
+    data class Init(val isNewUser: Boolean) : PomodoroSettingEvent
     data object ClickCategory : PomodoroSettingEvent
     data object ClickRestTime : PomodoroSettingEvent
     data object ClickFocusTime : PomodoroSettingEvent
     data object ClickStartPomodoroSetting : PomodoroSettingEvent
     data object ClickMyInfo : PomodoroSettingEvent
     data object DismissCategoryDialog : PomodoroSettingEvent
+    data object DismissOnBoardingTooltip : PomodoroSettingEvent
     data class ClickCategoryConfirmButton(val confirmCategoryNo: Int) : PomodoroSettingEvent
 }
 
@@ -77,9 +79,10 @@ class PomodoroSettingViewModel @Inject constructor(
                 } ?: setEffect(PomodoroSettingSideEffect.ShowSnackBar("카테고리를 설정해주세요"))
             }
 
-            PomodoroSettingEvent.Init -> {
+            is PomodoroSettingEvent.Init -> {
                 collectCategoryData()
                 getMyCatInfo()
+                updateState { copy(showOnboardingTooltip = event.isNewUser) }
             }
 
             PomodoroSettingEvent.DismissCategoryDialog -> {
@@ -92,6 +95,10 @@ class PomodoroSettingViewModel @Inject constructor(
                     pomodoroSettingRepository.updateRecentUseCategoryNo(event.confirmCategoryNo)
                 }
                 updateState { copy(showCategoryBottomSheet = false) }
+            }
+
+            PomodoroSettingEvent.DismissOnBoardingTooltip -> {
+                updateState { copy(showOnboardingTooltip = false) }
             }
         }
     }

@@ -94,6 +94,10 @@ fun PomodoroSettingRoute(
         }
     }
 
+    LaunchedEffect(Unit) {
+        pomodoroSettingViewModel.handleEvent(PomodoroSettingEvent.Init(isNewUser))
+    }
+
     if (state.showCategoryBottomSheet) {
         PomodoroCategoryBottomSheet(
             onAction = pomodoroSettingViewModel::handleEvent,
@@ -121,10 +125,6 @@ fun PomodoroSettingScreen(
 ) {
     val pomodoroSelectedCategoryModel by remember(state.selectedCategoryNo) {
         mutableStateOf(state.categoryList.find { it.categoryNo == state.selectedCategoryNo })
-    }
-
-    LaunchedEffect(Unit) {
-        onAction(PomodoroSettingEvent.Init)
     }
 
     Scaffold(
@@ -264,7 +264,10 @@ private fun PomodoroDetailSetting(
                     content = stringResource(R.string.tooltip_time_content),
                     anchorPadding = PaddingValues(bottom = MnSpacing.medium),
                     ovalShape = MnRadius.xSmall,
-                    onDismiss = { timeTooltip = false }
+                    onDismiss = {
+                        timeTooltip = false
+                        onAction(PomodoroSettingEvent.DismissOnBoardingTooltip)
+                    }
                 ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium)

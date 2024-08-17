@@ -63,8 +63,8 @@ fun NavGraphBuilder.onboardingScreen(
                 onBackClick = { navHostController.popBackStack() },
                 onNavToHome = {
                     navHostController.navigate(
-                        route = Pomodoro,
-                        navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(false).build()
+                        route = Pomodoro(isNewUser = true),
+                        navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build()
                     )
                 }
             )
