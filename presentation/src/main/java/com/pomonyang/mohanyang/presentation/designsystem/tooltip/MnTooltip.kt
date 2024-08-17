@@ -341,7 +341,7 @@ private fun MnTooltipImpl(
 }
 
 @Composable
-private fun TooltipContent(
+internal fun TooltipContent(
     tooltipColors: MnTooltipColors,
     content: String,
     contentAlign: TextAlign,
@@ -365,7 +365,7 @@ private fun TooltipContent(
 }
 
 @Composable
-private fun TooltipAnchor(
+internal fun TooltipAnchor(
     anchorColor: Color,
     modifier: Modifier = Modifier,
     direction: Alignment = Alignment.BottomCenter

@@ -54,7 +54,7 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 fun OnboardingSelectCatRoute(
     onBackClick: () -> Unit,
-    onNavToNaming: (Int, String?) -> Unit,
+    onNavToNaming: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
     onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel()
 ) {

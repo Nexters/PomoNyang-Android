@@ -38,7 +38,6 @@ internal data object PomodoroRest
 fun NavGraphBuilder.pomodoroScreen(
     isNewUser: Boolean,
     onShowSnackbar: (String, String?) -> Unit,
-    onBackPressed: () -> Unit,
     navHostController: NavHostController
 ) {
     navigation<Pomodoro>(
@@ -73,7 +72,6 @@ fun NavGraphBuilder.pomodoroScreen(
 
         composable<PomodoroTimer> {
             PomodoroTimerRoute(
-                onBackPressed = onBackPressed,
                 goToRest = { type, focusTime, exceededTime ->
                     navHostController.navigate(
                         PomodoroRestWaiting(
@@ -113,7 +111,6 @@ fun NavGraphBuilder.pomodoroScreen(
 
         composable<PomodoroRest> {
             PomodoroRestRoute(
-                onBackPressed = onBackPressed,
                 onShowSnackbar = onShowSnackbar,
                 goToHome = {
                     navHostController.popBackStack()

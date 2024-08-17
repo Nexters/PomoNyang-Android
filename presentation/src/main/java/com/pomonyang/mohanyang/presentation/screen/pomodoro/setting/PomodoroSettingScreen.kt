@@ -74,23 +74,12 @@ fun PomodoroSettingRoute(
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
-    var showTooltip by remember { mutableStateOf(true) }
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         Timber.tag("koni").d("handleEffect > $effect")
         when (effect) {
-            is PomodoroSettingSideEffect.ShowSnackBar -> {
-                onShowSnackbar(effect.message, null)
-            }
-
-            is PomodoroSettingSideEffect.GoTimeSetting -> {
-                showTooltip = false
-                goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
-            }
-
-            PomodoroSettingSideEffect.GoToPomodoro -> {
-                showTooltip = false
-                goToPomodoro()
-            }
+            is PomodoroSettingSideEffect.ShowSnackBar -> onShowSnackbar(effect.message, null)
+            is PomodoroSettingSideEffect.GoTimeSetting -> goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
+            PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro()
         }
     }
 
@@ -110,16 +99,14 @@ fun PomodoroSettingRoute(
         onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
         modifier = modifier,
-        isNewUser = isNewUser,
-        showTooltip = showTooltip
+        showOnboardingTooltip = state.showOnboardingTooltip
     )
 }
 
 @Composable
 fun PomodoroSettingScreen(
     onAction: (PomodoroSettingEvent) -> Unit,
-    isNewUser: Boolean,
-    showTooltip: Boolean,
+    showOnboardingTooltip: Boolean,
     state: PomodoroSettingState,
     modifier: Modifier = Modifier
 ) {
@@ -162,13 +149,12 @@ fun PomodoroSettingScreen(
             Box {
                 CatRive(
                     catName = state.catName,
-                    showTooltip = showTooltip,
                     tooltipMessage = stringResource(R.string.welcome_cat_tooltip)
                 )
             }
             PomodoroDetailSetting(
                 onAction = onAction,
-                isNewUser = isNewUser,
+                isNewUser = showOnboardingTooltip,
                 selectedCategoryData = pomodoroSelectedCategoryModel
             )
             SettingButton(
@@ -352,8 +338,7 @@ fun SettingButton(
 fun PomodoroStarterScreenPreview() {
     PomodoroSettingScreen(
         onAction = {},
-        isNewUser = false,
-        showTooltip = true,
+        showOnboardingTooltip = false,
         state = PomodoroSettingState(
             categoryList = listOf(
                 PomodoroCategoryModel(
