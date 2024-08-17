@@ -8,5 +8,6 @@ interface UserRepository {
     fun isNewUser(): Boolean
     suspend fun login(deviceId: String): Result<TokenResponse>
     suspend fun saveToken(accessToken: String, refreshToken: String)
-    suspend fun getMyInfo(): Result<UserInfoResponse>
+    suspend fun fetchMyInfo(): Result<UserInfoResponse>
+    suspend fun getMyInfo(): UserInfoResponse
 }
