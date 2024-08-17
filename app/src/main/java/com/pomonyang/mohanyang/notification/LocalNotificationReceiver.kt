@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.pomonyang.mohanyang.MainActivity
 import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.notification.util.defaultNotification
@@ -75,7 +74,10 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
     private fun notifyMessage(context: Context, notificationId: Int, title: String = context.getString(R.string.app_name), message: String) {
         if (!context.isNotificationGranted()) return
 
-        val notificationIntent = Intent(context, MainActivity::class.java)
+        val notificationIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+
         val pendingIntent =
             PendingIntent.getActivity(
                 context,

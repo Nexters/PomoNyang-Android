@@ -39,6 +39,9 @@ sealed interface PomodoroTimerEvent : ViewEvent {
     data object Init : PomodoroTimerEvent
     data object ClickRest : PomodoroTimerEvent
     data object ClickHome : PomodoroTimerEvent
+    data object Resume : PomodoroTimerEvent
+    data object Pause : PomodoroTimerEvent
+    data object Dispose : PomodoroTimerEvent
 }
 
 sealed interface PomodoroTimerEffect : ViewSideEffect {
@@ -49,6 +52,8 @@ sealed interface PomodoroTimerEffect : ViewSideEffect {
     ) : PomodoroTimerEffect
 
     data object GoToPomodoroSetting : PomodoroTimerEffect
+    data object StartFocusAlarm : PomodoroTimerEffect
+    data object StopFocusAlarm : PomodoroTimerEffect
 }
 
 @HiltViewModel
@@ -85,6 +90,9 @@ class PomodoroTimerViewModel @Inject constructor(
             )
 
             PomodoroTimerEvent.ClickHome -> setEffect(PomodoroTimerEffect.GoToPomodoroSetting)
+            PomodoroTimerEvent.Pause -> setEffect(PomodoroTimerEffect.StartFocusAlarm)
+            PomodoroTimerEvent.Resume -> setEffect(PomodoroTimerEffect.StopFocusAlarm)
+            PomodoroTimerEvent.Dispose -> setEffect(PomodoroTimerEffect.StopFocusAlarm)
         }
     }
 
