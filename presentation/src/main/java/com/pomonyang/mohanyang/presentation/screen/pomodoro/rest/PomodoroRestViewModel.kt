@@ -6,6 +6,7 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_REST_MINUTES
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MIN_REST_MINUTES
@@ -63,7 +64,7 @@ class PomodoroRestViewModel @Inject constructor(
     override fun handleEvent(event: PomodoroRestEvent) {
         when (event) {
             PomodoroRestEvent.Init -> viewModelScope.launch {
-                val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first()
+                val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
                 updateState {
                     copy(
                         type = selectedPomodoroSetting.title,
