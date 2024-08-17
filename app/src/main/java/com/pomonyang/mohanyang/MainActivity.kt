@@ -28,7 +28,6 @@ import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.usecase.GetTokenByDeviceIdUseCase
 import com.pomonyang.mohanyang.notification.FocusNotificationService
 import com.pomonyang.mohanyang.notification.util.createNotificationChannel
-import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -76,14 +75,19 @@ class MainActivity : ComponentActivity() {
             val isNewUser = userRepository.isNewUser()
             var showDialog by remember { mutableStateOf(isNewUser && !networkMonitor.isConnected) }
 
-            fun getUserTokenByDeviceId() {
+            fun initializeInfo() {
                 coroutineScope.launch {
-                    showDialog = isNewUser && getTokenByDeviceIdUseCase().isFailure
+                    getTokenByDeviceIdUseCase().onSuccess {
+                        userRepository.fetchMyInfo()
+                        pomodoroSettingRepository.fetchPomodoroSettingList()
+                    }.onFailure {
+                        showDialog = isNewUser
+                    }
                 }
             }
+
             LaunchedEffect(Unit) {
-                getUserTokenByDeviceId()
-                pomodoroSettingRepository.fetchPomodoroSettingList()
+                initializeInfo()
             }
 
             MnTheme {
@@ -104,7 +108,7 @@ class MainActivity : ComponentActivity() {
                             MnBoxButton(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = "새로고침",
-                                onClick = { getUserTokenByDeviceId() },
+                                onClick = { initializeInfo() },
                                 colors = MnBoxButtonColorType.primary,
                                 styles = MnBoxButtonStyles.medium
                             )
@@ -131,12 +135,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (isNotificationGranted()) stopService(Intent(this, FocusNotificationService::class.java))
+        stopService(Intent(this, FocusNotificationService::class.java))
     }
 
     override fun onPause() {
         super.onPause()
-        if (isNotificationGranted()) startService(Intent(this, FocusNotificationService::class.java))
+        startService(Intent(this, FocusNotificationService::class.java))
     }
 
     private fun initializeFCM() {

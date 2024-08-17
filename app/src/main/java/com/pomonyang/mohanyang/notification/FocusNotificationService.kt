@@ -8,7 +8,9 @@ import android.os.IBinder
 import com.pomonyang.mohanyang.BuildConfig
 import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.data.local.device.util.lockScreenState
-import com.pomonyang.mohanyang.presentation.model.cat.CatType
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
+import com.pomonyang.mohanyang.domain.model.cat.CatType
+import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalTime
 import javax.inject.Inject
@@ -22,11 +24,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class FocusNotificationService : Service() {
 
-    private val selectedCatType = CatType.CHEESE
+    @Inject
+    lateinit var mnAlarmManager: MnAlarmManager
+
+    @Inject
+    lateinit var userRepository: UserRepository
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var focusNotificationJob: Job? = null
@@ -35,12 +42,14 @@ class FocusNotificationService : Service() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private val isLocked: Flow<Boolean> = this.lockScreenState()
 
-    @Inject
-    lateinit var mnAlarmManager: MnAlarmManager
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        observeLockScreen()
-        startFocusNotify()
+        val isPushEnabled = applicationContext.isNotificationGranted() && runBlocking { userRepository.getMyInfo().isPushEnabled }
+
+        if (isPushEnabled) {
+            observeLockScreen()
+            startFocusNotify()
+        }
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -86,6 +95,8 @@ class FocusNotificationService : Service() {
     }
 
     private fun startFocusNotify() {
+        val selectedCatType = CatType.safeValueOf(runBlocking { userRepository.getMyInfo().cat.type })
+
         focusNotificationJob = scope.launch {
             // 10초 후 첫 알림 전송
             delay(FIRST_DELAY)
