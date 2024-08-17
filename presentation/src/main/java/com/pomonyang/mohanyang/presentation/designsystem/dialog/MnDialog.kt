@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,14 +15,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun MnDialog(
@@ -56,7 +61,8 @@ fun MnDialog(
                     DialogTitle(
                         title = title,
                         dialogTextStyles = dialogTextStyles,
-                        dialogColors = dialogColors
+                        dialogColors = dialogColors,
+                        onCloseClick = onDismissRequest
                     )
                     DialogDescription(
                         subTitle = subTitle,
@@ -116,17 +122,30 @@ private fun DialogDescription(
 
 @Composable
 private fun DialogTitle(
+    onCloseClick: () -> Unit,
     title: String,
     dialogTextStyles: MnDialogTextStyles,
     dialogColors: MnDialogColors
 ) {
-    Text(
-        text = title,
-        style = dialogTextStyles.titleTextStyle,
-        color = dialogColors.titleColor,
-        modifier = Modifier.padding(vertical = 7.5.dp),
-        maxLines = 1
-    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = title,
+            style = dialogTextStyles.titleTextStyle,
+            color = dialogColors.titleColor,
+            modifier = Modifier.padding(vertical = 7.5.dp),
+            maxLines = 1
+        )
+        MnMediumIcon(
+            resourceId = R.drawable.ic_close,
+            modifier = Modifier
+                .padding(8.dp)
+                .noRippleClickable { onCloseClick() }
+        )
+    }
 }
 
 @Preview
