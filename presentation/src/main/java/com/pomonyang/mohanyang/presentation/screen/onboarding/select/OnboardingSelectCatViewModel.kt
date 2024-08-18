@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.onboarding.select
 
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepository
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
@@ -31,7 +32,8 @@ sealed interface SelectCatSideEffect : ViewSideEffect {
 
 @HiltViewModel
 class OnboardingSelectCatViewModel @Inject constructor(
-    private val catSettingRepository: CatSettingRepository
+    private val catSettingRepository: CatSettingRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel<SelectCatState, SelectCatEvent, SelectCatSideEffect>() {
 
     override fun setInitialState(): SelectCatState = SelectCatState()
@@ -70,11 +72,14 @@ class OnboardingSelectCatViewModel @Inject constructor(
     private fun updateSelectCatType(catNo: Int) {
         viewModelScope.launch {
             catSettingRepository.updateCatType(catNo).onSuccess {
-                val catName = state.value.cats.find { it.no == catNo }
-                setEffect(SelectCatSideEffect.OnNavToNaming(catNo, catName?.name ?: "", state.value.selectedType?.riveAnimation))
-            }.onFailure {
-                Timber.e(it)
+                userRepository.fetchMyInfo().onSuccess {
+                    val cat = state.value.cats.find { it.no == catNo }
+                    setEffect(SelectCatSideEffect.OnNavToNaming(catNo, cat?.name ?: "", state.value.selectedType?.riveAnimation))
+                }
             }
+                .onFailure {
+                    Timber.e(it)
+                }
         }
     }
 }

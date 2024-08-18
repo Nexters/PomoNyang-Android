@@ -3,6 +3,7 @@ package com.pomonyang.mohanyang.presentation.screen.onboarding.naming
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepository
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
@@ -25,6 +26,7 @@ sealed interface NamingSideEffect : ViewSideEffect {
 @HiltViewModel
 class OnboardingNamingCatViewModel @Inject constructor(
     private val catSettingRepository: CatSettingRepository,
+    private val userRepository: UserRepository,
     private val pomodoroSettingRepository: PomodoroSettingRepository
 ) : BaseViewModel<NamingState, NamingEvent, NamingSideEffect>() {
 
@@ -44,7 +46,9 @@ class OnboardingNamingCatViewModel @Inject constructor(
     private fun updateCatName(name: String) {
         viewModelScope.launch {
             catSettingRepository.updateCatInfo(name).onSuccess {
-                setEffect(NamingSideEffect.NavToNext)
+                userRepository.fetchMyInfo().onSuccess {
+                    setEffect(NamingSideEffect.NavToNext)
+                }
             }.onFailure {
                 Timber.e(it)
             }

@@ -64,8 +64,16 @@ fun NavGraphBuilder.onboardingScreen(
             OnboardingSelectCatRoute(
                 selectedCatNo = routeData.selectedCatNo,
                 onBackClick = { navHostController.popBackStack() },
-                onNavToNaming = { catNo, catName, animation ->
-                    navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, destination = destination.name, selectedCatRiveAnimation = animation ?: ""))
+                onStartClick = { catNo, catName, animation ->
+                    when (destination) {
+                        CatSettingDestination.POMODORO -> {
+                            navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, destination = destination.name, selectedCatRiveAnimation = animation ?: ""))
+                        }
+
+                        CatSettingDestination.MY_PAGE -> {
+                            navHostController.popBackStack()
+                        }
+                    }
                 }
             )
         }

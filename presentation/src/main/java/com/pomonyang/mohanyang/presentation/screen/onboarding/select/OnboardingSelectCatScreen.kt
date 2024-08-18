@@ -55,7 +55,7 @@ import kotlinx.collections.immutable.toPersistentList
 fun OnboardingSelectCatRoute(
     selectedCatNo: Int,
     onBackClick: () -> Unit,
-    onNavToNaming: (Int, String, String?) -> Unit,
+    onStartClick: (Int, String, String?) -> Unit,
     modifier: Modifier = Modifier,
     onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel()
 ) {
@@ -64,7 +64,7 @@ fun OnboardingSelectCatRoute(
     onboardingSelectCatViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is SelectCatSideEffect.OnNavToNaming -> {
-                onNavToNaming(
+                onStartClick(
                     effect.no,
                     effect.catName,
                     effect.selectedCatRiveAnimation
