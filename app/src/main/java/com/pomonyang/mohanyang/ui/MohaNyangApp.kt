@@ -62,6 +62,7 @@ private fun MohaNyangApp(
             { message, iconRes ->
                 snackbarIconRes = iconRes
                 mohaNyangAppState.coroutineScope.launch {
+                    snackbarHostState.currentSnackbarData?.dismiss()
                     snackbarHostState.showSnackbar(
                         message = message,
                         duration = Short
