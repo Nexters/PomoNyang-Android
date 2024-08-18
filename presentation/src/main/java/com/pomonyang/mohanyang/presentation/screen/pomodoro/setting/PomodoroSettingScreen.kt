@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalAssetLoader::class)
+
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
 import androidx.annotation.DrawableRes
@@ -37,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
@@ -145,7 +148,10 @@ fun PomodoroSettingScreen(
             CatRive(
                 tooltipMessage = stringResource(R.string.welcome_cat_tooltip),
                 riveResource = R.raw.cat_motion_transparent,
-                stateMachineName = "State Machine 1"
+                stateMachineName = "State Machine 1",
+                onRiveClick = {
+                    it.fireState("State Machine 1", "Click")
+                }
             )
 
             Text(

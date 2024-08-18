@@ -43,7 +43,8 @@ fun CatRive(
     modifier: Modifier = Modifier,
     tooltipMessage: String? = null,
     riveAnimationName: String? = null,
-    stateMachineName: String? = null
+    stateMachineName: String? = null,
+    onRiveClick: (RiveAnimationView) -> Unit = {}
 ) {
     val catRiveModifier = if (tooltipMessage != null) {
         Modifier.padding(top = MnSpacing.threeXLarge)
@@ -83,8 +84,7 @@ fun CatRive(
                 )
 
                 TooltipAnchor(
-                    modifier = Modifier
-                        .width(MnTooltipDefaults.anchorWidth),
+                    modifier = Modifier.width(MnTooltipDefaults.anchorWidth),
                     anchorColor = colors.containerColor
                 )
             }
@@ -115,9 +115,7 @@ fun CatRive(
                     modifier = Modifier
                         .matchParentSize()
                         .debounceNoRippleClickable {
-                            stateMachineName?.let {
-                                riveView.fireState(it, "Click")
-                            }
+                            onRiveClick(riveView)
                         }
                 )
             }
