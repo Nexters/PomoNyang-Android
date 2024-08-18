@@ -4,7 +4,6 @@ import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepositor
 import java.time.Duration
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
-import timber.log.Timber
 
 class AdjustPomodoroTimeUseCase @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
@@ -19,8 +18,6 @@ class AdjustPomodoroTimeUseCase @Inject constructor(
 
         val updatedFocusTime = if (isFocusTime) focusTime + adjustment else focusTime
         val updatedRestTime = if (!isFocusTime) restTime + adjustment else restTime
-
-        Timber.tag("koni").d("AdjustPomodoroTimeUseCase > $updatedFocusTime // $updatedRestTime")
 
         pomodoroSettingRepository.updatePomodoroCategoryTimes(
             categoryNo = selectedPomodoroSetting.categoryNo,

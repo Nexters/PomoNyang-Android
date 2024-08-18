@@ -20,7 +20,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
@@ -84,8 +83,6 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
 
     private fun notifyMessage(context: Context, notificationId: Int, title: String = context.getString(R.string.app_name), message: String) {
         if (!context.isNotificationGranted()) return
-
-        Timber.tag("koni").d("notifyMessage > ")
 
         val notificationIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP

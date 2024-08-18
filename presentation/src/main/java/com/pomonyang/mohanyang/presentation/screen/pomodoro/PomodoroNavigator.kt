@@ -42,6 +42,7 @@ internal data object PomodoroRest
 
 fun NavGraphBuilder.pomodoroScreen(
     isNewUser: Boolean,
+    onForceGoHome: () -> Unit,
     onShowSnackbar: (String, Int?) -> Unit,
     navHostController: NavHostController
 ) {
@@ -124,6 +125,10 @@ fun NavGraphBuilder.pomodoroScreen(
                     navHostController.navigate(PomodoroRest) {
                         popUpTo<PomodoroRestWaiting> { inclusive = true }
                     }
+                },
+                forceGoHome = {
+                    navHostController.popBackStack()
+                    onForceGoHome()
                 },
                 onShowSnackbar = onShowSnackbar
             )

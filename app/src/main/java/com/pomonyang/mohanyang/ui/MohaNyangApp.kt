@@ -3,6 +3,7 @@ package com.pomonyang.mohanyang.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
@@ -21,8 +22,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mohanyang.presentation.R as PresentationR
 import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.navigation.MohaNyangNavHost
+import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
+import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
+import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
+import com.pomonyang.mohanyang.presentation.designsystem.dialog.MnDialog
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnXSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.toast.MnToastSnackbarHost
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
@@ -58,6 +64,7 @@ private fun MohaNyangApp(
         snackbarHost = { MnToastSnackbarHost(hostState = snackbarHostState, leadingIconResourceId = snackbarIconRes) }
     ) { innerPadding ->
         val isOffline by mohaNyangAppState.isOffline.collectAsStateWithLifecycle()
+        var isForceHome by remember { mutableStateOf(false) }
         val showSnackbar: (String, Int?) -> Unit = remember {
             { message, iconRes ->
                 snackbarIconRes = iconRes
@@ -74,8 +81,27 @@ private fun MohaNyangApp(
         if (isOffline) {
             OfflinePopup()
         }
+
+        if (isForceHome) {
+            MnDialog(
+                title = stringResource(R.string.force_home_dialog_title),
+                subTitle = stringResource(R.string.force_home_dialog_subtitle),
+                positiveButton = {
+                    MnBoxButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = stringResource(id = PresentationR.string.confirm),
+                        onClick = { isForceHome = false },
+                        colors = MnBoxButtonColorType.tertiary,
+                        styles = MnBoxButtonStyles.medium
+                    )
+                }
+            ) {
+                isForceHome = false
+            }
+        }
         MohaNyangNavHost(
             onShowSnackbar = showSnackbar,
+            onForceGoHome = { isForceHome = true },
             mohaNyangAppState = mohaNyangAppState,
             modifier = Modifier.padding(innerPadding)
         )
