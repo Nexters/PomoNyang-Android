@@ -38,9 +38,8 @@ fun NavGraphBuilder.myPageScreen(
                 onCatChangeClick = { catNo ->
                     navHostController.navigate(OnboardingSelectCat(selectedCatNo = catNo, destination = CatSettingDestination.MY_PAGE.name))
                 },
-                onCatNameChangeClick = { catName, catNo ->
-
-                    navHostController.navigate(OnboardingNamingCat(catName = catName, catNo = catNo, destination = CatSettingDestination.MY_PAGE.name))
+                onCatNameChangeClick = { catName, catNo, catType ->
+                    navHostController.navigate(OnboardingNamingCat(catName = catName, catNo = catNo, destination = CatSettingDestination.MY_PAGE.name, selectedCatRiveAnimation = catType.riveAnimation))
                 }
             )
         }

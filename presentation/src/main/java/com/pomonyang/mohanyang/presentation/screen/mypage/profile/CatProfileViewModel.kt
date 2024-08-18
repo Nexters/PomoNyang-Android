@@ -24,7 +24,7 @@ sealed interface CatProfileEvent : ViewEvent {
 }
 
 sealed interface CatProfileSideEffect : ViewSideEffect {
-    data class GoToCatNaming(val catName: String, val catNo: Int) : CatProfileSideEffect
+    data class GoToCatNaming(val catName: String, val catNo: Int, val catType: CatType) : CatProfileSideEffect
     data class GoToCatTypeChange(val catNo: Int) : CatProfileSideEffect
 }
 
@@ -42,7 +42,7 @@ class CatProfileViewModel @Inject constructor(
 
             is CatProfileEvent.ClickNaming -> {
                 with(state.value) {
-                    setEffect(CatProfileSideEffect.GoToCatNaming(catName, catNo))
+                    setEffect(CatProfileSideEffect.GoToCatNaming(catName, catNo, catType))
                 }
             }
 

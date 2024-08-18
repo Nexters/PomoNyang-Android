@@ -28,9 +28,8 @@ internal data class OnboardingSelectCat(
 internal data class OnboardingNamingCat(
     val catNo: Int,
     val catName: String,
-    val destination: String
-
-    val selectedCatRiveAnimation: String?
+    val destination: String,
+    val selectedCatRiveAnimation: String
 )
 
 enum class CatSettingDestination {
@@ -65,8 +64,8 @@ fun NavGraphBuilder.onboardingScreen(
             OnboardingSelectCatRoute(
                 selectedCatNo = routeData.selectedCatNo,
                 onBackClick = { navHostController.popBackStack() },
-                onNavToNaming = { catNo, catName ->
-                    navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName))
+                onNavToNaming = { catNo, catName, animation ->
+                    navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, destination = destination.name, selectedCatRiveAnimation = animation ?: ""))
                 }
             )
         }
@@ -74,6 +73,8 @@ fun NavGraphBuilder.onboardingScreen(
         composable<OnboardingNamingCat> { navBackStackEntry ->
             val namingCat = navBackStackEntry.toRoute<OnboardingNamingCat>()
             val catName = namingCat.catName
+            val selectedCatRiveAnimation = namingCat.selectedCatRiveAnimation
+            val destination = CatSettingDestination.valueOf(namingCat.destination)
 
             OnboardingNamingCatRoute(
                 catName = catName,
