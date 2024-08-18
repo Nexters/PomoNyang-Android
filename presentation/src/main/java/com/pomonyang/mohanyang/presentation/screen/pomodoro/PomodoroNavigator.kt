@@ -1,10 +1,15 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestWaitingRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.PomodoroSettingRoute
@@ -43,7 +48,13 @@ fun NavGraphBuilder.pomodoroScreen(
     navigation<Pomodoro>(
         startDestination = PomodoroSetting
     ) {
-        composable<PomodoroSetting> {
+        val slideDuration = 500
+
+        composable<PomodoroSetting>(
+            popEnterTransition = {
+                EnterTransition.None
+            }
+        ) {
             PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,
@@ -54,11 +65,22 @@ fun NavGraphBuilder.pomodoroScreen(
                 },
                 goToPomodoro = {
                     navHostController.navigate(PomodoroTimer)
+                },
+                goToMyPage = {
+                    navHostController.navigate(MyPage)
                 }
             )
         }
 
-        composable<TimeSetting> { backStackEntry ->
+        composable<TimeSetting>(
+            enterTransition = {
+                slideInVertically(tween(slideDuration), initialOffsetY = { it })
+            },
+            exitTransition = {
+                slideOutVertically(tween(slideDuration), targetOffsetY = { it })
+            }
+
+        ) { backStackEntry ->
             val routeData = backStackEntry.toRoute<TimeSetting>()
             PomodoroTimeSettingRoute(
                 isFocusTime = routeData.isFocusTime,

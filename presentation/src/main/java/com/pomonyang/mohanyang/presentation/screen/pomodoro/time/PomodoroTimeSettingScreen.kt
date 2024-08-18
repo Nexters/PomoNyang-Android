@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.time
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -79,7 +80,9 @@ private fun PomodoroTimeSettingScreen(
     val iconResId = if (isFocusTime) R.drawable.ic_focus else R.drawable.ic_rest
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .background(MnTheme.backgroundColorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
