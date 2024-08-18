@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,22 +28,32 @@ internal fun MohaNyangNavHost(
         Pomodoro(false)
     }
 
-    val slideDuration = 300
+    val slideDuration = 500
 
     NavHost(
         navController = navHostController,
         startDestination = startDestination,
         modifier = modifier,
         exitTransition = {
-            slideOutOfContainer(
-                AnimatedContentTransitionScope.SlideDirection.End,
-                tween(slideDuration)
-            )
+            ExitTransition.None
         },
 
         enterTransition = {
             slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Start,
+                tween(slideDuration)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.End,
+                tween(slideDuration)
+            )
+        },
+
+        popExitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.End,
                 tween(slideDuration)
             )
         }
