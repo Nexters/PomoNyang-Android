@@ -33,7 +33,6 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.formatTime
-import timber.log.Timber
 
 @Composable
 fun PomodoroRestWaitingRoute(
@@ -48,7 +47,6 @@ fun PomodoroRestWaitingRoute(
 ) {
     val state by pomodoroRestWaitingViewModel.state.collectAsStateWithLifecycle()
     pomodoroRestWaitingViewModel.effects.collectWithLifecycle { effect ->
-        Timber.tag("koni").d("effect > $effect")
         when (effect) {
             PomodoroRestWaitingSideEffect.GoToPomodoroSetting -> goToHome()
             is PomodoroRestWaitingSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)

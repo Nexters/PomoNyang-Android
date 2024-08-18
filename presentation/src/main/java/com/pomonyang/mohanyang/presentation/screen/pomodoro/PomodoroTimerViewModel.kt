@@ -22,7 +22,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 data class PomodoroTimerState(
     val maxFocusTime: Int = 0,
@@ -69,7 +68,6 @@ class PomodoroTimerViewModel @Inject constructor(
     override fun setInitialState(): PomodoroTimerState = PomodoroTimerState()
 
     override fun handleEvent(event: PomodoroTimerEvent) {
-        Timber.tag("koni").d("handleEvent > $event")
         when (event) {
             PomodoroTimerEvent.Init -> viewModelScope.launch {
                 val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
@@ -120,7 +118,6 @@ class PomodoroTimerViewModel @Inject constructor(
                         copy(currentFocusTime = currentFocusTime + ONE_SECOND)
                     } else {
                         if (exceededTime == 0) {
-                            Timber.tag("koni").d("SendEndFocusAlarm > SendEndFocusAlarm")
                             setEffect(PomodoroTimerEffect.SendEndFocusAlarm)
                         }
                         val newExceedTime = exceededTime + ONE_SECOND

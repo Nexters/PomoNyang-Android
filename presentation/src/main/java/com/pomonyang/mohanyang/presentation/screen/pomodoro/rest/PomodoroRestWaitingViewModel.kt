@@ -17,7 +17,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 data class PomodoroRestWaitingState(
     val plusButtonSelected: Boolean = false,
@@ -59,7 +58,6 @@ class PomodoroRestWaitingViewModel @Inject constructor(
     override fun setInitialState(): PomodoroRestWaitingState = PomodoroRestWaitingState()
 
     override fun handleEvent(event: PomodoroRestWaitingEvent) {
-        Timber.tag("koni").d("handleEvent > $event")
         when (event) {
             is PomodoroRestWaitingEvent.Init -> {
                 viewModelScope.launch {

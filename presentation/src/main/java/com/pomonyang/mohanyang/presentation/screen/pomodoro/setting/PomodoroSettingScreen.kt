@@ -62,7 +62,6 @@ import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun PomodoroSettingRoute(
@@ -76,7 +75,6 @@ fun PomodoroSettingRoute(
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
-        Timber.tag("koni").d("handleEffect > $effect")
         when (effect) {
             is PomodoroSettingSideEffect.ShowSnackBar -> onShowSnackbar(effect.message, effect.iconRes)
             is PomodoroSettingSideEffect.GoTimeSetting -> goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
