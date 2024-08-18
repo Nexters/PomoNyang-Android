@@ -37,6 +37,6 @@ class CatNameVerifier @Inject constructor() {
     companion object {
         private const val NAME_MAX_LENGTH = 10
         private const val NAME_MIN_LENGTH = 1
-        private const val NAME_PATTERN = "^[\\w\\s]{${NAME_MIN_LENGTH},${NAME_MAX_LENGTH}}$"
+        private const val NAME_PATTERN = "^[\\w\\s\\n]{${NAME_MIN_LENGTH},${NAME_MAX_LENGTH}}$"
     }
 }
