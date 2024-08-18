@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -17,8 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.component.Timer
 import com.pomonyang.mohanyang.presentation.component.TimerSelectedButtons
@@ -29,6 +32,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -111,10 +115,7 @@ private fun PomodoroRestWaitingScreen(
             exceededTime = exceedTime
         )
 
-        CatRive(
-            modifier = Modifier.padding(top = MnSpacing.xLarge),
-            riveResource = R.raw.cat_motion_transparent
-        )
+        RestLottie(isCompleteFocus = exceedTime != DEFAULT_TIME)
 
         TimerSelectedButtons(
             plusButtonSelected = plusButtonSelected,
@@ -141,6 +142,29 @@ private fun PomodoroRestWaitingScreen(
             text = stringResource(id = R.string.focus_end),
             onClick = { onAction(PomodoroRestWaitingEvent.OnEndFocusClick) }
         )
+    }
+}
+
+@Composable
+private fun RestLottie(
+    modifier: Modifier = Modifier,
+    isCompleteFocus: Boolean
+) {
+    val restWaitingLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loti_rest_waiting))
+    val completeFocusLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loti_rest_waiting_complete_focus))
+
+    Box(
+        modifier = modifier
+            .padding(top = MnSpacing.xLarge)
+            .size(240.dp)
+    ) {
+        LottieAnimation(
+            composition = restWaitingLottie
+        )
+
+        if (isCompleteFocus) {
+            LottieAnimation(composition = completeFocusLottie)
+        }
     }
 }
 
