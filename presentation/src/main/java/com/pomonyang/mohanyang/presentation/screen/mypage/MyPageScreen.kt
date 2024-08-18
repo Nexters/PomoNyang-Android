@@ -1,9 +1,11 @@
 package com.pomonyang.mohanyang.presentation.screen.mypage
 
 import MnToggleButton
+import android.app.Activity
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
@@ -53,9 +54,39 @@ fun MyPageRoute(
 ) {
     val state by myPageViewModel.state.collectAsStateWithLifecycle()
 
-    val context = LocalContext.current
+    val context = LocalContext.current as Activity
     var isShowDialog by remember {
         mutableStateOf(false)
+    }
+
+    var permissionRequest by remember {
+        mutableStateOf<NotificationRequest?>(null)
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (MnNotificationManager.isNotificationGranted(context)) {
+            permissionRequest?.let {
+                when (it) {
+                    NotificationRequest.TIMER -> {
+                        myPageViewModel.handleEvent(MyPageEvent.ChangeTimerNotification(true))
+                    }
+
+                    NotificationRequest.INTERRUPT -> {
+                        myPageViewModel.handleEvent(MyPageEvent.ChangeInterruptNotification(true))
+                    }
+                }
+            }
+        }
+    }
+
+    fun openSetting(request: NotificationRequest) {
+        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        launcher.launch(intent)
+        myPageViewModel.handleEvent(MyPageEvent.CloseDialog)
     }
 
     myPageViewModel.effects.collectWithLifecycle { effect ->
@@ -69,11 +100,16 @@ fun MyPageRoute(
                     effect.onGranted()
                 } else {
                     isShowDialog = true
+                    permissionRequest = effect.request
                 }
             }
 
             is MyPageSideEffect.CloseDialog -> {
                 isShowDialog = false
+            }
+
+            is MyPageSideEffect.OpenDialog -> {
+                permissionRequest?.let { openSetting(it) }
             }
         }
     }
@@ -92,6 +128,8 @@ fun MyPageRoute(
     )
 }
 
+enum class NotificationRequest { TIMER, INTERRUPT }
+
 @Composable
 fun MyPageScreen(
     state: MyPageState,
@@ -102,16 +140,6 @@ fun MyPageScreen(
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
-
-    val context = LocalContext.current
-
-    fun openSetting() {
-        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-        intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-            .addFlags(FLAG_ACTIVITY_NEW_TASK)
-        startActivity(context, intent, null)
-        onAction(MyPageEvent.CloseDialog)
-    }
 
     if (isShowDialog) {
         MnDialog(
@@ -130,12 +158,14 @@ fun MyPageScreen(
                 MnBoxButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = "설정으로 이동",
-                    onClick = { openSetting() },
+                    onClick = { onAction(MyPageEvent.OpenSetting) },
                     colors = MnBoxButtonColorType.primary,
                     styles = MnBoxButtonStyles.medium
                 )
             },
-            onDismissRequest = {}
+            onDismissRequest = {
+                onAction(MyPageEvent.CloseDialog)
+            }
         )
     }
 
