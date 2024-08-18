@@ -69,5 +69,13 @@
     <string name="category_study_kor">공부</string>
     <string name="category_book_kor">독서</string>
 
+    <string name="cat_profile_tooltip">사냥놀이를 하고싶다냥</string>
 
+    <string name="my_page_title">마이페이지</string>
+    <string name="my_page_cat_profile_title">나의 고양이</string>
+    <string name="my_page_timer_push_title">집중시간 알림받기</string>
+    <string name="my_page_timer_push_content">"집중・휴식시간이 되면 고양이가 알려줘요"</string>
+    <string name="my_page_interrupt_push_title">딴 짓 방해하기</string>
+    <string name="my_page_interrupt_push_content">다른 앱을 사용하면 고양이가 방해해요</string>
+    <string name="my_page_suggestion">의견보내기</string>
 </resources>

@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -19,14 +21,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.domain.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnLargeIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 
@@ -65,23 +70,11 @@ fun FocusStatisticBox(
                         .padding(horizontal = MnSpacing.xSmall, vertical = MnSpacing.small)
 
                 ) {
-                    Column {
-                        FocusCategoryDataBox(
-                            modifier = Modifier.padding(MnSpacing.xLarge),
-                            categoryModel = PomodoroCategoryModel(1, "기본", 25, 10)
-                        )
-                        FocusCategoryDataBox(
-                            modifier = Modifier.padding(MnSpacing.xLarge),
-                            categoryModel = PomodoroCategoryModel(1, "기본", 25, 10)
-                        )
-                        FocusCategoryDataBox(
-                            modifier = Modifier.padding(MnSpacing.xLarge),
-                            categoryModel = PomodoroCategoryModel(1, "기본", 25, 10)
-                        )
-                        FocusCategoryDataBox(
-                            modifier = Modifier.padding(MnSpacing.xLarge),
-                            categoryModel = PomodoroCategoryModel(1, "기본", 25, 10)
-                        )
+                    // TODO API 연결
+                    LazyColumn {
+                        itemsIndexed(PomodoroCategoryType.values()) { idx, category ->
+                            FocusCategoryDataBox(categoryModel = PomodoroCategoryModel(categoryNo = 1, title = stringResource(id = category.kor), categoryType = category, focusTime = 10, restTime = 20))
+                        }
                     }
                 }
 
@@ -153,7 +146,7 @@ fun FocusCategoryDataBox(
         horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        MnLargeIcon(resourceId = R.drawable.ic_null)
+        MnLargeIcon(resourceId = categoryModel.categoryType.iconRes, tint = Color.Unspecified)
         Text(
             modifier = Modifier.weight(1f),
             text = categoryModel.title,

@@ -2,6 +2,9 @@ package com.pomonyang.mohanyang.presentation.util
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 object MnNotificationManager {
@@ -35,4 +38,8 @@ object MnNotificationManager {
     fun stopInterrupt(context: Context) {
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(INTENT_STOP_INTERRUPT_MESSAGE))
     }
+
+    fun isNotificationGranted(context: Context): Boolean = (
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
+        )
 }
