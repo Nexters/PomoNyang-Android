@@ -40,6 +40,7 @@ fun PomodoroRestWaitingRoute(
     focusTime: Int,
     exceedTime: Int,
     goToHome: () -> Unit,
+    forceGoHome: () -> Unit,
     goToPomodoroRest: () -> Unit,
     modifier: Modifier = Modifier,
     pomodoroRestWaitingViewModel: PomodoroRestWaitingViewModel = hiltViewModel(),
@@ -51,6 +52,7 @@ fun PomodoroRestWaitingRoute(
             PomodoroRestWaitingSideEffect.GoToPomodoroSetting -> goToHome()
             is PomodoroRestWaitingSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestWaitingSideEffect.GoToPomodoroRest -> goToPomodoroRest()
+            PomodoroRestWaitingSideEffect.ForceGoPomodoroSetting -> forceGoHome()
         }
     }
 

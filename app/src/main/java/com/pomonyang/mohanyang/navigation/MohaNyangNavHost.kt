@@ -16,6 +16,7 @@ import com.pomonyang.mohanyang.ui.MohaNyangAppState
 @Composable
 internal fun MohaNyangNavHost(
     onShowSnackbar: (String, Int?) -> Unit,
+    onForceGoHome: () -> Unit,
     mohaNyangAppState: MohaNyangAppState,
     modifier: Modifier = Modifier
 ) {
@@ -66,7 +67,8 @@ internal fun MohaNyangNavHost(
         pomodoroScreen(
             isNewUser = mohaNyangAppState.isNewUser,
             navHostController = mohaNyangAppState.navHostController,
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
+            onForceGoHome = onForceGoHome
         )
 
         myPageScreen(navHostController = navHostController)

@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope
+import com.mohanyang.presentation.BuildConfig
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.domain.usecase.AdjustPomodoroTimeUseCase
@@ -15,6 +16,10 @@ import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_FOCUS_M
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MIN_FOCUS_MINUTES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -42,6 +47,8 @@ sealed interface PomodoroRestWaitingEvent : ViewEvent {
 sealed interface PomodoroRestWaitingSideEffect : ViewSideEffect {
     data object GoToPomodoroSetting : PomodoroRestWaitingSideEffect
     data object GoToPomodoroRest : PomodoroRestWaitingSideEffect
+    data object ForceGoPomodoroSetting : PomodoroRestWaitingSideEffect
+
     data class ShowSnackbar(
         val message: String,
         @DrawableRes val iconRes: Int
@@ -68,6 +75,7 @@ class PomodoroRestWaitingViewModel @Inject constructor(
                             minusButtonEnabled = pomodoroSetting.focusTime > MIN_FOCUS_MINUTES
                         )
                     }
+                    startForcePomodoroSettingCountdown()
                 }
             }
 
@@ -113,6 +121,23 @@ class PomodoroRestWaitingViewModel @Inject constructor(
             PomodoroRestWaitingEvent.OnStartRestClick -> {
                 adjustFocusTime()
                 setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroRest)
+            }
+        }
+    }
+
+    private fun startForcePomodoroSettingCountdown() {
+        viewModelScope.launch(Dispatchers.IO) {
+            var count = 1
+            while (true) {
+                if (BuildConfig.DEBUG) {
+                    delay(1.seconds)
+                } else {
+                    delay(1.minutes)
+                }
+                count += 1
+                if (count == if (BuildConfig.DEBUG) 10 else 60) {
+                    setEffect(PomodoroRestWaitingSideEffect.ForceGoPomodoroSetting)
+                }
             }
         }
     }
