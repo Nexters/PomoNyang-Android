@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.pomonyang.mohanyang.R
+import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.notification.util.defaultNotification
 import com.pomonyang.mohanyang.notification.util.isNotificationGranted
@@ -27,6 +28,9 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
     @Inject
     lateinit var userRepository: UserRepository
 
+    @Inject
+    lateinit var pushAlarmRepository: PushAlarmRepository
+
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -44,26 +48,31 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
                 }
 
                 MnNotificationManager.INTENT_NOTIFY_REST_MESSAGE -> {
-                    val id = UUID.randomUUID().hashCode()
-                    notifyMessage(
-                        context,
-                        notificationId = id,
-                        message = context.getString(cat.restEndPushContent)
-                    )
+                    if (pushAlarmRepository.isTimerNotificationEnabled()) {
+                        val id = UUID.randomUUID().hashCode()
+                        notifyMessage(
+                            context,
+                            notificationId = id,
+                            message = context.getString(cat.restEndPushContent)
+                        )
+                    }
                 }
 
                 MnNotificationManager.INTENT_NOTIFY_FOCUS_MESSAGE -> {
-                    Timber.tag("koni").d("INTENT_NOTIFY_FOCUS_MESSAGE")
-                    val id = UUID.randomUUID().hashCode()
-                    notifyMessage(
-                        context,
-                        notificationId = id,
-                        message = context.getString(cat.timerEndPushContent)
-                    )
+                    if (pushAlarmRepository.isTimerNotificationEnabled()) {
+                        val id = UUID.randomUUID().hashCode()
+                        notifyMessage(
+                            context,
+                            notificationId = id,
+                            message = context.getString(cat.timerEndPushContent)
+                        )
+                    }
                 }
 
                 MnNotificationManager.INTENT_START_INTERRUPT_MESSAGE -> {
-                    context.startService(Intent(context, FocusNotificationService::class.java))
+                    if (pushAlarmRepository.isInterruptNotificationEnabled()) {
+                        context.startService(Intent(context, FocusNotificationService::class.java))
+                    }
                 }
 
                 MnNotificationManager.INTENT_STOP_INTERRUPT_MESSAGE -> {
