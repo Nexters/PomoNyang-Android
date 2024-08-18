@@ -51,6 +51,8 @@ fun CatRive(
         Modifier
     }
     var showTooltip by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val riveView = remember { RiveAnimationView(context = context) }
 
     if (tooltipMessage != null) {
         LaunchedEffect(tooltipMessage) {
@@ -92,8 +94,6 @@ fun CatRive(
             modifier = catRiveModifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val context = LocalContext.current
-            val riveView = remember { RiveAnimationView(context = context) }
             LaunchedEffect(riveAnimationName) {
                 riveView.setRiveResource(
                     stateMachineName = stateMachineName,
