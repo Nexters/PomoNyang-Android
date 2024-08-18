@@ -67,6 +67,7 @@ fun PomodoroSettingRoute(
     onShowSnackbar: suspend (String, Int?) -> Unit,
     goToPomodoro: () -> Unit,
     goTimeSetting: (isFocusTime: Boolean, initialTime: Int, categoryName: String) -> Unit,
+    goToMyPage: () -> Unit,
     modifier: Modifier = Modifier,
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
@@ -77,6 +78,7 @@ fun PomodoroSettingRoute(
             is PomodoroSettingSideEffect.ShowSnackBar -> onShowSnackbar(effect.message, effect.iconRes)
             is PomodoroSettingSideEffect.GoTimeSetting -> goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
             PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro()
+            PomodoroSettingSideEffect.GoToMyPage -> goToMyPage()
         }
     }
 
@@ -123,7 +125,7 @@ fun PomodoroSettingScreen(
                     Box(
                         modifier = Modifier
                             .size(40.dp)
-                            .noRippleClickable { },
+                            .noRippleClickable { onAction(PomodoroSettingEvent.ClickMenu) },
                         contentAlignment = Alignment.Center
                     ) {
                         MnMediumIcon(
