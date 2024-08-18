@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalAssetLoader::class)
+
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
 import androidx.activity.compose.BackHandler
@@ -20,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
@@ -112,7 +115,13 @@ private fun PomodoroRestScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        CatRive(tooltipMessage = stringResource(id = tooltipMessage), riveResource = R.raw.cat_motion_transparent)
+        CatRive(
+            tooltipMessage = stringResource(id = tooltipMessage),
+            riveResource = R.raw.cat_motion_transparent,
+            onRiveClick = {
+                it.fireState("State Machine 1", "Click")
+            }
+        )
 
         TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)
 

@@ -146,7 +146,6 @@ fun PomodoroSettingScreen(
             CatRive(
                 tooltipMessage = stringResource(R.string.welcome_cat_tooltip),
                 riveResource = R.raw.cat_motion_transparent,
-                stateMachineName = "State Machine 1",
                 onRiveClick = {
                     it.fireState("State Machine 1", "Click")
                 }
