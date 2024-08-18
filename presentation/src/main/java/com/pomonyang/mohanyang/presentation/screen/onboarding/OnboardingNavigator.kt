@@ -6,7 +6,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.pomonyang.mohanyang.presentation.screen.mypage.CatProfile
 import com.pomonyang.mohanyang.presentation.screen.onboarding.guide.OnboardingGuideRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.naming.OnboardingNamingCatRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.select.OnboardingSelectCatRoute
@@ -90,10 +89,7 @@ fun NavGraphBuilder.onboardingScreen(
                         }
 
                         CatSettingDestination.MY_PAGE -> {
-                            navHostController.navigate(
-                                route = CatProfile,
-                                navOptions = NavOptions.Builder().setPopUpTo<OnboardingSelectCat>(true).build()
-                            )
+                            navHostController.popBackStack()
                         }
                     }
                 }
