@@ -53,6 +53,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun OnboardingSelectCatRoute(
+    selectedCatNo: Int,
     onBackClick: () -> Unit,
     onNavToNaming: (Int, String, String?) -> Unit,
     modifier: Modifier = Modifier,
@@ -75,6 +76,7 @@ fun OnboardingSelectCatRoute(
     NotificationPermissionEffect()
 
     OnboardingSelectCatScreen(
+        selectedCatNo = if (selectedCatNo != -1) selectedCatNo else null,
         onBackClick = onBackClick,
         modifier = modifier,
         onAction = onboardingSelectCatViewModel::handleEvent,
@@ -87,15 +89,17 @@ fun OnboardingSelectCatScreen(
     onBackClick: () -> Unit,
     onAction: (SelectCatEvent) -> Unit,
     state: SelectCatState,
+    selectedCatNo: Int?,
     modifier: Modifier = Modifier
 ) {
     LaunchedEffect(Unit) {
-        onAction(SelectCatEvent.Init)
+        onAction(SelectCatEvent.Init(selectedCatNo))
     }
 
     Column(
         modifier = modifier
-            .fillMaxSize().background(MnTheme.backgroundColorScheme.primary)
+            .fillMaxSize()
+            .background(MnTheme.backgroundColorScheme.primary)
     ) {
         MnTopAppBar(
             topAppBarColors = MnAppBarColors(
@@ -327,6 +331,7 @@ private fun NotificationPermissionEffect() {
 fun PreviewOnboardingSelectScreen() {
     OnboardingSelectCatScreen(
         onBackClick = {},
+        selectedCatNo = -1,
         state = SelectCatState(
             cats = listOf(
                 CatInfoModel(1, "이이오", type = CatType.CHEESE),

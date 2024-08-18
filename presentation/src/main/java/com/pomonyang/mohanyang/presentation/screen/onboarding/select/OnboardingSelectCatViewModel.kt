@@ -20,7 +20,7 @@ data class SelectCatState(
 ) : ViewState
 
 sealed interface SelectCatEvent : ViewEvent {
-    data object Init : SelectCatEvent
+    data class Init(val catNo: Int? = null) : SelectCatEvent
     data class OnSelectType(val type: CatType) : SelectCatEvent
     data object OnStartClick : SelectCatEvent
 }
@@ -39,7 +39,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
     override fun handleEvent(event: SelectCatEvent) {
         when (event) {
             is SelectCatEvent.Init -> {
-                getCatTypes()
+                getCatTypes(event.catNo)
             }
 
             is SelectCatEvent.OnSelectType -> {
@@ -56,11 +56,12 @@ class OnboardingSelectCatViewModel @Inject constructor(
         }
     }
 
-    private fun getCatTypes() {
+    private fun getCatTypes(selectedCatNo: Int?) {
         viewModelScope.launch {
             catSettingRepository.getCatTypes().also { response ->
                 response.onSuccess { cats ->
-                    updateState { copy(cats = cats.map { it.toModel() }) }
+                    val catList = cats.map { it.toModel() }
+                    updateState { copy(cats = catList, selectedType = catList.find { it.no == selectedCatNo }?.type) }
                 }
             }
         }

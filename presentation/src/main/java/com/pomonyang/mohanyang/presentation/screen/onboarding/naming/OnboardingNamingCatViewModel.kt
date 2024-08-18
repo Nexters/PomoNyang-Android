@@ -19,7 +19,7 @@ sealed interface NamingEvent : ViewEvent {
 }
 
 sealed interface NamingSideEffect : ViewSideEffect {
-    data object NavToHome : NamingSideEffect
+    data object NavToNext : NamingSideEffect
 }
 
 @HiltViewModel
@@ -44,7 +44,7 @@ class OnboardingNamingCatViewModel @Inject constructor(
     private fun updateCatName(name: String) {
         viewModelScope.launch {
             catSettingRepository.updateCatInfo(name).onSuccess {
-                setEffect(NamingSideEffect.NavToHome)
+                setEffect(NamingSideEffect.NavToNext)
             }.onFailure {
                 Timber.e(it)
             }

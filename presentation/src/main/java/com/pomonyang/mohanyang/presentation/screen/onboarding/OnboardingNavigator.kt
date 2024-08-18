@@ -6,6 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.pomonyang.mohanyang.presentation.screen.mypage.CatProfile
 import com.pomonyang.mohanyang.presentation.screen.onboarding.guide.OnboardingGuideRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.naming.OnboardingNamingCatRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.select.OnboardingSelectCatRoute
@@ -19,14 +20,24 @@ data object Onboarding
 internal data object OnboardingGuide
 
 @Serializable
-internal data object OnboardingSelectCat
+internal data class OnboardingSelectCat(
+    val selectedCatNo: Int,
+    val destination: String
+)
 
 @Serializable
 internal data class OnboardingNamingCat(
     val catNo: Int,
     val catName: String,
+    val destination: String
+
     val selectedCatRiveAnimation: String?
 )
+
+enum class CatSettingDestination {
+    POMODORO,
+    MY_PAGE
+}
 
 fun NavGraphBuilder.onboardingScreen(
     navHostController: NavHostController
@@ -37,16 +48,26 @@ fun NavGraphBuilder.onboardingScreen(
         composable<OnboardingGuide> {
             OnboardingGuideRoute(
                 onStartClick = {
-                    navHostController.navigate(OnboardingSelectCat)
+                    navHostController.navigate(
+                        OnboardingSelectCat(
+                            selectedCatNo = -1,
+                            destination = CatSettingDestination.POMODORO.name
+                        )
+                    )
                 }
             )
         }
 
-        composable<OnboardingSelectCat> {
+        composable<OnboardingSelectCat> { navBackStackEntry ->
+
+            val routeData = navBackStackEntry.toRoute<OnboardingSelectCat>()
+            val destination = CatSettingDestination.valueOf(routeData.destination)
+
             OnboardingSelectCatRoute(
+                selectedCatNo = routeData.selectedCatNo,
                 onBackClick = { navHostController.popBackStack() },
-                onNavToNaming = { catNo, catName, selectedCatRiveAnimation ->
-                    navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, selectedCatRiveAnimation = selectedCatRiveAnimation))
+                onNavToNaming = { catNo, catName ->
+                    navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName))
                 }
             )
         }
@@ -54,17 +75,27 @@ fun NavGraphBuilder.onboardingScreen(
         composable<OnboardingNamingCat> { navBackStackEntry ->
             val namingCat = navBackStackEntry.toRoute<OnboardingNamingCat>()
             val catName = namingCat.catName
-            val selectedCatRiveAnimation = namingCat.selectedCatRiveAnimation
 
             OnboardingNamingCatRoute(
                 catName = catName,
                 selectedCatRiveAnimation = selectedCatRiveAnimation,
                 onBackClick = { navHostController.popBackStack() },
-                onNavToHome = {
-                    navHostController.navigate(
-                        route = Pomodoro(isNewUser = true),
-                        navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build()
-                    )
+                onNavToDestination = {
+                    when (destination) {
+                        CatSettingDestination.POMODORO -> {
+                            navHostController.navigate(
+                                route = Pomodoro(isNewUser = true),
+                                navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build()
+                            )
+                        }
+
+                        CatSettingDestination.MY_PAGE -> {
+                            navHostController.navigate(
+                                route = CatProfile,
+                                navOptions = NavOptions.Builder().setPopUpTo<OnboardingSelectCat>(true).build()
+                            )
+                        }
+                    }
                 }
             )
         }

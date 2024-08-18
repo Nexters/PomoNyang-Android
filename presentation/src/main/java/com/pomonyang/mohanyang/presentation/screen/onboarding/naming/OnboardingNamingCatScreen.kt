@@ -44,14 +44,14 @@ fun OnboardingNamingCatRoute(
     catName: String,
     selectedCatRiveAnimation: String?,
     onBackClick: () -> Unit,
-    onNavToHome: () -> Unit,
+    onNavToDestination: () -> Unit,
     modifier: Modifier = Modifier,
     onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel()
 ) {
     onboardingNamingCatViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
-            is NamingSideEffect.NavToHome -> {
-                onNavToHome()
+            is NamingSideEffect.NavToNext -> {
+                onNavToDestination()
             }
         }
     }

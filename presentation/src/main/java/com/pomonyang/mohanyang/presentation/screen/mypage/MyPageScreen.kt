@@ -87,7 +87,8 @@ fun MyPageRoute(
         onAction = myPageViewModel::handleEvent,
         onBackClick = onBackClick,
         isOffline = false,
-        isShowDialog = isShowDialog
+        isShowDialog = isShowDialog,
+        modifier = modifier
     )
 }
 
