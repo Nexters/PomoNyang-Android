@@ -24,28 +24,53 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButto
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
-import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
+import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 
 @Composable
 internal fun CatProfileRoute(
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onCatChangeClick: (Int) -> Unit,
+    onCatNameChangeClick: (String, Int) -> Unit,
+    modifier: Modifier = Modifier,
+    catProfileViewModel: CatProfileViewModel = hiltViewModel()
 ) {
+    val state by catProfileViewModel.state.collectAsStateWithLifecycle()
+
+    catProfileViewModel.effects.collectWithLifecycle { effect ->
+        when (
+            effect
+        ) {
+            is CatProfileSideEffect.GoToCatNaming -> {
+                onCatNameChangeClick(effect.catName, effect.catNo)
+            }
+
+            is CatProfileSideEffect.GoToCatTypeChange -> {
+                onCatChangeClick(effect.catNo)
+            }
+        }
+    }
+
     CatProfileScreen(
+        state = state,
         onBackClick = onBackClick,
-        onCatChangeClick = {},
+        onAction = catProfileViewModel::handleEvent,
         modifier = modifier
     )
 }
 
 @Composable
 private fun CatProfileScreen(
+    state: CatProfileState,
     onBackClick: () -> Unit,
-    onCatChangeClick: () -> Unit,
+    onAction: (CatProfileEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(Unit) {
+        onAction(CatProfileEvent.Init)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -91,7 +116,7 @@ private fun CatProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 containerPadding = PaddingValues(bottom = MnSpacing.small),
                 text = "고양이 바꾸기",
-                onClick = { /*TODO*/ },
+                onClick = { onAction(CatProfileEvent.ClickChangeType) },
                 colors = MnBoxButtonColorType.secondary,
                 styles = MnBoxButtonStyles.large
             )
@@ -104,8 +129,9 @@ private fun CatProfileScreen(
 fun PreviewCatProfileScreen() {
     MnTheme {
         CatProfileScreen(
+            state = CatProfileState(),
             onBackClick = {},
-            onCatChangeClick = {}
+            onAction = {}
         )
     }
 }
