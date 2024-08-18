@@ -143,8 +143,15 @@ fun PomodoroSettingScreen(
             verticalArrangement = Arrangement.Center
         ) {
             CatRive(
-                catName = state.catName,
-                tooltipMessage = stringResource(R.string.welcome_cat_tooltip)
+                tooltipMessage = stringResource(R.string.welcome_cat_tooltip),
+                riveResource = R.raw.cat_motion_transparent,
+                stateMachineName = "State Machine 1"
+            )
+
+            Text(
+                text = state.catName,
+                style = MnTheme.typography.header4,
+                color = MnTheme.textColorScheme.tertiary
             )
 
             CategoryBox(
@@ -178,7 +185,7 @@ fun PomodoroSettingScreen(
             )
 
             SettingButton(
-                iconRes = R.drawable.ic_play,
+                iconRes = R.drawable.ic_play_32,
                 onClick = { onAction(PomodoroSettingEvent.ClickStartPomodoroSetting) },
                 backgroundColor = MnTheme.backgroundColorScheme.accent1
             )

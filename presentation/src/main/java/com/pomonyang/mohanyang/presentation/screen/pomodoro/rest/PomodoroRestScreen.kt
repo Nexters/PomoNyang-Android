@@ -92,7 +92,7 @@ private fun PomodoroRestScreen(
     onAction: (PomodoroRestEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val tooltipMessage = if (exceededTime != DEFAULT_TIME) R.string.rest_cat_tooltip else R.string.rest_exceed_cat_tooltip
+    val tooltipMessage = if (exceededTime != DEFAULT_TIME) R.string.rest_exceed_cat_tooltip else R.string.rest_cat_tooltip
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -112,7 +112,7 @@ private fun PomodoroRestScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        CatRive(tooltipMessage = stringResource(id = tooltipMessage))
+        CatRive(tooltipMessage = stringResource(id = tooltipMessage), riveResource = R.raw.cat_motion_transparent)
 
         TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)
 

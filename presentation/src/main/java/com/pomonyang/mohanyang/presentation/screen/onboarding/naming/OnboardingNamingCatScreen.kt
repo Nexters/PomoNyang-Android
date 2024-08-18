@@ -42,6 +42,7 @@ import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 @Composable
 fun OnboardingNamingCatRoute(
     catName: String,
+    selectedCatRiveAnimation: String?,
     onBackClick: () -> Unit,
     onNavToHome: () -> Unit,
     modifier: Modifier = Modifier,
@@ -57,6 +58,7 @@ fun OnboardingNamingCatRoute(
 
     OnboardingNamingCatScreen(
         catName = catName,
+        selectedCatRiveAnimation = selectedCatRiveAnimation,
         onAction = onboardingNamingCatViewModel::handleEvent,
         onBackClick = onBackClick,
         modifier = modifier
@@ -66,6 +68,7 @@ fun OnboardingNamingCatRoute(
 @Composable
 fun OnboardingNamingCatScreen(
     catName: String,
+    selectedCatRiveAnimation: String?,
     onAction: (NamingEvent) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -115,6 +118,8 @@ fun OnboardingNamingCatScreen(
                     modifier = Modifier
                         .padding(top = 130.dp)
                         .fillMaxWidth(),
+                    riveAnimationName = selectedCatRiveAnimation,
+                    riveResource = R.raw.cat_select_motion,
                     tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
                 )
                 Text(
@@ -160,6 +165,7 @@ fun OnboardingNamingCatScreen(
 fun PreviewOnboardingNamingCatScreen() {
     OnboardingNamingCatScreen(
         catName = "삼색이",
+        selectedCatRiveAnimation = "selectedCatRiveAnimation",
         onAction = { _ -> },
         onBackClick = {}
     )

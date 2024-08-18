@@ -42,6 +42,8 @@ collections-immutable = "0.3.7"
 secrets = "2.0.1"
 google-services = "4.4.2"
 permission = "0.35.1-alpha"
+rive = "8.7.0"
+startup = "1.1.1"
 
 [libraries]
 # Compose
@@ -108,6 +110,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 gradle-secrets = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "permission" }
+rive = { module = "app.rive:rive-android", version.ref = "rive" }
+startup = {module = "androidx.startup:startup-runtime", version.ref = "startup"}
 
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

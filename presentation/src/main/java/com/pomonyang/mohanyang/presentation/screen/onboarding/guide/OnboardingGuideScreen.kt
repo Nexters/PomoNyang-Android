@@ -173,7 +173,7 @@ private fun OnboardingGuideContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MnSpacing.threeXLarge)
     ) {
-        CatRive()
+        CatRive(riveResource = R.raw.cat_select_motion)
         TextGuide(content)
     }
 }

@@ -9,28 +9,32 @@ enum class CatType(
     val personalityIcon: Int,
     val timerEndPushContent: Int,
     val restEndPushContent: Int,
-    val backgroundPushContent: Int
+    val backgroundPushContent: Int,
+    val riveAnimation: String
 ) {
     CHEESE(
         personality = R.string.cat_cheese_personality,
         personalityIcon = R.drawable.ic_star,
         timerEndPushContent = R.string.cat_cheese_timer_end_push,
         restEndPushContent = R.string.cat_cheese_rest_end_push,
-        backgroundPushContent = R.string.cat_cheese_background_push
+        backgroundPushContent = R.string.cat_cheese_background_push,
+        riveAnimation = "stretch_Cheese Cat"
     ),
     BLACK(
         personality = R.string.cat_black_personality,
         personalityIcon = R.drawable.ic_heart,
         timerEndPushContent = R.string.cat_black_timer_end_push,
         restEndPushContent = R.string.cat_black_rest_end_push,
-        backgroundPushContent = R.string.cat_black_background_push
+        backgroundPushContent = R.string.cat_black_background_push,
+        riveAnimation = "stretch_Black Cat"
     ),
     THREE_COLOR(
         personality = R.string.cat_three_personality,
         personalityIcon = R.drawable.ic_focus,
         timerEndPushContent = R.string.cat_three_timer_end_push,
         restEndPushContent = R.string.cat_cheese_rest_end_push,
-        backgroundPushContent = R.string.cat_three_background_push
+        backgroundPushContent = R.string.cat_three_background_push,
+        riveAnimation = "stretch_Calico Cat"
     );
 
     companion object {

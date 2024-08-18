@@ -54,7 +54,7 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 fun OnboardingSelectCatRoute(
     onBackClick: () -> Unit,
-    onNavToNaming: (Int, String) -> Unit,
+    onNavToNaming: (Int, String, String?) -> Unit,
     modifier: Modifier = Modifier,
     onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel()
 ) {
@@ -65,7 +65,8 @@ fun OnboardingSelectCatRoute(
             is SelectCatSideEffect.OnNavToNaming -> {
                 onNavToNaming(
                     effect.no,
-                    effect.catName
+                    effect.catName,
+                    effect.selectedCatRiveAnimation
                 )
             }
         }
@@ -143,7 +144,9 @@ fun OnboardingSelectCatScreen(
                         top = MnSpacing.medium,
                         bottom = 42.dp
                     )
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                riveResource = R.raw.cat_select_motion,
+                riveAnimationName = state.selectedType?.riveAnimation
             )
 
             CatCategory(
