@@ -10,3 +10,9 @@ fun Int.formatTime(): String {
     val secondsPart = this % 60
     return String.format(Locale.KOREAN, "%02d:%02d", minutesPart, secondsPart)
 }
+
+fun Int.formatToMinutesAndSeconds(): String {
+    val minutes = this
+    val seconds = 0
+    return String.format("%02d:%02d", minutes, seconds)
+}

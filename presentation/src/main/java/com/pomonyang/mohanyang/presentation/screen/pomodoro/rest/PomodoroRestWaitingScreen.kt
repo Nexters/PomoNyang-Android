@@ -112,7 +112,8 @@ private fun PomodoroRestWaitingScreen(
         )
 
         CatRive(
-            modifier = Modifier.padding(top = MnSpacing.xLarge)
+            modifier = Modifier.padding(top = MnSpacing.xLarge),
+            riveResource = R.raw.cat_motion_transparent
         )
 
         TimerSelectedButtons(

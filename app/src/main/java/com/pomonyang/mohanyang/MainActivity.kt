@@ -19,6 +19,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.startup.AppInitializer
+import app.rive.runtime.kotlin.RiveInitializer
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
@@ -70,7 +72,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        AppInitializer.getInstance(applicationContext)
+            .initializeComponent(RiveInitializer::class.java)
         createNotificationChannel()
         registerNotificationService()
         GlobalScope.launch { pomodoroTimerRepository.savePomodoroCacheData() }

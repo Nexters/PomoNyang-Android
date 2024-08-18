@@ -46,6 +46,7 @@ import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.formatToMinutesAndSeconds
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -224,7 +225,7 @@ private fun BoxScope.WheelItemList(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "$item:00",
+                    text = item.formatToMinutesAndSeconds(),
                     style = if (isCentralItem) selectedTextStyle else unSelectedTextStyle,
                     color = if (isCentralItem) selectedTextColor else unSelectedTextColor
                 )

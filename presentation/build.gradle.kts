@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     implementation(libs.bundles.androidx.compose.navigation)
     implementation(libs.permission)
+    implementation(libs.rive)
 
     // module impl
     implementation(projects.domain)

@@ -66,6 +66,8 @@ dependencies {
     implementation(libs.bundles.androidx.compose.navigation)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.firebase.messaging)
+    implementation(libs.rive)
+    implementation(libs.startup)
 
     // module impl
     implementation(projects.data)

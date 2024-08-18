@@ -27,10 +27,10 @@ fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier =
 /**
  * 클릭 이벤트를 디바운스 처리하여 여러 번 빠르게 클릭하는 것을 방지하고,
  * @see noRippleClickable
- * @param debounceTime 클릭 이벤트를 디바운스 처리할 시간 간격(밀리초). 기본값은 500ms.
+ * @param debounceTime 클릭 이벤트를 디바운스 처리할 시간 간격(밀리초). 기본값은 250ms.
  */
 fun Modifier.debounceNoRippleClickable(
-    debounceTime: Long = 500L,
+    debounceTime: Long = 250,
     onClick: () -> Unit
 ): Modifier =
     composed {

@@ -1,22 +1,27 @@
 package com.pomonyang.mohanyang.presentation.screen.mypage.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButton
+import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
@@ -67,9 +72,20 @@ private fun CatProfileScreen(
             CatRive(
                 modifier = Modifier.fillMaxWidth(),
                 tooltipMessage = stringResource(id = R.string.cat_profile_tooltip),
-                catName = CatType.CHEESE.name,
-                iconRes = R.drawable.ic_pen
+                riveResource = R.raw.cat_motion_transparent
             )
+            Row(
+                modifier = Modifier.padding(top = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall)
+            ) {
+                Text(
+                    text = CatType.CHEESE.name,
+                    style = MnTheme.typography.header4,
+                    color = MnTheme.textColorScheme.tertiary
+                )
+                MnMediumIcon(resourceId = R.drawable.ic_pen, tint = MnTheme.iconColorScheme.primary)
+            }
             Spacer(modifier = Modifier.weight(1f))
             MnBoxButton(
                 modifier = Modifier.fillMaxWidth(),
