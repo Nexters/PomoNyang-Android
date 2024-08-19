@@ -108,7 +108,7 @@ fun MyPageRoute(
             }
 
             is MyPageSideEffect.OpenDialog -> {
-                permissionRequest?.let { openSetting() }
+                openSetting()
             }
         }
     }

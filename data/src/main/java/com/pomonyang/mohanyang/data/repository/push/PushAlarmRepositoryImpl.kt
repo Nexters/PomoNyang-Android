@@ -6,7 +6,7 @@ import com.pomonyang.mohanyang.data.remote.model.request.RegisterPushTokenReques
 import com.pomonyang.mohanyang.data.remote.service.MohaNyangService
 import javax.inject.Inject
 
-class PushAlarmRepositoryImpl @Inject constructor(
+internal class PushAlarmRepositoryImpl @Inject constructor(
     private val mohaNyangService: MohaNyangService,
     private val tokenLocalDataSource: TokenLocalDataSource,
     private val notificationLocalDataSource: NotificationLocalDataSource
