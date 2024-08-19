@@ -92,12 +92,14 @@ class MainActivity : ComponentActivity() {
             val coroutineScope = rememberCoroutineScope()
             val activity = (LocalContext.current as? Activity)
 
-            val isNewUser = userRepository.isNewUser()
+            var isNewUser = userRepository.isNewUser()
             var showDialog by remember { mutableStateOf(isNewUser && !networkMonitor.isConnected) }
             suspend fun initializeInfo() {
                 getTokenByDeviceIdUseCase()
                     .onSuccess {
-                        userRepository.fetchMyInfo()
+                        userRepository.fetchMyInfo().onSuccess {
+                            if (it.cat.no == -1) isNewUser = true
+                        }
                         pomodoroSettingRepository.fetchPomodoroSettingList()
                         showDialog = false
                     }.onFailure {
