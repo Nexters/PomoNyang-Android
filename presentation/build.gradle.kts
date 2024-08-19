@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.bundles.androidx.compose.navigation)
     implementation(libs.permission)
     implementation(libs.rive)
+    implementation(libs.lottie.compose)
 
     // module impl
     implementation(projects.domain)
