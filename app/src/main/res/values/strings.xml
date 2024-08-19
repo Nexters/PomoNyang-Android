@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">moha-nyang</string>
+    <string name="app_name">모하냥</string>
     <string name="channel_id">moha-nyang-channel</string>
     <string name="channel_name">moha-nyang</string>
     <string name="channel_group_name">moha-nyang-pomodoro</string>
