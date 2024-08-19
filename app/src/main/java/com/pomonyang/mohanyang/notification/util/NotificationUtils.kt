@@ -5,11 +5,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import com.pomonyang.mohanyang.R
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
@@ -37,7 +35,7 @@ fun Context.defaultNotification(
     getString(R.string.channel_id)
 )
     .setContentIntent(pendingIntent)
-    .setSmallIcon(com.mohanyang.presentation.R.drawable.ic_null)
+    .setSmallIcon(com.mohanyang.presentation.R.drawable.ic_launcher)
     .setPriority(NotificationCompat.PRIORITY_HIGH)
     .setAutoCancel(true)
     .setOnlyAlertOnce(true)
@@ -57,6 +55,4 @@ fun getTriggerTimeInMillis(time: LocalTime): Long {
         .toEpochMilli()
 }
 
-fun Context.isNotificationGranted(): Boolean = (
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
-    )
+fun Context.isNotificationGranted(): Boolean = MnNotificationManager.isNotificationGranted(this)
