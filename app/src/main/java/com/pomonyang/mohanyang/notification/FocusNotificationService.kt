@@ -99,20 +99,20 @@ class FocusNotificationService : Service() {
         focusNotificationJob = scope.launch {
             // 10초 후 첫 알림 전송
             delay(FIRST_DELAY)
-            addAlarm(LocalTime.now(), "10초: ${getString(selectedCatType.backgroundPushContent)}")
+            addAlarm(LocalTime.now(), getString(selectedCatType.backgroundPushContent))
 
             // 30초마다 반복 알림 전송
-            repeat(MAX_NOTIFICATION_COUNT) {
+            /* 무한 발송 */
+            while (true) {
                 delay(REPEAT_DELAY)
-                addAlarm(LocalTime.now(), "30초: ${getString(selectedCatType.backgroundPushContent)} ${(it + 1)}/${MAX_NOTIFICATION_COUNT}")
+                addAlarm(LocalTime.now(), getString(selectedCatType.backgroundPushContent))
             }
-            delay(LAST_ALARM_DISPLAY_DURATION)
-            stopSelf()
+            // delay(LAST_ALARM_DISPLAY_DURATION)
+            // stopSelf()
         }
     }
 
     companion object {
-        // TODO 최대 수가 없다고 픽스나면 while true로 변경하기
         private const val MAX_NOTIFICATION_COUNT = 10
         private val FIRST_DELAY = if (BuildConfig.DEBUG) 2_000L else 10_000L
         private val REPEAT_DELAY = if (BuildConfig.DEBUG) 5_000L else 30_000L
