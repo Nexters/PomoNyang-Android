@@ -8,7 +8,7 @@
     <string name="rest_action">휴식하기</string>
     <string name="one_more_focus">한 번 더 집중하기</string>
     <string name="rest_start">휴식 시작하기</string>
-    <string name="complete">완료</string>
+    <string name="complete">확인</string>
     <string name="tooltip_category_content">눌러서 카테고리를 변경할 수 있어요</string>
     <string name="tooltip_time_content">눌러서 시간을 조정할 수 있어요</string>
     <string name="tooltip_rest_content">푹 쉬었나요?\n힘내서 다시 집중할까냥?</string>

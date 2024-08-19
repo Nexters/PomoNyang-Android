@@ -55,6 +55,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.guideTooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -153,14 +155,12 @@ fun PomodoroSettingScreen(
         ) {
             CatRive(
                 tooltipMessage = stringResource(R.string.welcome_cat_tooltip),
-                riveResource = R.raw.cat_motion_transparent,
-                onRiveClick = {
-                    it.fireState("State Machine 1", "Click")
-                }
+                riveResource = R.raw.cat_select_motion,
+                riveAnimationName = state.cat.type.riveAnimation
             )
 
             Text(
-                text = state.catName,
+                text = state.cat.name,
                 style = MnTheme.typography.header4,
                 color = MnTheme.textColorScheme.tertiary
             )
@@ -360,7 +360,11 @@ fun PomodoroStarterScreenPreview() {
                     restTime = 10
                 )
             ),
-            catName = "까만냥"
+            cat = CatInfoModel(
+                no = 0,
+                name = "이이오",
+                type = CatType.CHEESE
+            )
         )
     )
 }

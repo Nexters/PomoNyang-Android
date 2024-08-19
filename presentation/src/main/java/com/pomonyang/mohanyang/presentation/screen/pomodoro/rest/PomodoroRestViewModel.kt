@@ -4,12 +4,15 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.usecase.AdjustPomodoroTimeUseCase
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
+import com.pomonyang.mohanyang.presentation.model.cat.toModel
 import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_REST_MINUTES
@@ -31,8 +34,9 @@ data class PomodoroRestState(
     val maxRestTime: Int = 0,
     val currentRestTime: Int = 0,
     val exceededTime: Int = 0,
-    val type: String = "",
+    val categoryType: String = "",
     val categoryNo: Int = -1,
+    val catType: CatType = CatType.CHEESE,
     val plusButtonSelected: Boolean = false,
     val minusButtonSelected: Boolean = false,
     val plusButtonEnabled: Boolean = true,
@@ -61,7 +65,8 @@ sealed interface PomodoroRestEffect : ViewSideEffect {
 class PomodoroRestViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
     private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase,
-    private val pomodoroTimerRepository: PomodoroTimerRepository
+    private val pomodoroTimerRepository: PomodoroTimerRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel<PomodoroRestState, PomodoroRestEvent, PomodoroRestEffect>() {
 
     private var timerJob: Job? = null
@@ -72,11 +77,13 @@ class PomodoroRestViewModel @Inject constructor(
         when (event) {
             PomodoroRestEvent.Init -> viewModelScope.launch {
                 val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
+                val cat = userRepository.getMyInfo().cat.toModel()
                 updateState {
                     copy(
-                        type = selectedPomodoroSetting.title,
+                        categoryType = selectedPomodoroSetting.title,
                         maxRestTime = (selectedPomodoroSetting.focusTime.times(60)),
                         categoryNo = selectedPomodoroSetting.categoryNo,
+                        catType = cat.type,
                         plusButtonEnabled = selectedPomodoroSetting.restTime < MAX_REST_MINUTES,
                         minusButtonEnabled = selectedPomodoroSetting.restTime > MIN_REST_MINUTES
                     )

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalAssetLoader::class)
+
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
 import androidx.activity.compose.BackHandler
@@ -22,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
@@ -34,6 +37,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -99,7 +103,8 @@ fun PomodoroTimerRoute(
     PomodoroTimerScreen(
         modifier = modifier,
         title = state.title,
-        type = state.type,
+        categoryType = state.categoryType,
+        catType = state.cat,
         time = state.displayFocusTime(),
         exceededTime = state.displayExceedTime(),
         onAction = remember { pomodoroTimerViewModel::handleEvent }
@@ -109,7 +114,8 @@ fun PomodoroTimerRoute(
 @Composable
 private fun PomodoroTimerScreen(
     title: String,
-    type: PomodoroCategoryType,
+    categoryType: PomodoroCategoryType,
+    catType: CatType,
     time: String,
     exceededTime: String,
     onAction: (PomodoroTimerEvent) -> Unit,
@@ -126,7 +132,7 @@ private fun PomodoroTimerScreen(
         MnTopAppBar(
             navigationIcon = {
                 CategoryBox(
-                    iconRes = type.iconRes,
+                    iconRes = categoryType.iconRes,
                     categoryName = title,
                     modifier = Modifier.padding(start = 12.dp)
                 )
@@ -135,7 +141,12 @@ private fun PomodoroTimerScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        CatRive(tooltipMessage = stringResource(id = tooltipMessage), riveResource = R.raw.cat_motion_transparent)
+        CatRive(
+            riveAnimationName = catType.riveAnimation,
+            tooltipMessage = stringResource(id = tooltipMessage),
+            riveResource = R.raw.cat_select_motion
+
+        )
 
         TimerType(type = stringResource(id = R.string.focus_time), iconRes = R.drawable.ic_focus)
 
@@ -168,10 +179,11 @@ private fun PomodoroTimerScreenPreview() {
     MnTheme {
         PomodoroTimerScreen(
             title = "공부",
-            type = PomodoroCategoryType.DEFAULT,
+            categoryType = PomodoroCategoryType.DEFAULT,
             time = "25:00",
             exceededTime = "00:00",
-            onAction = {}
+            onAction = {},
+            catType = CatType.CHEESE
         )
     }
 }
@@ -182,10 +194,11 @@ private fun PomodoroTimerExceedScreenPreview() {
     MnTheme {
         PomodoroTimerScreen(
             title = "공부",
-            type = PomodoroCategoryType.DEFAULT,
+            categoryType = PomodoroCategoryType.DEFAULT,
             time = "25:00",
             exceededTime = "10:00",
-            onAction = {}
+            onAction = {},
+            catType = CatType.CHEESE
         )
     }
 }
