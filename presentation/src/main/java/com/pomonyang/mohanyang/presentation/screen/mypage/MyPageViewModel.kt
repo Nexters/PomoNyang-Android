@@ -23,12 +23,14 @@ sealed interface MyPageEvent : ViewEvent {
     data class ChangeInterruptNotification(val isEnabled: Boolean) : MyPageEvent
     data class ChangeTimerNotification(val isEnabled: Boolean) : MyPageEvent
     data object CloseDialog : MyPageEvent
+    data object OpenSetting : MyPageEvent
 }
 
 sealed interface MyPageSideEffect : ViewSideEffect {
     data object GoToCatProfilePage : MyPageSideEffect
-    data class CheckNotificationPermission(val onGranted: () -> Unit) : MyPageSideEffect
+    data class CheckNotificationPermission(val request: NotificationRequest, val onGranted: () -> Unit) : MyPageSideEffect
     data object CloseDialog : MyPageSideEffect
+    data object OpenDialog : MyPageSideEffect
 }
 
 @HiltViewModel
@@ -51,6 +53,7 @@ class MyPageViewModel @Inject constructor(
             is MyPageEvent.ChangeTimerNotification -> {
                 setEffect(
                     MyPageSideEffect.CheckNotificationPermission(
+                        request = NotificationRequest.TIMER,
                         onGranted = { setITimerNotification(event.isEnabled) }
                     )
                 )
@@ -59,6 +62,7 @@ class MyPageViewModel @Inject constructor(
             is MyPageEvent.ChangeInterruptNotification -> {
                 setEffect(
                     MyPageSideEffect.CheckNotificationPermission(
+                        request = NotificationRequest.INTERRUPT,
                         onGranted = { setInterruptNotification(event.isEnabled) }
                     )
                 )
@@ -66,6 +70,10 @@ class MyPageViewModel @Inject constructor(
 
             is MyPageEvent.CloseDialog -> {
                 setEffect(MyPageSideEffect.CloseDialog)
+            }
+
+            is MyPageEvent.OpenSetting -> {
+                setEffect(MyPageSideEffect.OpenDialog)
             }
         }
     }

@@ -5,6 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.pomonyang.mohanyang.presentation.screen.mypage.profile.CatProfileRoute
+import com.pomonyang.mohanyang.presentation.screen.onboarding.CatSettingDestination
+import com.pomonyang.mohanyang.presentation.screen.onboarding.OnboardingNamingCat
+import com.pomonyang.mohanyang.presentation.screen.onboarding.OnboardingSelectCat
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -31,7 +34,13 @@ fun NavGraphBuilder.myPageScreen(
 
         composable<CatProfile> {
             CatProfileRoute(
-                onBackClick = { navHostController.popBackStack() }
+                onBackClick = { navHostController.popBackStack() },
+                onCatChangeClick = { catNo ->
+                    navHostController.navigate(OnboardingSelectCat(selectedCatNo = catNo, destination = CatSettingDestination.MY_PAGE.name))
+                },
+                onCatNameChangeClick = { catName, catNo, catType ->
+                    navHostController.navigate(OnboardingNamingCat(catName = catName, catNo = catNo, destination = CatSettingDestination.MY_PAGE.name, selectedCatRiveAnimation = catType.riveAnimation))
+                }
             )
         }
     }

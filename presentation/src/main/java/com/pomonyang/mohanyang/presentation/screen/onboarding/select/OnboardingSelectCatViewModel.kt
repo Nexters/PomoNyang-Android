@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.onboarding.select
 
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepository
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
@@ -20,7 +21,7 @@ data class SelectCatState(
 ) : ViewState
 
 sealed interface SelectCatEvent : ViewEvent {
-    data object Init : SelectCatEvent
+    data class Init(val catNo: Int? = null) : SelectCatEvent
     data class OnSelectType(val type: CatType) : SelectCatEvent
     data object OnStartClick : SelectCatEvent
 }
@@ -31,7 +32,8 @@ sealed interface SelectCatSideEffect : ViewSideEffect {
 
 @HiltViewModel
 class OnboardingSelectCatViewModel @Inject constructor(
-    private val catSettingRepository: CatSettingRepository
+    private val catSettingRepository: CatSettingRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel<SelectCatState, SelectCatEvent, SelectCatSideEffect>() {
 
     override fun setInitialState(): SelectCatState = SelectCatState()
@@ -39,7 +41,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
     override fun handleEvent(event: SelectCatEvent) {
         when (event) {
             is SelectCatEvent.Init -> {
-                getCatTypes()
+                getCatTypes(event.catNo)
             }
 
             is SelectCatEvent.OnSelectType -> {
@@ -56,11 +58,12 @@ class OnboardingSelectCatViewModel @Inject constructor(
         }
     }
 
-    private fun getCatTypes() {
+    private fun getCatTypes(selectedCatNo: Int?) {
         viewModelScope.launch {
             catSettingRepository.getCatTypes().also { response ->
                 response.onSuccess { cats ->
-                    updateState { copy(cats = cats.map { it.toModel() }) }
+                    val catList = cats.map { it.toModel() }
+                    updateState { copy(cats = catList, selectedType = catList.find { it.no == selectedCatNo }?.type) }
                 }
             }
         }
@@ -69,11 +72,14 @@ class OnboardingSelectCatViewModel @Inject constructor(
     private fun updateSelectCatType(catNo: Int) {
         viewModelScope.launch {
             catSettingRepository.updateCatType(catNo).onSuccess {
-                val catName = state.value.cats.find { it.no == catNo }
-                setEffect(SelectCatSideEffect.OnNavToNaming(catNo, catName?.name ?: "", state.value.selectedType?.riveAnimation))
-            }.onFailure {
-                Timber.e(it)
+                userRepository.fetchMyInfo().onSuccess {
+                    val cat = state.value.cats.find { it.no == catNo }
+                    setEffect(SelectCatSideEffect.OnNavToNaming(catNo, cat?.name ?: "", state.value.selectedType?.riveAnimation))
+                }
             }
+                .onFailure {
+                    Timber.e(it)
+                }
         }
     }
 }

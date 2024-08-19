@@ -19,14 +19,23 @@ data object Onboarding
 internal data object OnboardingGuide
 
 @Serializable
-internal data object OnboardingSelectCat
+internal data class OnboardingSelectCat(
+    val selectedCatNo: Int,
+    val destination: String
+)
 
 @Serializable
 internal data class OnboardingNamingCat(
     val catNo: Int,
     val catName: String,
-    val selectedCatRiveAnimation: String?
+    val destination: String,
+    val selectedCatRiveAnimation: String
 )
+
+enum class CatSettingDestination {
+    POMODORO,
+    MY_PAGE
+}
 
 fun NavGraphBuilder.onboardingScreen(
     navHostController: NavHostController
@@ -37,16 +46,34 @@ fun NavGraphBuilder.onboardingScreen(
         composable<OnboardingGuide> {
             OnboardingGuideRoute(
                 onStartClick = {
-                    navHostController.navigate(OnboardingSelectCat)
+                    navHostController.navigate(
+                        OnboardingSelectCat(
+                            selectedCatNo = -1,
+                            destination = CatSettingDestination.POMODORO.name
+                        )
+                    )
                 }
             )
         }
 
-        composable<OnboardingSelectCat> {
+        composable<OnboardingSelectCat> { navBackStackEntry ->
+
+            val routeData = navBackStackEntry.toRoute<OnboardingSelectCat>()
+            val destination = CatSettingDestination.valueOf(routeData.destination)
+
             OnboardingSelectCatRoute(
+                selectedCatNo = routeData.selectedCatNo,
                 onBackClick = { navHostController.popBackStack() },
-                onNavToNaming = { catNo, catName, selectedCatRiveAnimation ->
-                    navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, selectedCatRiveAnimation = selectedCatRiveAnimation))
+                onStartClick = { catNo, catName, animation ->
+                    when (destination) {
+                        CatSettingDestination.POMODORO -> {
+                            navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, destination = destination.name, selectedCatRiveAnimation = animation ?: ""))
+                        }
+
+                        CatSettingDestination.MY_PAGE -> {
+                            navHostController.popBackStack()
+                        }
+                    }
                 }
             )
         }
@@ -55,16 +82,25 @@ fun NavGraphBuilder.onboardingScreen(
             val namingCat = navBackStackEntry.toRoute<OnboardingNamingCat>()
             val catName = namingCat.catName
             val selectedCatRiveAnimation = namingCat.selectedCatRiveAnimation
+            val destination = CatSettingDestination.valueOf(namingCat.destination)
 
             OnboardingNamingCatRoute(
                 catName = catName,
                 selectedCatRiveAnimation = selectedCatRiveAnimation,
                 onBackClick = { navHostController.popBackStack() },
-                onNavToHome = {
-                    navHostController.navigate(
-                        route = Pomodoro(isNewUser = true),
-                        navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build()
-                    )
+                onNavToDestination = {
+                    when (destination) {
+                        CatSettingDestination.POMODORO -> {
+                            navHostController.navigate(
+                                route = Pomodoro(isNewUser = true),
+                                navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build()
+                            )
+                        }
+
+                        CatSettingDestination.MY_PAGE -> {
+                            navHostController.popBackStack()
+                        }
+                    }
                 }
             )
         }
