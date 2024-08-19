@@ -64,7 +64,6 @@ fun MyPageRoute(
     }
 
     val launcher = rememberLauncherForActivityResult(
-
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (MnNotificationManager.isNotificationGranted(context)) {
@@ -82,7 +81,7 @@ fun MyPageRoute(
         }
     }
 
-    fun openSetting(request: NotificationRequest) {
+    fun openSetting() {
         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
         intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
         launcher.launch(intent)
@@ -109,7 +108,7 @@ fun MyPageRoute(
             }
 
             is MyPageSideEffect.OpenDialog -> {
-                permissionRequest?.let { openSetting(it) }
+                permissionRequest?.let { openSetting() }
             }
         }
     }
@@ -143,12 +142,12 @@ fun MyPageScreen(
 
     if (isShowDialog) {
         MnDialog(
-            title = "설정에서 알림을 켜주세요",
-            subTitle = "안드로이드 설정에서 모하냥 앱의 알림 표시를 허용하면 Push 알림을 받을 수 있어요. 지금 설정하시겠어요?",
+            title = stringResource(id = R.string.notification_dialog_title),
+            subTitle = stringResource(id = R.string.notification_dialog_sub_title),
             positiveButton = {
                 MnBoxButton(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "다음에",
+                    text = stringResource(id = R.string.notification_dialog_cancel),
                     onClick = { onAction(MyPageEvent.CloseDialog) },
                     colors = MnBoxButtonColorType.tertiary,
                     styles = MnBoxButtonStyles.medium
@@ -157,7 +156,7 @@ fun MyPageScreen(
             negativeButton = {
                 MnBoxButton(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "설정으로 이동",
+                    text = stringResource(id = R.string.notification_dialog_move),
                     onClick = { onAction(MyPageEvent.OpenSetting) },
                     colors = MnBoxButtonColorType.primary,
                     styles = MnBoxButtonStyles.medium

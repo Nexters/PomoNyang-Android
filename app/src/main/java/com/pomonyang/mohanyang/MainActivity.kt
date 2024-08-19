@@ -204,7 +204,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val iconFadeOut = ObjectAnimator.ofFloat(splashScreenView.iconView, View.ALPHA, 1f, 0f).apply {
-                    duration = 300L
+                    duration = 200L
                 }
 
                 AnimatorSet().apply {
