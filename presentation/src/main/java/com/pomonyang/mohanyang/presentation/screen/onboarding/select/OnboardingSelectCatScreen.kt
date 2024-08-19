@@ -73,7 +73,9 @@ fun OnboardingSelectCatRoute(
         }
     }
 
-    NotificationPermissionEffect()
+    NotificationPermissionEffect {
+        onboardingSelectCatViewModel.handleEvent(SelectCatEvent.OnGrantedAlarmPermission)
+    }
 
     OnboardingSelectCatScreen(
         selectedCatNo = if (selectedCatNo != -1) selectedCatNo else null,
@@ -313,16 +315,33 @@ private fun CatCategory(
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun NotificationPermissionEffect() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+private fun NotificationPermissionEffect(
+    onGranted: () -> Unit
+) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        onGranted()
+        return
+    }
+
     val notificationsPermissionState = rememberPermissionState(
         android.Manifest.permission.POST_NOTIFICATIONS
     )
+
     LaunchedEffect(notificationsPermissionState) {
         val status = notificationsPermissionState.status
-        if (status is PermissionStatus.Denied && !status.shouldShowRationale) {
-            notificationsPermissionState.launchPermissionRequest()
+        when (status) {
+            is PermissionStatus.Granted -> {
+                onGranted()
+            }
+
+            is PermissionStatus.Denied -> {
+                notificationsPermissionState.launchPermissionRequest()
+            }
         }
+    }
+
+    if (notificationsPermissionState.status is PermissionStatus.Granted) {
+        onGranted()
     }
 }
 

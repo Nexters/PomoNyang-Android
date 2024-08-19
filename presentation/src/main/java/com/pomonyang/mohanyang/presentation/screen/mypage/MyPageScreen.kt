@@ -3,6 +3,7 @@ package com.pomonyang.mohanyang.presentation.screen.mypage
 import MnToggleButton
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -108,7 +109,11 @@ fun MyPageRoute(
             }
 
             is MyPageSideEffect.OpenDialog -> {
-                permissionRequest?.let { openSetting() }
+                openSetting()
+            }
+
+            is MyPageSideEffect.OpenExternalWebPage -> {
+                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(effect.url)))
             }
         }
     }
@@ -210,7 +215,11 @@ fun MyPageScreen(
                     onAction = onAction
                 )
             }
-            item { SuggestionBox() }
+            item {
+                SuggestionBox {
+                    onAction(MyPageEvent.ClickSuggestion)
+                }
+            }
         }
     }
 }
@@ -219,7 +228,7 @@ fun MyPageScreen(
 fun ProfileBox(
     catName: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
     Box(
         modifier = modifier

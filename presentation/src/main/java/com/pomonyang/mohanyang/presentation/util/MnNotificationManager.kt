@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.util
 
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -39,7 +40,12 @@ object MnNotificationManager {
         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(INTENT_STOP_INTERRUPT_MESSAGE))
     }
 
-    fun isNotificationGranted(context: Context): Boolean = (
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
-        )
+    fun isNotificationGranted(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            return notificationManager.areNotificationsEnabled()
+        }
+    }
 }

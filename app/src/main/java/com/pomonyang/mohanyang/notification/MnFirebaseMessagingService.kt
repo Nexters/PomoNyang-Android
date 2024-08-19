@@ -12,6 +12,7 @@ import com.pomonyang.mohanyang.MainActivity
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.notification.util.defaultNotification
+import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -34,10 +35,10 @@ internal class MnFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         scope.launch {
+            pushAlarmRepository.saveFcmToken(token)
             userRepository.getMyInfo().let {
                 if (it.isPushEnabled) {
                     pushAlarmRepository.apply {
-                        saveFcmToken(token)
                         registerPushToken(token)
                     }
                 }
@@ -49,6 +50,7 @@ internal class MnFirebaseMessagingService : FirebaseMessagingService() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             return
         }
+        if (!applicationContext.isNotificationGranted()) return
 
         val isPushEnabled = runBlocking { userRepository.getMyInfo().isPushEnabled }
         if (!isPushEnabled) return

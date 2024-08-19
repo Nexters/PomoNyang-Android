@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.onboarding.select
 
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepository
+import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
@@ -24,6 +25,7 @@ sealed interface SelectCatEvent : ViewEvent {
     data class Init(val catNo: Int? = null) : SelectCatEvent
     data class OnSelectType(val type: CatType) : SelectCatEvent
     data object OnStartClick : SelectCatEvent
+    data object OnGrantedAlarmPermission : SelectCatEvent
 }
 
 sealed interface SelectCatSideEffect : ViewSideEffect {
@@ -33,6 +35,7 @@ sealed interface SelectCatSideEffect : ViewSideEffect {
 @HiltViewModel
 class OnboardingSelectCatViewModel @Inject constructor(
     private val catSettingRepository: CatSettingRepository,
+    private val pushAlarmRepository: PushAlarmRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel<SelectCatState, SelectCatEvent, SelectCatSideEffect>() {
 
@@ -53,6 +56,13 @@ class OnboardingSelectCatViewModel @Inject constructor(
                     cats.find { it.type == selectedType }?.no
                 }?.let { selectedNo ->
                     updateSelectCatType(selectedNo)
+                }
+            }
+
+            SelectCatEvent.OnGrantedAlarmPermission -> {
+                viewModelScope.launch {
+                    pushAlarmRepository.setInterruptNotification(true)
+                    pushAlarmRepository.setTimerNotification(true)
                 }
             }
         }
