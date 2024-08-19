@@ -78,6 +78,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         handleSplashScreen()
         super.onCreate(savedInstanceState)
+
         AppInitializer.getInstance(applicationContext)
             .initializeComponent(RiveInitializer::class.java)
         GlobalScope.launch { pomodoroTimerRepository.savePomodoroCacheData() }
@@ -101,6 +102,7 @@ class MainActivity : ComponentActivity() {
                             if (it.cat.no == -1) isNewUser = true
                         }
                         pomodoroSettingRepository.fetchPomodoroSettingList()
+                        fetchNotificationState()
                         showDialog = false
                     }.onFailure {
                         showDialog = isNewUser
@@ -147,6 +149,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private suspend fun fetchNotificationState() {
+        if (MnNotificationManager.isNotificationGranted(this)) {
+            with(pushAlarmRepository) {
+                subscribeNotification()
+                registerPushToken(getFcmToken())
+            }
+        } else {
+            pushAlarmRepository.unSubscribeNotification()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         MnNotificationManager.stopInterrupt(this)
@@ -181,6 +194,7 @@ class MainActivity : ComponentActivity() {
     private fun handleSplashScreen() {
         installSplashScreen().also {
             it.setOnExitAnimationListener { splashScreenViewProvider ->
+
                 val splashScreenView = splashScreenViewProvider.view
                 val startColor = ContextCompat.getColor(splashScreenView.context, R.color.splash_background)
                 val endColor = ContextCompat.getColor(splashScreenView.context, R.color.splash_delay_background)
