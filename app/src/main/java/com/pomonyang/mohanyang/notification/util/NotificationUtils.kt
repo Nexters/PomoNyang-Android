@@ -35,7 +35,7 @@ fun Context.defaultNotification(
     getString(R.string.channel_id)
 )
     .setContentIntent(pendingIntent)
-    .setSmallIcon(com.mohanyang.presentation.R.drawable.ic_launcher)
+    .setSmallIcon(R.drawable.ic_app_notification)
     .setPriority(NotificationCompat.PRIORITY_HIGH)
     .setAutoCancel(true)
     .setOnlyAlertOnce(true)
