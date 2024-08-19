@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.onboarding.guide
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,14 +26,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
@@ -68,24 +69,15 @@ private fun OnboardingGuideScreen(
 ) {
     val onboardingContents = LocalContext.current.getOnBoardingContents()
 
-    val screenHeightPixel = LocalConfiguration.current.screenHeightDp
-    val topPadding = when {
-        screenHeightPixel <= 640 -> 40.dp
-        screenHeightPixel in 641..740 -> 60.dp
-        screenHeightPixel in 741..812 -> 100.dp
-        else -> 141.dp
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars)
             .background(MnTheme.backgroundColorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Center
     ) {
         OnboardingSlider(
-            modifier = Modifier.padding(top = topPadding),
             contents = onboardingContents
         )
         MnBoxButton(
@@ -173,7 +165,11 @@ private fun OnboardingGuideContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MnSpacing.threeXLarge)
     ) {
-        CatRive(riveResource = R.raw.cat_select_motion)
+        Image(
+            painter = painterResource(id = content.image),
+            contentDescription = stringResource(R.string.onboarding_guide_image),
+            modifier = Modifier.size(240.dp)
+        )
         TextGuide(content)
     }
 }
@@ -247,7 +243,8 @@ private fun OnboardingContentPreview() {
         content = OnboardingGuideContent(
             title = "모하냥과 함께 집중시간을 늘려보세요",
             subtitle = "고양이 종에 따라 성격이 달라요\n" +
-                "취향에 맞는 고양이를 선택해 몰입해 보세요"
+                "취향에 맞는 고양이를 선택해 몰입해 보세요",
+            image = R.drawable.onboarding_contents_1
         )
     )
 }

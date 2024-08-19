@@ -223,12 +223,12 @@ fun SelectedAlarmExample(
                 modifier = Modifier
                     .size(38.dp)
                     .background(
-                        MnTheme.backgroundColorScheme.tertiary,
+                        MnColor.Orange100,
                         shape = RoundedCornerShape(8.5.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Image(painter = painterResource(id = R.drawable.ic_null), contentDescription = "alarm_img")
+                Image(painter = painterResource(id = R.drawable.ic_app), contentDescription = "alarm_img")
             }
 
             Column {

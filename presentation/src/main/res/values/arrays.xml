@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="onboarding_guide_image">
+        <item>@drawable/onboarding_contents_1</item>
+        <item>@drawable/onboarding_contents_2</item>
+        <item>@drawable/onboarding_contents_3</item>
+    </array>
+</resources>
