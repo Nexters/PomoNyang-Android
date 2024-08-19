@@ -78,6 +78,8 @@
     <string name="my_page_interrupt_push_title">딴 짓 방해하기</string>
     <string name="my_page_interrupt_push_content">다른 앱을 사용하면 고양이가 방해해요</string>
     <string name="my_page_suggestion">의견보내기</string>
+    <string name="my_page_offline_message">오프라인 모드에서 고양이 변경은 불가능합니다</string>
+
     <string name="timer_exceed_time">초과</string>
 
     <string name="notification_dialog_title">설정에서 알림을 켜주세요</string>

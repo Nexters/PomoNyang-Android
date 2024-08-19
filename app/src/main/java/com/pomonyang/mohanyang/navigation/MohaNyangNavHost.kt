@@ -71,6 +71,10 @@ internal fun MohaNyangNavHost(
             onForceGoHome = onForceGoHome
         )
 
-        myPageScreen(navHostController = navHostController)
+        myPageScreen(
+            navHostController = navHostController,
+            isOfflineState = mohaNyangAppState.isOffline,
+            onShowSnackbar = onShowSnackbar
+        )
     }
 }
