@@ -2,10 +2,12 @@ package com.pomonyang.mohanyang
 
 import android.app.Activity
 import android.content.IntentFilter
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -79,7 +81,10 @@ class MainActivity : ComponentActivity() {
         GlobalScope.launch { pomodoroTimerRepository.savePomodoroCacheData() }
         handleSplashScreen()
         initializeFCM()
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+        )
 
         setContent {
             val coroutineScope = rememberCoroutineScope()
