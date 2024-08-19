@@ -57,7 +57,7 @@ fun PomodoroTimerRoute(
         // NOTHING
     }
 
-    pomodoroTimerViewModel.effects.collectWithLifecycle {
+    pomodoroTimerViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) {
         when (it) {
             is PomodoroTimerEffect.GoToPomodoroRest -> {
                 goToRest(it.title, it.focusTime, it.exceededTime)

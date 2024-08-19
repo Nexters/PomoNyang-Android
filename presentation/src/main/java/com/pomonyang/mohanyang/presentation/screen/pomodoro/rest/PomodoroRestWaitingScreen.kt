@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -51,7 +52,7 @@ fun PomodoroRestWaitingRoute(
     onShowSnackbar: (String, Int?) -> Unit
 ) {
     val state by pomodoroRestWaitingViewModel.state.collectAsStateWithLifecycle()
-    pomodoroRestWaitingViewModel.effects.collectWithLifecycle { effect ->
+    pomodoroRestWaitingViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
         when (effect) {
             PomodoroRestWaitingSideEffect.GoToPomodoroSetting -> goToHome()
             is PomodoroRestWaitingSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
