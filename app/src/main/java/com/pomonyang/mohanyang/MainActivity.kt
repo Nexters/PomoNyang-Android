@@ -6,10 +6,7 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.IntentFilter
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
@@ -78,22 +75,19 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var pomodoroTimerRepository: PomodoroTimerRepository
 
-    private var keepSplashOnScreen = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        handleSplashScreen()
         super.onCreate(savedInstanceState)
         AppInitializer.getInstance(applicationContext)
             .initializeComponent(RiveInitializer::class.java)
+        GlobalScope.launch { pomodoroTimerRepository.savePomodoroCacheData() }
         createNotificationChannel()
         registerNotificationService()
-        GlobalScope.launch { pomodoroTimerRepository.savePomodoroCacheData() }
-        handleSplashScreen()
         initializeFCM()
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
         )
-
         setContent {
             val coroutineScope = rememberCoroutineScope()
             val activity = (LocalContext.current as? Activity)
@@ -183,35 +177,30 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleSplashScreen() {
-        installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
-        setSplashAnimation()
-        Handler(Looper.getMainLooper()).postDelayed({ keepSplashOnScreen = false }, Companion.SPLASH_DELAY)
-    }
-
-    private fun setSplashAnimation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            splashScreen.setOnExitAnimationListener { splashScreenView ->
-
+        installSplashScreen().also {
+            it.setOnExitAnimationListener { splashScreenViewProvider ->
+                val splashScreenView = splashScreenViewProvider.view
                 val startColor = ContextCompat.getColor(splashScreenView.context, R.color.splash_background)
                 val endColor = ContextCompat.getColor(splashScreenView.context, R.color.splash_delay_background)
 
                 val colorAnim = ValueAnimator.ofArgb(startColor, Color.WHITE, endColor).apply {
-                    duration = 300L
+                    duration = SPLASH_ANIMATE_DURATION
                     addUpdateListener { animator ->
                         val animatedColor = animator.animatedValue as Int
                         splashScreenView.setBackgroundColor(animatedColor)
                     }
                 }
 
-                val iconFadeOut = ObjectAnimator.ofFloat(splashScreenView.iconView, View.ALPHA, 1f, 0f).apply {
-                    duration = 200L
+                val iconFadeOut = ObjectAnimator.ofFloat(splashScreenViewProvider.iconView, View.ALPHA, 1f, 0f).apply {
+                    duration = SPLASH_ANIMATE_DURATION
                 }
 
                 AnimatorSet().apply {
                     playTogether(iconFadeOut, colorAnim)
                     interpolator = AnticipateInterpolator()
+                    startDelay = SPLASH_DELAY
                     doOnEnd {
-                        splashScreenView.remove()
+                        splashScreenViewProvider.remove()
                     }
                     start()
                 }
@@ -221,5 +210,6 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         private const val SPLASH_DELAY = 1500L
+        private const val SPLASH_ANIMATE_DURATION = 500L
     }
 }
