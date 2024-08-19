@@ -2,6 +2,7 @@
 
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
+import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -60,6 +61,7 @@ import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -75,6 +77,7 @@ fun PomodoroSettingRoute(
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
+        if (isNewUser && state.isEndOnBoardingTooltip.not()) return@collectWithLifecycle
         when (effect) {
             is PomodoroSettingSideEffect.ShowSnackBar -> onShowSnackbar(effect.message, effect.iconRes)
             is PomodoroSettingSideEffect.GoTimeSetting -> goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
@@ -103,6 +106,7 @@ fun PomodoroSettingRoute(
     )
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PomodoroSettingScreen(
     onAction: (PomodoroSettingEvent) -> Unit,
@@ -113,9 +117,14 @@ fun PomodoroSettingScreen(
     val pomodoroSelectedCategoryModel by remember(state.selectedCategoryNo) {
         mutableStateOf(state.categoryList.find { it.categoryNo == state.selectedCategoryNo })
     }
-    var categoryTooltip by remember { mutableStateOf(showOnboardingTooltip) }
+    var categoryTooltip by remember { mutableStateOf(false) }
     var timeTooltip by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        delay(0.5.seconds)
+        categoryTooltip = showOnboardingTooltip
+    }
 
     Scaffold(
         modifier = modifier,
