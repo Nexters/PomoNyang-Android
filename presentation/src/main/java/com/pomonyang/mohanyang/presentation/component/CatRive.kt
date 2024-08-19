@@ -32,7 +32,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.tooltip.MnTooltipDefaul
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.TooltipAnchor
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.TooltipContent
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
-import com.pomonyang.mohanyang.presentation.util.debounceNoRippleClickable
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 
@@ -114,7 +114,9 @@ fun CatRive(
                 Box(
                     modifier = Modifier
                         .matchParentSize()
-                        .debounceNoRippleClickable {
+                        .clickableSingle(
+                            activeRippleEffect = false
+                        ) {
                             onRiveClick(riveView)
                         }
                 )

@@ -36,8 +36,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun OnboardingNamingCatRoute(
@@ -93,7 +93,7 @@ fun OnboardingNamingCatScreen(
         modifier = modifier
             .fillMaxSize()
             .background(MnTheme.backgroundColorScheme.primary)
-            .noRippleClickable {
+            .clickableSingle(activeRippleEffect = false) {
                 focusManager.clearFocus(true)
                 keyboardController?.hide()
             }

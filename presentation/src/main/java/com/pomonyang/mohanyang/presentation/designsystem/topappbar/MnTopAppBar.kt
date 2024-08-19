@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.dpToPx
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun MnTopAppBar(
@@ -94,7 +94,7 @@ private fun MnTopAppBarPreview() {
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .noRippleClickable { },
+                        .clickableSingle(activeRippleEffect = false) { },
                     contentAlignment = Alignment.Center
                 ) {
                     MnMediumIcon(
@@ -107,7 +107,7 @@ private fun MnTopAppBarPreview() {
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .noRippleClickable { },
+                        .clickableSingle(activeRippleEffect = false) { },
                     contentAlignment = Alignment.Center
                 ) {
                     MnMediumIcon(
@@ -133,7 +133,7 @@ private fun MnTopAppBarNotUseActionsPreview() {
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .noRippleClickable { },
+                        .clickableSingle(activeRippleEffect = false) { },
                     contentAlignment = Alignment.Center
                 ) {
                     MnMediumIcon(
@@ -159,7 +159,7 @@ private fun MnTopAppBarNotUseNaivigationPreview() {
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .noRippleClickable { },
+                        .clickableSingle(activeRippleEffect = false) { },
                     contentAlignment = Alignment.Center
                 ) {
                     MnMediumIcon(

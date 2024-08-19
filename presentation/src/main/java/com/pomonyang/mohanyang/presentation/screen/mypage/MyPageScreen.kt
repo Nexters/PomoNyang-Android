@@ -42,8 +42,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun MyPageRoute(
@@ -230,7 +230,7 @@ fun ProfileBox(
                 shape = RoundedCornerShape(MnRadius.small)
             )
             .padding(MnSpacing.xLarge)
-            .noRippleClickable { onClick() }
+            .clickableSingle(activeRippleEffect = false) { onClick() }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -358,7 +358,7 @@ fun SuggestionBox(
                 shape = RoundedCornerShape(MnRadius.small)
             )
             .padding(MnSpacing.xLarge)
-            .noRippleClickable {
+            .clickableSingle(activeRippleEffect = false) {
                 onClick()
             }
     ) {

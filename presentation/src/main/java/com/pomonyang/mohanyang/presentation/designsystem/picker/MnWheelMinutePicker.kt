@@ -46,8 +46,8 @@ import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.formatToMinutesAndSeconds
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
@@ -221,7 +221,7 @@ private fun BoxScope.WheelItemList(
                     .height(if (isCentralItem) focusItemHeight else itemHeight)
                     .padding(start = if (isCentralItem) 36.dp else 0.dp)
                     .fillMaxWidth()
-                    .noRippleClickable { onItemClick(index) },
+                    .clickableSingle(activeRippleEffect = false) { onItemClick(index) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(

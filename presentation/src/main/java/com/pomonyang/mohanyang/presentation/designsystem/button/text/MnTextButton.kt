@@ -23,7 +23,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.common.MnPressab
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 
 @Composable
 fun MnTextButton(
@@ -81,7 +81,7 @@ fun PreviewMnBoxButton() {
                 onClick = {}
             )
             MnTextButton(
-                modifier = Modifier.noRippleClickable { },
+                modifier = Modifier.clickableSingle(activeRippleEffect = false) { },
                 styles = MnTextButtonStyles.large,
                 text = "Button",
                 onClick = {},
@@ -91,7 +91,7 @@ fun PreviewMnBoxButton() {
             )
 
             MnTextButton(
-                modifier = Modifier.noRippleClickable { },
+                modifier = Modifier.clickableSingle(activeRippleEffect = false) { },
                 styles = MnTextButtonStyles.medium,
                 text = "Button",
                 onClick = {},

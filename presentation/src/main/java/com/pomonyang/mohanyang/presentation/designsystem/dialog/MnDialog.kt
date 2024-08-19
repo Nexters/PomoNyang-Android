@@ -26,7 +26,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 
 @Composable
 fun MnDialog(
@@ -143,7 +143,7 @@ private fun DialogTitle(
             resourceId = R.drawable.ic_close,
             modifier = Modifier
                 .padding(8.dp)
-                .noRippleClickable { onCloseClick() }
+                .clickableSingle(activeRippleEffect = false) { onCloseClick() }
         )
     }
 }

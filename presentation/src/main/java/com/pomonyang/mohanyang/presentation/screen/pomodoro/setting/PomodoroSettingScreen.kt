@@ -2,9 +2,9 @@
 
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
 
+import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,8 +58,9 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -75,6 +76,7 @@ fun PomodoroSettingRoute(
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
+        if (isNewUser && state.isEndOnBoardingTooltip.not()) return@collectWithLifecycle
         when (effect) {
             is PomodoroSettingSideEffect.ShowSnackBar -> onShowSnackbar(effect.message, effect.iconRes)
             is PomodoroSettingSideEffect.GoTimeSetting -> goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
@@ -103,6 +105,7 @@ fun PomodoroSettingRoute(
     )
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PomodoroSettingScreen(
     onAction: (PomodoroSettingEvent) -> Unit,
@@ -113,9 +116,14 @@ fun PomodoroSettingScreen(
     val pomodoroSelectedCategoryModel by remember(state.selectedCategoryNo) {
         mutableStateOf(state.categoryList.find { it.categoryNo == state.selectedCategoryNo })
     }
-    var categoryTooltip by remember { mutableStateOf(showOnboardingTooltip) }
+    var categoryTooltip by remember { mutableStateOf(false) }
     var timeTooltip by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        delay(0.5.seconds)
+        categoryTooltip = showOnboardingTooltip
+    }
 
     Scaffold(
         modifier = modifier,
@@ -126,7 +134,7 @@ fun PomodoroSettingScreen(
                     Box(
                         modifier = Modifier
                             .size(40.dp)
-                            .noRippleClickable { onAction(PomodoroSettingEvent.ClickMenu) },
+                            .clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickMenu) },
                         contentAlignment = Alignment.Center
                     ) {
                         MnMediumIcon(
@@ -176,7 +184,7 @@ fun PomodoroSettingScreen(
                             }
                         }
                     )
-                    .clickable { onAction(PomodoroSettingEvent.ClickCategory) }
+                    .clickableSingle { onAction(PomodoroSettingEvent.ClickCategory) }
             )
 
             TimeSetting(
@@ -222,13 +230,13 @@ private fun TimeSetting(
         horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium)
     ) {
         TimeComponent(
-            modifier = Modifier.noRippleClickable { onAction(PomodoroSettingEvent.ClickFocusTime) },
+            modifier = Modifier.clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickFocusTime) },
             type = stringResource(R.string.focus),
             time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.focusTime ?: 0)
         )
         TimeDivider()
         TimeComponent(
-            modifier = Modifier.noRippleClickable { onAction(PomodoroSettingEvent.ClickRestTime) },
+            modifier = Modifier.clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickRestTime) },
             type = stringResource(R.string.rest),
             time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.restTime ?: 0)
         )
@@ -326,7 +334,7 @@ fun SettingButton(
             .size(88.dp)
             .clip(CircleShape)
             .background(color = backgroundColor)
-            .clickable { onClick() },
+            .clickableSingle { onClick() },
         contentAlignment = Alignment.Center
     ) {
         MnLargeIcon(

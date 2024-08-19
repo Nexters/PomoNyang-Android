@@ -19,7 +19,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.toggle.MnToggleB
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import kotlin.math.roundToInt
 
 @Composable
@@ -52,8 +52,7 @@ fun MnToggleButton(
                     MnTheme.iconColorScheme.disabled
                 }
             )
-            .noRippleClickable(onClick = { onCheckedChange(!isChecked) })
-
+            .clickableSingle(activeRippleEffect = false, onClick = { onCheckedChange(!isChecked) })
     ) {
         Box(
             modifier = Modifier

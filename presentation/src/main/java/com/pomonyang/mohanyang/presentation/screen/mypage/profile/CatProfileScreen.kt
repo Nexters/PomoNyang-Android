@@ -31,8 +31,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 internal fun CatProfileRoute(
@@ -115,7 +115,9 @@ private fun CatProfileScreen(
             Row(
                 modifier = Modifier
                     .padding(top = 20.dp)
-                    .noRippleClickable {
+                    .clickableSingle(
+                        activeRippleEffect = false
+                    ) {
                         onAction(CatProfileEvent.ClickNaming)
                     },
                 verticalAlignment = Alignment.CenterVertically,

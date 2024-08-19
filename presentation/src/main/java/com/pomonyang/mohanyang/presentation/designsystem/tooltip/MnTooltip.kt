@@ -67,8 +67,8 @@ import androidx.compose.ui.window.PopupPositionProvider
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.dpToPx
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import com.pomonyang.mohanyang.presentation.util.pxToDp
 import kotlin.math.min
 import kotlinx.coroutines.delay
@@ -242,7 +242,7 @@ fun Modifier.guideTooltip(
                         backgroundColor = MnTooltipDefaults.overlayBackgroundColor,
                         shape = ovalShape
                     )
-                    .noRippleClickable { onDismiss() }
+                    .clickableSingle(activeRippleEffect = false) { onDismiss() }
             ) {
                 MnTooltipImpl(
                     modifier = Modifier
@@ -521,7 +521,7 @@ private fun MnTopTooltipPreview() {
             Text(
                 text = "Sample",
                 modifier = Modifier
-                    .noRippleClickable { isShowTooltip = true }
+                    .clickableSingle(activeRippleEffect = false) { isShowTooltip = true }
                     .guideTooltip(
                         anchorPadding = PaddingValues(bottom = 12.dp),
                         verticalAlignment = Alignment.Top,
@@ -553,7 +553,7 @@ private fun MnBottomTooltipPreview() {
                 text = "Sample",
                 modifier = Modifier
                     .padding(start = 12.dp)
-                    .noRippleClickable { isShowTooltip = true }
+                    .clickableSingle(activeRippleEffect = false) { isShowTooltip = true }
                     .guideTooltip(
                         tooltipColors = MnTooltipDefaults.darkTooltipColors(),
                         verticalAlignment = Alignment.Bottom,
