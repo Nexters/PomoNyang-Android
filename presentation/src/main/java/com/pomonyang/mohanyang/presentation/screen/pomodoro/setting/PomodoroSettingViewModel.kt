@@ -10,6 +10,9 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
+import com.pomonyang.mohanyang.presentation.model.cat.toModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +23,11 @@ data class PomodoroSettingState(
     val categoryList: List<PomodoroCategoryModel> = emptyList(),
     val selectedCategoryNo: Int = 0,
     val showCategoryBottomSheet: Boolean = false,
-    val catName: String = "",
+    val cat: CatInfoModel = CatInfoModel(
+        no = -1,
+        name = "",
+        type = CatType.CHEESE
+    ),
     val isEndOnBoardingTooltip: Boolean = false
 ) : ViewState {
     fun getSelectedCategory() = categoryList.find { it.categoryNo == selectedCategoryNo }
@@ -142,8 +149,8 @@ class PomodoroSettingViewModel @Inject constructor(
 
     private fun getMyCatInfo() {
         viewModelScope.launch {
-            val catName = userRepository.getMyInfo().cat.name
-            updateState { copy(catName = catName) }
+            val cat = userRepository.getMyInfo().cat.toModel()
+            updateState { copy(cat = cat) }
         }
     }
 }

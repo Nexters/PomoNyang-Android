@@ -37,6 +37,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -73,7 +74,8 @@ fun PomodoroRestRoute(
 
     PomodoroRestScreen(
         modifier = modifier,
-        type = state.type,
+        categoryType = state.categoryType,
+        catType = state.catType,
         time = state.displayRestTime(),
         plusButtonSelected = state.plusButtonSelected,
         minusButtonSelected = state.minusButtonSelected,
@@ -86,9 +88,10 @@ fun PomodoroRestRoute(
 
 @Composable
 private fun PomodoroRestScreen(
-    type: String,
+    categoryType: String,
     time: String,
     exceededTime: String,
+    catType: CatType,
     plusButtonSelected: Boolean,
     minusButtonSelected: Boolean,
     plusButtonEnabled: Boolean,
@@ -107,9 +110,9 @@ private fun PomodoroRestScreen(
         MnTopAppBar(
             navigationIcon = {
                 CategoryBox(
-                    categoryName = type,
+                    categoryName = categoryType,
                     modifier = Modifier.padding(start = 12.dp),
-                    iconRes = PomodoroCategoryType.safeValueOf(type).iconRes
+                    iconRes = PomodoroCategoryType.safeValueOf(categoryType).iconRes
                 )
             }
         )
@@ -118,10 +121,8 @@ private fun PomodoroRestScreen(
 
         CatRive(
             tooltipMessage = stringResource(id = tooltipMessage),
-            riveResource = R.raw.cat_motion_transparent,
-            onRiveClick = {
-                it.fireState("State Machine 1", "Click")
-            }
+            riveResource = R.raw.cat_select_motion,
+            riveAnimationName = catType.riveAnimation
         )
 
         TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)
@@ -166,13 +167,14 @@ private fun PomodoroRestScreen(
 private fun PomodoroTimerScreenPreview() {
     MnTheme {
         PomodoroRestScreen(
-            type = "공부",
+            categoryType = "공부",
             time = "25:00",
             exceededTime = "00:00",
             plusButtonSelected = false,
             minusButtonSelected = true,
             plusButtonEnabled = true,
             minusButtonEnabled = true,
+            catType = CatType.CHEESE,
             onAction = {}
         )
     }
@@ -183,13 +185,14 @@ private fun PomodoroTimerScreenPreview() {
 private fun PomodoroTimerExceedScreenPreview() {
     MnTheme {
         PomodoroRestScreen(
-            type = "공부",
+            categoryType = "공부",
             time = "25:00",
             exceededTime = "10:00",
             plusButtonSelected = false,
             minusButtonSelected = true,
             plusButtonEnabled = true,
             minusButtonEnabled = true,
+            catType = CatType.CHEESE,
             onAction = {}
         )
     }
