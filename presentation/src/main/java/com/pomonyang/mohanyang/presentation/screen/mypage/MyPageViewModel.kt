@@ -24,11 +24,13 @@ sealed interface MyPageEvent : ViewEvent {
     data class ChangeTimerNotification(val isEnabled: Boolean) : MyPageEvent
     data object CloseDialog : MyPageEvent
     data object OpenSetting : MyPageEvent
+    data object ClickSuggestion : MyPageEvent
 }
 
 sealed interface MyPageSideEffect : ViewSideEffect {
     data object GoToCatProfilePage : MyPageSideEffect
     data class CheckNotificationPermission(val request: NotificationRequest, val onGranted: () -> Unit) : MyPageSideEffect
+    data class OpenExternalWebPage(val url: String) : MyPageSideEffect
     data object CloseDialog : MyPageSideEffect
     data object OpenDialog : MyPageSideEffect
 }
@@ -74,6 +76,10 @@ class MyPageViewModel @Inject constructor(
 
             is MyPageEvent.OpenSetting -> {
                 setEffect(MyPageSideEffect.OpenDialog)
+            }
+
+            MyPageEvent.ClickSuggestion -> {
+                setEffect(MyPageSideEffect.OpenExternalWebPage("https://forms.gle/wEUPH9Tvxgua4hCZ9"))
             }
         }
     }
