@@ -52,7 +52,7 @@ fun MnToastSnackbarHost(
         Card(
             shape = RoundedCornerShape(MnRadius.small),
             colors = CardDefaults.cardColors(
-                containerColor = MnTheme.backgroundColorScheme.inverse,
+                containerColor = MnColor.Black,
                 contentColor = MnColor.White
             )
         ) {
