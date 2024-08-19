@@ -28,7 +28,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnStroke
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
-import com.pomonyang.mohanyang.presentation.util.clickableSingle
+import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun MnSelectButton(
@@ -59,7 +59,7 @@ fun MnSelectButton(
     ) {
         Column(
             modifier = modifier
-                .clickableSingle(activeRippleEffect = false) { onClick() },
+                .noRippleClickable { onClick() },
             verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

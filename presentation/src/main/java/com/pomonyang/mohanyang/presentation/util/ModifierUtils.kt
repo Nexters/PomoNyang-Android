@@ -10,6 +10,19 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.semantics.Role
 
+/**
+ * 클릭 시 리플 효과가 없는 Modifier를 반환합니다.
+ */
+fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier =
+    composed {
+        clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() }
+        ) {
+            onClick()
+        }
+    }
+
 internal interface MultipleEventsCutter {
     fun processEvent(event: () -> Unit)
 
