@@ -1,11 +1,14 @@
 package com.pomonyang.mohanyang
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.view.View
+import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -19,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.animation.doOnEnd
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.startup.AppInitializer
@@ -70,22 +75,19 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var pomodoroTimerRepository: PomodoroTimerRepository
 
-    private var keepSplashOnScreen = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        handleSplashScreen()
         super.onCreate(savedInstanceState)
         AppInitializer.getInstance(applicationContext)
             .initializeComponent(RiveInitializer::class.java)
+        GlobalScope.launch { pomodoroTimerRepository.savePomodoroCacheData() }
         createNotificationChannel()
         registerNotificationService()
-        GlobalScope.launch { pomodoroTimerRepository.savePomodoroCacheData() }
-        handleSplashScreen()
         initializeFCM()
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
         )
-
         setContent {
             val coroutineScope = rememberCoroutineScope()
             val activity = (LocalContext.current as? Activity)
@@ -143,11 +145,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun handleSplashScreen() {
-        installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
-        Handler(Looper.getMainLooper()).postDelayed({ keepSplashOnScreen = false }, Companion.SPLASH_DELAY)
-    }
-
     override fun onResume() {
         super.onResume()
         MnNotificationManager.stopInterrupt(this)
@@ -179,7 +176,40 @@ class MainActivity : ComponentActivity() {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilters)
     }
 
+    private fun handleSplashScreen() {
+        installSplashScreen().also {
+            it.setOnExitAnimationListener { splashScreenViewProvider ->
+                val splashScreenView = splashScreenViewProvider.view
+                val startColor = ContextCompat.getColor(splashScreenView.context, R.color.splash_background)
+                val endColor = ContextCompat.getColor(splashScreenView.context, R.color.splash_delay_background)
+
+                val colorAnim = ValueAnimator.ofArgb(startColor, Color.WHITE, endColor).apply {
+                    duration = SPLASH_ANIMATE_DURATION
+                    addUpdateListener { animator ->
+                        val animatedColor = animator.animatedValue as Int
+                        splashScreenView.setBackgroundColor(animatedColor)
+                    }
+                }
+
+                val iconFadeOut = ObjectAnimator.ofFloat(splashScreenViewProvider.iconView, View.ALPHA, 1f, 0f).apply {
+                    duration = SPLASH_ANIMATE_DURATION
+                }
+
+                AnimatorSet().apply {
+                    playTogether(iconFadeOut, colorAnim)
+                    interpolator = AnticipateInterpolator()
+                    startDelay = SPLASH_DELAY
+                    doOnEnd {
+                        splashScreenViewProvider.remove()
+                    }
+                    start()
+                }
+            }
+        }
+    }
+
     companion object {
-        private const val SPLASH_DELAY = 2000L
+        private const val SPLASH_DELAY = 1500L
+        private const val SPLASH_ANIMATE_DURATION = 500L
     }
 }
