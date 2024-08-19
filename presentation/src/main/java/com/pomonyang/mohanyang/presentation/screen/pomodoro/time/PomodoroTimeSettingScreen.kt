@@ -28,8 +28,8 @@ import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.SettingButton
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 
 @Composable
 fun PomodoroTimeSettingRoute(
@@ -124,7 +124,7 @@ private fun TimeSettingTopAppBar(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .noRippleClickable { onActionClick() },
+                    .clickableSingle(activeRippleEffect = false) { onActionClick() },
                 contentAlignment = Alignment.Center
             ) {
                 MnMediumIcon(

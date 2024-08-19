@@ -25,7 +25,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectL
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,7 +90,7 @@ private fun BottomSheetContent(
                 resourceId = R.drawable.ic_close,
                 modifier = Modifier
                     .padding(8.dp)
-                    .noRippleClickable { onCloseClick() }
+                    .clickableSingle(activeRippleEffect = false) { onCloseClick() }
             )
         }
 

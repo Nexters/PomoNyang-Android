@@ -32,7 +32,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -75,7 +75,7 @@ fun MnToastSnackbarHost(
                 data.visuals.actionLabel?.let { label ->
                     Spacer(modifier = Modifier.padding(start = MnSpacing.small))
                     Text(
-                        modifier = Modifier.noRippleClickable {
+                        modifier = Modifier.clickableSingle(activeRippleEffect = false) {
                             data.performAction()
                         },
                         text = label,

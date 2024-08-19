@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.input.pointer.pointerInput
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnInteraction
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 
 @Composable
 fun MnPressableWrapper(
@@ -50,7 +50,7 @@ fun Modifier.pressClickEffect(onClick: () -> Unit) = composed {
 
     this
         .background(interactionColor)
-        .noRippleClickable { onClick() }
+        .clickableSingle(activeRippleEffect = false) { onClick() }
         .pointerInput(buttonState) {
             awaitPointerEventScope {
                 buttonState = if (buttonState == ButtonState.Pressed) {

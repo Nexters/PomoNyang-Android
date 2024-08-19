@@ -1,91 +1,61 @@
 package com.pomonyang.mohanyang.presentation.util
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.debounce
+import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.semantics.Role
 
-/**
- * 클릭 시 리플 효과가 없는 Modifier를 반환합니다.
- */
-fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier =
-    composed {
-        clickable(
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() }
-        ) {
-            onClick()
-        }
-    }
+internal interface MultipleEventsCutter {
+    fun processEvent(event: () -> Unit)
 
-/**
- * 클릭 이벤트를 디바운스 처리하여 여러 번 빠르게 클릭하는 것을 방지하고,
- * @see noRippleClickable
- * @param debounceTime 클릭 이벤트를 디바운스 처리할 시간 간격(밀리초). 기본값은 250ms.
- */
-fun Modifier.debounceNoRippleClickable(
-    debounceTime: Long = 250,
-    onClick: () -> Unit
-): Modifier =
-    composed {
-        debounceHandler(debounceTime = debounceTime) { debouncedOnClick ->
-            noRippleClickable {
-                debouncedOnClick(onClick)
-            }
-        }
-    }
-
-/**
- * 클릭 이벤트를 디바운스 처리하여 여러 번 빠르게 클릭하는 것을 방지하는 Modifier를 반환합니다.
- *
- * @param debounceTime 클릭 이벤트를 디바운스 처리할 시간 간격(밀리초). 기본값은 500ms.
- */
-fun Modifier.debounceClickable(
-    debounceTime: Long = 500L,
-    onClick: () -> Unit
-): Modifier =
-    composed {
-        debounceHandler(debounceTime = debounceTime) { debouncedOnClick ->
-            clickable {
-                debouncedOnClick(onClick)
-            }
-        }
-    }
-
-@Composable
-private fun <T> debounceHandler(
-    debounceTime: Long,
-    content: @Composable (DebouncedOnClick) -> T
-): T {
-    val eventFlow =
-        remember {
-            MutableSharedFlow<() -> Unit>(
-                replay = 0,
-                extraBufferCapacity = 1,
-                onBufferOverflow = BufferOverflow.DROP_OLDEST
-            )
-        }
-
-    val result =
-        content { event ->
-            eventFlow.tryEmit(event)
-        }
-
-    LaunchedEffect(Unit) {
-        eventFlow
-            .debounce(debounceTime)
-            .collect { event ->
-                event()
-            }
-    }
-
-    return result
+    companion object
 }
 
-typealias DebouncedOnClick = (() -> Unit) -> Unit
+internal fun MultipleEventsCutter.Companion.get(throttleTime: Long = 500L): MultipleEventsCutter =
+    MultipleEventsCutterImpl(throttleTime)
+
+@Immutable
+private class MultipleEventsCutterImpl(val throttleTime: Long) : MultipleEventsCutter {
+    private val now: Long
+        get() = System.currentTimeMillis()
+
+    private var lastEventTimeMs: Long = 0
+
+    override fun processEvent(event: () -> Unit) {
+        if (now - lastEventTimeMs >= throttleTime) {
+            event.invoke()
+        }
+        lastEventTimeMs = now
+    }
+}
+
+fun Modifier.clickableSingle(
+    enabled: Boolean = true,
+    activeRippleEffect: Boolean = true,
+    onClickLabel: String? = null,
+    role: Role? = null,
+    onClick: () -> Unit
+) = composed(
+    inspectorInfo = debugInspectorInfo {
+        name = "clickableSingle"
+        properties["enabled"] = enabled
+        properties["onClickLabel"] = onClickLabel
+        properties["role"] = role
+        properties["onClick"] = onClick
+    }
+) {
+    val multipleEventsCutter = remember { MultipleEventsCutter.get() }
+    Modifier.clickable(
+        enabled = enabled,
+        onClickLabel = onClickLabel,
+        onClick = { multipleEventsCutter.processEvent { onClick() } },
+        role = role,
+        indication = if (activeRippleEffect) LocalIndication.current else null,
+        interactionSource = remember { MutableInteractionSource() }
+    )
+}

@@ -41,7 +41,7 @@ import com.pomonyang.mohanyang.presentation.screen.onboarding.model.OnboardingGu
 import com.pomonyang.mohanyang.presentation.screen.onboarding.model.getOnBoardingContents
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
-import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -210,7 +210,7 @@ private fun IndicatorDots(
 ) {
     Box(
         modifier = Modifier
-            .noRippleClickable { onClick() }
+            .clickableSingle(activeRippleEffect = false) { onClick() }
             .clip(CircleShape)
             .size(8.dp)
             .background(
