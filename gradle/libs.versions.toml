@@ -9,7 +9,7 @@ material3 = "1.12.0"
 core-ktx = "1.13.1"
 datastore = "1.1.1"
 room = "2.6.1"
-core-splash = "1.0.1"
+core-splash = "1.1.0-alpha02"
 
 # Compose
 compose = "1.6.8"
@@ -112,7 +112,7 @@ gradle-secrets = { module = "com.google.android.libraries.mapsplatform.secrets-g
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "permission" }
 rive = { module = "app.rive:rive-android", version.ref = "rive" }
-startup = {module = "androidx.startup:startup-runtime", version.ref = "startup"}
+startup = { module = "androidx.startup:startup-runtime", version.ref = "startup" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 [plugins]
