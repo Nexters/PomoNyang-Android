@@ -148,7 +148,7 @@ private fun PomodoroTimerScreen(
             stateMachineName = "State Machine_Focus",
             isAutoPlay = false,
             onRiveClick = {
-                it.fireState("State Machine_Focus", catType.pomodoroFireInput)
+                it.fireState("State Machine_Focus", catType.catFireInput)
             }
         )
 

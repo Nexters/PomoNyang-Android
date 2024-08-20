@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
@@ -66,6 +67,7 @@ internal fun CatProfileRoute(
     )
 }
 
+@OptIn(ExperimentalAssetLoader::class)
 @Composable
 private fun CatProfileScreen(
     state: CatProfileState,
@@ -78,7 +80,7 @@ private fun CatProfileScreen(
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(MnTheme.backgroundColorScheme.primary)
     ) {
@@ -108,10 +110,14 @@ private fun CatProfileScreen(
             CatRive(
                 modifier = Modifier.fillMaxWidth(),
                 tooltipMessage = stringResource(id = R.string.cat_profile_tooltip),
-                riveResource = R.raw.cat_select_motion,
-                riveAnimationName = state.catType.onBoardingRiveCat
-
+                riveResource = R.raw.cat_select,
+                riveAnimationName = state.catType.onBoardingRiveCat,
+                stateMachineName = "State Machine_selectCat",
+                onRiveClick = {
+                    it.fireState("State Machine_selectCat", state.catType.catFireInput)
+                }
             )
+
             Row(
                 modifier = Modifier
                     .padding(top = 20.dp)

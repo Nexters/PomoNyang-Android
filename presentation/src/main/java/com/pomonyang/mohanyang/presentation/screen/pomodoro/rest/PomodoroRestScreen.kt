@@ -126,7 +126,7 @@ private fun PomodoroRestScreen(
             stateMachineInput = catType.pomodoroRiveCat,
             isAutoPlay = false,
             onRiveClick = {
-                it.fireState("State Machine_Home", catType.pomodoroFireInput)
+                it.fireState("State Machine_Home", catType.catFireInput)
             }
         )
 

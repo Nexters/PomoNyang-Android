@@ -160,7 +160,7 @@ fun PomodoroSettingScreen(
                 stateMachineName = "State Machine_Home",
                 isAutoPlay = false,
                 onRiveClick = {
-                    it.fireState("State Machine_Home", state.cat.type.pomodoroFireInput)
+                    it.fireState("State Machine_Home", state.cat.type.catFireInput)
                 }
             )
 
