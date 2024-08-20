@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.pomonyang.mohanyang"
-        versionCode = 2
+        versionCode = 3
         versionName = "0.1.0"
     }
 
