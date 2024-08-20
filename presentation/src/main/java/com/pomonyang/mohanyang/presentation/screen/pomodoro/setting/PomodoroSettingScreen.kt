@@ -77,6 +77,7 @@ fun PomodoroSettingRoute(
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
+    val catMessage = remember(state.cat.type) { state.cat.type.getRandomMessage() }
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         if (isNewUser && state.isEndOnBoardingTooltip.not()) return@collectWithLifecycle
         when (effect) {
@@ -102,6 +103,7 @@ fun PomodoroSettingRoute(
     PomodoroSettingScreen(
         onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
+        catMessage = catMessage,
         modifier = modifier,
         showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not()
     )
@@ -112,6 +114,7 @@ fun PomodoroSettingRoute(
 fun PomodoroSettingScreen(
     onAction: (PomodoroSettingEvent) -> Unit,
     showOnboardingTooltip: Boolean,
+    catMessage: String,
     state: PomodoroSettingState,
     modifier: Modifier = Modifier
 ) {
@@ -154,7 +157,7 @@ fun PomodoroSettingScreen(
             verticalArrangement = Arrangement.Center
         ) {
             CatRive(
-                tooltipMessage = state.cat.type.getRandomMessage(),
+                tooltipMessage = catMessage,
                 riveResource = R.raw.cat_home,
                 stateMachineInput = state.cat.type.pomodoroRiveCat,
                 stateMachineName = "State Machine_Home",
@@ -357,6 +360,7 @@ fun PomodoroStarterScreenPreview() {
     PomodoroSettingScreen(
         onAction = {},
         showOnboardingTooltip = false,
+        catMessage = "catMessage",
         state = PomodoroSettingState(
             categoryList = listOf(
                 PomodoroCategoryModel(
