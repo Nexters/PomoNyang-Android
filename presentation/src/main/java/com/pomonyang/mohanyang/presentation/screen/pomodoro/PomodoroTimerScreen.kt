@@ -142,9 +142,8 @@ private fun PomodoroTimerScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         CatRive(
-            riveAnimationName = catType.riveAnimation,
             tooltipMessage = stringResource(id = tooltipMessage),
-            riveResource = R.raw.cat_select_motion
+            riveResource = R.raw.cat_focus
 
         )
 

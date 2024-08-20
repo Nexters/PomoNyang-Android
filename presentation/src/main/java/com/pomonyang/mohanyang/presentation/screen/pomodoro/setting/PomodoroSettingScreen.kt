@@ -155,8 +155,7 @@ fun PomodoroSettingScreen(
         ) {
             CatRive(
                 tooltipMessage = stringResource(R.string.welcome_cat_tooltip),
-                riveResource = R.raw.cat_select_motion,
-                riveAnimationName = state.cat.type.riveAnimation
+                riveResource = R.raw.cat_home
             )
 
             Text(
