@@ -14,3 +14,5 @@ local.properties
 debug.secrets.properties
 release.secrets.properties
 /app/google-services.json
+key-release
+key.secrets.properties

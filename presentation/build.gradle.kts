@@ -1,17 +1,20 @@
 plugins {
-    id("pomonyang.android.library")
-    id("pomonyang.android.hilt")
-    id("pomonyang.android.library.compose")
+    id("mohanyang.android.library")
+    id("mohanyang.android.hilt")
+    id("mohanyang.android.library.compose")
 }
 
 android {
-    namespace = "com.pomonyang.presentation"
+    namespace = "com.mohanyang.presentation"
 }
 
 dependencies {
     implementation(libs.material)
     implementation(libs.dagger.hilt.android)
     implementation(libs.bundles.androidx.compose.navigation)
+    implementation(libs.permission)
+    implementation(libs.rive)
+    implementation(libs.lottie.compose)
 
     // module impl
     implementation(projects.domain)

@@ -1,26 +1,40 @@
-import com.pomonyang.convention.GithubUtils
+import com.google.android.libraries.mapsplatform.secrets_gradle_plugin.loadPropertiesFile
+import com.pomonyang.mohanyang.convention.GithubUtils
 
 plugins {
-    id("pomonyang.android.application")
-    id("pomonyang.android.hilt")
-    id("pomonyang.android.application.compose")
-    id("pomonyang.android.application.firebase")
+    id("mohanyang.android.application")
+    id("mohanyang.android.hilt")
+    id("mohanyang.android.application.compose")
+    id("mohanyang.android.application.firebase")
 }
 
 android {
-    namespace = "com.pomonyang"
+    namespace = "com.pomonyang.mohanyang"
 
     defaultConfig {
-        applicationId = "com.pomonyang"
+        applicationId = "com.pomonyang.mohanyang"
+        versionCode = 2
+        versionName = "0.1.0"
+    }
+
+    signingConfigs {
+        create("release") {
+            val props = loadPropertiesFile("../key.secrets.properties")
+            storeFile = file(props.getProperty("STORE_FILE_PATH"))
+            storePassword = props.getProperty("STORE_PASSWORD")
+            keyAlias = props.getProperty("KEY_ALIAS")
+            keyPassword = props.getProperty("KEY_PASSWORD")
+        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-project.txt"
             )
+            signingConfig = signingConfigs.getByName("release")
             firebaseAppDistribution {
                 releaseNotes = "[${GithubUtils.commitHash()}]-${GithubUtils.lastCommitMessage()}"
                 groups = "뽀모냥"
@@ -50,6 +64,10 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
     implementation(libs.bundles.androidx.compose.navigation)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.firebase.messaging)
+    implementation(libs.rive)
+    implementation(libs.startup)
 
     // module impl
     implementation(projects.data)

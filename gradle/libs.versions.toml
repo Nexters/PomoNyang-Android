@@ -7,6 +7,9 @@ lifecycle = "2.8.3"
 appcompat = "1.7.0"
 material3 = "1.12.0"
 core-ktx = "1.13.1"
+datastore = "1.1.1"
+room = "2.6.1"
+core-splash = "1.1.0-alpha02"
 
 # Compose
 compose = "1.6.8"
@@ -30,6 +33,7 @@ firebase-crashlytics-gradle = "3.0.2"
 firebase-pref-gradle = "1.4.2"
 firebase-appdistribution-gradle = "5.0.0"
 firebase-bom = "33.1.2"
+firebaes-messaging = "23.2.1"
 
 # etc
 timber = "5.0.1"
@@ -37,6 +41,10 @@ dagger = "2.51.1"
 collections-immutable = "0.3.7"
 secrets = "2.0.1"
 google-services = "4.4.2"
+permission = "0.35.1-alpha"
+startup = "1.1.1"
+lottie = "6.0.0"
+rive = "8.7.0"
 
 [libraries]
 # Compose
@@ -53,6 +61,13 @@ androidx-compose-navigation = { module = "androidx.navigation:navigation-compose
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "core-splash" }
+
+
 
 # Dagger
 dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
@@ -88,12 +103,17 @@ firebase-appdistribution-gradle = { group = "com.google.firebase", name = "fireb
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaes-messaging" }
 
 # etc
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material3" }
 gradle-secrets = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "permission" }
+rive = { module = "app.rive:rive-android", version.ref = "rive" }
+startup = { module = "androidx.startup:startup-runtime", version.ref = "startup" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
@@ -117,7 +137,8 @@ androidx-compose = [
     "androidx-compose-material",
     "androidx-compose-runtime",
     "androidx-compose-toolingPreview",
-    "androidx-lifecycle-runtime-compose"
+    "androidx-lifecycle-runtime-compose",
+    "kotlin-collections-immutable"
 ]
 
 androidx-compose-navigation = [
