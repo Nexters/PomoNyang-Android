@@ -41,8 +41,10 @@ fun CatRive(
     @RawRes riveResource: Int,
     modifier: Modifier = Modifier,
     tooltipMessage: String? = null,
+    isAutoPlay: Boolean = true,
     riveAnimationName: String? = null,
     stateMachineName: String? = null,
+    stateMachineInput: String? = null,
     onRiveClick: (RiveAnimationView) -> Unit = {}
 ) {
     val catRiveModifier = if (tooltipMessage != null) {
@@ -53,19 +55,20 @@ fun CatRive(
     var showTooltip by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val riveView = remember {
-        RiveAnimationView(context = context).also {
-            it.setRiveResource(
-                stateMachineName = stateMachineName,
-                resId = riveResource,
-                autoplay = true
-            )
-        }
+        RiveAnimationView(context = context)
     }
 
     LaunchedEffect(riveAnimationName) {
-        if (riveAnimationName != null) {
-            riveView.play(riveAnimationName)
-        }
+        riveView.setRiveResource(
+            resId = riveResource,
+            stateMachineName = stateMachineName,
+            autoplay = isAutoPlay,
+            animationName = riveAnimationName
+        )
+    }
+    if (stateMachineName != null && stateMachineInput != null) {
+        riveView.setBooleanState(stateMachineName, stateMachineInput, true)
+        riveView.play()
     }
 
     if (tooltipMessage != null) {

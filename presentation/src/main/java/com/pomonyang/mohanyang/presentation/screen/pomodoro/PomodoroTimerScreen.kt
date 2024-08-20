@@ -144,7 +144,9 @@ private fun PomodoroTimerScreen(
         CatRive(
             tooltipMessage = stringResource(id = tooltipMessage),
             riveResource = R.raw.cat_focus,
-            riveAnimationName = catType.focusRiveCat
+            stateMachineInput = catType.pomodoroRiveCat,
+            stateMachineName = "State Machine_Focus",
+            isAutoPlay = false
         )
 
         TimerType(type = stringResource(id = R.string.focus_time), iconRes = R.drawable.ic_focus)
