@@ -26,7 +26,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
 import app.rive.runtime.kotlin.RiveAnimationView
 import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
-import app.rive.runtime.kotlin.core.Fit
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.MnTooltipDefaults
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.TooltipAnchor
@@ -53,7 +52,21 @@ fun CatRive(
     }
     var showTooltip by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val riveView = remember { RiveAnimationView(context = context) }
+    val riveView = remember {
+        RiveAnimationView(context = context).also {
+            it.setRiveResource(
+                stateMachineName = stateMachineName,
+                resId = riveResource,
+                autoplay = true
+            )
+        }
+    }
+
+    LaunchedEffect(riveAnimationName) {
+        if (riveAnimationName != null) {
+            riveView.play(riveAnimationName)
+        }
+    }
 
     if (tooltipMessage != null) {
         LaunchedEffect(tooltipMessage) {
@@ -94,15 +107,6 @@ fun CatRive(
             modifier = catRiveModifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LaunchedEffect(riveAnimationName) {
-                riveView.setRiveResource(
-                    stateMachineName = stateMachineName,
-                    resId = riveResource,
-                    animationName = riveAnimationName,
-                    fit = Fit.FILL
-                )
-            }
-
             Box(
                 modifier = Modifier.size(240.dp)
             ) {
