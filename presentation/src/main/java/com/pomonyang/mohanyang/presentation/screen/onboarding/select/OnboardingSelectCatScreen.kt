@@ -152,7 +152,7 @@ fun OnboardingSelectCatScreen(
                     )
                     .fillMaxWidth(),
                 riveResource = R.raw.cat_select_motion,
-                riveAnimationName = state.selectedType?.riveAnimation
+                riveAnimationName = state.selectedType?.onBoardingRiveCat
             )
 
             CatCategory(

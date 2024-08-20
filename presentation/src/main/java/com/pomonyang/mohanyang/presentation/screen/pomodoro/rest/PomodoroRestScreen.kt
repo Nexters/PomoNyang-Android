@@ -121,7 +121,8 @@ private fun PomodoroRestScreen(
 
         CatRive(
             tooltipMessage = stringResource(id = tooltipMessage),
-            riveResource = R.raw.cat_rest
+            riveResource = R.raw.cat_rest,
+            riveAnimationName = catType.restRiveCat
         )
 
         TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)

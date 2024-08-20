@@ -109,7 +109,7 @@ private fun CatProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 tooltipMessage = stringResource(id = R.string.cat_profile_tooltip),
                 riveResource = R.raw.cat_select_motion,
-                riveAnimationName = state.catType.riveAnimation
+                riveAnimationName = state.catType.onBoardingRiveCat
 
             )
             Row(
