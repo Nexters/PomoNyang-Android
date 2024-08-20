@@ -45,15 +45,20 @@ import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun MyPageRoute(
+    isOfflineState: StateFlow<Boolean>,
+    onShowSnackBar: (String, Int?) -> Unit,
     onBackClick: () -> Unit,
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
     myPageViewModel: MyPageViewModel = hiltViewModel()
 ) {
     val state by myPageViewModel.state.collectAsStateWithLifecycle()
+
+    val isOffline by isOfflineState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current as Activity
     var isShowDialog by remember {
@@ -91,6 +96,10 @@ fun MyPageRoute(
 
     myPageViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
+            is MyPageSideEffect.ShowSnackBar -> {
+                onShowSnackBar(effect.message, null)
+            }
+
             is MyPageSideEffect.GoToCatProfilePage -> {
                 onProfileClick()
             }
@@ -126,7 +135,7 @@ fun MyPageRoute(
         state = state,
         onAction = myPageViewModel::handleEvent,
         onBackClick = onBackClick,
-        isOffline = false,
+        isOffline = isOffline,
         isShowDialog = isShowDialog,
         modifier = modifier
     )
@@ -205,7 +214,9 @@ fun MyPageScreen(
             item {
                 ProfileBox(
                     catName = state.catName,
-                    onClick = { onAction(MyPageEvent.ClickCatProfile) }
+                    onClick = {
+                        onAction(MyPageEvent.ClickCatProfile(isOffline))
+                    }
                 )
             }
 

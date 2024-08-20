@@ -19,7 +19,7 @@ data class MyPageState(
 
 sealed interface MyPageEvent : ViewEvent {
     data class Init(val appNotificationGranted: Boolean) : MyPageEvent
-    data object ClickCatProfile : MyPageEvent
+    data class ClickCatProfile(val isOffline: Boolean) : MyPageEvent
     data class ChangeInterruptNotification(val isEnabled: Boolean) : MyPageEvent
     data class ChangeTimerNotification(val isEnabled: Boolean) : MyPageEvent
     data object CloseDialog : MyPageEvent
@@ -33,6 +33,7 @@ sealed interface MyPageSideEffect : ViewSideEffect {
     data class OpenExternalWebPage(val url: String) : MyPageSideEffect
     data object CloseDialog : MyPageSideEffect
     data object OpenDialog : MyPageSideEffect
+    data class ShowSnackBar(val message: String) : MyPageSideEffect
 }
 
 @HiltViewModel
@@ -49,7 +50,11 @@ class MyPageViewModel @Inject constructor(
             }
 
             is MyPageEvent.ClickCatProfile -> {
-                setEffect(MyPageSideEffect.GoToCatProfilePage)
+                if (event.isOffline) {
+                    setEffect(MyPageSideEffect.ShowSnackBar("오프라인 모드에서 고양이를 변경할 수 없습니다"))
+                } else {
+                    setEffect(MyPageSideEffect.GoToCatProfilePage)
+                }
             }
 
             is MyPageEvent.ChangeTimerNotification -> {

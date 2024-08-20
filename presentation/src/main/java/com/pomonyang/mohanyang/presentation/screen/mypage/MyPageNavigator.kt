@@ -8,6 +8,7 @@ import com.pomonyang.mohanyang.presentation.screen.mypage.profile.CatProfileRout
 import com.pomonyang.mohanyang.presentation.screen.onboarding.CatSettingDestination
 import com.pomonyang.mohanyang.presentation.screen.onboarding.OnboardingNamingCat
 import com.pomonyang.mohanyang.presentation.screen.onboarding.OnboardingSelectCat
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -20,13 +21,17 @@ data object MyPageHome
 data object CatProfile
 
 fun NavGraphBuilder.myPageScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    onShowSnackbar: (String, Int?) -> Unit,
+    isOfflineState: StateFlow<Boolean>
 ) {
     navigation<MyPage>(
         startDestination = MyPageHome
     ) {
         composable<MyPageHome> {
             MyPageRoute(
+                isOfflineState = isOfflineState,
+                onShowSnackBar = onShowSnackbar,
                 onBackClick = { navHostController.popBackStack() },
                 onProfileClick = { navHostController.navigate(CatProfile) }
             )
