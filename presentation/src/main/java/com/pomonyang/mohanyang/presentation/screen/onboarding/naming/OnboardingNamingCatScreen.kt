@@ -119,7 +119,7 @@ fun OnboardingNamingCatScreen(
                         .padding(top = 130.dp)
                         .fillMaxWidth(),
                     riveAnimationName = selectedCatRiveAnimation,
-                    riveResource = R.raw.cat_select_motion,
+                    riveResource = R.raw.cat_select,
                     tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
                 )
                 Text(

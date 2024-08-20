@@ -26,7 +26,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
 import app.rive.runtime.kotlin.RiveAnimationView
 import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
-import app.rive.runtime.kotlin.core.Fit
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.MnTooltipDefaults
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.TooltipAnchor
@@ -42,8 +41,10 @@ fun CatRive(
     @RawRes riveResource: Int,
     modifier: Modifier = Modifier,
     tooltipMessage: String? = null,
+    isAutoPlay: Boolean = true,
     riveAnimationName: String? = null,
     stateMachineName: String? = null,
+    stateMachineInput: String? = null,
     onRiveClick: (RiveAnimationView) -> Unit = {}
 ) {
     val catRiveModifier = if (tooltipMessage != null) {
@@ -53,7 +54,22 @@ fun CatRive(
     }
     var showTooltip by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val riveView = remember { RiveAnimationView(context = context) }
+    val riveView = remember {
+        RiveAnimationView(context = context)
+    }
+
+    LaunchedEffect(riveAnimationName) {
+        riveView.setRiveResource(
+            resId = riveResource,
+            stateMachineName = stateMachineName,
+            autoplay = isAutoPlay,
+            animationName = riveAnimationName
+        )
+    }
+    if (stateMachineName != null && stateMachineInput != null) {
+        riveView.setBooleanState(stateMachineName, stateMachineInput, true)
+        riveView.play()
+    }
 
     if (tooltipMessage != null) {
         LaunchedEffect(tooltipMessage) {
@@ -94,15 +110,6 @@ fun CatRive(
             modifier = catRiveModifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LaunchedEffect(riveAnimationName) {
-                riveView.setRiveResource(
-                    stateMachineName = stateMachineName,
-                    resId = riveResource,
-                    animationName = riveAnimationName,
-                    fit = Fit.FILL
-                )
-            }
-
             Box(
                 modifier = Modifier.size(240.dp)
             ) {

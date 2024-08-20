@@ -77,6 +77,7 @@ fun PomodoroSettingRoute(
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
+    val catMessage = remember(state.cat.type) { state.cat.type.getRandomMessage() }
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         if (isNewUser && state.isEndOnBoardingTooltip.not()) return@collectWithLifecycle
         when (effect) {
@@ -102,6 +103,7 @@ fun PomodoroSettingRoute(
     PomodoroSettingScreen(
         onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
+        catMessage = catMessage,
         modifier = modifier,
         showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not()
     )
@@ -112,6 +114,7 @@ fun PomodoroSettingRoute(
 fun PomodoroSettingScreen(
     onAction: (PomodoroSettingEvent) -> Unit,
     showOnboardingTooltip: Boolean,
+    catMessage: String,
     state: PomodoroSettingState,
     modifier: Modifier = Modifier
 ) {
@@ -154,9 +157,16 @@ fun PomodoroSettingScreen(
             verticalArrangement = Arrangement.Center
         ) {
             CatRive(
-                tooltipMessage = stringResource(R.string.welcome_cat_tooltip),
-                riveResource = R.raw.cat_select_motion,
-                riveAnimationName = state.cat.type.riveAnimation
+                tooltipMessage = catMessage,
+                riveResource = R.raw.cat_home,
+                stateMachineInput = state.cat.type.pomodoroRiveCat,
+                stateMachineName = "State Machine_Home",
+                isAutoPlay = false,
+                onRiveClick = remember {
+                    {
+                        it.fireState("State Machine_Home", state.cat.type.catFireInput)
+                    }
+                }
             )
 
             Text(
@@ -350,6 +360,7 @@ fun PomodoroStarterScreenPreview() {
     PomodoroSettingScreen(
         onAction = {},
         showOnboardingTooltip = false,
+        catMessage = "catMessage",
         state = PomodoroSettingState(
             categoryList = listOf(
                 PomodoroCategoryModel(
