@@ -42,7 +42,7 @@ import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
-import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.notifyFocusEnd
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.notifyRestEnd
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 
 @Composable
@@ -60,7 +60,7 @@ fun PomodoroRestRoute(
             is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestEffect.GoToHome -> goToHome()
             PomodoroRestEffect.GoToPomodoroFocus -> goToFocus()
-            PomodoroRestEffect.SendEndRestAlarm -> notifyFocusEnd(context)
+            PomodoroRestEffect.SendEndRestAlarm -> notifyRestEnd(context)
         }
     }
 
