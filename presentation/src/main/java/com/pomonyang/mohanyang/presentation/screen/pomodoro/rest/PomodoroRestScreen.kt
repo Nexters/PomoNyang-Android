@@ -124,7 +124,10 @@ private fun PomodoroRestScreen(
             riveResource = R.raw.cat_rest,
             stateMachineName = "State Machine_Home",
             stateMachineInput = catType.pomodoroRiveCat,
-            isAutoPlay = false
+            isAutoPlay = false,
+            onRiveClick = {
+                it.fireState("State Machine_Home", catType.pomodoroFireInput)
+            }
         )
 
         TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)

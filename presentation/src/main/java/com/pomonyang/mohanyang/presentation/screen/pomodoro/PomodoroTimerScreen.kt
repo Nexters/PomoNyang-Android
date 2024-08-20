@@ -146,7 +146,10 @@ private fun PomodoroTimerScreen(
             riveResource = R.raw.cat_focus,
             stateMachineInput = catType.pomodoroRiveCat,
             stateMachineName = "State Machine_Focus",
-            isAutoPlay = false
+            isAutoPlay = false,
+            onRiveClick = {
+                it.fireState("State Machine_Focus", catType.pomodoroFireInput)
+            }
         )
 
         TimerType(type = stringResource(id = R.string.focus_time), iconRes = R.drawable.ic_focus)

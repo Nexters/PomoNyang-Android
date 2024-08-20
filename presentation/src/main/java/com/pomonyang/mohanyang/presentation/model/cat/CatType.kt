@@ -11,7 +11,8 @@ enum class CatType(
     val restEndPushContent: Int,
     val backgroundPushContent: Int,
     val onBoardingRiveCat: String,
-    val pomodoroRiveCat: String
+    val pomodoroRiveCat: String,
+    val pomodoroFireInput: String
 ) {
     CHEESE(
         personality = R.string.cat_cheese_personality,
@@ -20,7 +21,8 @@ enum class CatType(
         restEndPushContent = R.string.cat_cheese_rest_end_push,
         backgroundPushContent = R.string.cat_cheese_background_push,
         onBoardingRiveCat = "stretch_Cheese Cat",
-        pomodoroRiveCat = "cheeseCat"
+        pomodoroRiveCat = "cheeseCat",
+        pomodoroFireInput = "Click_Cheese Cat"
     ),
     BLACK(
         personality = R.string.cat_black_personality,
@@ -29,7 +31,8 @@ enum class CatType(
         restEndPushContent = R.string.cat_black_rest_end_push,
         backgroundPushContent = R.string.cat_black_background_push,
         onBoardingRiveCat = "stretch_Black Cat",
-        pomodoroRiveCat = "blackCat"
+        pomodoroRiveCat = "blackCat",
+        pomodoroFireInput = "Click_Black Cat"
     ),
     THREE_COLOR(
         personality = R.string.cat_three_personality,
@@ -38,7 +41,8 @@ enum class CatType(
         restEndPushContent = R.string.cat_cheese_rest_end_push,
         backgroundPushContent = R.string.cat_three_background_push,
         onBoardingRiveCat = "stretch_Calico Cat",
-        pomodoroRiveCat = "calicoCat"
+        pomodoroRiveCat = "calicoCat",
+        pomodoroFireInput = "Click_Calico Cat"
     );
 
     companion object {

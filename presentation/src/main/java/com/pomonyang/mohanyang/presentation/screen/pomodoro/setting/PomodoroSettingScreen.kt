@@ -158,7 +158,10 @@ fun PomodoroSettingScreen(
                 riveResource = R.raw.cat_home,
                 stateMachineInput = state.cat.type.pomodoroRiveCat,
                 stateMachineName = "State Machine_Home",
-                isAutoPlay = false
+                isAutoPlay = false,
+                onRiveClick = {
+                    it.fireState("State Machine_Home", state.cat.type.pomodoroFireInput)
+                }
             )
 
             Text(
