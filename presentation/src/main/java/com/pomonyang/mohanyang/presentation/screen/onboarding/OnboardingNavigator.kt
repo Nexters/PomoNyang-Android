@@ -6,6 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.screen.onboarding.guide.OnboardingGuideRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.naming.OnboardingNamingCatRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.select.OnboardingSelectCatRoute
@@ -29,7 +30,7 @@ internal data class OnboardingNamingCat(
     val catNo: Int,
     val catName: String,
     val destination: String,
-    val selectedCatRiveAnimation: String
+    val catTypeName: String
 )
 
 enum class CatSettingDestination {
@@ -64,10 +65,10 @@ fun NavGraphBuilder.onboardingScreen(
             OnboardingSelectCatRoute(
                 selectedCatNo = routeData.selectedCatNo,
                 onBackClick = { navHostController.popBackStack() },
-                onStartClick = { catNo, catName, animation ->
+                onStartClick = { catNo, catName, catTypeName ->
                     when (destination) {
                         CatSettingDestination.POMODORO -> {
-                            navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, destination = destination.name, selectedCatRiveAnimation = animation ?: ""))
+                            navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, destination = destination.name, catTypeName = catTypeName))
                         }
 
                         CatSettingDestination.MY_PAGE -> {
@@ -81,12 +82,12 @@ fun NavGraphBuilder.onboardingScreen(
         composable<OnboardingNamingCat> { navBackStackEntry ->
             val namingCat = navBackStackEntry.toRoute<OnboardingNamingCat>()
             val catName = namingCat.catName
-            val selectedCatRiveAnimation = namingCat.selectedCatRiveAnimation
+            val catType = CatType.valueOf(namingCat.catTypeName)
             val destination = CatSettingDestination.valueOf(namingCat.destination)
 
             OnboardingNamingCatRoute(
                 catName = catName,
-                selectedCatRiveAnimation = selectedCatRiveAnimation,
+                catType = catType,
                 onBackClick = { navHostController.popBackStack() },
                 onNavToDestination = {
                     when (destination) {

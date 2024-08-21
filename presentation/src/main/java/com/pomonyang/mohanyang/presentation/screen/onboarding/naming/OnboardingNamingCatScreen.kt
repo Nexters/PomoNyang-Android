@@ -35,6 +35,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.textfield.MnTextField
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -42,7 +43,7 @@ import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 @Composable
 fun OnboardingNamingCatRoute(
     catName: String,
-    selectedCatRiveAnimation: String?,
+    catType: CatType,
     onBackClick: () -> Unit,
     onNavToDestination: () -> Unit,
     modifier: Modifier = Modifier,
@@ -58,7 +59,7 @@ fun OnboardingNamingCatRoute(
 
     OnboardingNamingCatScreen(
         catName = catName,
-        selectedCatRiveAnimation = selectedCatRiveAnimation,
+        catType = catType,
         onAction = onboardingNamingCatViewModel::handleEvent,
         onBackClick = onBackClick,
         modifier = modifier
@@ -68,7 +69,7 @@ fun OnboardingNamingCatRoute(
 @Composable
 fun OnboardingNamingCatScreen(
     catName: String,
-    selectedCatRiveAnimation: String?,
+    catType: CatType,
     onAction: (NamingEvent) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -118,9 +119,16 @@ fun OnboardingNamingCatScreen(
                     modifier = Modifier
                         .padding(top = 130.dp)
                         .fillMaxWidth(),
-                    riveAnimationName = selectedCatRiveAnimation,
+                    isAutoPlay = false,
+                    riveAnimationName = catType.onBoardingRiveCat,
+                    stateMachineName = "State Machine_selectCat",
                     riveResource = R.raw.cat_select,
-                    tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
+                    tooltipMessage = stringResource(id = R.string.naming_cat_tooltip),
+                    onRiveClick = remember {
+                        {
+                            it.fireState("State Machine_Home", catType.catFireInput)
+                        }
+                    }
                 )
                 Text(
                     modifier = Modifier.padding(
@@ -165,7 +173,7 @@ fun OnboardingNamingCatScreen(
 fun PreviewOnboardingNamingCatScreen() {
     OnboardingNamingCatScreen(
         catName = "삼색이",
-        selectedCatRiveAnimation = "selectedCatRiveAnimation",
+        catType = CatType.CHEESE,
         onAction = { _ -> },
         onBackClick = {}
     )
