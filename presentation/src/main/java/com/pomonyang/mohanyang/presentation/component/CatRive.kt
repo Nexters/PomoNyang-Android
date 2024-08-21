@@ -55,20 +55,29 @@ fun CatRive(
     var showTooltip by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val riveView = remember {
-        RiveAnimationView(context = context)
+        RiveAnimationView(context)
     }
 
-    LaunchedEffect(riveAnimationName) {
-        riveView.setRiveResource(
-            resId = riveResource,
-            stateMachineName = stateMachineName,
-            autoplay = isAutoPlay,
-            animationName = riveAnimationName
-        )
-    }
-    if (stateMachineName != null && stateMachineInput != null) {
-        riveView.setBooleanState(stateMachineName, stateMachineInput, true)
-        riveView.play()
+    LaunchedEffect(stateMachineInput, riveAnimationName) {
+        if (stateMachineName != null
+        ) {
+            riveView.reset()
+            riveView.apply {
+                setRiveResource(
+                    resId = riveResource,
+                    stateMachineName = stateMachineName,
+                    autoplay = isAutoPlay,
+                    animationName = riveAnimationName
+                )
+            }
+            if (stateMachineInput != null) riveView.setBooleanState(stateMachineName, stateMachineInput, true)
+
+            if (riveAnimationName != null) {
+                riveView.play(riveAnimationName)
+            } else {
+                riveView.play()
+            }
+        }
     }
 
     if (tooltipMessage != null) {
