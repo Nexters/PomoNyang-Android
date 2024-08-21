@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId = "com.pomonyang.mohanyang"
-        versionCode = 1
-        versionName = "0.0.0"
+        versionCode = 4
+        versionName = "0.1.1"
     }
 
     signingConfigs {
