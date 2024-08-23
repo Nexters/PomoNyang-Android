@@ -95,7 +95,7 @@ class MainActivity : ComponentActivity() {
                 getTokenByDeviceIdUseCase()
                     .onSuccess {
                         userRepository.fetchMyInfo().onSuccess {
-                            if (it.cat.no == -1) isNewUser = true
+                            isNewUser = it.cat.no == -1
                         }
                         pomodoroSettingRepository.fetchPomodoroSettingList()
                         showDialog = false
