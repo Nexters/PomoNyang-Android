@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -108,13 +109,16 @@ private fun CatProfileScreen(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             CatRive(
+                isAutoPlay = false,
                 modifier = Modifier.fillMaxWidth(),
                 tooltipMessage = stringResource(id = R.string.cat_profile_tooltip),
-                riveResource = R.raw.cat_select,
-                riveAnimationName = state.catType.onBoardingRiveCat,
-                stateMachineName = "State Machine_selectCat",
-                onRiveClick = {
-                    it.fireState("State Machine_selectCat", state.catType.catFireInput)
+                riveResource = R.raw.cat_rest,
+                stateMachineName = "State Machine_Home",
+                stateMachineInput = state.catType.pomodoroRiveCat,
+                onRiveClick = remember {
+                    {
+                        it.fireState("State Machine_Home", state.catType.catFireInput)
+                    }
                 }
             )
 

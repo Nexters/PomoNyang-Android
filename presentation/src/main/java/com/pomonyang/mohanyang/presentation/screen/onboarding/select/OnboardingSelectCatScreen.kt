@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,7 +56,7 @@ import kotlinx.collections.immutable.toPersistentList
 fun OnboardingSelectCatRoute(
     selectedCatNo: Int,
     onBackClick: () -> Unit,
-    onStartClick: (Int, String, String?) -> Unit,
+    onStartClick: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
     onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel()
 ) {
@@ -67,7 +68,7 @@ fun OnboardingSelectCatRoute(
                 onStartClick(
                     effect.no,
                     effect.catName,
-                    effect.selectedCatRiveAnimation
+                    effect.catTypeName
                 )
             }
         }
@@ -152,7 +153,15 @@ fun OnboardingSelectCatScreen(
                     )
                     .fillMaxWidth(),
                 riveResource = R.raw.cat_select,
-                riveAnimationName = state.selectedType?.onBoardingRiveCat
+                riveAnimationName = state.selectedType?.onBoardingRiveCat,
+                stateMachineName = "State Machine_selectCat",
+                onRiveClick = remember {
+                    { view ->
+                        state.selectedType?.let {
+                            view.fireState("State Machine_selectCat", it.catFireInput)
+                        }
+                    }
+                }
             )
 
             CatCategory(
