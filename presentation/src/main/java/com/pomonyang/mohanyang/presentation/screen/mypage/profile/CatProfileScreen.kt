@@ -110,8 +110,8 @@ private fun CatProfileScreen(
                 isAutoPlay = false,
                 modifier = Modifier.fillMaxWidth(),
                 tooltipMessage = stringResource(id = R.string.cat_profile_tooltip),
-                riveResource = R.raw.cat_rest,
-                stateMachineName = "State Machine_Home",
+                riveResource = R.raw.cat_rename,
+                stateMachineName = "State Machine_Rename",
                 stateMachineInput = state.catType.pomodoroRiveCat,
                 onRiveClick = remember {
                     {
