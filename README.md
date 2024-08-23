@@ -4,7 +4,7 @@
 
 > 고양이와 함께하는 집중 시간, 모하냥!
 
-[![download](https://img.shields.io/badge/playstore-download-brightgreen?style=social&logo=googleplay&logoColor=FFB019)](https://github.com/Nexters/PomoNyang-Android)
+[![download](https://img.shields.io/badge/playstore-download-brightgreen?style=social&logo=googleplay&logoColor=FFB019)](https://sixth-polyanthus-090.notion.site/Android-5dfb4e9c66cc4b34ad357120a9402218?pvs=4)
 
 <br>
 
