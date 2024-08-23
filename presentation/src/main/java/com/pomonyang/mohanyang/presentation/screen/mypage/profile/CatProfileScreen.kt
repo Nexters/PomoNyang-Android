@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -112,12 +111,7 @@ private fun CatProfileScreen(
                 tooltipMessage = stringResource(id = R.string.cat_profile_tooltip),
                 riveResource = R.raw.cat_rename,
                 stateMachineName = "State Machine_Rename",
-                stateMachineInput = state.catType.pomodoroRiveCat,
-                onRiveClick = remember {
-                    {
-                        it.fireState("State Machine_Home", state.catType.catFireInput)
-                    }
-                }
+                stateMachineInput = state.catType.pomodoroRiveCat
             )
 
             Row(
