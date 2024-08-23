@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalAssetLoader::class)
-
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
 
 import androidx.activity.compose.BackHandler
@@ -23,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox

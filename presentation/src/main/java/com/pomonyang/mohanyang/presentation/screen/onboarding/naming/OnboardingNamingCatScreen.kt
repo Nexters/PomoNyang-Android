@@ -122,9 +122,9 @@ fun OnboardingNamingCatScreen(
                         .padding(top = 130.dp)
                         .fillMaxWidth(),
                     isAutoPlay = false,
-                    fireState = catType.catFireInput,
-                    stateMachineName = "State Machine_selectCat",
-                    riveResource = R.raw.cat_select,
+                    stateMachineInput = catType.pomodoroRiveCat,
+                    stateMachineName = "State Machine_Rename",
+                    riveResource = R.raw.cat_rename,
                     tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
                 )
                 Text(
@@ -143,7 +143,7 @@ fun OnboardingNamingCatScreen(
                     errorMessage = nameValidationResult.message,
                     backgroundColor = MnColor.White,
                     onValueChange = { value -> name = value },
-                    hint = catName ?: ""
+                    hint = catName
                 )
             }
         }

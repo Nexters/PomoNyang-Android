@@ -28,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
@@ -87,7 +86,6 @@ fun OnboardingSelectCatRoute(
     )
 }
 
-@OptIn(ExperimentalAssetLoader::class)
 @Composable
 fun OnboardingSelectCatScreen(
     onBackClick: () -> Unit,
