@@ -45,6 +45,7 @@ fun CatRive(
     riveAnimationName: String? = null,
     stateMachineName: String? = null,
     stateMachineInput: String? = null,
+    fireState: String? = null,
     onRiveClick: (RiveAnimationView) -> Unit = {}
 ) {
     val catRiveModifier = if (tooltipMessage != null) {
@@ -84,6 +85,12 @@ fun CatRive(
         LaunchedEffect(tooltipMessage) {
             delay(0.5.seconds)
             showTooltip = true
+        }
+    }
+
+    LaunchedEffect(fireState) {
+        if (stateMachineName != null && fireState != null) {
+            riveView.fireState(stateMachineName, fireState)
         }
     }
 

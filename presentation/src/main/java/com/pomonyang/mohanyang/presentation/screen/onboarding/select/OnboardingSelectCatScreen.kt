@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
@@ -87,6 +87,7 @@ fun OnboardingSelectCatRoute(
     )
 }
 
+@OptIn(ExperimentalAssetLoader::class)
 @Composable
 fun OnboardingSelectCatScreen(
     onBackClick: () -> Unit,
@@ -153,15 +154,8 @@ fun OnboardingSelectCatScreen(
                     )
                     .fillMaxWidth(),
                 riveResource = R.raw.cat_select,
-                riveAnimationName = state.selectedType?.onBoardingRiveCat,
                 stateMachineName = "State Machine_selectCat",
-                onRiveClick = remember {
-                    { view ->
-                        state.selectedType?.let {
-                            view.fireState("State Machine_selectCat", it.catFireInput)
-                        }
-                    }
-                }
+                fireState = state.selectedType?.catFireInput
             )
 
             CatCategory(

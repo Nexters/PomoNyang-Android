@@ -12,7 +12,6 @@ enum class CatType(
     val restEndPushContent: Int,
     val backgroundPushContent: Int,
     val messages: List<String>,
-    val onBoardingRiveCat: String,
     val pomodoroRiveCat: String,
     val catFireInput: String
 ) {
@@ -22,7 +21,6 @@ enum class CatType(
         timerEndPushContent = R.string.cat_cheese_timer_end_push,
         restEndPushContent = R.string.cat_cheese_rest_end_push,
         backgroundPushContent = R.string.cat_cheese_background_push,
-        onBoardingRiveCat = "stretch_Cheese Cat",
         pomodoroRiveCat = "cheeseCat",
         messages = listOf(
             "나랑 함께할 시간이다냥!",
@@ -37,7 +35,6 @@ enum class CatType(
         timerEndPushContent = R.string.cat_black_timer_end_push,
         restEndPushContent = R.string.cat_black_rest_end_push,
         backgroundPushContent = R.string.cat_black_background_push,
-        onBoardingRiveCat = "stretch_Black Cat",
         pomodoroRiveCat = "blackCat",
         messages = listOf(
             "나랑 함께할 시간이다냥!",
@@ -52,7 +49,6 @@ enum class CatType(
         timerEndPushContent = R.string.cat_three_timer_end_push,
         restEndPushContent = R.string.cat_cheese_rest_end_push,
         backgroundPushContent = R.string.cat_three_background_push,
-        onBoardingRiveCat = "stretch_Calico Cat",
         pomodoroRiveCat = "calicoCat",
         messages = listOf(
             "“시간이 없어서\"는 변명이다냥",
