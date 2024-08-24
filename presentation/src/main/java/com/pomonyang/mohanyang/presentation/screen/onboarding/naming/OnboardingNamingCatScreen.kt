@@ -124,7 +124,7 @@ fun OnboardingNamingCatScreen(
                     isAutoPlay = false,
                     stateMachineInput = catType.pomodoroRiveCat,
                     stateMachineName = "State Machine_Rename",
-                    riveResource = R.raw.cat_rename,
+                    riveResource = R.raw.cat_rename_2,
                     tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
                 )
                 Text(

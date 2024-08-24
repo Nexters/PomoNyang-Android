@@ -151,7 +151,7 @@ fun OnboardingSelectCatScreen(
                         bottom = 42.dp
                     )
                     .fillMaxWidth(),
-                riveResource = R.raw.cat_select,
+                riveResource = R.raw.cat_select_2,
                 stateMachineName = "State Machine_selectCat",
                 fireState = state.selectedType?.catFireInput
             )
