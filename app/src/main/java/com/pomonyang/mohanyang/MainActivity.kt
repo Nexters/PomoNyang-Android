@@ -47,6 +47,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -95,7 +96,7 @@ class MainActivity : ComponentActivity() {
                 getTokenByDeviceIdUseCase()
                     .onSuccess {
                         userRepository.fetchMyInfo().onSuccess {
-                            if (it.cat.no == -1) isNewUser = true
+                            isNewUser = it.cat.no == -1
                         }
                         pomodoroSettingRepository.fetchPomodoroSettingList()
                         showDialog = false
@@ -104,7 +105,14 @@ class MainActivity : ComponentActivity() {
                     }
             }
 
-            runBlocking { initializeInfo() }
+            runBlocking {
+                try {
+                    withTimeout(SPLASH_DELAY) {
+                        initializeInfo()
+                    }
+                } catch (ignored: Exception) {
+                }
+            }
 
             MnTheme {
                 val mohaNyangAppState = rememberMohaNyangAppState(

@@ -13,14 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
@@ -68,7 +66,6 @@ internal fun CatProfileRoute(
     )
 }
 
-@OptIn(ExperimentalAssetLoader::class)
 @Composable
 private fun CatProfileScreen(
     state: CatProfileState,
@@ -112,14 +109,9 @@ private fun CatProfileScreen(
                 isAutoPlay = false,
                 modifier = Modifier.fillMaxWidth(),
                 tooltipMessage = stringResource(id = R.string.cat_profile_tooltip),
-                riveResource = R.raw.cat_rest,
-                stateMachineName = "State Machine_Home",
-                stateMachineInput = state.catType.pomodoroRiveCat,
-                onRiveClick = remember {
-                    {
-                        it.fireState("State Machine_Home", state.catType.catFireInput)
-                    }
-                }
+                riveResource = R.raw.cat_rename_2,
+                stateMachineName = "State Machine_Rename",
+                stateMachineInput = state.catType.pomodoroRiveCat
             )
 
             Row(

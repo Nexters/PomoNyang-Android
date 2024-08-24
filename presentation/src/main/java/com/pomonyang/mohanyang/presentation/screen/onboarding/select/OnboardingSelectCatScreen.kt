@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -152,16 +151,9 @@ fun OnboardingSelectCatScreen(
                         bottom = 42.dp
                     )
                     .fillMaxWidth(),
-                riveResource = R.raw.cat_select,
-                riveAnimationName = state.selectedType?.onBoardingRiveCat,
+                riveResource = R.raw.cat_select_2,
                 stateMachineName = "State Machine_selectCat",
-                onRiveClick = remember {
-                    { view ->
-                        state.selectedType?.let {
-                            view.fireState("State Machine_selectCat", it.catFireInput)
-                        }
-                    }
-                }
+                fireState = state.selectedType?.catFireInput
             )
 
             CatCategory(

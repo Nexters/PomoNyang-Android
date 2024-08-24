@@ -44,7 +44,7 @@ google-services = "4.4.2"
 permission = "0.35.1-alpha"
 startup = "1.1.1"
 lottie = "6.0.0"
-rive = "8.7.0"
+rive = "9.6.4"
 
 [libraries]
 # Compose

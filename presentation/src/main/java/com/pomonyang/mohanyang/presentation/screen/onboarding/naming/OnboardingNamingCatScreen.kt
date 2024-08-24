@@ -101,12 +101,14 @@ fun OnboardingNamingCatScreen(
             .imePadding()
 
     ) {
-        MnTopAppBar(navigationIcon = {
-            MnIconButton(
-                onClick = onBackClick,
-                iconResourceId = R.drawable.ic_chevron_left
-            )
-        })
+        MnTopAppBar(
+            navigationIcon = {
+                MnIconButton(
+                    onClick = onBackClick,
+                    iconResourceId = R.drawable.ic_chevron_left
+                )
+            }
+        )
 
         LazyColumn(
             state = listState,
@@ -120,15 +122,10 @@ fun OnboardingNamingCatScreen(
                         .padding(top = 130.dp)
                         .fillMaxWidth(),
                     isAutoPlay = false,
-                    riveAnimationName = catType.onBoardingRiveCat,
-                    stateMachineName = "State Machine_selectCat",
-                    riveResource = R.raw.cat_select,
-                    tooltipMessage = stringResource(id = R.string.naming_cat_tooltip),
-                    onRiveClick = remember {
-                        {
-                            it.fireState("State Machine_Home", catType.catFireInput)
-                        }
-                    }
+                    stateMachineInput = catType.pomodoroRiveCat,
+                    stateMachineName = "State Machine_Rename",
+                    riveResource = R.raw.cat_rename_2,
+                    tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
                 )
                 Text(
                     modifier = Modifier.padding(
@@ -146,7 +143,7 @@ fun OnboardingNamingCatScreen(
                     errorMessage = nameValidationResult.message,
                     backgroundColor = MnColor.White,
                     onValueChange = { value -> name = value },
-                    hint = catName ?: ""
+                    hint = catName
                 )
             }
         }
