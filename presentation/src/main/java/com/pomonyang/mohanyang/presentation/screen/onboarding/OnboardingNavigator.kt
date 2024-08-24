@@ -39,7 +39,8 @@ enum class CatSettingDestination {
 }
 
 fun NavGraphBuilder.onboardingScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    onShowSnackbar: (String, Int?) -> Unit
 ) {
     navigation<Onboarding>(
         startDestination = OnboardingGuide
@@ -75,6 +76,9 @@ fun NavGraphBuilder.onboardingScreen(
                             navHostController.popBackStack()
                         }
                     }
+                },
+                onShowSnackBar = {
+                    onShowSnackbar(it, null)
                 }
             )
         }

@@ -61,7 +61,8 @@ internal fun MohaNyangNavHost(
 
     ) {
         onboardingScreen(
-            navHostController = mohaNyangAppState.navHostController
+            navHostController = mohaNyangAppState.navHostController,
+            onShowSnackbar = onShowSnackbar
         )
 
         pomodoroScreen(
