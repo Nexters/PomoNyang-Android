@@ -84,6 +84,8 @@ fun OnboardingNamingCatScreen(
         mutableStateOf(ValidationResult(true))
     }
 
+    fun isEnabled(): Boolean = name.isNotEmpty() && nameValidationResult.isValid
+
     LaunchedEffect(name) {
         if (name.isNotEmpty()) {
             nameValidationResult = catNameValidator.verifyName(name)
@@ -156,8 +158,8 @@ fun OnboardingNamingCatScreen(
                 start = MnSpacing.xLarge,
                 end = MnSpacing.xLarge
             ),
-            onClick = { onAction(NamingEvent.OnComplete(name)) },
-            isEnabled = name.isNotEmpty() && nameValidationResult.isValid,
+            onClick = { if (isEnabled()) onAction(NamingEvent.OnComplete(name)) },
+            isEnabled = isEnabled(),
             modifier = Modifier.fillMaxWidth(),
             colors = MnBoxButtonColorType.primary,
             styles = MnBoxButtonStyles.large
