@@ -54,7 +54,7 @@ class CatProfileViewModel @Inject constructor(
 
     private fun getMyInfo() {
         viewModelScope.launch {
-            userRepository.fetchMyInfo().onSuccess {
+            userRepository.getMyInfo().let {
                 updateState { copy(catName = it.cat.name, catNo = it.cat.no, catType = CatType.safeValueOf(it.cat.type)) }
             }
         }

@@ -18,7 +18,8 @@ import timber.log.Timber
 
 data class SelectCatState(
     val cats: List<CatInfoModel> = emptyList(),
-    val selectedType: CatType? = null
+    val selectedType: CatType? = null,
+    val isLoading: Boolean = true
 ) : ViewState
 
 sealed interface SelectCatEvent : ViewEvent {
@@ -30,6 +31,8 @@ sealed interface SelectCatEvent : ViewEvent {
 
 sealed interface SelectCatSideEffect : ViewSideEffect {
     data class OnNavToNaming(val no: Int, val catName: String, val catTypeName: String) : SelectCatSideEffect
+    data object GoToBack : SelectCatSideEffect
+    data class ShowSnackBar(val message: String) : SelectCatSideEffect
 }
 
 @HiltViewModel
@@ -73,7 +76,16 @@ class OnboardingSelectCatViewModel @Inject constructor(
             catSettingRepository.getCatTypes().also { response ->
                 response.onSuccess { cats ->
                     val catList = cats.map { it.toModel() }
-                    updateState { copy(cats = catList, selectedType = catList.find { it.no == selectedCatNo }?.type) }
+                    updateState {
+                        copy(
+                            cats = catList,
+                            selectedType = catList.find { it.no == selectedCatNo }?.type,
+                            isLoading = false
+                        )
+                    }
+                }.onFailure {
+                    Timber.e(it)
+                    setEffect(SelectCatSideEffect.GoToBack, SelectCatSideEffect.ShowSnackBar("고양이 선택을 위해 네트워크 연결이 필요해요"))
                 }
             }
         }
