@@ -62,9 +62,15 @@ fun MnSelectListItem(
                     style = MnTheme.typography.bodySemiBold,
                     color = MnTheme.textColorScheme.primary
                 )
-                TimeComponent(focusTime)
+                TimeComponent(
+                    type = stringResource(R.string.focus),
+                    time = focusTime
+                )
                 TimeDivider()
-                TimeComponent(restTime)
+                TimeComponent(
+                    type = stringResource(R.string.rest),
+                    time = restTime
+                )
             }
         },
         onClick = onClick
@@ -86,19 +92,25 @@ private fun TimeDivider() {
 }
 
 @Composable
-private fun TimeComponent(time: String) {
-    Text(
-        text = stringResource(R.string.focus),
-        style = MnTheme.typography.subBodyRegular,
-        color = MnTheme.textColorScheme.tertiary
-    )
+private fun TimeComponent(
+    type: String,
+    time: String,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier) {
+        Text(
+            text = type,
+            style = MnTheme.typography.subBodyRegular,
+            color = MnTheme.textColorScheme.tertiary
+        )
 
-    Text(
-        modifier = Modifier.padding(start = 4.dp),
-        text = time,
-        style = MnTheme.typography.subBodyRegular,
-        color = MnTheme.textColorScheme.tertiary
-    )
+        Text(
+            modifier = Modifier.padding(start = 4.dp),
+            text = time,
+            style = MnTheme.typography.subBodyRegular,
+            color = MnTheme.textColorScheme.tertiary
+        )
+    }
 }
 
 @Preview
