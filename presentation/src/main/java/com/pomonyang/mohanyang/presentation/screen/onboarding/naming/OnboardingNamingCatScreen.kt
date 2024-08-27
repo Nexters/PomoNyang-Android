@@ -35,6 +35,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.textfield.MnTextField
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -42,7 +43,7 @@ import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 @Composable
 fun OnboardingNamingCatRoute(
     catName: String,
-    selectedCatRiveAnimation: String?,
+    catType: CatType,
     onBackClick: () -> Unit,
     onNavToDestination: () -> Unit,
     modifier: Modifier = Modifier,
@@ -58,7 +59,7 @@ fun OnboardingNamingCatRoute(
 
     OnboardingNamingCatScreen(
         catName = catName,
-        selectedCatRiveAnimation = selectedCatRiveAnimation,
+        catType = catType,
         onAction = onboardingNamingCatViewModel::handleEvent,
         onBackClick = onBackClick,
         modifier = modifier
@@ -68,7 +69,7 @@ fun OnboardingNamingCatRoute(
 @Composable
 fun OnboardingNamingCatScreen(
     catName: String,
-    selectedCatRiveAnimation: String?,
+    catType: CatType,
     onAction: (NamingEvent) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -82,6 +83,8 @@ fun OnboardingNamingCatScreen(
     var nameValidationResult by remember {
         mutableStateOf(ValidationResult(true))
     }
+
+    fun isEnabled(): Boolean = name.isNotEmpty() && nameValidationResult.isValid
 
     LaunchedEffect(name) {
         if (name.isNotEmpty()) {
@@ -100,12 +103,14 @@ fun OnboardingNamingCatScreen(
             .imePadding()
 
     ) {
-        MnTopAppBar(navigationIcon = {
-            MnIconButton(
-                onClick = onBackClick,
-                iconResourceId = R.drawable.ic_chevron_left
-            )
-        })
+        MnTopAppBar(
+            navigationIcon = {
+                MnIconButton(
+                    onClick = onBackClick,
+                    iconResourceId = R.drawable.ic_chevron_left
+                )
+            }
+        )
 
         LazyColumn(
             state = listState,
@@ -118,8 +123,10 @@ fun OnboardingNamingCatScreen(
                     modifier = Modifier
                         .padding(top = 130.dp)
                         .fillMaxWidth(),
-                    riveAnimationName = selectedCatRiveAnimation,
-                    riveResource = R.raw.cat_select,
+                    isAutoPlay = false,
+                    stateMachineInput = catType.pomodoroRiveCat,
+                    stateMachineName = "State Machine_Rename",
+                    riveResource = R.raw.cat_rename_2,
                     tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
                 )
                 Text(
@@ -138,7 +145,7 @@ fun OnboardingNamingCatScreen(
                     errorMessage = nameValidationResult.message,
                     backgroundColor = MnColor.White,
                     onValueChange = { value -> name = value },
-                    hint = catName ?: ""
+                    hint = catName
                 )
             }
         }
@@ -151,8 +158,8 @@ fun OnboardingNamingCatScreen(
                 start = MnSpacing.xLarge,
                 end = MnSpacing.xLarge
             ),
-            onClick = { onAction(NamingEvent.OnComplete(name)) },
-            isEnabled = name.isNotEmpty() && nameValidationResult.isValid,
+            onClick = { if (isEnabled()) onAction(NamingEvent.OnComplete(name)) },
+            isEnabled = isEnabled(),
             modifier = Modifier.fillMaxWidth(),
             colors = MnBoxButtonColorType.primary,
             styles = MnBoxButtonStyles.large
@@ -165,7 +172,7 @@ fun OnboardingNamingCatScreen(
 fun PreviewOnboardingNamingCatScreen() {
     OnboardingNamingCatScreen(
         catName = "삼색이",
-        selectedCatRiveAnimation = "selectedCatRiveAnimation",
+        catType = CatType.CHEESE,
         onAction = { _ -> },
         onBackClick = {}
     )

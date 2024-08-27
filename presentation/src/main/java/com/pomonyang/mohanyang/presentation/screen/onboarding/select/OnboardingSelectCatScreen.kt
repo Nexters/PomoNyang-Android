@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,7 +56,8 @@ import kotlinx.collections.immutable.toPersistentList
 fun OnboardingSelectCatRoute(
     selectedCatNo: Int,
     onBackClick: () -> Unit,
-    onStartClick: (Int, String, String?) -> Unit,
+    onStartClick: (Int, String, String) -> Unit,
+    onShowSnackBar: (String) -> Unit,
     modifier: Modifier = Modifier,
     onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel()
 ) {
@@ -67,8 +69,16 @@ fun OnboardingSelectCatRoute(
                 onStartClick(
                     effect.no,
                     effect.catName,
-                    effect.selectedCatRiveAnimation
+                    effect.catTypeName
                 )
+            }
+
+            is SelectCatSideEffect.GoToBack -> {
+                onBackClick()
+            }
+
+            is SelectCatSideEffect.ShowSnackBar -> {
+                onShowSnackBar(effect.message)
             }
         }
     }
@@ -77,27 +87,41 @@ fun OnboardingSelectCatRoute(
         onboardingSelectCatViewModel.handleEvent(SelectCatEvent.OnGrantedAlarmPermission)
     }
 
-    OnboardingSelectCatScreen(
-        selectedCatNo = if (selectedCatNo != -1) selectedCatNo else null,
-        onBackClick = onBackClick,
-        modifier = modifier,
-        onAction = onboardingSelectCatViewModel::handleEvent,
-        state = state
-    )
+    LaunchedEffect(Unit) {
+        onboardingSelectCatViewModel.handleEvent(SelectCatEvent.Init(selectedCatNo))
+    }
+
+    if (state.isLoading) {
+        OnboardingSelectCatLoadingScreen()
+    } else {
+        OnboardingSelectCatScreen(
+            onBackClick = onBackClick,
+            modifier = modifier,
+            onAction = onboardingSelectCatViewModel::handleEvent,
+            state = state
+        )
+    }
 }
 
 @Composable
-fun OnboardingSelectCatScreen(
+private fun OnboardingSelectCatLoadingScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MnTheme.backgroundColorScheme.primary),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(modifier = Modifier.size(70.dp), color = MnColor.Orange500)
+    }
+}
+
+@Composable
+private fun OnboardingSelectCatScreen(
     onBackClick: () -> Unit,
     onAction: (SelectCatEvent) -> Unit,
     state: SelectCatState,
-    selectedCatNo: Int?,
     modifier: Modifier = Modifier
 ) {
-    LaunchedEffect(Unit) {
-        onAction(SelectCatEvent.Init(selectedCatNo))
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -151,10 +175,10 @@ fun OnboardingSelectCatScreen(
                         bottom = 42.dp
                     )
                     .fillMaxWidth(),
-                riveResource = R.raw.cat_select,
-                riveAnimationName = state.selectedType?.onBoardingRiveCat
+                riveResource = R.raw.cat_select_2,
+                stateMachineName = "State Machine_selectCat",
+                fireState = state.selectedType?.catFireInput
             )
-
             CatCategory(
                 cats = state.cats.toPersistentList(),
                 selectedType = state.selectedType,
@@ -350,7 +374,6 @@ private fun NotificationPermissionEffect(
 fun PreviewOnboardingSelectScreen() {
     OnboardingSelectCatScreen(
         onBackClick = {},
-        selectedCatNo = -1,
         state = SelectCatState(
             cats = listOf(
                 CatInfoModel(1, "이이오", type = CatType.CHEESE),

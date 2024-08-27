@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
 import app.rive.runtime.kotlin.RiveAnimationView
-import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.MnTooltipDefaults
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.TooltipAnchor
@@ -35,7 +34,6 @@ import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalAssetLoader::class)
 @Composable
 fun CatRive(
     @RawRes riveResource: Int,
@@ -45,6 +43,7 @@ fun CatRive(
     riveAnimationName: String? = null,
     stateMachineName: String? = null,
     stateMachineInput: String? = null,
+    fireState: String? = null,
     onRiveClick: (RiveAnimationView) -> Unit = {}
 ) {
     val catRiveModifier = if (tooltipMessage != null) {
@@ -55,7 +54,7 @@ fun CatRive(
     var showTooltip by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val riveView = remember {
-        RiveAnimationView(context = context)
+        RiveAnimationView(context)
     }
 
     LaunchedEffect(riveAnimationName) {
@@ -66,9 +65,18 @@ fun CatRive(
             animationName = riveAnimationName
         )
     }
-    if (stateMachineName != null && stateMachineInput != null) {
-        riveView.setBooleanState(stateMachineName, stateMachineInput, true)
-        riveView.play()
+
+    LaunchedEffect(stateMachineInput) {
+        if (stateMachineName != null && stateMachineInput != null) {
+            riveView.reset()
+            riveView.setBooleanState(stateMachineName, stateMachineInput, true)
+        }
+    }
+
+    LaunchedEffect(fireState) {
+        if (stateMachineName != null && fireState != null) {
+            riveView.fireState(stateMachineName, fireState)
+        }
     }
 
     if (tooltipMessage != null) {
