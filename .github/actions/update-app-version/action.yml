@@ -39,6 +39,8 @@ runs:
           sed -i "s/\"patch\": [0-9]\+/\"patch\": ${{ inputs.patch }}/" $VERSION_FILE
           sed -i "s/\"code\": [0-9]\+/\"code\": ${{ inputs.code }}/" $VERSION_FILE
         fi
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"           
         git add $VERSION_FILE
         git commit -m "Update app version to ${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }} [${{ inputs.code }}]"
-        git push origin HEAD
+        git push

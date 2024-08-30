@@ -3,13 +3,12 @@ name: Deploy New Version
 on:
   pull_request:
     types: [ closed ]
-
-  push:
     branches:
       - test/app-version
+
 jobs:
   versioning:
-    if: github.event.pull_request.merged == true && github.ref == 'refs/heads/test/app-version'
+    if: github.ref == 'refs/heads/test/app-version'
     runs-on: ubuntu-latest
 
     steps:
@@ -77,7 +76,7 @@ jobs:
           echo "version_name=${major}.${minor}.${patch}" >> $GITHUB_OUTPUT
 
       - name: Update App Version
-        uses: ./github/actions/update-app-version
+        uses: ./.github/actions/update-app-version
         with:
           major: ${{ steps.calculate_version.outputs.major }}
           minor: ${{ steps.calculate_version.outputs.minor }}
