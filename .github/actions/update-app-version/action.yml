@@ -22,6 +22,7 @@ runs:
   steps:
     - name: Update app version
       shell: bash
+      if: success()
       run: |
         VERSION_FILE="${{ inputs.file }}"
         if command -v jq &> /dev/null; then

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - test/app-version
-      - cat/309
 
 jobs:
   versioning:
