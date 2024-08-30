@@ -85,7 +85,7 @@ jobs:
 
       - name: Get Updated App Version
         id: get-updated-version
-        uses: ./github/actions/get-app-version
+        uses: ./.github/actions/get-app-version
 
       - name: Create Git Tag
         run: |
