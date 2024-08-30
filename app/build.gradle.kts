@@ -6,6 +6,7 @@ plugins {
     id("mohanyang.android.hilt")
     id("mohanyang.android.application.compose")
     id("mohanyang.android.application.firebase")
+    id("mohanyang.appversion")
 }
 
 android {
@@ -13,8 +14,8 @@ android {
 
     defaultConfig {
         applicationId = "com.pomonyang.mohanyang"
-        versionCode = 6
-        versionName = "0.1.3"
+        versionCode = appVersion.code
+        versionName = appVersion.name
     }
 
     signingConfigs {
