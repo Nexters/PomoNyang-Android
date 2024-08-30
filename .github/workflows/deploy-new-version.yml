@@ -1,10 +1,10 @@
 name: Deploy New Version
 
 on:
-  pull_request:
-    types: [ closed ]
+  push:
     branches:
       - test/app-version
+      - cat/309
 
 jobs:
   versioning:
