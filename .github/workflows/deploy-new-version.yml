@@ -1,13 +1,16 @@
 name: Deploy New Version
 
 on:
+  pull_request:
+    types: [ closed ]
+
   push:
     branches:
       - test/app-version
 
 jobs:
   versioning:
-    if: github.ref == 'refs/heads/test/app-version'
+    if: github.event.pull_request.merged == true && github.ref == 'refs/heads/test/app-version'
     runs-on: ubuntu-latest
 
     steps:
