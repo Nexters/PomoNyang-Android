@@ -1,0 +1,39 @@
+name: 'Get App Version'
+description: 'Get App Version'
+
+outputs:
+  major:
+    description: "앱 버전 중 major"
+    value: ${{ steps.get-app-version.outputs.major }}
+  minor:
+    description: "앱 버전 중 minor"
+    value: ${{ steps.get-app-version.outputs.minor }}
+  patch:
+    description: "앱 버전 중 patch"
+    value: ${{ steps.get-app-version.outputs.patch }}
+  code:
+    description: "앱 버전 코드"
+    value: ${{ steps.get-app-version.outputs.code }}
+  version_name:
+    description: "앱 버전 이름"
+    value: ${{ steps.get-app-version.outputs.version_name }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get App Version
+      id: get-app-version
+      shell: bash
+      run: |
+        major=$(jq .major app-version.json)
+        minor=$(jq .minor app-version.json)
+        patch=$(jq .patch app-version.json)
+        code=$(jq .code app-version.json)
+        
+        {
+          echo "major=$major"
+          echo "minor=$minor"
+          echo "patch=$patch"
+          echo "code=$code"
+          echo "version_name=$major.$minor.$patch"
+        } >> $GITHUB_OUTPUT
