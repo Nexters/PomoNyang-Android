@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroTimerEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PomodoroTimerDao {
@@ -12,14 +13,50 @@ interface PomodoroTimerDao {
     @Query("SELECT * FROM pomodoro_timer")
     suspend fun getAllPomodoroTimers(): List<PomodoroTimerEntity>
 
+    @Query(
+        """
+    SELECT * 
+    FROM pomodoro_timer 
+    WHERE focusTimeId = (
+        SELECT focusTimeId 
+        FROM pomodoro_timer 
+        ORDER BY ROWID DESC 
+        LIMIT 1
+    )
+    """
+    )
+    fun getCurrentTimerEntity(): Flow<PomodoroTimerEntity?>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPomodoroSettingData(pomodoroTimerEntity: PomodoroTimerEntity)
 
-    @Query("UPDATE pomodoro_timer SET focusedTime = :focusedTime WHERE focusTimeId = (SELECT focusTimeId FROM pomodoro_timer ORDER BY ROWID DESC LIMIT 1)")
-    suspend fun updateFocusedTime(focusedTime: Int)
+    @Query(
+        """
+            UPDATE pomodoro_timer 
+            SET focusedTime = focusedTime + 1 
+            WHERE focusTimeId = (
+                SELECT focusTimeId 
+                FROM pomodoro_timer 
+                ORDER BY ROWID DESC 
+                LIMIT 1
+            )
+        """
+    )
+    suspend fun incrementFocusedTime()
 
-    @Query("UPDATE pomodoro_timer SET restedTime = :restedTime WHERE focusTimeId = (SELECT focusTimeId FROM pomodoro_timer ORDER BY ROWID DESC LIMIT 1)")
-    suspend fun updateRestedTime(restedTime: Int)
+    @Query(
+        """
+            UPDATE pomodoro_timer 
+            SET restedTime = restedTime + 1 
+            WHERE focusTimeId = (
+                SELECT focusTimeId 
+                FROM pomodoro_timer 
+                ORDER BY ROWID DESC 
+                LIMIT 1
+            )
+        """
+    )
+    suspend fun incrementRestTime()
 
     @Query("UPDATE pomodoro_timer SET doneAt = :doneAt WHERE focusTimeId = (SELECT focusTimeId FROM pomodoro_timer ORDER BY ROWID DESC LIMIT 1)")
     suspend fun updateDoneAt(doneAt: String)

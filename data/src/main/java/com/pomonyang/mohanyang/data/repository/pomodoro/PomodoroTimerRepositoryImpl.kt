@@ -8,6 +8,7 @@ import java.time.Duration
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 internal class PomodoroTimerRepositoryImpl @Inject constructor(
     private val pomodoroTimerDao: PomodoroTimerDao,
@@ -22,12 +23,12 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun updateFocusTime(focusedTime: Int) {
-        pomodoroTimerDao.updateFocusedTime(focusedTime)
+    override suspend fun incrementFocusedTime() {
+        pomodoroTimerDao.incrementFocusedTime()
     }
 
-    override suspend fun updateRestedTime(restedTime: Int) {
-        pomodoroTimerDao.updateRestedTime(restedTime)
+    override suspend fun incrementRestedTime() {
+        pomodoroTimerDao.incrementRestTime()
     }
 
     override suspend fun updatePomodoroDone() {
@@ -51,6 +52,8 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
             pomodoroTimerDao.deletePomodoroTimerAll()
         }
     }
+
+    override fun getPomodoroTimer(): Flow<PomodoroTimerEntity?> = pomodoroTimerDao.getCurrentTimerEntity()
 
     private fun Int.toDurationString(): String = Duration.ofMinutes((this / 60).toLong()).toString()
 }

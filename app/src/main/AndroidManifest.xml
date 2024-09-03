@@ -66,6 +66,8 @@
             </intent-filter>
         </service>
 
+        <service android:name=".presentation.util.PomodoroTimerService" />
+
     </application>
 
 </manifest>
