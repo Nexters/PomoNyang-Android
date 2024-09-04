@@ -88,7 +88,7 @@ fun PomodoroFocusRoute(
         }
     }
 
-    pomodoroTimerViewModel.effects.collectWithLifecycle { effect ->
+    pomodoroTimerViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
         if (effect is PomodoroTimerEffect.PomodoroFocusEffect) {
             when (effect) {
                 PomodoroTimerEffect.PomodoroFocusEffect.ForceGoRest -> {
