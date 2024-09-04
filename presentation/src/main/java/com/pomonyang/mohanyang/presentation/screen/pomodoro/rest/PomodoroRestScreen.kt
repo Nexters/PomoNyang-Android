@@ -79,8 +79,6 @@ fun PomodoroRestRoute(
     DisposableEffect(Unit) {
         context.startTimer(false)
 
-        pomodoroRestViewModel.handleEvent(PomodoroRestEvent.Init)
-
         onDispose {
             context.stopTimer(false)
         }

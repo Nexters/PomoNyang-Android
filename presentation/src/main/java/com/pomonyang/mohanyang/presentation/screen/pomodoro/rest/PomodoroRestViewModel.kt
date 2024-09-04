@@ -30,7 +30,6 @@ sealed interface PomodoroRestEvent : ViewEvent {
     data class OnMinusButtonClick(val isMinusButtonSelected: Boolean) : PomodoroRestEvent
     data object OnEndPomodoroClick : PomodoroRestEvent
     data object OnFocusClick : PomodoroRestEvent
-    data object Init : PomodoroRestEvent
 }
 
 sealed interface PomodoroRestEffect : ViewSideEffect {
@@ -47,20 +46,22 @@ class PomodoroRestViewModel @Inject constructor(
     private val pomodoroTimerRepository: PomodoroTimerRepository
 ) : BaseViewModel<PomodoroRestState, PomodoroRestEvent, PomodoroRestEffect>() {
 
+    init {
+        viewModelScope.launch {
+            val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
+            updateState {
+                copy(
+                    plusButtonEnabled = selectedPomodoroSetting.restTime < MAX_REST_MINUTES,
+                    minusButtonEnabled = selectedPomodoroSetting.restTime > MIN_REST_MINUTES
+                )
+            }
+        }
+    }
+
     override fun setInitialState(): PomodoroRestState = PomodoroRestState()
 
     override fun handleEvent(event: PomodoroRestEvent) {
         when (event) {
-            PomodoroRestEvent.Init -> viewModelScope.launch {
-                val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
-                updateState {
-                    copy(
-                        plusButtonEnabled = selectedPomodoroSetting.restTime < MAX_REST_MINUTES,
-                        minusButtonEnabled = selectedPomodoroSetting.restTime > MIN_REST_MINUTES
-                    )
-                }
-            }
-
             is PomodoroRestEvent.OnPlusButtonClick -> {
                 if (state.value.plusButtonEnabled.not()) {
                     setEffect(
