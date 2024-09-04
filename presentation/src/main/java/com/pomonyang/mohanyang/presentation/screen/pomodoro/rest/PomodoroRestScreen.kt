@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,26 +37,37 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.notifyRestEnd
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
+import com.pomonyang.mohanyang.presentation.util.startTimer
+import com.pomonyang.mohanyang.presentation.util.stopTimer
 
 @Composable
 fun PomodoroRestRoute(
+    pomodoroTimerViewModel: PomodoroTimerViewModel,
     onShowSnackbar: suspend (String, Int?) -> Unit,
     goToHome: () -> Unit,
     goToFocus: () -> Unit,
     modifier: Modifier = Modifier,
     pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel()
 ) {
-    val state by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
+    val timerState by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
+    val restState by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     pomodoroRestViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
         when (effect) {
             is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
-            PomodoroRestEffect.GoToHome -> goToHome()
-            PomodoroRestEffect.GoToPomodoroFocus -> goToFocus()
+            PomodoroRestEffect.GoToHome -> {
+                goToHome()
+            }
+
+            PomodoroRestEffect.GoToPomodoroFocus -> {
+                goToFocus()
+            }
+
             PomodoroRestEffect.SendEndRestAlarm -> notifyRestEnd(context)
         }
     }
@@ -65,20 +76,26 @@ fun PomodoroRestRoute(
         // NOTHING
     }
 
-    LaunchedEffect(Unit) {
+    DisposableEffect(Unit) {
+        context.startTimer(false)
+
         pomodoroRestViewModel.handleEvent(PomodoroRestEvent.Init)
+
+        onDispose {
+            context.stopTimer(false)
+        }
     }
 
     PomodoroRestScreen(
         modifier = modifier,
-        categoryType = state.categoryType,
-        catType = state.catType,
-        time = state.displayRestTime(),
-        plusButtonSelected = state.plusButtonSelected,
-        minusButtonSelected = state.minusButtonSelected,
-        plusButtonEnabled = state.plusButtonEnabled,
-        minusButtonEnabled = state.minusButtonEnabled,
-        exceededTime = state.displayExceedTime(),
+        categoryType = stringResource(id = timerState.categoryType.kor),
+        catType = timerState.cat,
+        time = timerState.displayRestTime(),
+        plusButtonSelected = restState.plusButtonSelected,
+        minusButtonSelected = restState.minusButtonSelected,
+        plusButtonEnabled = restState.plusButtonEnabled,
+        minusButtonEnabled = restState.minusButtonEnabled,
+        exceededTime = timerState.displayRestExceedTime(),
         onAction = remember { pomodoroRestViewModel::handleEvent }
     )
 }

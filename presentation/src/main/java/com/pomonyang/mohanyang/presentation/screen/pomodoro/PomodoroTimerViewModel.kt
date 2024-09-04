@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
 import androidx.lifecycle.viewModelScope
+import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroTimerEntity
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
@@ -18,9 +19,10 @@ import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 data class PomodoroTimerState(
     val focusTime: Int = 0,
@@ -39,15 +41,22 @@ data class PomodoroTimerState(
 }
 
 sealed interface PomodoroTimerEvent : ViewEvent {
-    sealed interface PomodoroFocusEvent : PomodoroTimerEvent
+    data object Start : PomodoroTimerEvent
 
+    // 포커스, 휴식 이벤트 분리를 했는데 나중에 필요하면 상속받고 추가
+    sealed interface PomodoroFocusEvent : PomodoroTimerEvent
     sealed interface PomodoroRestEvent : PomodoroTimerEvent
 }
 
 sealed interface PomodoroTimerEffect : ViewSideEffect {
-    sealed interface PomodoroFocusEffect : PomodoroTimerEffect
+    sealed interface PomodoroFocusEffect : PomodoroTimerEffect {
+        data object SendEndFocusAlarm : PomodoroFocusEffect
+        data object ForceGoRest : PomodoroFocusEffect
+    }
 
-    sealed interface PomodoroRestEffect : PomodoroTimerEffect
+    sealed interface PomodoroRestEffect : PomodoroTimerEffect {
+        data object SendEndRestAlarm : PomodoroRestEffect
+    }
 }
 
 @HiltViewModel
@@ -60,14 +69,57 @@ class PomodoroTimerViewModel @Inject constructor(
 
     private var maxFocusTime: Int = 0
     private var maxRestTime: Int = 0
-    private var currentFocusTimerId = UUID.randomUUID().toString()
+    private val currentFocusTimerId = MutableStateFlow("")
+
+    private val combinedTimerData = currentFocusTimerId.flatMapLatest { timerId ->
+        pomodoroTimerRepository.getPomodoroTimer(timerId)
+    }
 
     init {
         viewModelScope.launch {
-            pomodoroInitialDataUseCase(currentFocusTimerId)
-        }.invokeOnCompletion {
-            loadPomodoroSettingData()
-            collectTimer()
+            combinedTimerData.collect { timerData ->
+                timerData?.let { updateTimerState(it) }
+            }
+        }
+    }
+
+    private fun updateTimerState(timerData: PomodoroTimerEntity) {
+        val currentFocusTime = timerData.focusedTime.coerceAtMost(maxFocusTime)
+        val currentRestTime = timerData.restedTime.coerceAtMost(maxRestTime)
+        val focusExceededTime = (timerData.focusedTime - maxFocusTime).coerceAtLeast(0)
+        val restExceededTime = (timerData.restedTime - maxRestTime).coerceAtLeast(0)
+
+        if (timerData.focusedTime == maxFocusTime) {
+            setEffect(PomodoroTimerEffect.PomodoroFocusEffect.SendEndFocusAlarm)
+        }
+
+        if (timerData.restedTime == maxRestTime) {
+            setEffect(PomodoroTimerEffect.PomodoroRestEffect.SendEndRestAlarm)
+        }
+
+        updateState {
+            copy(
+                focusTime = currentFocusTime,
+                focusExceededTime = focusExceededTime,
+                restTime = currentRestTime,
+                restExceededTime = restExceededTime
+            )
+        }
+
+        if (focusExceededTime == PomodoroConstants.MAX_EXCEEDED_TIME) {
+            setEffect(PomodoroTimerEffect.PomodoroFocusEffect.ForceGoRest)
+        }
+    }
+
+    override fun setInitialState(): PomodoroTimerState = PomodoroTimerState()
+
+    override fun handleEvent(event: PomodoroTimerEvent) {
+        when (event) {
+            PomodoroTimerEvent.Start -> {
+                setInitialState()
+                loadPomodoroSettingData()
+                initPomodoroData()
+            }
         }
     }
 
@@ -76,6 +128,7 @@ class PomodoroTimerViewModel @Inject constructor(
             val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
             val cat = userRepository.getMyInfo().cat.toModel()
             maxFocusTime = (selectedPomodoroSetting.focusTime.times(60))
+            maxRestTime = (selectedPomodoroSetting.restTime.times(60))
             updateState {
                 copy(
                     title = selectedPomodoroSetting.title,
@@ -86,44 +139,11 @@ class PomodoroTimerViewModel @Inject constructor(
         }
     }
 
-    override fun setInitialState(): PomodoroTimerState = PomodoroTimerState()
-
-    override fun handleEvent(event: PomodoroTimerEvent) {
-        // TODO [코니]
-    }
-
-    private fun collectTimer() {
+    private fun initPomodoroData() {
         viewModelScope.launch {
-            pomodoroTimerRepository.getPomodoroTimer(currentFocusTimerId).collect { timerData ->
-                timerData ?: return@collect
-                Timber.tag("koni").d("timerData $timerData")
-                val currentFocusTime = timerData.focusedTime.coerceAtMost(maxFocusTime)
-                val currentRestTime = timerData.restedTime.coerceAtMost(maxRestTime)
-                val focusExceededTime = (timerData.focusedTime - maxFocusTime).coerceAtLeast(0)
-                val restExceededTime = (timerData.focusedTime - maxRestTime).coerceAtLeast(0)
-                if (timerData.focusedTime == maxFocusTime) {
-                    Timber.tag("koni").d("timerData.focusedTime == maxFocusTime")
-                    // TODO [코니] 포커스 알림 보내야 함
-                }
-
-                if (timerData.restedTime == maxRestTime) {
-                    Timber.tag("koni").d("timerData.restedTime == maxRestTime")
-                    // TODO [코니] 휴식 알림 보내야 함
-                }
-                updateState {
-                    copy(
-                        focusTime = currentFocusTime,
-                        focusExceededTime = focusExceededTime,
-                        restTime = currentRestTime,
-                        restExceededTime = restExceededTime
-                    )
-                }
-
-                if (focusExceededTime == PomodoroConstants.MAX_EXCEEDED_TIME) {
-                    Timber.tag("koni").d("focusExceededTime == PomodoroConstants.MAX_EXCEEDED_TIME")
-                    // TODO [코니] 여기 최대 초과시간 지났으면 홈으로 강제 이동
-                }
-            }
+            val focusTimeKey = UUID.randomUUID().toString()
+            currentFocusTimerId.value = focusTimeKey
+            pomodoroInitialDataUseCase(focusTimeKey)
         }
     }
 }

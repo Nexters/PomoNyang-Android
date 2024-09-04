@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
+package com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting
 
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope

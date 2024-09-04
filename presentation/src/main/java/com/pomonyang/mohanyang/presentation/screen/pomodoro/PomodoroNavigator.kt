@@ -4,16 +4,18 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.focus.PomodoroFocusRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestRoute
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestWaitingRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.PomodoroSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.time.PomodoroTimeSettingRoute
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting.PomodoroRestWaitingRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -94,7 +96,8 @@ fun NavGraphBuilder.pomodoroScreen(
         }
 
         composable<PomodoroTimer> {
-            PomodoroTimerRoute(
+            PomodoroFocusRoute(
+                pomodoroTimerViewModel = hiltViewModel<PomodoroTimerViewModel>(navHostController.getBackStackEntry<Pomodoro>()),
                 goToRest = { type, focusTime, exceededTime ->
                     navHostController.navigate(
                         PomodoroRestWaiting(
@@ -136,6 +139,7 @@ fun NavGraphBuilder.pomodoroScreen(
 
         composable<PomodoroRest> {
             PomodoroRestRoute(
+                pomodoroTimerViewModel = hiltViewModel<PomodoroTimerViewModel>(navHostController.getBackStackEntry<Pomodoro>()),
                 onShowSnackbar = onShowSnackbar,
                 goToHome = {
                     navHostController.popBackStack()

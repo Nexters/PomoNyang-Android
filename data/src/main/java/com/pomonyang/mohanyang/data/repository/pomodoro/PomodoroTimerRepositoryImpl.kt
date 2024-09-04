@@ -15,9 +15,10 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
     private val mohaNyangService: MohaNyangService
 ) : PomodoroTimerRepository {
 
-    override suspend fun insertPomodoroTimerInitData(categoryNo: Int) {
+    override suspend fun insertPomodoroTimerInitData(categoryNo: Int, focusTimeId: String) {
         pomodoroTimerDao.insertPomodoroSettingData(
             PomodoroTimerEntity(
+                focusTimeId = focusTimeId,
                 categoryNo = categoryNo
             )
         )
@@ -53,7 +54,7 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getPomodoroTimer(): Flow<PomodoroTimerEntity?> = pomodoroTimerDao.getCurrentTimerEntity()
+    override fun getPomodoroTimer(timerId: String): Flow<PomodoroTimerEntity?> = pomodoroTimerDao.getCurrentTimer(timerId)
 
     private fun Int.toDurationString(): String = Duration.ofMinutes((this / 60).toLong()).toString()
 }

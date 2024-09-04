@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
+package com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background

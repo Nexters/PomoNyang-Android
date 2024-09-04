@@ -13,19 +13,8 @@ interface PomodoroTimerDao {
     @Query("SELECT * FROM pomodoro_timer")
     suspend fun getAllPomodoroTimers(): List<PomodoroTimerEntity>
 
-    @Query(
-        """
-    SELECT * 
-    FROM pomodoro_timer 
-    WHERE focusTimeId = (
-        SELECT focusTimeId 
-        FROM pomodoro_timer 
-        ORDER BY ROWID DESC 
-        LIMIT 1
-    )
-    """
-    )
-    fun getCurrentTimerEntity(): Flow<PomodoroTimerEntity?>
+    @Query("SELECT *FROM pomodoro_timer WHERE focusTimeId =:timerId")
+    fun getCurrentTimer(timerId: String): Flow<PomodoroTimerEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPomodoroSettingData(pomodoroTimerEntity: PomodoroTimerEntity)
