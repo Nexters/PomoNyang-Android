@@ -20,15 +20,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 data class PomodoroTimerState(
     val focusTime: Int = 0,
     val focusExceededTime: Int = 0,
+    val maxFocusTime: Int = 0,
     val restTime: Int = 0,
     val restExceededTime: Int = 0,
+    val maxRestTime: Int = 0,
     val title: String = "",
     val categoryType: PomodoroCategoryType = PomodoroCategoryType.DEFAULT,
     val cat: CatType = CatType.CHEESE,
@@ -67,8 +68,6 @@ class PomodoroTimerViewModel @Inject constructor(
     private val pomodoroInitialDataUseCase: InsertPomodoroInitialDataUseCase
 ) : BaseViewModel<PomodoroTimerState, PomodoroTimerEvent, PomodoroTimerEffect>() {
 
-    private var maxFocusTime: Int = 0
-    private var maxRestTime: Int = 0
     private val currentFocusTimerId = MutableStateFlow("")
 
     private val combinedTimerData = currentFocusTimerId.flatMapLatest { timerId ->
@@ -76,38 +75,14 @@ class PomodoroTimerViewModel @Inject constructor(
     }
 
     init {
+        loadTimerData()
+    }
+
+    private fun loadTimerData() {
         viewModelScope.launch {
             combinedTimerData.collect { timerData ->
                 timerData?.let { updateTimerState(it) }
             }
-        }
-    }
-
-    private fun updateTimerState(timerData: PomodoroTimerEntity) {
-        val currentFocusTime = timerData.focusedTime.coerceAtMost(maxFocusTime)
-        val currentRestTime = timerData.restedTime.coerceAtMost(maxRestTime)
-        val focusExceededTime = (timerData.focusedTime - maxFocusTime).coerceAtLeast(0)
-        val restExceededTime = (timerData.restedTime - maxRestTime).coerceAtLeast(0)
-
-        if (timerData.focusedTime == maxFocusTime) {
-            setEffect(PomodoroTimerEffect.PomodoroFocusEffect.SendEndFocusAlarm)
-        }
-
-        if (timerData.restedTime == maxRestTime) {
-            setEffect(PomodoroTimerEffect.PomodoroRestEffect.SendEndRestAlarm)
-        }
-
-        updateState {
-            copy(
-                focusTime = currentFocusTime,
-                focusExceededTime = focusExceededTime,
-                restTime = currentRestTime,
-                restExceededTime = restExceededTime
-            )
-        }
-
-        if (focusExceededTime == PomodoroConstants.MAX_EXCEEDED_TIME) {
-            setEffect(PomodoroTimerEffect.PomodoroFocusEffect.ForceGoRest)
         }
     }
 
@@ -125,16 +100,18 @@ class PomodoroTimerViewModel @Inject constructor(
 
     private fun loadPomodoroSettingData() {
         viewModelScope.launch {
-            val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
-            val cat = userRepository.getMyInfo().cat.toModel()
-            maxFocusTime = (selectedPomodoroSetting.focusTime.times(60))
-            maxRestTime = (selectedPomodoroSetting.restTime.times(60))
-            updateState {
-                copy(
-                    title = selectedPomodoroSetting.title,
-                    categoryType = selectedPomodoroSetting.categoryType,
-                    cat = cat.type
-                )
+            getSelectedPomodoroSettingUseCase().collect { entity ->
+                val selectedPomodoroSetting = entity.toModel()
+                val cat = userRepository.getMyInfo().cat.toModel()
+                updateState {
+                    copy(
+                        title = selectedPomodoroSetting.title,
+                        categoryType = selectedPomodoroSetting.categoryType,
+                        cat = cat.type,
+                        maxFocusTime = (selectedPomodoroSetting.focusTime.times(60)),
+                        maxRestTime = (selectedPomodoroSetting.restTime.times(60))
+                    )
+                }
             }
         }
     }
@@ -144,6 +121,34 @@ class PomodoroTimerViewModel @Inject constructor(
             val focusTimeKey = UUID.randomUUID().toString()
             currentFocusTimerId.value = focusTimeKey
             pomodoroInitialDataUseCase(focusTimeKey)
+        }
+    }
+
+    private fun updateTimerState(timerData: PomodoroTimerEntity) {
+        val currentFocusTime = timerData.focusedTime.coerceAtMost(state.value.maxFocusTime)
+        val currentRestTime = timerData.restedTime.coerceAtMost(state.value.maxRestTime)
+        val focusExceededTime = (timerData.focusedTime - state.value.maxFocusTime).coerceAtLeast(0)
+        val restExceededTime = (timerData.restedTime - state.value.maxRestTime).coerceAtLeast(0)
+
+        if (timerData.focusedTime == state.value.maxFocusTime) {
+            setEffect(PomodoroTimerEffect.PomodoroFocusEffect.SendEndFocusAlarm)
+        }
+
+        if (timerData.restedTime == state.value.maxRestTime) {
+            setEffect(PomodoroTimerEffect.PomodoroRestEffect.SendEndRestAlarm)
+        }
+
+        updateState {
+            copy(
+                focusTime = currentFocusTime,
+                focusExceededTime = focusExceededTime,
+                restTime = currentRestTime,
+                restExceededTime = restExceededTime
+            )
+        }
+
+        if (focusExceededTime == PomodoroConstants.MAX_EXCEEDED_TIME) {
+            setEffect(PomodoroTimerEffect.PomodoroFocusEffect.ForceGoRest)
         }
     }
 }

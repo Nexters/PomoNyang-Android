@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -76,9 +77,13 @@ fun PomodoroRestRoute(
         // NOTHING
     }
 
-    DisposableEffect(Unit) {
-        context.startTimer(false)
+    LaunchedEffect(timerState.maxRestTime) {
+        if (timerState.maxRestTime != 0) {
+            context.startTimer(false, timerState.maxRestTime)
+        }
+    }
 
+    DisposableEffect(Unit) {
         onDispose {
             context.stopTimer(false)
         }
