@@ -41,7 +41,6 @@ import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIM
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
-import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.notifyRestEnd
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.startTimer
 import com.pomonyang.mohanyang.presentation.util.stopTimer
@@ -68,8 +67,6 @@ fun PomodoroRestRoute(
             PomodoroRestEffect.GoToPomodoroFocus -> {
                 goToFocus()
             }
-
-            PomodoroRestEffect.SendEndRestAlarm -> notifyRestEnd(context)
         }
     }
 

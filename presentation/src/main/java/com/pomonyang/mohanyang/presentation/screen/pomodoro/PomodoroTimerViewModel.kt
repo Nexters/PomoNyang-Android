@@ -51,13 +51,10 @@ sealed interface PomodoroTimerEvent : ViewEvent {
 
 sealed interface PomodoroTimerEffect : ViewSideEffect {
     sealed interface PomodoroFocusEffect : PomodoroTimerEffect {
-        data object SendEndFocusAlarm : PomodoroFocusEffect
         data object ForceGoRest : PomodoroFocusEffect
     }
 
-    sealed interface PomodoroRestEffect : PomodoroTimerEffect {
-        data object SendEndRestAlarm : PomodoroRestEffect
-    }
+    sealed interface PomodoroRestEffect : PomodoroTimerEffect
 }
 
 @HiltViewModel
@@ -129,14 +126,6 @@ class PomodoroTimerViewModel @Inject constructor(
         val currentRestTime = timerData.restedTime.coerceAtMost(state.value.maxRestTime)
         val focusExceededTime = (timerData.focusedTime - state.value.maxFocusTime).coerceAtLeast(0)
         val restExceededTime = (timerData.restedTime - state.value.maxRestTime).coerceAtLeast(0)
-
-        if (timerData.focusedTime == state.value.maxFocusTime) {
-            setEffect(PomodoroTimerEffect.PomodoroFocusEffect.SendEndFocusAlarm)
-        }
-
-        if (timerData.restedTime == state.value.maxRestTime) {
-            setEffect(PomodoroTimerEffect.PomodoroRestEffect.SendEndRestAlarm)
-        }
 
         updateState {
             copy(

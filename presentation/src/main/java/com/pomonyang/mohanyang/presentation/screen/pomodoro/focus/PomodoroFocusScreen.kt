@@ -43,7 +43,6 @@ import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerEvent
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
-import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.notifyFocusEnd
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.startInterrupt
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.stopInterrupt
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -99,8 +98,6 @@ fun PomodoroFocusRoute(
                         state.focusExceededTime
                     )
                 }
-
-                PomodoroTimerEffect.PomodoroFocusEffect.SendEndFocusAlarm -> notifyFocusEnd(context)
             }
         }
     }

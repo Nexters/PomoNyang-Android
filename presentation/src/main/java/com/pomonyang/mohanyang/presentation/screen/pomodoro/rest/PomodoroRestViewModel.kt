@@ -36,7 +36,6 @@ sealed interface PomodoroRestEffect : ViewSideEffect {
     data class ShowSnackbar(val message: String, @DrawableRes val iconRes: Int) : PomodoroRestEffect
     data object GoToHome : PomodoroRestEffect
     data object GoToPomodoroFocus : PomodoroRestEffect
-    data object SendEndRestAlarm : PomodoroRestEffect
 }
 
 @HiltViewModel
