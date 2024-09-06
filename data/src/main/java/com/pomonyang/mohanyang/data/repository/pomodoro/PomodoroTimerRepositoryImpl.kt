@@ -45,10 +45,9 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
                     categoryNo = pomodoro.categoryNo,
                     focusedTime = pomodoro.focusedTime.toDurationString(),
                     restedTime = pomodoro.restedTime.toDurationString(),
-                    doneAt = pomodoro.doneAt
+                    doneAt = pomodoro.doneAt.ifBlank { DateTimeFormatter.ISO_INSTANT.format(Instant.now()) }
                 )
             }
-
         mohaNyangService.saveFocusTime(pomodoroList).onSuccess {
             pomodoroTimerDao.deletePomodoroTimerAll()
         }
