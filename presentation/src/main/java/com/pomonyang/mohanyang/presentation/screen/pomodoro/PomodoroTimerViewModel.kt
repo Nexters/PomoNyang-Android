@@ -137,7 +137,15 @@ class PomodoroTimerViewModel @Inject constructor(
         }
 
         if (focusExceededTime == PomodoroConstants.MAX_EXCEEDED_TIME) {
+            savePomodoroData()
             setEffect(PomodoroTimerEffect.PomodoroFocusEffect.ForceGoRest)
+        }
+    }
+
+    private fun savePomodoroData() {
+        viewModelScope.launch {
+            pomodoroTimerRepository.updatePomodoroDone()
+            pomodoroTimerRepository.savePomodoroCacheData()
         }
     }
 }
