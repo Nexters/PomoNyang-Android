@@ -19,7 +19,7 @@ import com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting.PomodoroRest
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Pomodoro(
+data class Home(
     val isNewUser: Boolean
 )
 
@@ -48,7 +48,7 @@ fun NavGraphBuilder.pomodoroScreen(
     onShowSnackbar: (String, Int?) -> Unit,
     navHostController: NavHostController
 ) {
-    navigation<Pomodoro>(
+    navigation<Home>(
         startDestination = PomodoroSetting
     ) {
         val slideDuration = 500
@@ -97,7 +97,7 @@ fun NavGraphBuilder.pomodoroScreen(
 
         composable<PomodoroTimer> {
             PomodoroFocusRoute(
-                pomodoroTimerViewModel = hiltViewModel<PomodoroTimerViewModel>(navHostController.getBackStackEntry<Pomodoro>()),
+                pomodoroTimerViewModel = hiltViewModel<PomodoroTimerViewModel>(navHostController.getBackStackEntry<Home>()),
                 goToRest = { type, focusTime, exceededTime ->
                     navHostController.navigate(
                         PomodoroRestWaiting(
@@ -139,7 +139,7 @@ fun NavGraphBuilder.pomodoroScreen(
 
         composable<PomodoroRest> {
             PomodoroRestRoute(
-                pomodoroTimerViewModel = hiltViewModel<PomodoroTimerViewModel>(navHostController.getBackStackEntry<Pomodoro>()),
+                pomodoroTimerViewModel = hiltViewModel<PomodoroTimerViewModel>(navHostController.getBackStackEntry<Home>()),
                 onShowSnackbar = onShowSnackbar,
                 goToHome = {
                     navHostController.popBackStack()

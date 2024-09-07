@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import com.pomonyang.mohanyang.presentation.screen.mypage.myPageScreen
 import com.pomonyang.mohanyang.presentation.screen.onboarding.Onboarding
 import com.pomonyang.mohanyang.presentation.screen.onboarding.onboardingScreen
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.Home
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.pomodoroScreen
 import com.pomonyang.mohanyang.ui.MohaNyangAppState
 
@@ -26,7 +26,7 @@ internal fun MohaNyangNavHost(
     val startDestination: Any = if (mohaNyangAppState.isNewUser) {
         Onboarding
     } else {
-        Pomodoro(false)
+        Home(false)
     }
 
     val slideDuration = 500
