@@ -42,8 +42,6 @@ data class PomodoroTimerState(
 }
 
 sealed interface PomodoroTimerEvent : ViewEvent {
-    data object Start : PomodoroTimerEvent
-
     // 포커스, 휴식 이벤트 분리를 했는데 나중에 필요하면 상속받고 추가
     sealed interface PomodoroFocusEvent : PomodoroTimerEvent
     sealed interface PomodoroRestEvent : PomodoroTimerEvent
@@ -72,6 +70,8 @@ class PomodoroTimerViewModel @Inject constructor(
     }
 
     init {
+        loadPomodoroSettingData()
+        initPomodoroData()
         loadTimerData()
     }
 
@@ -86,13 +86,6 @@ class PomodoroTimerViewModel @Inject constructor(
     override fun setInitialState(): PomodoroTimerState = PomodoroTimerState()
 
     override fun handleEvent(event: PomodoroTimerEvent) {
-        when (event) {
-            PomodoroTimerEvent.Start -> {
-                setInitialState()
-                loadPomodoroSettingData()
-                initPomodoroData()
-            }
-        }
     }
 
     private fun loadPomodoroSettingData() {
@@ -144,8 +137,8 @@ class PomodoroTimerViewModel @Inject constructor(
 
     private fun savePomodoroData() {
         viewModelScope.launch {
-            pomodoroTimerRepository.updatePomodoroDone()
-            pomodoroTimerRepository.savePomodoroCacheData()
+            pomodoroTimerRepository.updatePomodoroDone(currentFocusTimerId.value)
+            pomodoroTimerRepository.savePomodoroData(currentFocusTimerId.value)
         }
     }
 }

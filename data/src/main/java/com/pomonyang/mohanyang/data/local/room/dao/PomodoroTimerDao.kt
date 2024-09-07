@@ -14,7 +14,7 @@ interface PomodoroTimerDao {
     suspend fun getAllPomodoroTimers(): List<PomodoroTimerEntity>
 
     @Query("SELECT *FROM pomodoro_timer WHERE focusTimeId =:timerId")
-    fun getCurrentTimer(timerId: String): Flow<PomodoroTimerEntity?>
+    fun getTimer(timerId: String): Flow<PomodoroTimerEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPomodoroSettingData(pomodoroTimerEntity: PomodoroTimerEntity)
@@ -47,9 +47,15 @@ interface PomodoroTimerDao {
     )
     suspend fun incrementRestTime()
 
+    @Query("UPDATE pomodoro_timer SET doneAt = :doneAt WHERE focusTimeId = :focusTimerId")
+    suspend fun updateDoneAt(doneAt: String, focusTimerId: String)
+
     @Query("UPDATE pomodoro_timer SET doneAt = :doneAt WHERE focusTimeId = (SELECT focusTimeId FROM pomodoro_timer ORDER BY ROWID DESC LIMIT 1)")
-    suspend fun updateDoneAt(doneAt: String)
+    suspend fun updateDoneAtRecentPomodoro(doneAt: String)
 
     @Query("DELETE FROM pomodoro_timer")
     suspend fun deletePomodoroTimerAll()
+
+    @Query("DELETE FROM pomodoro_timer WHERE focusTimeId = :focusTimeId")
+    suspend fun deletePomodoroTimer(focusTimeId: String)
 }

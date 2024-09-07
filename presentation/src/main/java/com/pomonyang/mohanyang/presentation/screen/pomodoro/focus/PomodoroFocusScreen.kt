@@ -39,7 +39,6 @@ import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerEffect
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerEvent
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
@@ -117,7 +116,6 @@ fun PomodoroFocusRoute(
     }
 
     DisposableEffect(key1 = Unit) {
-        pomodoroTimerViewModel.handleEvent(PomodoroTimerEvent.Start)
         onDispose {
             stopInterrupt(context)
             context.stopTimer(true)

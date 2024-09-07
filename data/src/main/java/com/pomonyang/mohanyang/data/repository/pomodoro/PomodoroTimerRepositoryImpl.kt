@@ -9,16 +9,17 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 internal class PomodoroTimerRepositoryImpl @Inject constructor(
     private val pomodoroTimerDao: PomodoroTimerDao,
     private val mohaNyangService: MohaNyangService
 ) : PomodoroTimerRepository {
 
-    override suspend fun insertPomodoroTimerInitData(categoryNo: Int, focusTimeId: String) {
+    override suspend fun insertPomodoroTimerInitData(categoryNo: Int, pomodoroTimerId: String) {
         pomodoroTimerDao.insertPomodoroSettingData(
             PomodoroTimerEntity(
-                focusTimeId = focusTimeId,
+                focusTimeId = pomodoroTimerId,
                 categoryNo = categoryNo
             )
         )
@@ -32,8 +33,31 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
         pomodoroTimerDao.incrementRestTime()
     }
 
-    override suspend fun updatePomodoroDone() {
-        pomodoroTimerDao.updateDoneAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()))
+    override suspend fun updatePomodoroDone(pomodoroTimerId: String) {
+        pomodoroTimerDao.updateDoneAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()), pomodoroTimerId)
+    }
+
+    override suspend fun updateRecentPomodoroDone() {
+        pomodoroTimerDao.updateDoneAtRecentPomodoro(DateTimeFormatter.ISO_INSTANT.format(Instant.now()))
+    }
+
+    override suspend fun savePomodoroData(pomodoroTimerId: String) {
+        val pomodoro = pomodoroTimerDao.getTimer(pomodoroTimerId).firstOrNull()
+        pomodoro?.let {
+            mohaNyangService.saveFocusTime(
+                listOf(
+                    PomodoroTimerRequest(
+                        clientFocusTimeId = pomodoro.focusTimeId,
+                        categoryNo = pomodoro.categoryNo,
+                        focusedTime = pomodoro.focusedTime.toDurationString(),
+                        restedTime = pomodoro.restedTime.toDurationString(),
+                        doneAt = pomodoro.doneAt
+                    )
+                )
+            ).onSuccess {
+                pomodoroTimerDao.deletePomodoroTimer(pomodoroTimerId)
+            }
+        }
     }
 
     override suspend fun savePomodoroCacheData() {
@@ -45,7 +69,7 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
                     categoryNo = pomodoro.categoryNo,
                     focusedTime = pomodoro.focusedTime.toDurationString(),
                     restedTime = pomodoro.restedTime.toDurationString(),
-                    doneAt = pomodoro.doneAt.ifBlank { DateTimeFormatter.ISO_INSTANT.format(Instant.now()) }
+                    doneAt = pomodoro.doneAt
                 )
             }
         mohaNyangService.saveFocusTime(pomodoroList).onSuccess {
@@ -53,7 +77,7 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getPomodoroTimer(timerId: String): Flow<PomodoroTimerEntity?> = pomodoroTimerDao.getCurrentTimer(timerId)
+    override fun getPomodoroTimer(timerId: String): Flow<PomodoroTimerEntity?> = pomodoroTimerDao.getTimer(timerId)
 
     private fun Int.toDurationString(): String = Duration.ofMinutes((this / 60).toLong()).toString()
 }

@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.setting
+package com.pomonyang.mohanyang.presentation.screen.home.setting
 
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope

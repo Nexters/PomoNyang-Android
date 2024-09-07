@@ -7,10 +7,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
+import com.pomonyang.mohanyang.presentation.screen.home.Home
 import com.pomonyang.mohanyang.presentation.screen.onboarding.guide.OnboardingGuideRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.naming.OnboardingNamingCatRoute
 import com.pomonyang.mohanyang.presentation.screen.onboarding.select.OnboardingSelectCatRoute
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.Home
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -97,7 +97,7 @@ fun NavGraphBuilder.onboardingScreen(
                     when (destination) {
                         CatSettingDestination.POMODORO -> {
                             navHostController.navigate(
-                                route = Home(isNewUser = true),
+                                route = Home,
                                 navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build()
                             )
                         }
