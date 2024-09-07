@@ -67,24 +67,23 @@ class PomodoroTimerService : Service() {
     }
 
     private fun startFocusTimer(maxTime: Int) {
-        if (focusTimer == null) {
-            var focusTimeElapsed = 0
-            focusTimer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_DELAY) {
-                scope.launch {
-                    focusTimeElapsed += ONE_SECOND
+        focusTimer?.cancel()
+        var focusTimeElapsed = 0
+        focusTimer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_DELAY) {
+            scope.launch {
+                focusTimeElapsed += ONE_SECOND
 
-                    if (focusTimeElapsed == maxTime) {
-                        Timber.d("Focus 타이머가 maxTime $maxTime 에 도달하여 집중 끝 알림 발송")
-                        notifyFocusEnd(this@PomodoroTimerService)
-                    }
+                if (focusTimeElapsed == maxTime) {
+                    Timber.d("Focus 타이머가 maxTime $maxTime 에 도달하여 집중 끝 알림 발송")
+                    notifyFocusEnd(this@PomodoroTimerService)
+                }
 
-                    if (focusTimeElapsed > maxTime + MAX_EXCEEDED_TIME) {
-                        Timber.d("Focus 타이머가 최대 머무를 수 있는 ${maxTime + MAX_EXCEEDED_TIME} 에 도달하여 중지됨")
-                        stopFocusTimer()
-                    } else {
-                        Timber.d("Focus 타이머 작동 중 / 경과 시간: $focusTimeElapsed")
-                        pomodoroTimerRepository.incrementFocusedTime()
-                    }
+                if (focusTimeElapsed > maxTime + MAX_EXCEEDED_TIME) {
+                    Timber.d("Focus 타이머가 최대 머무를 수 있는 ${maxTime + MAX_EXCEEDED_TIME} 에 도달하여 중지됨")
+                    stopFocusTimer()
+                } else {
+                    Timber.d("Focus 타이머 작동 중 / 경과 시간: $focusTimeElapsed")
+                    pomodoroTimerRepository.incrementFocusedTime()
                 }
             }
         }
@@ -97,24 +96,23 @@ class PomodoroTimerService : Service() {
     }
 
     private fun startRestTimer(maxTime: Int) {
-        if (restTimer == null) {
-            var restTimeElapsed = 0
-            restTimer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_DELAY) {
-                scope.launch {
-                    restTimeElapsed += ONE_SECOND
+        restTimer?.cancel()
+        var restTimeElapsed = 0
+        restTimer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_DELAY) {
+            scope.launch {
+                restTimeElapsed += ONE_SECOND
 
-                    if (restTimeElapsed == maxTime) {
-                        Timber.d("Rest 타이머가 maxTime $maxTime 에 도달하여 휴식 끝 알림 발송")
-                        notifyRestEnd(this@PomodoroTimerService)
-                    }
+                if (restTimeElapsed == maxTime) {
+                    Timber.d("Rest 타이머가 maxTime $maxTime 에 도달하여 휴식 끝 알림 발송")
+                    notifyRestEnd(this@PomodoroTimerService)
+                }
 
-                    if (restTimeElapsed > maxTime + MAX_EXCEEDED_TIME) {
-                        Timber.d("Rest 타이머가 최대 머무를 수 있는 ${maxTime + MAX_EXCEEDED_TIME} 에 도달하여 중지됨")
-                        stopRestTimer()
-                    } else {
-                        Timber.d("Rest 타이머 작동 중 / 경과 시간: $restTimeElapsed")
-                        pomodoroTimerRepository.incrementRestedTime()
-                    }
+                if (restTimeElapsed > maxTime + MAX_EXCEEDED_TIME) {
+                    Timber.d("Rest 타이머가 최대 머무를 수 있는 ${maxTime + MAX_EXCEEDED_TIME} 에 도달하여 중지됨")
+                    stopRestTimer()
+                } else {
+                    Timber.d("Rest 타이머 작동 중 / 경과 시간: $restTimeElapsed")
+                    pomodoroTimerRepository.incrementRestedTime()
                 }
             }
         }
