@@ -1,14 +1,11 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.focus
 
-import androidx.lifecycle.viewModelScope
-import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.launch
 
 data object PomodoroFocusState : ViewState
 
@@ -28,24 +25,14 @@ sealed interface PomodoroFocusEffect : ViewSideEffect {
 }
 
 @HiltViewModel
-class PomodoroFocusViewModel @Inject constructor(
-    private val pomodoroTimerRepository: PomodoroTimerRepository
-) : BaseViewModel<PomodoroFocusState, PomodoroFocusEvent, PomodoroFocusEffect>() {
+class PomodoroFocusViewModel @Inject constructor() : BaseViewModel<PomodoroFocusState, PomodoroFocusEvent, PomodoroFocusEffect>() {
 
     override fun setInitialState(): PomodoroFocusState = PomodoroFocusState
 
     override fun handleEvent(event: PomodoroFocusEvent) {
         when (event) {
             PomodoroFocusEvent.ClickRest -> setEffect(PomodoroFocusEffect.GoToPomodoroRest)
-
-            PomodoroFocusEvent.ClickHome -> {
-                viewModelScope.launch {
-                    pomodoroTimerRepository.updatePomodoroDone()
-                    pomodoroTimerRepository.savePomodoroCacheData()
-                }
-                setEffect(PomodoroFocusEffect.GoToPomodoroSetting)
-            }
-
+            PomodoroFocusEvent.ClickHome -> setEffect(PomodoroFocusEffect.GoToPomodoroSetting)
             PomodoroFocusEvent.Pause -> setEffect(PomodoroFocusEffect.StartFocusAlarm)
             PomodoroFocusEvent.Resume -> setEffect(PomodoroFocusEffect.StopFocusAlarm)
             PomodoroFocusEvent.Dispose -> setEffect(PomodoroFocusEffect.StopFocusAlarm)

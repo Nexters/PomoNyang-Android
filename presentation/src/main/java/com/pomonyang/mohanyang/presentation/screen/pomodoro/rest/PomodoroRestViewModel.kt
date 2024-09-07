@@ -88,23 +88,14 @@ class PomodoroRestViewModel @Inject constructor(
             }
 
             PomodoroRestEvent.OnEndPomodoroClick -> {
-                savePomodoroData()
                 adjustRestTime()
                 setEffect(PomodoroRestEffect.GoToHome)
             }
 
             PomodoroRestEvent.OnFocusClick -> {
-                savePomodoroData()
                 adjustRestTime()
                 setEffect(PomodoroRestEffect.GoToPomodoroFocus)
             }
-        }
-    }
-
-    private fun savePomodoroData() {
-        viewModelScope.launch {
-            pomodoroTimerRepository.updatePomodoroDone()
-            pomodoroTimerRepository.savePomodoroCacheData()
         }
     }
 

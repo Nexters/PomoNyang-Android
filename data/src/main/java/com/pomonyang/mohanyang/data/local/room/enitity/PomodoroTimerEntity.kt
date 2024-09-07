@@ -2,6 +2,8 @@ package com.pomonyang.mohanyang.data.local.room.enitity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.pomonyang.mohanyang.data.local.room.util.formatDurationToMinutesString
+import com.pomonyang.mohanyang.data.remote.model.request.PomodoroTimerRequest
 
 @Entity(tableName = "pomodoro_timer")
 data class PomodoroTimerEntity(
@@ -11,4 +13,12 @@ data class PomodoroTimerEntity(
     val restedTime: Int = 0,
     val doneAt: String = "",
     val categoryNo: Int
+)
+
+fun PomodoroTimerEntity.toRequestModel() = PomodoroTimerRequest(
+    clientFocusTimeId = focusTimeId,
+    categoryNo = categoryNo,
+    focusedTime = focusedTime.formatDurationToMinutesString(),
+    restedTime = restedTime.formatDurationToMinutesString(),
+    doneAt = doneAt
 )

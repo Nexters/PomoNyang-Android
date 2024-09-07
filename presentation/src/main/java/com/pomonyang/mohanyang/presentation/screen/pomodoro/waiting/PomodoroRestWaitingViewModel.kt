@@ -111,10 +111,6 @@ class PomodoroRestWaitingViewModel @Inject constructor(
 
             PomodoroRestWaitingEvent.OnEndFocusClick -> {
                 adjustFocusTime()
-                viewModelScope.launch {
-                    pomodoroTimerRepository.updatePomodoroDone()
-                    pomodoroTimerRepository.savePomodoroCacheData()
-                }
                 setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroSetting)
             }
 
