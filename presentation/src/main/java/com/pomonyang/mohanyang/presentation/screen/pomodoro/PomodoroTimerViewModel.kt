@@ -35,7 +35,8 @@ data class PomodoroTimerState(
     val title: String = "",
     val categoryType: PomodoroCategoryType = PomodoroCategoryType.DEFAULT,
     val cat: CatType = CatType.CHEESE,
-    val categoryNo: Int = -1
+    val categoryNo: Int = -1,
+    val forceGoRest: Boolean = false
 ) : ViewState {
     fun displayFocusTime(): String = focusTime.formatTime()
     fun displayRestTime(): String = restTime.formatTime()
@@ -50,10 +51,7 @@ sealed interface PomodoroTimerEvent : ViewEvent {
 }
 
 sealed interface PomodoroTimerEffect : ViewSideEffect {
-    sealed interface PomodoroFocusEffect : PomodoroTimerEffect {
-        data object ForceGoRest : PomodoroFocusEffect
-    }
-
+    sealed interface PomodoroFocusEffect : PomodoroTimerEffect
     sealed interface PomodoroRestEffect : PomodoroTimerEffect
 }
 
@@ -133,7 +131,7 @@ class PomodoroTimerViewModel @Inject constructor(
 
         if (focusExceededTime == PomodoroConstants.MAX_EXCEEDED_TIME) {
             savePomodoroData()
-            setEffect(PomodoroTimerEffect.PomodoroFocusEffect.ForceGoRest)
+            updateState { copy(forceGoRest = true) }
         }
     }
 

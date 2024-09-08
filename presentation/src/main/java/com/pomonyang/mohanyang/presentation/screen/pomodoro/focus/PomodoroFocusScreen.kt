@@ -38,7 +38,6 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerEffect
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
@@ -87,20 +86,6 @@ fun PomodoroFocusRoute(
         }
     }
 
-    pomodoroTimerViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
-        if (effect is PomodoroTimerEffect.PomodoroFocusEffect) {
-            when (effect) {
-                PomodoroTimerEffect.PomodoroFocusEffect.ForceGoRest -> {
-                    goToRest(
-                        context.getString(state.categoryType.kor),
-                        state.focusTime,
-                        state.focusExceededTime
-                    )
-                }
-            }
-        }
-    }
-
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         pomodoroFocusViewModel.handleEvent(PomodoroFocusEvent.Resume)
     }
@@ -112,6 +97,16 @@ fun PomodoroFocusRoute(
     LaunchedEffect(state.maxFocusTime) {
         if (state.maxFocusTime != 0) {
             context.startTimer(true, state.maxFocusTime)
+        }
+    }
+
+    LaunchedEffect(state.forceGoRest) {
+        if (state.forceGoRest) {
+            goToRest(
+                context.getString(state.categoryType.kor),
+                state.focusTime,
+                state.focusExceededTime
+            )
         }
     }
 

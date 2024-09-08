@@ -77,8 +77,8 @@ fun NavGraphBuilder.pomodoroScreen(
                     }
                 },
                 forceGoHome = {
-                    navHostController.popBackStack()
                     onForceGoHome()
+                    navHostController.popBackStack()
                 },
                 onShowSnackbar = onShowSnackbar
             )
