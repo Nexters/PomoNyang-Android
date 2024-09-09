@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -61,10 +60,12 @@ fun PomodoroRestRoute(
         when (effect) {
             is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestEffect.GoToHome -> {
+                context.stopTimer(false)
                 goToHome()
             }
 
             PomodoroRestEffect.GoToPomodoroFocus -> {
+                context.stopTimer(false)
                 goToFocus()
             }
         }
@@ -77,12 +78,6 @@ fun PomodoroRestRoute(
     LaunchedEffect(timerState.maxRestTime) {
         if (timerState.maxRestTime != 0) {
             context.startTimer(false, timerState.maxRestTime)
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            context.stopTimer(false)
         }
     }
 

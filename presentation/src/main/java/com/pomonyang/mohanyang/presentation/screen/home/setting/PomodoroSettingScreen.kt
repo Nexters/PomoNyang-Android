@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang.presentation.screen.home.setting
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,6 +61,7 @@ import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
+import com.pomonyang.mohanyang.presentation.util.stopTimer
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -75,6 +78,7 @@ fun PomodoroSettingRoute(
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
     val catMessage = remember(state.cat.type) { state.cat.type.getRandomMessage() }
+    val context = LocalContext.current
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         if (isNewUser && state.isEndOnBoardingTooltip.not()) return@collectWithLifecycle
         when (effect) {
@@ -87,6 +91,7 @@ fun PomodoroSettingRoute(
 
     LaunchedEffect(Unit) {
         pomodoroSettingViewModel.handleEvent(PomodoroSettingEvent.Init)
+        stopAllTimer(context)
     }
 
     if (state.showCategoryBottomSheet) {
@@ -104,6 +109,11 @@ fun PomodoroSettingRoute(
         modifier = modifier,
         showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not()
     )
+}
+
+private fun stopAllTimer(context: Context) {
+    context.stopTimer(false)
+    context.stopTimer(true)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

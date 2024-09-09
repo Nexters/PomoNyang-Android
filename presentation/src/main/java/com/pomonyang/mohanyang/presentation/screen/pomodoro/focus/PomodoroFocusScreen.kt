@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.focus
 
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -65,6 +65,7 @@ fun PomodoroFocusRoute(
     pomodoroFocusViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
         when (effect) {
             is PomodoroFocusEffect.GoToPomodoroRest -> {
+                stopNotification(context)
                 goToRest(
                     context.getString(state.categoryType.kor),
                     state.focusTime,
@@ -73,6 +74,7 @@ fun PomodoroFocusRoute(
             }
 
             PomodoroFocusEffect.GoToPomodoroSetting -> {
+                stopNotification(context)
                 goToHome()
             }
 
@@ -110,13 +112,6 @@ fun PomodoroFocusRoute(
         }
     }
 
-    DisposableEffect(key1 = Unit) {
-        onDispose {
-            stopInterrupt(context)
-            context.stopTimer(true)
-        }
-    }
-
     PomodoroTimerScreen(
         modifier = modifier,
         title = state.title,
@@ -126,6 +121,11 @@ fun PomodoroFocusRoute(
         exceededTime = state.displayFocusExceedTime(),
         onAction = remember { pomodoroFocusViewModel::handleEvent }
     )
+}
+
+private fun stopNotification(context: Context) {
+    stopInterrupt(context)
+    context.stopTimer(true)
 }
 
 @Composable
