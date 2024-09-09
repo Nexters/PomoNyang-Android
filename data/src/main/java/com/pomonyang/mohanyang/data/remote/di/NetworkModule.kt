@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.data.remote.di
 
+import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mohanyang.data.BuildConfig
 import com.pomonyang.mohanyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSource
@@ -16,6 +17,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import kotlinx.serialization.json.Json
@@ -59,8 +61,10 @@ internal abstract class NetworkModule {
         @Provides
         @Singleton
         fun provideHTTPRequestInterceptor(
-            tokenLocalDataSource: TokenLocalDataSource
-        ): HttpRequestInterceptor = HttpRequestInterceptor(tokenLocalDataSource)
+            tokenLocalDataSource: TokenLocalDataSource,
+            deviceIdLocalDataSource: DeviceIdLocalDataSource,
+            @ApplicationContext context: Context
+        ): HttpRequestInterceptor = HttpRequestInterceptor(tokenLocalDataSource, deviceIdLocalDataSource, context)
 
         @Provides
         @Singleton
