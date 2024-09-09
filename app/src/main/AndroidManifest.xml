@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
 
     <application
@@ -66,7 +69,14 @@
             </intent-filter>
         </service>
 
-        <service android:name=".presentation.util.PomodoroTimerService" />
+        <service
+            android:name=".presentation.util.PomodoroTimerService"
+            android:foregroundServiceType="specialUse">
+            <meta-data
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="timer_running_in_background" />
+        </service>
+
 
     </application>
 

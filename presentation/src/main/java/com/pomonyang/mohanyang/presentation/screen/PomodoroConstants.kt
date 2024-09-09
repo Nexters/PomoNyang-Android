@@ -11,4 +11,7 @@ object PomodoroConstants {
     const val MIN_REST_MINUTES = 5
     const val ONE_SECOND = 1
     const val DEFAULT_TIME = "00:00"
+    const val POMODORO_NOTIFICATION_CHANNEL_ID = "pomodoro_notification_channel_id"
+    const val POMODORO_NOTIFICATION_CHANNEL_NAME = "pomodoro_notification_channel_name"
+    const val POMODORO_NOTIFICATION_ID = 1
 }
