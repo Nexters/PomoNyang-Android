@@ -7,7 +7,6 @@ interface PomodoroTimerRepository {
     suspend fun insertPomodoroTimerInitData(categoryNo: Int, pomodoroTimerId: String)
     suspend fun incrementFocusedTime()
     suspend fun incrementRestedTime()
-    suspend fun updatePomodoroDone(pomodoroTimerId: String)
     suspend fun updateRecentPomodoroDone()
     suspend fun savePomodoroData(pomodoroTimerId: String)
     suspend fun savePomodoroCacheData()

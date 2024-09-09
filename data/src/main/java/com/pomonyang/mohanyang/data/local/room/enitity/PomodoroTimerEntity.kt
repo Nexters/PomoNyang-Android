@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.pomonyang.mohanyang.data.local.room.util.formatDurationToMinutesString
 import com.pomonyang.mohanyang.data.remote.model.request.PomodoroTimerRequest
+import com.pomonyang.mohanyang.data.repository.util.getCurrentIsoInstant
 
 @Entity(tableName = "pomodoro_timer")
 data class PomodoroTimerEntity(
@@ -20,5 +21,5 @@ fun PomodoroTimerEntity.toRequestModel() = PomodoroTimerRequest(
     categoryNo = categoryNo,
     focusedTime = focusedTime.formatDurationToMinutesString(),
     restedTime = restedTime.formatDurationToMinutesString(),
-    doneAt = doneAt
+    doneAt = doneAt.ifEmpty { getCurrentIsoInstant() }
 )

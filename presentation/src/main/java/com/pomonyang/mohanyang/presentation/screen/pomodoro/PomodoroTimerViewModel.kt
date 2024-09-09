@@ -17,7 +17,7 @@ import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -138,7 +138,6 @@ class PomodoroTimerViewModel @Inject constructor(
     @OptIn(DelicateCoroutinesApi::class)
     private fun savePomodoroData() {
         GlobalScope.launch {
-            pomodoroTimerRepository.updatePomodoroDone(currentFocusTimerId.value)
             pomodoroTimerRepository.savePomodoroData(currentFocusTimerId.value)
         }
     }
