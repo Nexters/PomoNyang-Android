@@ -130,7 +130,6 @@ class PomodoroTimerViewModel @Inject constructor(
         }
 
         if (focusExceededTime == PomodoroConstants.MAX_EXCEEDED_TIME) {
-            savePomodoroData()
             updateState { copy(forceGoRest = true) }
         }
     }
