@@ -62,7 +62,7 @@ fun PomodoroFocusRoute(
         // NOTHING
     }
 
-    pomodoroFocusViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
+    pomodoroFocusViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is PomodoroFocusEffect.GoToPomodoroRest -> {
                 stopNotification(context)

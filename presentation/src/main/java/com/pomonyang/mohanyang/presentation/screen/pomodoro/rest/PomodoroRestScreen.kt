@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
@@ -56,7 +55,7 @@ fun PomodoroRestRoute(
     val timerState by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
     val restState by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    pomodoroRestViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
+    pomodoroRestViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestEffect.GoToHome -> {

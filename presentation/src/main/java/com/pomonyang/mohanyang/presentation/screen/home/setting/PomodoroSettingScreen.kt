@@ -59,6 +59,7 @@ import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.stopTimer
@@ -91,7 +92,7 @@ fun PomodoroSettingRoute(
 
     LaunchedEffect(Unit) {
         pomodoroSettingViewModel.handleEvent(PomodoroSettingEvent.Init)
-        stopAllTimer(context)
+        stopAllNotification(context)
     }
 
     if (state.showCategoryBottomSheet) {
@@ -111,9 +112,10 @@ fun PomodoroSettingRoute(
     )
 }
 
-private fun stopAllTimer(context: Context) {
+private fun stopAllNotification(context: Context) {
     context.stopTimer(false)
     context.stopTimer(true)
+    MnNotificationManager.stopInterrupt(context)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
