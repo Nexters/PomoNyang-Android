@@ -44,7 +44,7 @@
 
 | Tech Stack   |                                            |
 |:-------------|:-------------------------------------------|
-| Architecture | MVI, Clean Architecture, Multi-Module      |
+| Architecture | MVI,  Multi-Module                         |
 | Compose      | Navigation, Animation etc                  |
 | DI           | Hilt                                       |
 | Network      | Retrofit2, OkHttp3                         |
