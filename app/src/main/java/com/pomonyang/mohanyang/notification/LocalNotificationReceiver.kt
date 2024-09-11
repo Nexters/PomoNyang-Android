@@ -1,7 +1,6 @@
 package com.pomonyang.mohanyang.notification
 
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -13,8 +12,9 @@ import com.pomonyang.mohanyang.notification.util.isNotificationGranted
 import com.pomonyang.mohanyang.notification.util.summaryNotification
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
+import com.pomonyang.mohanyang.ui.ServiceHelper
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -84,17 +84,7 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
     private fun notifyMessage(context: Context, notificationId: Int, title: String = context.getString(R.string.app_name), message: String) {
         if (!context.isNotificationGranted()) return
 
-        val notificationIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        }
-
-        val pendingIntent =
-            PendingIntent.getActivity(
-                context,
-                notificationId,
-                notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+        val pendingIntent = ServiceHelper.clickPendingIntent(context, notificationId)
 
         val notification =
             context.defaultNotification(pendingIntent)

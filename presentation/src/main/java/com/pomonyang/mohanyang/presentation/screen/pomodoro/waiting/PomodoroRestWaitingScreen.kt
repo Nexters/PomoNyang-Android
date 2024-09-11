@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
+package com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -57,7 +57,6 @@ fun PomodoroRestWaitingRoute(
             PomodoroRestWaitingSideEffect.GoToPomodoroSetting -> goToHome()
             is PomodoroRestWaitingSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestWaitingSideEffect.GoToPomodoroRest -> goToPomodoroRest()
-            PomodoroRestWaitingSideEffect.ForceGoPomodoroSetting -> forceGoHome()
         }
     }
 
@@ -73,6 +72,12 @@ fun PomodoroRestWaitingRoute(
                 focusTime = focusTime
             )
         )
+    }
+
+    LaunchedEffect(state.forceGoHome) {
+        if (state.forceGoHome) {
+            forceGoHome()
+        }
     }
 
     PomodoroRestWaitingScreen(

@@ -1,34 +1,26 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.focus.PomodoroFocusRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestRoute
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestWaitingRoute
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.PomodoroSettingRoute
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.time.PomodoroTimeSettingRoute
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting.PomodoroRestWaitingRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Pomodoro(
-    val isNewUser: Boolean
-)
+data object Pomodoro
 
 @Serializable
-internal data object PomodoroSetting
-
-@Serializable
-internal data class TimeSetting(val isFocusTime: Boolean, val initialTime: Int, val categoryName: String)
-
-@Serializable
-internal data object PomodoroTimer
+internal data object PomodoroFocusTimer
 
 @Serializable
 internal data class PomodoroRestWaiting(
@@ -41,60 +33,16 @@ internal data class PomodoroRestWaiting(
 internal data object PomodoroRest
 
 fun NavGraphBuilder.pomodoroScreen(
-    isNewUser: Boolean,
     onForceGoHome: () -> Unit,
     onShowSnackbar: (String, Int?) -> Unit,
     navHostController: NavHostController
 ) {
     navigation<Pomodoro>(
-        startDestination = PomodoroSetting
+        startDestination = PomodoroFocusTimer
     ) {
-        val slideDuration = 500
-
-        composable<PomodoroSetting>(
-            popEnterTransition = {
-                EnterTransition.None
-            }
-        ) {
-            PomodoroSettingRoute(
-                isNewUser = isNewUser,
-                onShowSnackbar = onShowSnackbar,
-                goTimeSetting = { isFocusTime, initialTime, categoryName ->
-                    navHostController.navigate(
-                        TimeSetting(isFocusTime, initialTime, categoryName)
-                    )
-                },
-                goToPomodoro = {
-                    navHostController.navigate(PomodoroTimer)
-                },
-                goToMyPage = {
-                    navHostController.navigate(MyPage)
-                }
-            )
-        }
-
-        composable<TimeSetting>(
-            enterTransition = {
-                slideInVertically(tween(slideDuration), initialOffsetY = { it })
-            },
-            exitTransition = {
-                slideOutVertically(tween(slideDuration), targetOffsetY = { it })
-            }
-
-        ) { backStackEntry ->
-            val routeData = backStackEntry.toRoute<TimeSetting>()
-            PomodoroTimeSettingRoute(
-                isFocusTime = routeData.isFocusTime,
-                initialSettingTime = routeData.initialTime,
-                categoryName = routeData.categoryName,
-                onShowSnackbar = onShowSnackbar
-            ) {
-                navHostController.popBackStack()
-            }
-        }
-
-        composable<PomodoroTimer> {
-            PomodoroTimerRoute(
+        composable<PomodoroFocusTimer> {
+            PomodoroFocusRoute(
+                pomodoroTimerViewModel = it.sharedViewModel(navHostController),
                 goToRest = { type, focusTime, exceededTime ->
                     navHostController.navigate(
                         PomodoroRestWaiting(
@@ -103,7 +51,7 @@ fun NavGraphBuilder.pomodoroScreen(
                             exceededTime = exceededTime
                         )
                     ) {
-                        popUpTo(PomodoroTimer) { inclusive = true }
+                        popUpTo(PomodoroFocusTimer) { inclusive = true }
                     }
                 },
                 goToHome = {
@@ -123,12 +71,14 @@ fun NavGraphBuilder.pomodoroScreen(
                 },
                 goToPomodoroRest = {
                     navHostController.navigate(PomodoroRest) {
-                        popUpTo<PomodoroRestWaiting> { inclusive = true }
+                        popUpTo<PomodoroRestWaiting> {
+                            inclusive = true
+                        }
                     }
                 },
                 forceGoHome = {
-                    navHostController.popBackStack()
                     onForceGoHome()
+                    navHostController.popBackStack()
                 },
                 onShowSnackbar = onShowSnackbar
             )
@@ -136,16 +86,26 @@ fun NavGraphBuilder.pomodoroScreen(
 
         composable<PomodoroRest> {
             PomodoroRestRoute(
+                pomodoroTimerViewModel = it.sharedViewModel(navHostController),
                 onShowSnackbar = onShowSnackbar,
                 goToHome = {
                     navHostController.popBackStack()
                 },
                 goToFocus = {
-                    navHostController.navigate(PomodoroTimer) {
+                    navHostController.navigate(Pomodoro) {
                         popUpTo(PomodoroRest) { inclusive = true }
                     }
                 }
             )
         }
     }
+}
+
+@Composable
+inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navHostController: NavHostController): T {
+    val navGraphRoute = destination.parent?.route ?: return viewModel()
+    val parentEntry = remember(this) {
+        navHostController.getBackStackEntry(navGraphRoute)
+    }
+    return hiltViewModel(parentEntry)
 }
