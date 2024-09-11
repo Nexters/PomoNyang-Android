@@ -1,10 +1,9 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.rest
+package com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting
 
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.viewModelScope
 import com.mohanyang.presentation.BuildConfig
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.domain.usecase.AdjustPomodoroTimeUseCase
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
@@ -27,7 +26,8 @@ data class PomodoroRestWaitingState(
     val plusButtonSelected: Boolean = false,
     val minusButtonSelected: Boolean = false,
     val plusButtonEnabled: Boolean = true,
-    val minusButtonEnabled: Boolean = true
+    val minusButtonEnabled: Boolean = true,
+    val forceGoHome: Boolean = false
 ) : ViewState
 
 sealed interface PomodoroRestWaitingEvent : ViewEvent {
@@ -47,7 +47,6 @@ sealed interface PomodoroRestWaitingEvent : ViewEvent {
 sealed interface PomodoroRestWaitingSideEffect : ViewSideEffect {
     data object GoToPomodoroSetting : PomodoroRestWaitingSideEffect
     data object GoToPomodoroRest : PomodoroRestWaitingSideEffect
-    data object ForceGoPomodoroSetting : PomodoroRestWaitingSideEffect
 
     data class ShowSnackbar(
         val message: String,
@@ -58,8 +57,7 @@ sealed interface PomodoroRestWaitingSideEffect : ViewSideEffect {
 @HiltViewModel
 class PomodoroRestWaitingViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
-    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase,
-    private val pomodoroTimerRepository: PomodoroTimerRepository
+    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase
 ) : BaseViewModel<PomodoroRestWaitingState, PomodoroRestWaitingEvent, PomodoroRestWaitingSideEffect>() {
 
     override fun setInitialState(): PomodoroRestWaitingState = PomodoroRestWaitingState()
@@ -111,10 +109,6 @@ class PomodoroRestWaitingViewModel @Inject constructor(
 
             PomodoroRestWaitingEvent.OnEndFocusClick -> {
                 adjustFocusTime()
-                viewModelScope.launch {
-                    pomodoroTimerRepository.updatePomodoroDone()
-                    pomodoroTimerRepository.savePomodoroCacheData()
-                }
                 setEffect(PomodoroRestWaitingSideEffect.GoToPomodoroSetting)
             }
 
@@ -136,7 +130,7 @@ class PomodoroRestWaitingViewModel @Inject constructor(
                 }
                 count += 1
                 if (count == if (BuildConfig.DEBUG) 10 else 60) {
-                    setEffect(PomodoroRestWaitingSideEffect.ForceGoPomodoroSetting)
+                    updateState { copy(forceGoHome = true) }
                 }
             }
         }

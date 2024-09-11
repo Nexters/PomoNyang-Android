@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.time
+package com.pomonyang.mohanyang.presentation.screen.home.time
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.picker.MnWheelMinutePic
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.setting.SettingButton
+import com.pomonyang.mohanyang.presentation.screen.home.setting.SettingButton
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle

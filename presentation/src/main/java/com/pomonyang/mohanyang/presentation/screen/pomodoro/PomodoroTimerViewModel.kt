@@ -1,9 +1,11 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
 import androidx.lifecycle.viewModelScope
+import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroTimerEntity
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
+import com.pomonyang.mohanyang.domain.usecase.InsertPomodoroInitialDataUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
@@ -12,137 +14,135 @@ import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.cat.toModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.model.setting.toModel
-import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
-import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
-import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.UUID
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 data class PomodoroTimerState(
+    val focusTime: Int = 0,
+    val focusExceededTime: Int = 0,
     val maxFocusTime: Int = 0,
-    val currentFocusTime: Int = 0,
-    val exceededTime: Int = 0,
+    val restTime: Int = 0,
+    val restExceededTime: Int = 0,
+    val maxRestTime: Int = 0,
     val title: String = "",
     val categoryType: PomodoroCategoryType = PomodoroCategoryType.DEFAULT,
     val cat: CatType = CatType.CHEESE,
-    val categoryNo: Int = -1
+    val categoryNo: Int = -1,
+    val forceGoRest: Boolean = false
 ) : ViewState {
-    fun displayFocusTime(): String = currentFocusTime.formatTime()
-    fun displayExceedTime(): String = exceededTime.formatTime()
+    fun displayFocusTime(): String = focusTime.formatTime()
+    fun displayRestTime(): String = restTime.formatTime()
+    fun displayFocusExceedTime(): String = focusExceededTime.formatTime()
+    fun displayRestExceedTime(): String = restExceededTime.formatTime()
 }
 
 sealed interface PomodoroTimerEvent : ViewEvent {
-    data object Init : PomodoroTimerEvent
-    data object ClickRest : PomodoroTimerEvent
-    data object ClickHome : PomodoroTimerEvent
-    data object Resume : PomodoroTimerEvent
-    data object Pause : PomodoroTimerEvent
-    data object Dispose : PomodoroTimerEvent
+    // 포커스, 휴식 이벤트 분리를 했는데 나중에 필요하면 상속받고 추가
+    sealed interface PomodoroFocusEvent : PomodoroTimerEvent
+    sealed interface PomodoroRestEvent : PomodoroTimerEvent
 }
 
 sealed interface PomodoroTimerEffect : ViewSideEffect {
-    data class GoToPomodoroRest(
-        val title: String,
-        val focusTime: Int,
-        val exceededTime: Int
-    ) : PomodoroTimerEffect
-
-    data object GoToPomodoroSetting : PomodoroTimerEffect
-    data object StartFocusAlarm : PomodoroTimerEffect
-    data object StopFocusAlarm : PomodoroTimerEffect
-    data object SendEndFocusAlarm : PomodoroTimerEffect
+    sealed interface PomodoroFocusEffect : PomodoroTimerEffect
+    sealed interface PomodoroRestEffect : PomodoroTimerEffect
 }
 
 @HiltViewModel
 class PomodoroTimerViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
     private val pomodoroTimerRepository: PomodoroTimerRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val pomodoroInitialDataUseCase: InsertPomodoroInitialDataUseCase
 ) : BaseViewModel<PomodoroTimerState, PomodoroTimerEvent, PomodoroTimerEffect>() {
 
-    private var timerJob: Job? = null
+    private val currentFocusTimerId = MutableStateFlow("")
+
+    private val combinedTimerData = currentFocusTimerId.flatMapLatest { timerId ->
+        pomodoroTimerRepository.getPomodoroTimer(timerId)
+    }
+
+    init {
+        loadPomodoroSettingData()
+        initPomodoroData()
+        loadTimerData()
+    }
+
+    private fun loadTimerData() {
+        viewModelScope.launch {
+            combinedTimerData.collect { timerData ->
+                timerData?.let { updateTimerState(it) }
+            }
+        }
+    }
 
     override fun setInitialState(): PomodoroTimerState = PomodoroTimerState()
 
     override fun handleEvent(event: PomodoroTimerEvent) {
-        when (event) {
-            PomodoroTimerEvent.Init -> viewModelScope.launch {
-                val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
+    }
+
+    private fun loadPomodoroSettingData() {
+        viewModelScope.launch {
+            getSelectedPomodoroSettingUseCase().collect { entity ->
+                val selectedPomodoroSetting = entity.toModel()
                 val cat = userRepository.getMyInfo().cat.toModel()
                 updateState {
                     copy(
                         title = selectedPomodoroSetting.title,
                         categoryType = selectedPomodoroSetting.categoryType,
+                        cat = cat.type,
                         maxFocusTime = (selectedPomodoroSetting.focusTime.times(60)),
-                        categoryNo = selectedPomodoroSetting.categoryNo,
-                        cat = cat.type
+                        maxRestTime = (selectedPomodoroSetting.restTime.times(60))
                     )
                 }
-                pomodoroTimerRepository.insertPomodoroTimerInitData(selectedPomodoroSetting.categoryNo)
-                startTimer()
             }
-
-            PomodoroTimerEvent.ClickRest -> setEffect(
-                PomodoroTimerEffect.GoToPomodoroRest(
-                    title = state.value.title,
-                    focusTime = state.value.currentFocusTime,
-                    exceededTime = state.value.exceededTime
-                )
-            )
-
-            PomodoroTimerEvent.ClickHome -> {
-                viewModelScope.launch {
-                    pomodoroTimerRepository.updatePomodoroDone()
-                    pomodoroTimerRepository.savePomodoroCacheData()
-                }
-                setEffect(PomodoroTimerEffect.GoToPomodoroSetting)
-            }
-
-            PomodoroTimerEvent.Pause -> setEffect(PomodoroTimerEffect.StartFocusAlarm)
-            PomodoroTimerEvent.Resume -> setEffect(PomodoroTimerEffect.StopFocusAlarm)
-            PomodoroTimerEvent.Dispose -> setEffect(PomodoroTimerEffect.StopFocusAlarm)
         }
     }
 
-    private fun startTimer() {
-        timerJob?.cancel()
-        timerJob = CoroutineScope(Dispatchers.IO).launch {
-            while (isActive) {
-                delay(TIMER_DELAY)
-                updateState {
-                    if (currentFocusTime < maxFocusTime) {
-                        val newFocusTime = currentFocusTime + ONE_SECOND
-                        viewModelScope.launch {
-                            pomodoroTimerRepository.updateFocusTime(newFocusTime)
-                        }
-                        copy(currentFocusTime = currentFocusTime + ONE_SECOND)
-                    } else {
-                        if (exceededTime == 0) {
-                            setEffect(PomodoroTimerEffect.SendEndFocusAlarm)
-                        }
-                        val newExceedTime = exceededTime + ONE_SECOND
-                        if (newExceedTime >= MAX_EXCEEDED_TIME) {
-                            timerJob?.cancel()
-                            setEffect(
-                                PomodoroTimerEffect.GoToPomodoroRest(
-                                    title = state.value.title,
-                                    focusTime = state.value.currentFocusTime,
-                                    exceededTime = newExceedTime
-                                )
-                            )
-                        }
-                        copy(exceededTime = newExceedTime)
-                    }
-                }
-            }
+    private fun initPomodoroData() {
+        viewModelScope.launch {
+            val focusTimeKey = UUID.randomUUID().toString()
+            currentFocusTimerId.value = focusTimeKey
+            pomodoroInitialDataUseCase(focusTimeKey)
         }
+    }
+
+    private fun updateTimerState(timerData: PomodoroTimerEntity) {
+        val currentFocusTime = timerData.focusedTime.coerceAtMost(state.value.maxFocusTime)
+        val currentRestTime = timerData.restedTime.coerceAtMost(state.value.maxRestTime)
+        val focusExceededTime = (timerData.focusedTime - state.value.maxFocusTime).coerceAtLeast(0)
+        val restExceededTime = (timerData.restedTime - state.value.maxRestTime).coerceAtLeast(0)
+
+        updateState {
+            copy(
+                focusTime = currentFocusTime,
+                focusExceededTime = focusExceededTime,
+                restTime = currentRestTime,
+                restExceededTime = restExceededTime
+            )
+        }
+
+        if (focusExceededTime == PomodoroConstants.MAX_EXCEEDED_TIME) {
+            updateState { copy(forceGoRest = true) }
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun savePomodoroData() {
+        GlobalScope.launch {
+            pomodoroTimerRepository.savePomodoroData(currentFocusTimerId.value)
+        }
+    }
+
+    override fun onCleared() {
+        savePomodoroData()
+        super.onCleared()
     }
 }

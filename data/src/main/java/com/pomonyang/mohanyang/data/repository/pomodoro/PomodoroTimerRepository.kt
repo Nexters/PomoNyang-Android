@@ -1,9 +1,14 @@
 package com.pomonyang.mohanyang.data.repository.pomodoro
 
+import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroTimerEntity
+import kotlinx.coroutines.flow.Flow
+
 interface PomodoroTimerRepository {
-    suspend fun insertPomodoroTimerInitData(categoryNo: Int)
-    suspend fun updateFocusTime(focusedTime: Int)
-    suspend fun updateRestedTime(restedTime: Int)
-    suspend fun updatePomodoroDone()
+    suspend fun insertPomodoroTimerInitData(categoryNo: Int, pomodoroTimerId: String)
+    suspend fun incrementFocusedTime()
+    suspend fun incrementRestedTime()
+    suspend fun updateRecentPomodoroDone()
+    suspend fun savePomodoroData(pomodoroTimerId: String)
     suspend fun savePomodoroCacheData()
+    fun getPomodoroTimer(timerId: String): Flow<PomodoroTimerEntity?>
 }

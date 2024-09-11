@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.time
+package com.pomonyang.mohanyang.presentation.screen.home.time
 
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository

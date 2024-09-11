@@ -6,10 +6,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.pomonyang.mohanyang.presentation.screen.home.Home
+import com.pomonyang.mohanyang.presentation.screen.home.homeScreen
 import com.pomonyang.mohanyang.presentation.screen.mypage.myPageScreen
 import com.pomonyang.mohanyang.presentation.screen.onboarding.Onboarding
 import com.pomonyang.mohanyang.presentation.screen.onboarding.onboardingScreen
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.pomodoroScreen
 import com.pomonyang.mohanyang.ui.MohaNyangAppState
 
@@ -26,7 +27,7 @@ internal fun MohaNyangNavHost(
     val startDestination: Any = if (mohaNyangAppState.isNewUser) {
         Onboarding
     } else {
-        Pomodoro(false)
+        Home
     }
 
     val slideDuration = 500
@@ -65,11 +66,16 @@ internal fun MohaNyangNavHost(
             onShowSnackbar = onShowSnackbar
         )
 
-        pomodoroScreen(
+        homeScreen(
             isNewUser = mohaNyangAppState.isNewUser,
             navHostController = mohaNyangAppState.navHostController,
+            onShowSnackbar = onShowSnackbar
+        )
+
+        pomodoroScreen(
+            onForceGoHome = onForceGoHome,
             onShowSnackbar = onShowSnackbar,
-            onForceGoHome = onForceGoHome
+            navHostController = mohaNyangAppState.navHostController
         )
 
         myPageScreen(

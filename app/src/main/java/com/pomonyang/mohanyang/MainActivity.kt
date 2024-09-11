@@ -166,7 +166,7 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
-        GlobalScope.launch { pomodoroTimerRepository.updatePomodoroDone() }
+        GlobalScope.launch { pomodoroTimerRepository.updateRecentPomodoroDone() }
         super.onDestroy()
     }
 

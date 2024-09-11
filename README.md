@@ -4,7 +4,7 @@
 
 > 고양이와 함께하는 집중 시간, 모하냥!
 
-[![download](https://img.shields.io/badge/playstore-download-brightgreen?style=social&logo=googleplay&logoColor=FFB019)](https://sixth-polyanthus-090.notion.site/Android-5dfb4e9c66cc4b34ad357120a9402218?pvs=4)
+[![download](https://img.shields.io/badge/playstore-download-brightgreen?style=social&logo=googleplay&logoColor=FFB019)](https://play.google.com/store/apps/details?id=com.pomonyang.mohanyang)
 
 <br>
 
@@ -44,7 +44,7 @@
 
 | Tech Stack   |                                            |
 |:-------------|:-------------------------------------------|
-| Architecture | MVI, Clean Architecture, Multi-Module      |
+| Architecture | MVI,  Multi-Module                         |
 | Compose      | Navigation, Animation etc                  |
 | DI           | Hilt                                       |
 | Network      | Retrofit2, OkHttp3                         |
