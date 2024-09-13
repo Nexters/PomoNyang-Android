@@ -3,7 +3,7 @@ name: "[CD] Debug to Firebase Distribution"
 on:
   push:
     branches:
-      - feature/cat-101
+      - develop
 
 jobs:
   deploy_debug:
