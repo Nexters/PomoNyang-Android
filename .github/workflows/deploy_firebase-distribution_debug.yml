@@ -1,0 +1,41 @@
+name: "[CD] Debug to Firebase Distribution"
+
+on:
+  push:
+    branches:
+      - feature/cat-101
+
+jobs:
+  deploy_debug:
+    environment: Debug
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Development Environment
+        uses: ./.github/actions/setup-development-environment
+        with:
+          google-services: ${{ secrets.GOOGLE_SERVICES }}
+          test-mode: debug
+          debug-properties: ${{ secrets.DEBUG_PROPERTIES }}
+
+      - name: Setup Signed Key Environment
+        uses: ./.github/actions/setup-key-environment
+        with:
+          key-properties: ${{ secrets.KEY_PROPERTIES }}
+          key-file: ${{ secrets.SIGNED_KEY }}
+
+      - name: Build Debug APK
+        run: ./gradlew :app:assembleDebug
+
+      - name: Check if APK exists
+        run: ls -la app/build/outputs/apk/debug/
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS }}
+          groups: 뽀모냥
+          file: app/build/outputs/apk/debug/app-debug.apk
