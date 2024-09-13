@@ -1,0 +1,47 @@
+name: "[CD] Release to Play Store"
+
+# test
+on:
+  push:
+    branches:
+      - feature/google-play-store  # 테스트 끝나면 main 브랜치로 변경 필요
+
+jobs:
+  deploy_release_to_play_store:
+    environment: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Development Environment
+        uses: ./.github/actions/setup-development-environment
+        with:
+          google-services: ${{ secrets.GOOGLE_SERVICES }}
+          test-mode: release
+          release-properties: ${{ secrets.RELEASE_PROPERTIES }}
+
+      - name: Setup Signed Key Environment
+        uses: ./.github/actions/setup-key-environment
+        with:
+          key-properties: ${{ secrets.KEY_PROPERTIES }}
+          key-file: ${{ secrets.SIGNED_KEY }}
+
+      - name: Build Release APK
+        run: ./gradlew :app:bundleRelease
+
+      - name: Check if AAB exists
+        run: ls -la app/build/outputs/bundle/release/
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.FIREBASE_CREDENTIALS }}
+          packageName: com.pomonyang.mohanyang
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: alpha
+          status: completed
+          inAppUpdatePriority: 2
+          whatsNewDirectory: distribution/whatsnew
+          mappingFile: app/build/outputs/mapping/release/mapping.txt
+          debugSymbols: app/intermediates/merged_native_libs/release/out/lib
