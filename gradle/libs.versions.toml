@@ -45,6 +45,8 @@ permission = "0.35.1-alpha"
 startup = "1.1.1"
 lottie = "6.1.0"
 rive = "9.6.4"
+datadog = "1.14.0"
+datadog-sdk = "2.13.1"
 
 [libraries]
 # Compose
@@ -95,6 +97,7 @@ android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref 
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 compose-compiler-extension = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+datadog-gradlePlugin = { module = "com.datadoghq:dd-sdk-android-gradle-plugin", version.ref = "datadog" }
 
 # firebase
 firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebase-crashlytics-gradle" }
@@ -115,6 +118,10 @@ rive = { module = "app.rive:rive-android", version.ref = "rive" }
 startup = { module = "androidx.startup:startup-runtime", version.ref = "startup" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
+datadog-rum = { module = "com.datadoghq:dd-sdk-android-rum", version.ref = "datadog-sdk" }
+datadog-okhttp = { module = "com.datadoghq:dd-sdk-android-okhttp", version.ref = "datadog-sdk" }
+
+
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "androidStudioGradlePlugin" }
@@ -129,6 +136,7 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-gradle" }
 firebase-pref = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-pref-gradle" }
 firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "firebase-appdistribution-gradle" }
+datadog = { id = "com.datadoghq.dd-sdk-android-gradle-plugin", version.ref = "datadog" }
 
 [bundles]
 androidx-compose = [
