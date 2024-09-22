@@ -21,9 +21,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
-
+          
+      - name: Check PR body
+        run: |
+          echo "PR Body: ${{ github.event.pull_request.body }}"
       - name: Install jq
         run: sudo apt-get install jq -y
+
+
 
       - name: Determine Version Release Type
         id: version_type
