@@ -2,7 +2,7 @@ name: Deploy New Version
 
 on:
   pull_request:
-    types: [ opened,synchronize ]
+    types: [ opened,synchronize, edited ]
 
   push:
     branches:
