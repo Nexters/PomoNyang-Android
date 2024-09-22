@@ -2,7 +2,7 @@ name: Deploy New Version
 
 on:
   pull_request:
-    types: [ closed ]
+    types: [ opened,synchronize ]
 
   push:
     branches:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   versioning:
-    if: github.event.pull_request.merged == true && github.ref == 'refs/heads/test/app-version'
+    if: github.ref == 'refs/heads/feature/app-version'
     runs-on: ubuntu-latest
 
     steps:
