@@ -21,7 +21,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
-          
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+
       - name: Check PR body
         run: |
           echo "PR Body: ${{ github.event.pull_request.body }}"
@@ -36,20 +40,20 @@ jobs:
           LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
           echo "Last comment: $LAST_COMMENT"
           
-          
       - name: Install jq
         run: sudo apt-get install jq -y
-
 
 
       - name: Determine Version Release Type
         id: version_type
         run: |
           pr_body=$(echo "${{ github.event.pull_request.body }}" | tr '[:upper:]' '[:lower:]')
-          if [[ "$pr_body" =~ "major" ]]; then
+          if echo "$pr_body" | grep -q '\[x\].*major'; then
             echo "release_type=major" >> $GITHUB_ENV
-          elif [[ "$pr_body" =~ "minor" ]]; then
+          elif echo "$pr_body" | grep -q '\[x\].*minor'; then
             echo "release_type=minor" >> $GITHUB_ENV
+          elif echo "$pr_body" | grep -q '\[x\].*patch'; then
+            echo "release_type=patch" >> $GITHUB_ENV
           else
             echo "release_type=patch" >> $GITHUB_ENV
           fi
