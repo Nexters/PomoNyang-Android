@@ -25,12 +25,17 @@ jobs:
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
 
+      - name: Authenticate GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
 
       - name: Check PR body
         run: |
           echo "PR Body: ${{ github.event.pull_request.body }}"
 
-            
+
       - name: Check ref
         run: |
           echo "PR ref: ${{ github.ref }} && Pr Head ref ${{ github.head_ref }}"
@@ -39,7 +44,7 @@ jobs:
         run: |
           LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
           echo "Last comment: $LAST_COMMENT"
-          
+
       - name: Install jq
         run: sudo apt-get install jq -y
 
