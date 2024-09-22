@@ -2,7 +2,7 @@ name: Deploy New Version
 
 on:
   pull_request:
-    types: [ opened,synchronize, edited ]
+    types: [ closed ]
 
   push:
     branches:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   versioning:
-    if: github.ref == 'refs/heads/feature/app-version'
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +25,18 @@ jobs:
       - name: Check PR body
         run: |
           echo "PR Body: ${{ github.event.pull_request.body }}"
+
+            
+      - name: Check ref
+        run: |
+          echo "PR ref: ${{ github.ref }} && Pr Head ref ${{ github.head_ref }}"
+
+      - name: Check latest PR comment
+        run: |
+          LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
+          echo "Last comment: $LAST_COMMENT"
+          
+          
       - name: Install jq
         run: sudo apt-get install jq -y
 
