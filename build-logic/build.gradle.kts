@@ -41,5 +41,9 @@ gradlePlugin {
             id = "mohanyang.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
+        register("appVersion") {
+            id = "mohanyang.appversion"
+            implementationClass = "com.pomonyang.mohanyang.AppVersionPlugin"
+        }
     }
 }
