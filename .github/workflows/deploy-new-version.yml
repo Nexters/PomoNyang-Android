@@ -2,7 +2,7 @@ name: Deploy New Version
 
 on:
   pull_request:
-    types: [ opened,synchronize, edited ]
+    types: [ opened,reopened, edited ]
 
   push:
     branches:
@@ -24,6 +24,10 @@ jobs:
 
       - name: Install jq
         run: sudo apt-get install jq -y
+
+      - name: Check PR body
+        run: | 
+          echo "PR Body: ${{ github.event.pull_request.body }}"   
 
       - name: Determine Version Release Type
         id: version_type
