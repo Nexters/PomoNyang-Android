@@ -8,6 +8,7 @@ on:
     branches:
       - feature/app-version
 
+
 jobs:
   versioning:
     if: github.event.pull_request.merged == true
@@ -22,6 +23,10 @@ jobs:
         with:
           node-version: '14'
 
+      - name: Install jq
+        run: sudo apt-get install jq -y
+
+
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
 
@@ -35,18 +40,16 @@ jobs:
         run: |
           echo "PR Body: ${{ github.event.pull_request.body }}"
 
-
       - name: Check ref
         run: |
           echo "PR ref: ${{ github.ref }} && Pr Head ref ${{ github.head_ref }}"
 
       - name: Check latest PR comment
         run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
           LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
           echo "Last comment: $LAST_COMMENT"
 
-      - name: Install jq
-        run: sudo apt-get install jq -y
 
 
       - name: Determine Version Release Type
