@@ -1,15 +1,131 @@
-name: "[CD] Release to Play Store"
+name: Deploy New Version and Release to Play Store
 
-# last dance
 on:
+  pull_request:
+    types: [closed]
   push:
     branches:
+      - develop
       - feature/google-play-store  # 테스트 끝나면 main 브랜치로 변경 필요
 
 jobs:
-  deploy_release_to_play_store:
-    environment: Release
+  versioning:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install jq
+        run: sudo apt-get install jq -y
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      - name: Authenticate GitHub CLI
+        run: |
+          gh auth setup-git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check PR body
+        run: |
+          echo "PR Body: ${{ github.event.pull_request.body }}"
+
+      - name: Check ref
+        run: |
+          echo "PR ref: ${{ github.ref }} && Pr Head ref ${{ github.head_ref }}"
+
+      - name: Check latest PR comment
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
+          echo "Last comment: $LAST_COMMENT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine Version Release Type
+        id: version_type
+        run: |
+          pr_body=$(echo "${{ github.event.pull_request.body }}" | tr '[:upper:]' '[:lower:]')
+          if echo "$pr_body" | grep -q '\[x\].*major'; then
+            echo "release_type=major" >> $GITHUB_ENV
+          elif echo "$pr_body" | grep -q '\[x\].*minor'; then
+            echo "release_type=minor" >> $GITHUB_ENV
+          elif echo "$pr_body" | grep -q '\[x\].*patch'; then
+            echo "release_type=patch" >> $GITHUB_ENV
+          else
+            echo "release_type=patch" >> $GITHUB_ENV
+          fi
+
+      - name: Get App Version
+        uses: ./.github/actions/get-app-version
+        id: get-version
+
+      - name: Echo Current App Version
+        run: |
+          echo "App Version: ${{ steps.get-version.outputs.version_name }}"
+          echo "Major Version: ${{ steps.get-version.outputs.major }}"
+          echo "Minor Version: ${{ steps.get-version.outputs.minor }}"
+          echo "Patch Version: ${{ steps.get-version.outputs.patch }}"
+          echo "Code: ${{ steps.get-version.outputs.code }}"
+
+      - name: Calculate New Version
+        id: calculate_version
+        run: |
+          major=${{ steps.get-version.outputs.major }}
+          minor=${{ steps.get-version.outputs.minor }}
+          patch=${{ steps.get-version.outputs.patch }}
+          code=${{ steps.get-version.outputs.code }}
+
+          if [ "$release_type" = "major" ]; then
+            major=$((major + 1))
+            minor=0
+            patch=0
+          elif [ "$release_type" = "minor" ]; then
+            minor=$((minor + 1))
+            patch=0
+          else
+            patch=$((patch + 1))
+          fi
+
+          code=$((code + 1))
+
+          echo "major=${major}" >> $GITHUB_OUTPUT
+          echo "minor=${minor}" >> $GITHUB_OUTPUT
+          echo "patch=${patch}" >> $GITHUB_OUTPUT
+          echo "code=${code}" >> $GITHUB_OUTPUT
+          echo "version_name=${major}.${minor}.${patch}" >> $GITHUB_OUTPUT
+
+      - name: Update App Version
+        uses: ./.github/actions/update-app-version
+        with:
+          major: ${{ steps.calculate_version.outputs.major }}
+          minor: ${{ steps.calculate_version.outputs.minor }}
+          patch: ${{ steps.calculate_version.outputs.patch }}
+          code: ${{ steps.calculate_version.outputs.code }}
+          file: "app-version.json"
+
+      - name: Get Updated App Version
+        id: get-updated-version
+        uses: ./.github/actions/get-app-version
+
+      - name: Create Git Tag
+        run: |
+          version_name=${{ steps.get-updated-version.outputs.version_name }}
+          git tag -a "v$version_name" -m "Version $version_name"
+          git push origin "v$version_name"
+
+  release_to_play_store:
+    needs: versioning  # 버전 업데이트가 완료된 후 실행
+    runs-on: ubuntu-latest
+    environment: Release
     steps:
       - name: Checkout
         uses: actions/checkout@v4
