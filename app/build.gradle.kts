@@ -8,6 +8,7 @@ plugins {
     id("mohanyang.android.application.compose")
     id("mohanyang.android.application.firebase")
     id("mohanyang.android.datadog")
+    id("mohanyang.appversion")
 }
 
 android {
@@ -15,13 +16,14 @@ android {
 
     defaultConfig {
         applicationId = "com.pomonyang.mohanyang"
-        versionCode = 7
-        versionName = "0.1.4"
+        versionCode = appVersion.code
+        versionName = appVersion.name
     }
 
     signingConfigs {
         create("release") {
-            val props = loadPropertiesFile("../key.secrets.properties")
+            val props = loadPropertiesFile(rootDir.absolutePath + "/key.secrets.properties")
+            println(rootDir.absolutePath + "/key.secrets.properties")
             storeFile = file(props.getProperty("STORE_FILE_PATH"))
             storePassword = props.getProperty("STORE_PASSWORD")
             keyAlias = props.getProperty("KEY_ALIAS")
