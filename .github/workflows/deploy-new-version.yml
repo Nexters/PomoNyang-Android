@@ -48,7 +48,8 @@ jobs:
           PR_NUMBER=${{ github.event.pull_request.number }}
           LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
           echo "Last comment: $LAST_COMMENT"
-
+        env:
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 
       - name: Determine Version Release Type
