@@ -46,5 +46,9 @@ gradlePlugin {
             id = "mohanyang.android.datadog"
             implementationClass = "AndroidDatadogConventionPlugin"
         }
+        register("appVersion") {
+            id = "mohanyang.appversion"
+            implementationClass = "com.pomonyang.mohanyang.AppVersionPlugin"
+        }
     }
 }
