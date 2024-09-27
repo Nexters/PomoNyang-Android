@@ -127,12 +127,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Release
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Clean Gradle Cache
-        run: ./gradlew clean build --refresh-dependencies
-
+      -
       - name: Check Updated App Version
         run: cat app-version.json
 
