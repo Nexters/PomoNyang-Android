@@ -130,6 +130,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Clean Gradle Cache
+        run: ./gradlew clean
+
+      - name: Check Updated App Version
+        run: cat app-version.json
+
       - name: Setup Development Environment
         uses: ./.github/actions/setup-development-environment
         with:
