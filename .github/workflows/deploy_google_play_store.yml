@@ -8,7 +8,7 @@ on:
       - test-cd-2 # test
 jobs:
   versioning:
-#    if: github.event.pull_request.merged == true
+    #    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -125,6 +125,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: Release
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get Updated App Version
+        id: get-updated-version
+        uses: ./.github/actions/get-app-version
+
       - name: Setup Development Environment
         uses: ./.github/actions/setup-development-environment
         with:
