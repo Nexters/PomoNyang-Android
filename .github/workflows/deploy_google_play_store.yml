@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - develop
-      - feature/google-play-store  # 테스트 끝나면 main 브랜치로 변경 필요 3
+      - feature/google-play-store  # 테스트 끝나면 main 브랜치로 변경 필요 4
       - test-cd-2
 jobs:
   versioning:
