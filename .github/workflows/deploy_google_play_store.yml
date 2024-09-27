@@ -2,7 +2,7 @@ name: Deploy New Version and Release to Play Store
 
 on:
   pull_request:
-    types: [closed]
+    types: [ closed ]
   push:
     branches:
       - develop
@@ -131,7 +131,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Clean Gradle Cache
-        run: ./gradlew clean
+        run: ./gradlew clean build --refresh-dependencies
 
       - name: Check Updated App Version
         run: cat app-version.json
