@@ -125,10 +125,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: Release
     steps:
-      - name: Get Updated App Version
-        id: get-updated-version
-        uses: ./.github/actions/get-app-version
-
       - name: Setup Development Environment
         uses: ./.github/actions/setup-development-environment
         with:
