@@ -1,8 +1,6 @@
 name: Deploy New Version and Release to Play Store
 
 on:
-  pull_request:
-    types: [ closed ]
   push:
     branches:
       - develop
