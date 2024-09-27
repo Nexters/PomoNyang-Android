@@ -5,12 +5,11 @@ on:
     branches:
       - develop
       - feature/google-play-store  # 테스트 끝나면 main 브랜치로 변경 필요 4
-      - test-cd-2 # test
-jobs:
-  versioning:
-    #    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
+      - test-cd-2  # test
 
+jobs:
+  versioning_and_release:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,22 +30,6 @@ jobs:
           gh auth setup-git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check PR body
-        run: |
-          echo "PR Body: ${{ github.event.pull_request.body }}"
-
-      - name: Check ref
-        run: |
-          echo "PR ref: ${{ github.ref }} && Pr Head ref ${{ github.head_ref }}"
-
-      - name: Check latest PR comment
-        run: |
-          PR_NUMBER=${{ github.event.pull_request.number }}
-          LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
-          echo "Last comment: $LAST_COMMENT"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Determine Version Release Type
         id: version_type
@@ -119,18 +102,6 @@ jobs:
           version_name=${{ steps.get-updated-version.outputs.version_name }}
           git tag -a "v$version_name" -m "Version $version_name"
           git push origin "v$version_name"
-
-  release_to_play_store:
-    needs: versioning  # 버전 업데이트가 완료된 후 실행
-    runs-on: ubuntu-latest
-    environment: Release
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get Updated App Version
-        id: get-updated-version
-        uses: ./.github/actions/get-app-version
 
       - name: Setup Development Environment
         uses: ./.github/actions/setup-development-environment
