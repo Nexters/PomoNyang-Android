@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - develop
-      - feature/google-play-store  # 테스트 끝나면 main 브랜치로 변경 필요 3
+      - feature/google-play-store  # 테스트 끝나면 main 브랜치로 변경 필요
       - test-cd-2
 jobs:
   versioning:
@@ -40,7 +40,7 @@ jobs:
 
       - name: Check ref
         run: |
-          echo "PR ref: ${{ github.ref }} && Pr Head ref ${{ github.head_ref }}"
+          echo "PR ref: ${{ github.ref }} && PR Head ref ${{ github.head_ref }}"
 
       - name: Check latest PR comment
         run: |
@@ -111,6 +111,14 @@ jobs:
           patch: ${{ steps.calculate_version.outputs.patch }}
           code: ${{ steps.calculate_version.outputs.code }}
           file: "app-version.json"
+
+      - name: Commit updated version
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add app-version.json
+          git commit -m "Update version to ${{ steps.get-updated-version.outputs.version_name }}"
+          git push origin HEAD
 
       - name: Get Updated App Version
         id: get-updated-version
