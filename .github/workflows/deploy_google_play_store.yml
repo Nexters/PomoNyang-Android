@@ -10,6 +10,7 @@ on:
 jobs:
   versioning_and_release:
     runs-on: ubuntu-latest
+    environment: Release
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
