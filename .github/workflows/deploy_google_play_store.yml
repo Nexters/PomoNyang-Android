@@ -120,6 +120,15 @@ jobs:
       - name: Build Release APK
         run: ./gradlew :app:bundleRelease
 
+      - name: Check latest PR comment
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
+          echo "Last comment: $LAST_COMMENT"
+          echo "WHATS_NEW_DIR=$(echo "$LAST_COMMENT" | sed 's/ /_/g')" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
       - name: Check if AAB exists
         run: ls -la app/build/outputs/bundle/release/
 
@@ -129,5 +138,7 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.FIREBASE_CREDENTIALS }}
           packageName: com.pomonyang.mohanyang
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          whatsNewDirectory: ${{ env.WHATS_NEW_DIR }}
           track: internal
           status: draft
+
