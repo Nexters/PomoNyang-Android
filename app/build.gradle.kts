@@ -8,6 +8,7 @@ plugins {
     id("mohanyang.android.application.compose")
     id("mohanyang.android.application.firebase")
     id("mohanyang.android.datadog")
+    id("mohanyang.appversion")
 }
 
 android {
@@ -15,8 +16,8 @@ android {
 
     defaultConfig {
         applicationId = "com.pomonyang.mohanyang"
-        versionCode = 7
-        versionName = "0.1.4"
+        versionCode = appVersion.code
+        versionName = appVersion.name
     }
 
     signingConfigs {

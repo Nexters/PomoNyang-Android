@@ -1,0 +1,47 @@
+name: "Update App Version"
+
+inputs:
+  major:
+    description: "업데이트 할 앱 major"
+    required: true
+  minor:
+    description: "업데이트 할 앱 버전 minor"
+    required: true
+  patch:
+    description: "업데이트 할 앱 버전 patch"
+    required: true
+  code:
+    description: "업데이트 할 앱 버전 code"
+    required: true
+  file:
+    description: "업데이트 할 파일 경로"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Update app version
+      shell: bash
+      if: success()
+      run: |
+        VERSION_FILE="${{ inputs.file }}"
+        if command -v jq &> /dev/null; then
+          # jq가 설치되어 있는 경우
+          jq '.major = $major | .minor = $minor | .patch = $patch  | .code = $code' \
+            --argjson major "${{ inputs.major }}" \
+            --argjson minor "${{ inputs.minor }}" \
+            --argjson patch "${{ inputs.patch }}" \
+            --argjson code "${{ inputs.code }}" \
+            $VERSION_FILE > tmp.$$.json && mv tmp.$$.json $VERSION_FILE
+        else
+          # jq가 설치되어 있지 않은 경우
+          sed -i "s/\"major\": [0-9]\+/\"major\": ${{ inputs.major }}/" $VERSION_FILE
+          sed -i "s/\"minor\": [0-9]\+/\"minor\": ${{ inputs.minor }}/" $VERSION_FILE
+          sed -i "s/\"patch\": [0-9]\+/\"patch\": ${{ inputs.patch }}/" $VERSION_FILE
+          sed -i "s/\"code\": [0-9]\+/\"code\": ${{ inputs.code }}/" $VERSION_FILE
+        fi
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"           
+        git add $VERSION_FILE
+        git commit -m "Update app version to ${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }} [${{ inputs.code }}]"
+        git push
