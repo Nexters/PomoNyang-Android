@@ -1,4 +1,4 @@
-name: Deploy New Version
+name: Deploy New Version and Release to Play Store
 
 on:
   pull_request:
@@ -6,12 +6,13 @@ on:
 
   push:
     branches:
-      - develop
-jobs:
-  versioning:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
+      - main
 
+jobs:
+  versioning_and_release:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    environment: Release
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,24 +33,6 @@ jobs:
           gh auth setup-git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check PR body
-        run: |
-          echo "PR Body: ${{ github.event.pull_request.body }}"
-
-      - name: Check ref
-        run: |
-          echo "PR ref: ${{ github.ref }} && Pr Head ref ${{ github.head_ref }}"
-
-      - name: Check latest PR comment
-        run: |
-          PR_NUMBER=${{ github.event.pull_request.number }}
-          LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
-          echo "Last comment: $LAST_COMMENT"
-        env:
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-
 
       - name: Determine Version Release Type
         id: version_type
@@ -76,7 +59,6 @@ jobs:
           echo "Minor Version: ${{ steps.get-version.outputs.minor }}"
           echo "Patch Version: ${{ steps.get-version.outputs.patch }}"
           echo "Code: ${{ steps.get-version.outputs.code }}"
-
 
       - name: Calculate New Version
         id: calculate_version
@@ -123,3 +105,44 @@ jobs:
           version_name=${{ steps.get-updated-version.outputs.version_name }}
           git tag -a "v$version_name" -m "Version $version_name"
           git push origin "v$version_name"
+
+      - name: Setup Development Environment
+        uses: ./.github/actions/setup-development-environment
+        with:
+          google-services: ${{ secrets.GOOGLE_SERVICES }}
+          test-mode: release
+          release-properties: ${{ secrets.RELEASE_PROPERTIES }}
+
+      - name: Setup Signed Key Environment
+        uses: ./.github/actions/setup-key-environment
+        with:
+          key-properties: ${{ secrets.KEY_PROPERTIES }}
+          key-file: ${{ secrets.SIGNED_KEY }}
+
+      - name: Build Release APK
+        run: ./gradlew :app:bundleRelease
+
+      - name: Check latest PR comment
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
+          echo "Last comment: $LAST_COMMENT"
+          # Create a directory for "What's New"
+          mkdir -p distribution/whatsnew
+          # Create the file with the correct BCP 47 locale code (for example, en-US)
+          echo "$LAST_COMMENT" > distribution/whatsnew/whatsnew-ko-KR
+        env:
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Check if AAB exists
+        run: ls -la app/build/outputs/bundle/release/
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.FIREBASE_CREDENTIALS }}
+          packageName: com.pomonyang.mohanyang
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          whatsNewDirectory: distribution/whatsnew
+          track: internal
+          status: draft
