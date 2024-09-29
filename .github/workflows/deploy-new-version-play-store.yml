@@ -1,20 +1,17 @@
 name: Deploy New Version and Release to Play Store
 
 on:
-  # MR 머지 전에 push 했을 때 제대로 들어가는지 확인 후 주석 제거
-  # pull_request:
-    # types: [ closed ]
+  pull_request:
+    types: [ closed ]
 
   push:
     branches:
-      - develop
       - main
-      - feature/deploy-google-store
 
 jobs:
   versioning_and_release:
     runs-on: ubuntu-latest
-    # MR 머지 전에 push 했을 때 제대로 들어가는지 확인 후 주석 제거 if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     environment: Release
     steps:
       - name: Checkout code
