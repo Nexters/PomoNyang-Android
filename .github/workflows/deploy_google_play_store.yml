@@ -125,10 +125,10 @@ jobs:
           PR_NUMBER=${{ github.event.pull_request.number }}
           LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
           echo "Last comment: $LAST_COMMENT"
-          # release note가 생성될 폴더
+          # Create a directory for "What's New"
           mkdir -p distribution/whatsnew
-          # 기본 note이며 나라에 따라서 en-US.txt 이런 형태로 만들면 다국어로 대응도 됨
-          echo "$LAST_COMMENT" > distribution/whatsnew/whatsnew-en.txt
+          # Create the file with the correct BCP 47 locale code (for example, en-US)
+          echo "$LAST_COMMENT" > distribution/whatsnew/whatsnew-en-US.txt
         env:
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
@@ -144,4 +144,3 @@ jobs:
           whatsNewDirectory: distribution/whatsnew
           track: internal
           status: draft
-
