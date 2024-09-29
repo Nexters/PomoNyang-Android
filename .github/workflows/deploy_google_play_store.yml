@@ -128,7 +128,7 @@ jobs:
           # release note가 생성될 폴더
           mkdir -p whatsnew
           # 기본 note이며 나라에 따라서 en-US.txt 이런 형태로 만들면 다국어로 대응도 됨
-          echo "$LAST_COMMENT" > whatsnew/whatsnew-ko-KR.txt
+          echo "$LAST_COMMENT" > whatsnew/whatsnew-ko.txt
         env:
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
