@@ -126,7 +126,7 @@ jobs:
           LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
           echo "Last comment: $LAST_COMMENT"
           # release note가 생성될 폴더
-          mkdir -p whatsnew
+          mkdir -p distribution/whatsnew
           # 기본 note이며 나라에 따라서 en-US.txt 이런 형태로 만들면 다국어로 대응도 됨
           echo "$LAST_COMMENT" > distribution/whatsnew/whatsnew-en-US.txt
         env:
