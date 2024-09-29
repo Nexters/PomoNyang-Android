@@ -128,7 +128,7 @@ jobs:
           # Create a directory for "What's New"
           mkdir -p distribution/whatsnew
           # Create the file with the correct BCP 47 locale code (for example, en-US)
-          echo "$LAST_COMMENT" > distribution/whatsnew/whatsnew-en-US.txt
+          echo "$LAST_COMMENT" > distribution/whatsnew/whatsnew-ko-KR
         env:
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
