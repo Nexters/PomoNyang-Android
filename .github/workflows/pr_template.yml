@@ -1,0 +1,33 @@
+name: PR Template Selector
+
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  apply-template:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Branch and Apply Template
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const { context } = require('@actions/github');
+            const prBranch = context.payload.pull_request.head.ref;
+
+            let templatePath = '.github/PULL_REQUEST_TEMPLATE/basic_template.md';
+
+            if (prBranch.startsWith('release/')) {
+              templatePath = '.github/PULL_REQUEST_TEMPLATE/release_template.md';
+            } else if (prBranch === 'develop') {
+              templatePath = '.github/PULL_REQUEST_TEMPLATE/basic_template.md';
+            }
+
+            const template = fs.readFileSync(templatePath, 'utf8');
+            await github.rest.pulls.update({
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+              body: template
+            });
