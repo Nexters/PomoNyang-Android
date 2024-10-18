@@ -1,0 +1,5 @@
+- name: "Basic PR Template"
+  path: "PULL_REQUEST_TEMPLATE/BASIC_PR_TEMPLATE.md"
+
+- name: "Release PR Template"
+  path: "PULL_REQUEST_TEMPLATE/RELEASE_PR_TEMPLATE.md"
