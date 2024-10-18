@@ -1,0 +1,148 @@
+name: Deploy New Version and Release to Play Store
+
+on:
+  pull_request:
+    types: [ closed ]
+
+  push:
+    branches:
+      - main
+
+jobs:
+  versioning_and_release:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    environment: Release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install jq
+        run: sudo apt-get install jq -y
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      - name: Authenticate GitHub CLI
+        run: |
+          gh auth setup-git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine Version Release Type
+        id: version_type
+        run: |
+          pr_body=$(echo "${{ github.event.pull_request.body }}" | tr '[:upper:]' '[:lower:]')
+          if echo "$pr_body" | grep -q '\[x\].*major'; then
+            echo "release_type=major" >> $GITHUB_ENV
+          elif echo "$pr_body" | grep -q '\[x\].*minor'; then
+            echo "release_type=minor" >> $GITHUB_ENV
+          elif echo "$pr_body" | grep -q '\[x\].*patch'; then
+            echo "release_type=patch" >> $GITHUB_ENV
+          else
+            echo "release_type=patch" >> $GITHUB_ENV
+          fi
+
+      - name: Get App Version
+        uses: ./.github/actions/get-app-version
+        id: get-version
+
+      - name: Echo Current App Version
+        run: |
+          echo "App Version: ${{ steps.get-version.outputs.version_name }}"
+          echo "Major Version: ${{ steps.get-version.outputs.major }}"
+          echo "Minor Version: ${{ steps.get-version.outputs.minor }}"
+          echo "Patch Version: ${{ steps.get-version.outputs.patch }}"
+          echo "Code: ${{ steps.get-version.outputs.code }}"
+
+      - name: Calculate New Version
+        id: calculate_version
+        run: |
+          major=${{ steps.get-version.outputs.major }}
+          minor=${{ steps.get-version.outputs.minor }}
+          patch=${{ steps.get-version.outputs.patch }}
+          code=${{ steps.get-version.outputs.code }}
+
+          if [ "$release_type" = "major" ]; then
+            major=$((major + 1))
+            minor=0
+            patch=0
+          elif [ "$release_type" = "minor" ]; then
+            minor=$((minor + 1))
+            patch=0
+          else
+            patch=$((patch + 1))
+          fi
+
+          code=$((code + 1))
+
+          echo "major=${major}" >> $GITHUB_OUTPUT
+          echo "minor=${minor}" >> $GITHUB_OUTPUT
+          echo "patch=${patch}" >> $GITHUB_OUTPUT
+          echo "code=${code}" >> $GITHUB_OUTPUT
+          echo "version_name=${major}.${minor}.${patch}" >> $GITHUB_OUTPUT
+
+      - name: Update App Version
+        uses: ./.github/actions/update-app-version
+        with:
+          major: ${{ steps.calculate_version.outputs.major }}
+          minor: ${{ steps.calculate_version.outputs.minor }}
+          patch: ${{ steps.calculate_version.outputs.patch }}
+          code: ${{ steps.calculate_version.outputs.code }}
+          file: "app-version.json"
+
+      - name: Get Updated App Version
+        id: get-updated-version
+        uses: ./.github/actions/get-app-version
+
+      - name: Create Git Tag
+        run: |
+          version_name=${{ steps.get-updated-version.outputs.version_name }}
+          git tag -a "v$version_name" -m "Version $version_name"
+          git push origin "v$version_name"
+
+      - name: Setup Development Environment
+        uses: ./.github/actions/setup-development-environment
+        with:
+          google-services: ${{ secrets.GOOGLE_SERVICES }}
+          test-mode: release
+          release-properties: ${{ secrets.RELEASE_PROPERTIES }}
+
+      - name: Setup Signed Key Environment
+        uses: ./.github/actions/setup-key-environment
+        with:
+          key-properties: ${{ secrets.KEY_PROPERTIES }}
+          key-file: ${{ secrets.SIGNED_KEY }}
+
+      - name: Build Release APK
+        run: ./gradlew :app:bundleRelease
+
+      - name: Check latest PR comment
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          LAST_COMMENT=$(gh pr view $PR_NUMBER --comments --json comments --jq '.comments[-1].body')
+          echo "Last comment: $LAST_COMMENT"
+          # Create a directory for "What's New"
+          mkdir -p distribution/whatsnew
+          # Create the file with the correct BCP 47 locale code (for example, en-US)
+          echo "$LAST_COMMENT" > distribution/whatsnew/whatsnew-ko-KR
+        env:
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Check if AAB exists
+        run: ls -la app/build/outputs/bundle/release/
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.FIREBASE_CREDENTIALS }}
+          packageName: com.pomonyang.mohanyang
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          whatsNewDirectory: distribution/whatsnew
+          track: internal
+          status: draft

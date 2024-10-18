@@ -1,4 +1,5 @@
 import com.google.android.libraries.mapsplatform.secrets_gradle_plugin.loadPropertiesFile
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import com.pomonyang.mohanyang.convention.GithubUtils
 
 plugins {
@@ -6,6 +7,8 @@ plugins {
     id("mohanyang.android.hilt")
     id("mohanyang.android.application.compose")
     id("mohanyang.android.application.firebase")
+    id("mohanyang.android.datadog")
+    id("mohanyang.appversion")
 }
 
 android {
@@ -13,8 +16,8 @@ android {
 
     defaultConfig {
         applicationId = "com.pomonyang.mohanyang"
-        versionCode = 7
-        versionName = "0.1.4"
+        versionCode = appVersion.code
+        versionName = appVersion.name
     }
 
     signingConfigs {
@@ -68,7 +71,6 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.rive)
     implementation(libs.startup)
-
     // module impl
     implementation(projects.data)
     implementation(projects.domain)

@@ -13,6 +13,7 @@ dependencies {
     compileOnly(libs.firebase.perf.gradle)
     compileOnly(libs.firebase.crashlytics.gradle)
     compileOnly(libs.firebase.appdistribution.gradle)
+    compileOnly(libs.datadog.gradlePlugin)
 }
 
 gradlePlugin {
@@ -40,6 +41,14 @@ gradlePlugin {
         register("androidHilt") {
             id = "mohanyang.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
+        }
+        register("androidDatadog") {
+            id = "mohanyang.android.datadog"
+            implementationClass = "AndroidDatadogConventionPlugin"
+        }
+        register("appVersion") {
+            id = "mohanyang.appversion"
+            implementationClass = "com.pomonyang.mohanyang.AppVersionPlugin"
         }
     }
 }
