@@ -27,7 +27,7 @@ jobs:
 
             let templatePath = '.github/PULL_REQUEST_TEMPLATE/basic_template.md';
 
-            if (prBranch.startsWith('release/')) {
+            if (prBranch.startsWith('release/') || prBranch.startsWith('hotfix/')) {
               templatePath = '.github/PULL_REQUEST_TEMPLATE/release_template.md';
             } else if (baseBranch === 'develop') {
               templatePath = '.github/PULL_REQUEST_TEMPLATE/basic_template.md';
