@@ -9,12 +9,14 @@ import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NO
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_CHANNEL_NAME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_ID
 import javax.inject.Inject
+import timber.log.Timber
 
 internal class PomodoroNotificationManager @Inject constructor(
     @PomodoroNotification private val notificationBuilder: NotificationCompat.Builder,
     private val notificationManager: NotificationManager
 ) {
     fun createNotification(isFocus: Boolean): Notification {
+        Timber.tag("TIMER").d("createNotification > isFocus $isFocus")
         val notificationChannelId = POMODORO_NOTIFICATION_CHANNEL_ID
         val notificationChannel = NotificationChannel(
             notificationChannelId,

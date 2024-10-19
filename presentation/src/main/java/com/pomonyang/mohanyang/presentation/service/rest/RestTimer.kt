@@ -12,6 +12,7 @@ import kotlin.concurrent.fixedRateTimer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 internal class RestTimer @Inject constructor(
     private val timerRepository: PomodoroTimerRepository
@@ -22,12 +23,15 @@ internal class RestTimer @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun startTimer(maxTime: Int, eventHandler: PomodoroTimerEventHandler) {
+        Timber.tag("TIMER").d("startRest timer / maxTime : $maxTime")
         if (timer == null) {
             timeElapsed = 0
             timer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_DELAY) {
                 scope.launch {
                     timeElapsed += ONE_SECOND
                     timerRepository.incrementRestedTime()
+
+                    Timber.tag("TIMER").d("countRestTime: $timeElapsed ")
 
                     if (timeElapsed >= maxTime) {
                         eventHandler.onTimeEnd()

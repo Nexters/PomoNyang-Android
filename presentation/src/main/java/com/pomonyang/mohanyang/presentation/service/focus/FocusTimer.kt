@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 internal class FocusTimer @Inject constructor(
     private val timerRepository: PomodoroTimerRepository
@@ -23,12 +24,15 @@ internal class FocusTimer @Inject constructor(
     private var timeElapsed = 0
 
     override fun startTimer(maxTime: Int, eventHandler: PomodoroTimerEventHandler) {
+        Timber.tag("TIMER").d("startFocus timer / maxTime : $maxTime")
         if (timer == null) {
             timeElapsed = 0
             timer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_DELAY) {
                 scope.launch {
                     timeElapsed += ONE_SECOND
                     timerRepository.incrementFocusedTime()
+
+                    Timber.tag("TIMER").d("countFocusTime: $timeElapsed ")
 
                     if (timeElapsed >= maxTime) {
                         eventHandler.onTimeEnd()

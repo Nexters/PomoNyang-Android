@@ -11,6 +11,7 @@ import com.pomonyang.mohanyang.presentation.service.PomodoroTimerEventHandler
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import timber.log.Timber
 
 @AndroidEntryPoint
 internal class PomodoroFocusTimerService :
@@ -28,6 +29,7 @@ internal class PomodoroFocusTimerService :
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val maxTime = intent.getIntExtra(PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME, 0)
+        Timber.tag("TIMER").d("onStartCommand > ${intent.action} / maxTime: $maxTime")
         when (intent.action) {
             PomodoroTimerServiceExtras.ACTION_TIMER_START -> {
                 startForeground(

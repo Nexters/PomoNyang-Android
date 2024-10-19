@@ -5,12 +5,12 @@ import android.content.Intent
 import android.os.IBinder
 import com.pomonyang.mohanyang.presentation.di.RestTimerType
 import com.pomonyang.mohanyang.presentation.noti.PomodoroNotificationManager
-import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_ID
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerEventHandler
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
 internal class PomodoroRestTimerService :
@@ -31,7 +31,7 @@ internal class PomodoroRestTimerService :
         when (intent.action) {
             PomodoroTimerServiceExtras.ACTION_TIMER_START -> {
                 startForeground(
-                    POMODORO_NOTIFICATION_ID,
+                    Random.nextInt(),
                     pomodoroNotificationManager.createNotification(false)
                 )
                 restTimer.startTimer(maxTime, this)

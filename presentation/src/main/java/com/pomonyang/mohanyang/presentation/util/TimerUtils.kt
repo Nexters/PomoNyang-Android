@@ -6,8 +6,10 @@ import androidx.core.os.bundleOf
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
 import com.pomonyang.mohanyang.presentation.service.focus.PomodoroFocusTimerService
 import com.pomonyang.mohanyang.presentation.service.rest.PomodoroRestTimerService
+import timber.log.Timber
 
-fun Context.startFocusTimer(maxTime: Int) {
+internal fun Context.startFocusTimer(maxTime: Int) {
+    Timber.tag("TIMER").d("startFocusTimer")
     startService(
         Intent(this, PomodoroFocusTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_START
@@ -20,7 +22,8 @@ fun Context.startFocusTimer(maxTime: Int) {
     )
 }
 
-fun Context.startRestTimer(maxTime: Int) {
+internal fun Context.startRestTimer(maxTime: Int) {
+    Timber.tag("TIMER").d("startRestTimer")
     startService(
         Intent(this, PomodoroRestTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_START
@@ -33,7 +36,8 @@ fun Context.startRestTimer(maxTime: Int) {
     )
 }
 
-fun Context.stopFocusTimer() {
+internal fun Context.stopFocusTimer() {
+    Timber.tag("TIMER").d("stopFocusTimer")
     startService(
         Intent(this, PomodoroFocusTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_STOP
@@ -41,7 +45,8 @@ fun Context.stopFocusTimer() {
     )
 }
 
-fun Context.stopRestTimer() {
+internal fun Context.stopRestTimer() {
+    Timber.tag("TIMER").d("stopRestTimer")
     startService(
         Intent(this, PomodoroRestTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_STOP
