@@ -69,7 +69,15 @@
         </service>
 
         <service
-            android:name=".presentation.screen.pomodoro.service.PomodoroTimerService"
+            android:name=".presentation.service.focus.PomodoroFocusTimerService"
+            android:foregroundServiceType="specialUse">
+            <meta-data
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="timer_running_in_background" />
+        </service>
+
+        <service
+            android:name=".presentation.service.rest.PomodoroRestTimerService"
             android:foregroundServiceType="specialUse">
             <meta-data
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
