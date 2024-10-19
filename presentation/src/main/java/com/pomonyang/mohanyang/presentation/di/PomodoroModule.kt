@@ -1,9 +1,9 @@
 package com.pomonyang.mohanyang.presentation.di
 
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.PomodoroTimer
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.focus.FocusTimer
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.rest.RestTimer
+import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
+import com.pomonyang.mohanyang.presentation.service.focus.FocusTimer
+import com.pomonyang.mohanyang.presentation.service.rest.RestTimer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

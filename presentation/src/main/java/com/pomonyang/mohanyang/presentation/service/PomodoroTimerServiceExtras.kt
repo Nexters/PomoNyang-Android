@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.service
+package com.pomonyang.mohanyang.presentation.service
 
 internal object PomodoroTimerServiceExtras {
     const val INTENT_TIMER_MAX_TIME = "mohanyang.intent.MAX_TIME"

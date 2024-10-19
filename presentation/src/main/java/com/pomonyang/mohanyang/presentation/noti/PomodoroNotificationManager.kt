@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.noti
+package com.pomonyang.mohanyang.presentation.noti
 
 import android.app.Notification
 import android.app.NotificationChannel

@@ -1,14 +1,14 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.service.rest
+package com.pomonyang.mohanyang.presentation.service.rest
 
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import com.pomonyang.mohanyang.presentation.di.RestTimerType
+import com.pomonyang.mohanyang.presentation.noti.PomodoroNotificationManager
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_ID
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.noti.PomodoroNotificationManager
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.PomodoroTimer
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.PomodoroTimerEventHandler
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.PomodoroTimerServiceExtras
+import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
+import com.pomonyang.mohanyang.presentation.service.PomodoroTimerEventHandler
+import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

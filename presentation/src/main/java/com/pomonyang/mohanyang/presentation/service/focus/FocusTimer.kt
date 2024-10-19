@@ -1,11 +1,11 @@
-package com.pomonyang.mohanyang.presentation.screen.pomodoro.service.focus
+package com.pomonyang.mohanyang.presentation.service.focus
 
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.PomodoroTimer
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.PomodoroTimerEventHandler
+import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
+import com.pomonyang.mohanyang.presentation.service.PomodoroTimerEventHandler
 import java.util.Timer
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer

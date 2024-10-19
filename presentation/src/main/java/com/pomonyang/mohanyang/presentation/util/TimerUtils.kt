@@ -3,9 +3,9 @@ package com.pomonyang.mohanyang.presentation.util
 import android.content.Context
 import android.content.Intent
 import androidx.core.os.bundleOf
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.PomodoroTimerServiceExtras
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.focus.PomodoroFocusTimerService
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.rest.PomodoroRestTimerService
+import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
+import com.pomonyang.mohanyang.presentation.service.focus.PomodoroFocusTimerService
+import com.pomonyang.mohanyang.presentation.service.rest.PomodoroRestTimerService
 
 fun Context.startFocusTimer(maxTime: Int) {
     startService(
