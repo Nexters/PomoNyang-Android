@@ -69,7 +69,7 @@
         </service>
 
         <service
-            android:name=".presentation.util.PomodoroTimerService"
+            android:name=".presentation.screen.pomodoro.service.PomodoroTimerService"
             android:foregroundServiceType="specialUse">
             <meta-data
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"

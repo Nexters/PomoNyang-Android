@@ -3,14 +3,16 @@ package com.pomonyang.mohanyang.presentation.util
 import android.content.Context
 import android.content.Intent
 import androidx.core.os.bundleOf
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.PomodoroTimerServiceExtras
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.focus.PomodoroFocusTimerService
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.service.rest.PomodoroRestTimerService
 
-fun Context.startTimer(isFocus: Boolean, maxTime: Int) {
+fun Context.startFocusTimer(maxTime: Int) {
     startService(
-        Intent(this, PomodoroTimerService::class.java).apply {
+        Intent(this, PomodoroFocusTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_START
             putExtras(
                 bundleOf(
-                    PomodoroTimerServiceExtras.INTENT_TIMER_IS_FOCUS to isFocus,
                     PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME to maxTime
                 )
             )
@@ -18,11 +20,31 @@ fun Context.startTimer(isFocus: Boolean, maxTime: Int) {
     )
 }
 
-fun Context.stopTimer(isFocus: Boolean) {
+fun Context.startRestTimer(maxTime: Int) {
     startService(
-        Intent(this, PomodoroTimerService::class.java).apply {
+        Intent(this, PomodoroRestTimerService::class.java).apply {
+            action = PomodoroTimerServiceExtras.ACTION_TIMER_START
+            putExtras(
+                bundleOf(
+                    PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME to maxTime
+                )
+            )
+        }
+    )
+}
+
+fun Context.stopFocusTimer() {
+    startService(
+        Intent(this, PomodoroFocusTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_STOP
-            putExtra(PomodoroTimerServiceExtras.INTENT_TIMER_IS_FOCUS, isFocus)
+        }
+    )
+}
+
+fun Context.stopRestTimer() {
+    startService(
+        Intent(this, PomodoroRestTimerService::class.java).apply {
+            action = PomodoroTimerServiceExtras.ACTION_TIMER_STOP
         }
     )
 }
