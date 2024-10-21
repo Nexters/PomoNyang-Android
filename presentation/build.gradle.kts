@@ -2,10 +2,12 @@ plugins {
     id("mohanyang.android.library")
     id("mohanyang.android.hilt")
     id("mohanyang.android.library.compose")
+    alias(libs.plugins.screenshot)
 }
 
 android {
     namespace = "com.mohanyang.presentation"
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 }
 
 dependencies {
@@ -19,4 +21,6 @@ dependencies {
     // module impl
     implementation(projects.domain)
     implementation(projects.data)
+
+    screenshotTestImplementation(libs.androidx.compose.tooling)
 }
