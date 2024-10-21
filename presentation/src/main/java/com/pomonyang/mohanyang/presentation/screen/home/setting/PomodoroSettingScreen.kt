@@ -62,7 +62,8 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.stopTimer
+import com.pomonyang.mohanyang.presentation.util.stopFocusTimer
+import com.pomonyang.mohanyang.presentation.util.stopRestTimer
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -113,8 +114,8 @@ fun PomodoroSettingRoute(
 }
 
 private fun stopAllNotification(context: Context) {
-    context.stopTimer(false)
-    context.stopTimer(true)
+    context.stopFocusTimer()
+    context.stopRestTimer()
     MnNotificationManager.stopInterrupt(context)
 }
 
