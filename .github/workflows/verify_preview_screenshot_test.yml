@@ -8,43 +8,79 @@ jobs:
     environment: Debug
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      # 현재 커밋을 체크아웃하고 커밋 해시를 저장합니다.
+      - name: Checkout current commit
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0  # 모든 Git 히스토리를 가져옵니다.
 
-      - name: Setup Gradle
+      - name: Save current commit hash
+        id: vars
+        run: echo "##[set-output name=commit_hash;]$(git rev-parse HEAD)"
+
+      # develop 브랜치로 체크아웃합니다.
+      - name: Checkout develop branch
+        run: git checkout origin/develop
+
+      # develop 브랜치용 환경 설정
+      - name: Setup Gradle for develop branch
         uses: gradle/actions/setup-gradle@v3
         with:
+          gradle-version: 'wrapper'  # 필요에 따라 수정
+          wrapper-cache-enabled: true
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
           build-scan-terms-of-use-agree: "yes"
 
-      - name: Setup Development Environment
+      - name: Setup Development Environment for develop branch
         uses: ./.github/actions/setup-development-environment
         with:
           google-services: ${{ secrets.GOOGLE_SERVICES }}
           test-mode: debug
           debug-properties: ${{ secrets.DEBUG_PROPERTIES }}
 
-      - name: Setup Signed Key Environment
+      - name: Setup Signed Key Environment for develop branch
         uses: ./.github/actions/setup-key-environment
         with:
           key-properties: ${{ secrets.KEY_PROPERTIES }}
           key-file: ${{ secrets.SIGNED_KEY }}
 
-      - name: Checkout Previous Commit
-        run: git checkout HEAD^
-
-      - name: Run updateDebugScreenshotTest
+      # develop 브랜치에서 updateDebugScreenshotTest 실행
+      - name: Run updateDebugScreenshotTest on develop branch
         run: ./gradlew updateDebugScreenshotTest
 
-      - name: Checkout Latest Commit
-        run: git checkout -
+      # 이전 커밋으로 돌아갑니다.
+      - name: Checkout back to original commit
+        run: git checkout ${{ steps.vars.outputs.commit_hash }}
 
-      - name: Run validateDebugScreenshotTest
+      # 현재 브랜치용 환경 설정
+      - name: Setup Gradle for current commit
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 'wrapper'  # 필요에 따라 수정
+          wrapper-cache-enabled: true
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
+
+      - name: Setup Development Environment for current commit
+        uses: ./.github/actions/setup-development-environment
+        with:
+          google-services: ${{ secrets.GOOGLE_SERVICES }}
+          test-mode: debug
+          debug-properties: ${{ secrets.DEBUG_PROPERTIES }}
+
+      - name: Setup Signed Key Environment for current commit
+        uses: ./.github/actions/setup-key-environment
+        with:
+          key-properties: ${{ secrets.KEY_PROPERTIES }}
+          key-file: ${{ secrets.SIGNED_KEY }}
+
+      # 현재 브랜치에서 validateDebugScreenshotTest 실행
+      - name: Run validateDebugScreenshotTest on current commit
         run: ./gradlew validateDebugScreenshotTest
 
+      # 빌드 리포트 업로드
       - name: Upload build reports
         uses: actions/upload-artifact@v4
         if: always()
