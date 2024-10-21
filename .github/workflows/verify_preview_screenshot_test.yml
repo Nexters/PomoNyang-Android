@@ -20,7 +20,7 @@ jobs:
 
       # develop 브랜치로 체크아웃합니다.
       - name: Checkout develop branch
-        run: git checkout origin/develop
+        run: git checkout origin/test/preview-screen #develop 변경 필요
 
       # develop 브랜치용 환경 설정
       - name: Setup Gradle for develop branch
