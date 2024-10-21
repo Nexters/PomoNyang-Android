@@ -70,7 +70,7 @@ fun PomodoroTimeSettingRoute(
 }
 
 @Composable
-private fun PomodoroTimeSettingScreen(
+internal fun PomodoroTimeSettingScreen(
     initialSettingTime: Int,
     isFocusTime: Boolean,
     category: PomodoroCategoryType,
