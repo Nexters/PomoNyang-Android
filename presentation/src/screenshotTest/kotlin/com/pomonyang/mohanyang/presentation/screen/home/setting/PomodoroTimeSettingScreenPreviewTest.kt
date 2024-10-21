@@ -8,7 +8,7 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
 class PomodoroTimeSettingScreenPreviewTest {
 
-    @Preview(showBackground = true)
+    @Preview(showBackground = true, backgroundColor = 0xFFFAF6F3)
     @Composable
     private fun PomodoroTimeSettingScreenPreview() {
         MnTheme {
