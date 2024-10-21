@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -31,7 +33,16 @@ jobs:
           key-properties: ${{ secrets.KEY_PROPERTIES }}
           key-file: ${{ secrets.SIGNED_KEY }}
 
-      - name: Run build
+      - name: Checkout Previous Commit
+        run: git checkout HEAD^
+
+      - name: Run updateDebugScreenshotTest
+        run: ./gradlew updateDebugScreenshotTest
+
+      - name: Checkout Latest Commit
+        run: git checkout -
+
+      - name: Run validateDebugScreenshotTest
         run: ./gradlew validateDebugScreenshotTest
 
       - name: Upload build reports
