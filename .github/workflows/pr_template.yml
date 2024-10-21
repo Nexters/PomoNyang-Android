@@ -1,4 +1,4 @@
-name: PR Template Selector
+name: "PR Template Selector"
 
 on:
   pull_request:

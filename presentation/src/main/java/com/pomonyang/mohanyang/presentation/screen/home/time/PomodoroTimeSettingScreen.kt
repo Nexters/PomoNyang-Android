@@ -82,7 +82,7 @@ internal fun PomodoroTimeSettingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MnTheme.backgroundColorScheme.primary),
+            .background(MnTheme.backgroundColorScheme.secondary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
