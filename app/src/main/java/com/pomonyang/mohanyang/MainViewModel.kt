@@ -34,8 +34,8 @@ sealed interface MainEvent : ViewEvent {
 }
 
 sealed interface MainEffect : ViewSideEffect {
-    data object ShowBlockDialog : MainEffect
-    data object DismissBlockDialog : MainEffect
+    data object ShowDialog : MainEffect
+    data object DismissDialog : MainEffect
     data object GoToOnBoarding : MainEffect
     data object GoToTimer : MainEffect
     data object ExitApp : MainEffect
@@ -87,7 +87,7 @@ class MainViewModel @Inject constructor(
             } catch (e: TimeoutCancellationException) {
                 /* MAX TIME 초과시  Cancel 처리된 경우 네트워크 알림처리 */
                 updateState { copy(isLoading = false) }
-                setEffect(MainEffect.ShowBlockDialog)
+                setEffect(MainEffect.ShowDialog)
             } catch (e: Exception) {
                 Timber.w("${e.message}")
                 updateState { copy(isError = true, isLoading = false) }
@@ -114,7 +114,7 @@ class MainViewModel @Inject constructor(
             val isNewUser = checkIfNewUser()
             Timber.d("offline : ${isNewUser}")
             if (isNewUser) {
-                setEffect(MainEffect.ShowBlockDialog)
+                setEffect(MainEffect.ShowDialog)
             } else {
                 setEffect(MainEffect.GoToTimer)
             }
@@ -148,7 +148,7 @@ class MainViewModel @Inject constructor(
 
             fetchUserInfo()
                 .onSuccess {
-                    setEffect(MainEffect.DismissBlockDialog)
+                    setEffect(MainEffect.DismissDialog)
                 }
 
             updateState { copy(isLoading = false) }

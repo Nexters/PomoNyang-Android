@@ -90,11 +90,11 @@ class MainActivity : ComponentActivity() {
 
             viewModel.effects.collectWithLifecycle { effect ->
                 when (effect) {
-                    MainEffect.ShowBlockDialog -> {
+                    MainEffect.ShowDialog -> {
                         showDialog = true
                     }
 
-                    MainEffect.DismissBlockDialog -> {
+                    MainEffect.DismissDialog -> {
                         showDialog = false
                     }
 
@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
             }
 
             MnTheme {
-                if (showDialog) NewUserBlockDialog(
+                if (showDialog) NetworkFailDialog(
                     onClickRefresh = {
                         viewModel.handleEvent(MainEvent.ClickRefresh)
                     }, onDismissRequest = {
@@ -150,7 +150,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun NewUserBlockDialog(
+    fun NetworkFailDialog(
         onClickRefresh: () -> Unit,
         onDismissRequest: () -> Unit,
     ) {
