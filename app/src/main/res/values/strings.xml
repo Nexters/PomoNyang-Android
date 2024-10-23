@@ -9,7 +9,5 @@
     <string name="offline_mode_message">오프라인 모드</string>
     <string name="force_home_dialog_title">집중을 끝내고 돌아왔어요</string>
     <string name="force_home_dialog_subtitle">너무 오랜 시간동안 대기화면에 머물러서 홈화면으로 이동되었어요.</string>
-    <string name="dialog_network_title">네트워크 연결 실패</string>
-    <string name="dialog_network_content">네트워크 연결에 실패하였습니다.\n확인 후 다시 시도해 주세요</string>
-    <string name="dialog_network_refresh">새로고침</string>
+
 </resources>

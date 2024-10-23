@@ -9,12 +9,6 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,11 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -36,10 +27,9 @@ import app.rive.runtime.kotlin.RiveInitializer
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.notification.LocalNotificationReceiver
 import com.pomonyang.mohanyang.notification.util.createNotificationChannel
-import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
-import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
-import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
-import com.pomonyang.mohanyang.presentation.designsystem.dialog.MnDialog
+import com.pomonyang.mohanyang.presentation.screen.common.LoadingScreen
+import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorDialog
+import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorScreen
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -111,68 +101,36 @@ class MainActivity : ComponentActivity() {
             }
 
             MnTheme {
-                if (showDialog) NetworkFailDialog(
+                if (showDialog) NetworkErrorDialog(
                     onClickRefresh = {
                         viewModel.handleEvent(MainEvent.ClickRefresh)
                     }, onDismissRequest = {
                         viewModel.handleEvent(MainEvent.ClickClose)
                     }
                 )
-                else AppScreen(viewState = state, mohaNyangAppState = mohaNyangAppState)
+                else AppScreen(
+                    modifier = Modifier,
+                    viewState = state,
+                    mohaNyangAppState = mohaNyangAppState
+                )
             }
         }
 
     }
 
     @Composable
-    fun AppScreen(viewState: MainState, mohaNyangAppState: MohaNyangAppState) {
+    fun AppScreen(
+        modifier: Modifier,
+        viewState: MainState,
+        mohaNyangAppState: MohaNyangAppState,
+    ) {
         when {
-            viewState.isLoading -> LoadingScreen()
-            viewState.isError -> ErrorScreen()
+            viewState.isLoading -> LoadingScreen(modifier = modifier)
+            viewState.isError -> NetworkErrorScreen(modifier = modifier)
             else -> {
                 MohaNyangApp(mohaNyangAppState = mohaNyangAppState)
             }
         }
-    }
-
-    @Composable
-    fun LoadingScreen() {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator(modifier = Modifier.size(20.dp))
-        }
-    }
-
-    @Composable
-    fun ErrorScreen() {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("에러발생!")
-        }
-    }
-
-    @Composable
-    fun NetworkFailDialog(
-        onClickRefresh: () -> Unit,
-        onDismissRequest: () -> Unit,
-    ) {
-        MnDialog(
-            properties = DialogProperties(
-                dismissOnClickOutside = false,
-                dismissOnBackPress = true
-            ),
-            title = getString(R.string.dialog_network_title),
-            subTitle = getString(R.string.dialog_network_content),
-            positiveButton = {
-                MnBoxButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = getString(R.string.dialog_network_refresh),
-                    onClick = onClickRefresh,
-                    colors = MnBoxButtonColorType.primary,
-                    styles = MnBoxButtonStyles.medium,
-
-                    )
-            },
-            onDismissRequest = onDismissRequest
-        )
     }
 
 
