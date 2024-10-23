@@ -11,9 +11,6 @@ import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.domain.usecase.GetTokenByDeviceIdUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
-import com.pomonyang.mohanyang.presentation.base.ViewEvent
-import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
-import com.pomonyang.mohanyang.presentation.base.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.TimeoutCancellationException
@@ -21,25 +18,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 
-
-data class MainState(
-    val isError: Boolean = false,
-    val isLoading: Boolean = true,
-) : ViewState
-
-sealed interface MainEvent : ViewEvent {
-    data object Init : MainEvent
-    data object ClickRefresh : MainEvent
-    data object ClickClose : MainEvent
-}
-
-sealed interface MainEffect : ViewSideEffect {
-    data object ShowDialog : MainEffect
-    data object DismissDialog : MainEffect
-    data object GoToOnBoarding : MainEffect
-    data object GoToTimer : MainEffect
-    data object ExitApp : MainEffect
-}
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -108,11 +86,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    //오프라인 상태일 때 실행할 초기화 로직
+    // 오프라인 상태일 때 실행할 초기화 로직
     private fun onOffline() {
         viewModelScope.launch {
             val isNewUser = checkIfNewUser()
-            Timber.d("offline : ${isNewUser}")
             if (isNewUser) {
                 setEffect(MainEffect.ShowDialog)
             } else {
