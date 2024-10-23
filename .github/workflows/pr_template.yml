@@ -2,7 +2,7 @@ name: PR Template Selector
 
 on:
   pull_request:
-    types: [opened, edited, reopened]
+    types: [opened]
 
 jobs:
   apply-template:
