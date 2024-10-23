@@ -31,7 +31,7 @@ class MainViewModel @Inject constructor(
 
 
     override fun setInitialState(): MainState {
-        return MainState()
+        return MainState(isLoading = true)
     }
 
     override fun handleEvent(event: MainEvent) {
@@ -79,10 +79,11 @@ class MainViewModel @Inject constructor(
     private fun onOnline() {
         viewModelScope.launch {
             fetchFcmToken()
-            fetchUserInfo()
-                .onSuccess {
-                    savePomodoroCacheData()
-                }
+            fetchUserInfo().onSuccess {
+                setupUserAndNavigate(it.isNewUser())
+            }.onFailure {
+                updateState { copy(isError = true) }
+            }
         }
     }
 
@@ -90,11 +91,16 @@ class MainViewModel @Inject constructor(
     private fun onOffline() {
         viewModelScope.launch {
             val isNewUser = checkIfNewUser()
-            if (isNewUser) {
-                setEffect(MainEffect.ShowDialog)
-            } else {
-                setEffect(MainEffect.GoToTimer)
-            }
+            setupUserAndNavigate(isNewUser)
+        }
+    }
+
+    private suspend fun setupUserAndNavigate(isNewUser: Boolean) {
+        if (isNewUser) {
+            setEffect(MainEffect.GoToOnBoarding)
+        } else {
+            savePomodoroCacheData()
+            setEffect(MainEffect.GoToTimer)
         }
     }
 
@@ -106,14 +112,6 @@ class MainViewModel @Inject constructor(
             val userInfo = userRepository.fetchMyInfo().getOrThrow()
             pomodoroSettingRepository.fetchPomodoroSettingList()
             userInfo
-        }.onSuccess {
-            if (it.isNewUser()) {
-                setEffect(MainEffect.GoToOnBoarding)
-            } else {
-                setEffect(MainEffect.GoToTimer)
-            }
-        }.onFailure {
-            updateState { copy(isError = true) }
         }
     }
 
@@ -123,10 +121,12 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             updateState { copy(isLoading = true) }
 
-            fetchUserInfo()
-                .onSuccess {
-                    setEffect(MainEffect.DismissDialog)
-                }
+            fetchUserInfo().onSuccess {
+                setEffect(MainEffect.DismissDialog)
+                setupUserAndNavigate(it.isNewUser())
+            }.onFailure {
+                updateState { copy(isError = true) }
+            }
 
             updateState { copy(isLoading = false) }
         }
