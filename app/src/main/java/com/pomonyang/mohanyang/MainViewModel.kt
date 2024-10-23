@@ -169,13 +169,8 @@ class MainViewModel @Inject constructor(
         pomodoroTimerRepository.updateRecentPomodoroDone()
     }
 
-    private fun UserInfoResponse.isNewUser(): Boolean {
-        /* 서버에서 fetch 한 기본 고양이 id가 -1 인 경우 신규 유저로 판단 */
-        return this.cat.no == NEW_USER_VALIDATION_ID
-    }
 
     companion object {
-        const val NEW_USER_VALIDATION_ID = -1
         const val FETCH_MAX_TIME = 3000L
     }
 
