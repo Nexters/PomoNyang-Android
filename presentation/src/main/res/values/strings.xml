@@ -87,6 +87,8 @@
     <string name="notification_dialog_sub_title">안드로이드 설정에서 모하냥 앱의 알림 표시를 허용하면 Push 알림을 받을 수 있어요. 지금 설정하시겠어요?</string>
     <string name="notification_dialog_cancel">다음에</string>
     <string name="notification_dialog_move">설정으로 이동</string>
-
+    <string name="dialog_network_title">네트워크 연결 실패</string>
+    <string name="dialog_network_content">네트워크 연결에 실패하였습니다.\n확인 후 다시 시도해 주세요</string>
+    <string name="dialog_network_refresh">새로고침</string>
 
 </resources>
