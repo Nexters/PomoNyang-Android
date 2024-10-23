@@ -44,8 +44,8 @@ import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.startInterrupt
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.stopInterrupt
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.startTimer
-import com.pomonyang.mohanyang.presentation.util.stopTimer
+import com.pomonyang.mohanyang.presentation.util.startFocusTimer
+import com.pomonyang.mohanyang.presentation.util.stopFocusTimer
 
 @Composable
 fun PomodoroFocusRoute(
@@ -98,7 +98,7 @@ fun PomodoroFocusRoute(
 
     LaunchedEffect(state.maxFocusTime) {
         if (state.maxFocusTime != 0) {
-            context.startTimer(true, state.maxFocusTime)
+            context.startFocusTimer(state.maxFocusTime)
         }
     }
 
@@ -125,7 +125,7 @@ fun PomodoroFocusRoute(
 
 private fun stopNotification(context: Context) {
     stopInterrupt(context)
-    context.stopTimer(true)
+    context.stopFocusTimer()
 }
 
 @Composable
