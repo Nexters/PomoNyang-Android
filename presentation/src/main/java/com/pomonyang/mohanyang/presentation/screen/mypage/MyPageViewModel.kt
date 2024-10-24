@@ -25,6 +25,7 @@ sealed interface MyPageEvent : ViewEvent {
     data object CloseDialog : MyPageEvent
     data object OpenSetting : MyPageEvent
     data object ClickSuggestion : MyPageEvent
+    data object ClickStatic : MyPageEvent
 }
 
 sealed interface MyPageSideEffect : ViewSideEffect {
@@ -83,8 +84,12 @@ class MyPageViewModel @Inject constructor(
                 setEffect(MyPageSideEffect.OpenDialog)
             }
 
-            MyPageEvent.ClickSuggestion -> {
+            is MyPageEvent.ClickSuggestion -> {
                 setEffect(MyPageSideEffect.OpenExternalWebPage("https://forms.gle/wEUPH9Tvxgua4hCZ9"))
+            }
+
+            is MyPageEvent.ClickStatic -> {
+                setEffect(MyPageSideEffect.ShowSnackBar("통계를 사용할 수 있도록 준비하고 있어요"))
             }
         }
     }
