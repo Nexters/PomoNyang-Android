@@ -22,8 +22,11 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.compose.rememberNavController
 import androidx.startup.AppInitializer
 import app.rive.runtime.kotlin.RiveInitializer
+import com.datadog.android.compose.ExperimentalTrackingApi
+import com.datadog.android.compose.NavigationViewTrackingEffect
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.notification.LocalNotificationReceiver
 import com.pomonyang.mohanyang.notification.util.createNotificationChannel
@@ -43,7 +46,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
+@OptIn(DelicateCoroutinesApi::class, ExperimentalTrackingApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -69,7 +72,10 @@ class MainActivity : ComponentActivity() {
             val mohaNyangAppState = rememberMohaNyangAppState(
                 isNewUser = viewModel.checkIfNewUser(),
                 networkMonitor = networkMonitor,
-                coroutineScope = coroutineScope
+                coroutineScope = coroutineScope,
+                navHostController = rememberNavController().apply {
+                    NavigationViewTrackingEffect(navController = this)
+                }
             )
 
             var showDialog by remember { mutableStateOf(false) }
