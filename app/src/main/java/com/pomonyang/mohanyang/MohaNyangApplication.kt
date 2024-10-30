@@ -25,7 +25,7 @@ class MohaNyangApplication : Application() {
     private fun initializeDataDog() {
         val clientToken = BuildConfig.DATADOG_CLIENT_TOKEN
         val environmentName = DATADOG_ENV
-        val appVariantName = BuildConfig.DATADOG_APP__VARIANT
+        val appVariantName = BuildConfig.DATADOG_APP_VARIANT
 
         val configuration = Configuration.Builder(
             clientToken = clientToken,
