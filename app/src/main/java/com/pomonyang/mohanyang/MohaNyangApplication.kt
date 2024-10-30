@@ -41,7 +41,6 @@ class MohaNyangApplication : Application() {
         val rumConfiguration = RumConfiguration.Builder(applicationId)
             .trackUserInteractions()
             .trackLongTasks(250L)
-            .trackNonFatalAnrs(true)
             .useViewTrackingStrategy(
                 ActivityViewTrackingStrategy(
                     trackExtras = true,
@@ -49,6 +48,7 @@ class MohaNyangApplication : Application() {
                         override fun accept(component: Activity): Boolean {
                             return component !is MainActivity
                         }
+
                         override fun getViewName(component: Activity): String? = null
                     })
             )
