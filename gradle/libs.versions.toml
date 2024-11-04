@@ -119,6 +119,7 @@ startup = { module = "androidx.startup:startup-runtime", version.ref = "startup"
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 datadog-rum = { module = "com.datadoghq:dd-sdk-android-rum", version.ref = "datadog-sdk" }
+datadog-compose = { module = "com.datadoghq:dd-sdk-android-compose", version.ref = "datadog-sdk" }
 datadog-okhttp = { module = "com.datadoghq:dd-sdk-android-okhttp", version.ref = "datadog-sdk" }
 
 

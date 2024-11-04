@@ -17,5 +17,6 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.datadog.okhttp)
     ksp(libs.androidx.room.compiler)
 }
