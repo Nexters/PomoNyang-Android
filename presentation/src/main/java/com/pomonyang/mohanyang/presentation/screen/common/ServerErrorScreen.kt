@@ -1,5 +1,8 @@
 package com.pomonyang.mohanyang.presentation.screen.common
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -26,9 +30,11 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 @Composable
 fun ServerErrorScreen(
     onClickNavigateToHome: () -> Unit,
-    onClickInquiry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    val suggestionUrl = "https://forms.gle/wEUPH9Tvxgua4hCZ9"
+
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -64,20 +70,26 @@ fun ServerErrorScreen(
             )
 
             Text(
-                modifier = Modifier.padding(top = MnSpacing.large),
+                modifier = Modifier
+                    .padding(top = MnSpacing.large)
+                    .clickable {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(suggestionUrl)))
+                    },
                 style = MnTheme.typography.subBodyRegular.copy(
                     textDecoration = TextDecoration.Underline,
-                ), color = MnTheme.textColorScheme.tertiary,
-                text = stringResource(id = R.string.inquiry_service)
+                ),
+                color = MnTheme.textColorScheme.tertiary,
+                text = stringResource(id = R.string.inquiry_service),
             )
         }
     }
+
 }
 
 @Preview
 @Composable
 fun PreviewServerErrorScreen() {
     MnTheme {
-        ServerErrorScreen(onClickNavigateToHome = {}, onClickInquiry = {})
+        ServerErrorScreen(onClickNavigateToHome = {})
     }
 }

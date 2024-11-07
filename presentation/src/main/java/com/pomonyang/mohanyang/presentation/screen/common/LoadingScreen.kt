@@ -24,3 +24,17 @@ fun LoadingScreen(
         MnSpinner()
     }
 }
+
+
+@Composable
+fun LoadingContentContainer(
+    isLoading: Boolean,
+    content: @Composable () -> Unit
+) {
+    Box {
+        content()
+        if (isLoading) {
+            LoadingScreen()
+        }
+    }
+}

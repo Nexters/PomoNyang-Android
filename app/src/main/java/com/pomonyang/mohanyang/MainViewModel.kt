@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
+import com.pomonyang.mohanyang.data.remote.util.BadRequestException
+import com.pomonyang.mohanyang.data.remote.util.InternalException
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
@@ -38,16 +40,23 @@ class MainViewModel @Inject constructor(
         when (event) {
             MainEvent.Init -> {
                 initializeAppData()
+                updateState { copy(lastRequestAction = event) }
             }
 
             MainEvent.ClickRefresh -> {
                 onClickRefresh()
+                updateState { copy(lastRequestAction = event) }
             }
 
             MainEvent.ClickClose -> {
                 setEffect(MainEffect.ExitApp)
             }
+
+            MainEvent.ClickRetry -> {
+                state.value.lastRequestAction?.let { handleEvent(it) }
+            }
         }
+
     }
 
 
@@ -68,7 +77,7 @@ class MainViewModel @Inject constructor(
                 setEffect(MainEffect.ShowDialog)
             } catch (e: Exception) {
                 Timber.w("${e.message}")
-                updateState { copy(isError = true, isLoading = false) }
+                updateState { copy(isInvalidError = true, isLoading = false) }
             }
 
         }
@@ -82,7 +91,7 @@ class MainViewModel @Inject constructor(
             fetchUserInfo().onSuccess {
                 setupUserAndNavigate(it.isNewUser())
             }.onFailure {
-                updateState { copy(isError = true) }
+                updateState { copy(isInvalidError = true) }
             }
         }
     }
@@ -121,14 +130,17 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             updateState { copy(isLoading = true) }
 
-            fetchUserInfo().onSuccess {
+            try {
+                val userInfo = fetchUserInfo().getOrThrow()
                 setEffect(MainEffect.DismissDialog)
-                setupUserAndNavigate(it.isNewUser())
-            }.onFailure {
-                updateState { copy(isError = true) }
+                setupUserAndNavigate(userInfo.isNewUser())
+            } catch (e: InternalException) {
+                updateState { copy(isInternalError = true) }
+            } catch (e: BadRequestException) {
+                updateState { copy(isInvalidError = true) }
+            } finally {
+                updateState { copy(isLoading = false) }
             }
-
-            updateState { copy(isLoading = false) }
         }
     }
 
