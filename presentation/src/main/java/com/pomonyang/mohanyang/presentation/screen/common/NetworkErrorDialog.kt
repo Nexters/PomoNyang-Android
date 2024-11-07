@@ -23,12 +23,12 @@ fun NetworkErrorDialog(
             dismissOnClickOutside = false,
             dismissOnBackPress = true
         ),
-        title = getString(R.string.dialog_network_title),
-        subTitle = getString(R.string.dialog_network_content),
+        title = getString(R.string.network_error_title),
+        subTitle = getString(R.string.network_error_content),
         positiveButton = {
             MnBoxButton(
                 modifier = Modifier.fillMaxWidth(),
-                text = getString(R.string.dialog_network_refresh),
+                text = getString(R.string.network_refresh),
                 onClick = onClickRefresh,
                 colors = MnBoxButtonColorType.primary,
                 styles = MnBoxButtonStyles.medium,

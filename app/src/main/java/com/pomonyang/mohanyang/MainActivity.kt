@@ -134,7 +134,7 @@ class MainActivity : ComponentActivity() {
     ) {
         when {
             viewState.isLoading -> LoadingScreen(modifier = modifier)
-            viewState.isError -> NetworkErrorScreen(modifier = modifier)
+            viewState.isError -> NetworkErrorScreen(modifier = modifier, onClickRetry = {})
             else -> {
                 MohaNyangApp(mohaNyangAppState = mohaNyangAppState)
             }
