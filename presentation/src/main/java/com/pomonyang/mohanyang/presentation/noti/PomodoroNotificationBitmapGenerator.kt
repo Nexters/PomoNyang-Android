@@ -19,19 +19,37 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
 ) {
 
     private val timeBitmaps: Map<String, Bitmap> by lazy {
-        generateNumberBitmaps(R.font.pretendard_bold, 40f, R.color.notification_pomodoro_time)
+        generateNumberBitmaps(
+            fontResId = R.font.pretendard_bold,
+            textSize = 40f,
+            colorResId = R.color.notification_pomodoro_time
+        )
     }
 
     private val overtimeNumberBitmaps: Map<String, Bitmap> by lazy {
-        generateNumberBitmaps(R.font.pretendard_semibold, 18f, R.color.notification_pomodoro_over_time)
+        generateNumberBitmaps(
+            fontResId = R.font.pretendard_semibold,
+            textSize = 18f,
+            colorResId = R.color.notification_pomodoro_over_time
+        )
     }
 
     private val colonBitmap: Bitmap by lazy {
-        createTextBitmap(":", R.font.pretendard_bold, 40f, R.color.notification_pomodoro_time)
+        createTextBitmap(
+            text = ":",
+            fontResId = R.font.pretendard_bold,
+            textSize = 40f,
+            colorResId = R.color.notification_pomodoro_time
+        )
     }
 
     private val overtimeColonBitmap: Bitmap by lazy {
-        createTextBitmap(":", R.font.pretendard_semibold, 18f, R.color.notification_pomodoro_over_time)
+        createTextBitmap(
+            text = ":",
+            fontResId = R.font.pretendard_semibold,
+            textSize = 18f,
+            colorResId = R.color.notification_pomodoro_over_time
+        )
     }
 
     fun createStatusBitmap(statusText: String): Bitmap = createTextBitmap(
@@ -43,7 +61,10 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
 
     fun combineTimeBitmaps(time: String, isOvertime: Boolean): Bitmap {
         val digits = time.toCharArray()
-        return combineBitmaps(digits, isOvertime)
+        return combineBitmaps(
+            digits = digits,
+            isOvertime = isOvertime
+        )
     }
 
     fun createTextBitmap(
@@ -73,7 +94,12 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
         return textToBitmap(text, typeface, textSize, textColor)
     }
 
-    private fun textToBitmap(text: String, typeface: Typeface, textSize: Float, textColor: Int): Bitmap {
+    private fun textToBitmap(
+        text: String,
+        typeface: Typeface,
+        textSize: Float,
+        textColor: Int
+    ): Bitmap {
         val paint = Paint().apply {
             this.typeface = typeface
             this.textSize = textSize * context.resources.displayMetrics.density
@@ -90,7 +116,10 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
         }
     }
 
-    private fun combineBitmaps(digits: CharArray, isOvertime: Boolean): Bitmap {
+    private fun combineBitmaps(
+        digits: CharArray,
+        isOvertime: Boolean
+    ): Bitmap {
         val bitmaps = mutableListOf<Bitmap>()
         var totalWidth = 0
         var maxHeight = 0
@@ -122,7 +151,11 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
             maxHeight = maxOf(maxHeight, extraTextBitmap.height)
         }
 
-        return Bitmap.createBitmap(totalWidth, maxHeight, Bitmap.Config.ARGB_8888).apply {
+        return Bitmap.createBitmap(
+            totalWidth,
+            maxHeight,
+            Bitmap.Config.ARGB_8888
+        ).apply {
             val canvas = Canvas(this)
             var currentX = 0f
 

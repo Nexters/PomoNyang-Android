@@ -91,13 +91,19 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     }
 
     private fun setTime(remoteViews: RemoteViews, formattedTime: String) {
-        val timeBitmap = bitmapGenerator.combineTimeBitmaps(formattedTime, isOvertime = false)
+        val timeBitmap = bitmapGenerator.combineTimeBitmaps(
+            time = formattedTime,
+            isOvertime = false
+        )
         remoteViews.setImageViewBitmap(R.id.text_time, timeBitmap)
     }
 
     private fun setOvertime(remoteViews: RemoteViews, formattedOvertime: String?) {
         if (formattedOvertime != null) {
-            val overtimeBitmap = bitmapGenerator.combineTimeBitmaps(formattedOvertime, isOvertime = true)
+            val overtimeBitmap = bitmapGenerator.combineTimeBitmaps(
+                time = formattedOvertime,
+                isOvertime = true
+            )
             remoteViews.setImageViewBitmap(R.id.text_overtime, overtimeBitmap)
             remoteViews.setViewVisibility(R.id.text_overtime, View.VISIBLE)
         } else {

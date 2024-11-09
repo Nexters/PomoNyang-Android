@@ -63,7 +63,11 @@ internal class PomodoroNotificationManager @Inject constructor(
         category: PomodoroCategoryType?,
         time: String,
         overtime: String?
-    ): RemoteViews = contentFactory.createPomodoroNotificationBigContent(category, time, overtime)
+    ): RemoteViews = contentFactory.createPomodoroNotificationBigContent(
+        category = category,
+        time = time,
+        overtime = overtime
+    )
 
     private fun buildNotification(
         contentView: RemoteViews,
