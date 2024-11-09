@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.di
 
-import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
 import com.pomonyang.mohanyang.presentation.service.focus.FocusTimer
 import com.pomonyang.mohanyang.presentation.service.rest.RestTimer
@@ -15,13 +14,9 @@ internal object PomodoroModule {
 
     @Provides
     @FocusTimerType
-    fun provideFocusTimer(
-        timerRepository: PomodoroTimerRepository
-    ): PomodoroTimer = FocusTimer(timerRepository = timerRepository)
+    fun provideFocusTimer(): PomodoroTimer = FocusTimer()
 
     @Provides
     @RestTimerType
-    fun provideRestTimer(
-        timerRepository: PomodoroTimerRepository
-    ): PomodoroTimer = RestTimer(timerRepository = timerRepository)
+    fun provideRestTimer(): PomodoroTimer = RestTimer()
 }
