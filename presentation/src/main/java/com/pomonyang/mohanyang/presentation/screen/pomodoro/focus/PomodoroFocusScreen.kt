@@ -98,7 +98,10 @@ fun PomodoroFocusRoute(
 
     LaunchedEffect(state.maxFocusTime) {
         if (state.maxFocusTime != 0) {
-            context.startFocusTimer(state.maxFocusTime)
+            context.startFocusTimer(
+                maxTime = state.maxFocusTime,
+                category = state.categoryType
+            )
         }
     }
 

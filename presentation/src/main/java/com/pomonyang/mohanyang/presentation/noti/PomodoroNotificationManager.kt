@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.di.PomodoroNotification
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_CHANNEL_ID
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_CHANNEL_NAME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_ID
@@ -26,15 +27,6 @@ internal class PomodoroNotificationManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val notificationManager: NotificationManager
 ) {
-    private val statusBitmap by lazy {
-        textToBitmap(
-            "휴식중",
-            ResourcesCompat.getFont(context, R.font.pretendard_semibold)!!,
-            16f,
-            ContextCompat.getColor(context, R.color.notification_pomodoro_category_text)
-        )
-    }
-
     private val timeBitmaps by lazy {
         val typeface = ResourcesCompat.getFont(context, R.font.pretendard_bold)!!
         val textColor = ContextCompat.getColor(context, R.color.notification_pomodoro_time)
@@ -99,17 +91,23 @@ internal class PomodoroNotificationManager @Inject constructor(
         notificationManager.createNotificationChannel(channel)
     }
 
-    fun createNotification(isFocus: Boolean, time: String = "00:00", overtime: String = "00:00"): Notification {
-        val formattedTime = formatTimeString(time)
-        val formattedOvertime = if (overtime != "0") {
-            formatTimeString(overtime)
+    fun createNotification(
+        category: PomodoroCategoryType? = null
+    ): Notification {
+        val (statusBitmap, iconRes) = if (category != null) {
+            val statusText = context.getString(category.kor)
+            val bitmap = createStatusBitmap(statusText)
+            bitmap to category.iconRes
         } else {
-            null
+            val statusText = "휴식중"
+            val bitmap = createStatusBitmap(statusText)
+            bitmap to R.drawable.ic_rest
         }
 
-        val remoteViews = createRemoteViews(formattedTime, formattedOvertime)
+        val remoteViews = createRemoteViews(statusBitmap, iconRes, "00:00", null)
 
         return notificationBuilder
+            .setAutoCancel(true)
             .setCustomContentView(remoteViews)
             .setCustomBigContentView(remoteViews)
             .setColor(ContextCompat.getColor(context, R.color.notification_background_color))
@@ -118,7 +116,14 @@ internal class PomodoroNotificationManager @Inject constructor(
             .build()
     }
 
-    private fun createRemoteViews(time: String, overtime: String?): RemoteViews = RemoteViews(context.packageName, R.layout.notification_pomodoro).apply {
+    private fun createStatusBitmap(statusText: String): Bitmap = textToBitmap(
+        statusText,
+        ResourcesCompat.getFont(context, R.font.pretendard_semibold)!!,
+        16f,
+        ContextCompat.getColor(context, R.color.notification_pomodoro_category_text)
+    )
+
+    private fun createRemoteViews(statusBitmap: Bitmap, iconRes: Int, time: String, overtime: String?): RemoteViews = RemoteViews(context.packageName, R.layout.notification_pomodoro).apply {
         // 상태 텍스트 설정
         setImageViewBitmap(R.id.text_status, statusBitmap)
 
@@ -139,7 +144,7 @@ internal class PomodoroNotificationManager @Inject constructor(
         }
 
         // 아이콘 설정
-        setImageViewResource(R.id.icon_lightning, R.drawable.ic_alert)
+        setImageViewResource(R.id.icon_lightning, iconRes)
     }
 
     private fun textToBitmap(text: String, typeface: Typeface, textSize: Float, textColor: Int): Bitmap {
@@ -204,23 +209,7 @@ internal class PomodoroNotificationManager @Inject constructor(
         }
     }
 
-    fun notifyFocusEnd() {
-        // 필요한 경우 구현
-    }
-
-    fun notifyFocusExceed() {
-        // 필요한 경우 구현
-    }
-
-    fun notifyRestEnd() {
-        // 필요한 경우 구현
-    }
-
-    fun notifyRestExceed() {
-        // 필요한 경우 구현
-    }
-
-    fun updateNotification(time: String, overtime: String) {
+    fun updateNotification(category: PomodoroCategoryType?, time: String, overtime: String) {
         val formattedTime = formatTimeString(time)
         val formattedOvertime = if (overtime != "0") {
             formatTimeString(overtime)
@@ -228,7 +217,17 @@ internal class PomodoroNotificationManager @Inject constructor(
             null
         }
 
-        val remoteViews = createRemoteViews(formattedTime, formattedOvertime)
+        val (statusBitmap, iconRes) = if (category != null) {
+            val statusText = context.getString(category.kor)
+            val bitmap = createStatusBitmap(statusText)
+            bitmap to category.iconRes
+        } else {
+            val statusText = "휴식중"
+            val bitmap = createStatusBitmap(statusText)
+            bitmap to R.drawable.ic_rest
+        }
+
+        val remoteViews = createRemoteViews(statusBitmap, iconRes, formattedTime, formattedOvertime)
 
         notificationManager.notify(
             POMODORO_NOTIFICATION_ID,

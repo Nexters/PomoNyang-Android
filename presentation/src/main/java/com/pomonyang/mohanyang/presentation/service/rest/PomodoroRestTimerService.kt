@@ -5,12 +5,12 @@ import android.content.Intent
 import android.os.IBinder
 import com.pomonyang.mohanyang.presentation.di.RestTimerType
 import com.pomonyang.mohanyang.presentation.noti.PomodoroNotificationManager
+import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerEventHandler
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlin.random.Random
 
 @AndroidEntryPoint
 internal class PomodoroRestTimerService :
@@ -31,8 +31,8 @@ internal class PomodoroRestTimerService :
         when (intent.action) {
             PomodoroTimerServiceExtras.ACTION_TIMER_START -> {
                 startForeground(
-                    Random.nextInt(),
-                    pomodoroNotificationManager.createNotification(false)
+                    PomodoroConstants.POMODORO_NOTIFICATION_ID,
+                    pomodoroNotificationManager.createNotification()
                 )
                 restTimer.startTimer(
                     maxTime = maxTime,
@@ -51,11 +51,11 @@ internal class PomodoroRestTimerService :
     }
 
     override fun onTimeEnd() {
-        pomodoroNotificationManager.notifyRestEnd()
+//        pomodoroNotificationManager.notifyRestEnd()
     }
 
     override fun onTimeExceeded() {
-        pomodoroNotificationManager.notifyRestExceed()
+//        pomodoroNotificationManager.notifyRestExceed()
     }
 
     override fun stopService(name: Intent?): Boolean {

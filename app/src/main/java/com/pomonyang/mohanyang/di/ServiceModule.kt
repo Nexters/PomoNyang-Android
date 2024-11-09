@@ -11,17 +11,17 @@ import com.pomonyang.mohanyang.ui.ServiceHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ServiceScoped
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ServiceComponent::class)
+@InstallIn(SingletonComponent::class)
 internal object ServiceModule {
 
     @Provides
     @PomodoroNotification
-    @ServiceScoped
+    @Singleton
     fun provideNotificationBuilder(
         @ApplicationContext context: Context
     ): NotificationCompat.Builder = NotificationCompat.Builder(context, POMODORO_NOTIFICATION_CHANNEL_ID)
@@ -33,7 +33,7 @@ internal object ServiceModule {
         .setContentIntent(ServiceHelper.clickPendingIntent(context, POMODORO_NOTIFICATION_ID))
 
     @Provides
-    @ServiceScoped
+    @Singleton
     fun provideNotificationManager(
         @ApplicationContext context: Context
     ): NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

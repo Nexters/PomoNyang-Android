@@ -1,13 +1,14 @@
 package com.pomonyang.mohanyang.presentation.service.focus
 
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.noti.PomodoroNotificationManager
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerEventHandler
-import java.util.Timer
+import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +28,8 @@ internal class FocusTimer @Inject constructor(
     override fun startTimer(
         maxTime: Int,
         eventHandler: PomodoroTimerEventHandler,
-        pomodoroNotificationManager: PomodoroNotificationManager
+        pomodoroNotificationManager: PomodoroNotificationManager,
+        category: PomodoroCategoryType?
     ) {
         Timber.tag("TIMER").d("startFocus timer / maxTime : $maxTime")
         if (timer == null) {
@@ -41,7 +43,8 @@ internal class FocusTimer @Inject constructor(
 
                     pomodoroNotificationManager.updateNotification(
                         time = if (timeElapsed >= maxTime) maxTime.toString() else timeElapsed.toString(),
-                        overtime = if (maxTime >= timeElapsed) "0" else (timeElapsed - maxTime).toString()
+                        overtime = if (maxTime >= timeElapsed) "0" else (timeElapsed - maxTime).toString(),
+                        category = category
                     )
 
                     if (timeElapsed >= maxTime) {
