@@ -65,7 +65,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     }
 
     private fun setIcon(remoteViews: RemoteViews, iconRes: Int) {
-        remoteViews.setImageViewResource(R.id.icon_lightning, iconRes)
+        remoteViews.setImageViewResource(R.id.icon_category, iconRes)
     }
 
     private fun getStatusBitmapAndIcon(category: PomodoroCategoryType?): Pair<Bitmap, Int> = if (category != null) {
