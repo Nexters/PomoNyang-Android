@@ -15,16 +15,29 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     private val bitmapGenerator: PomodoroNotificationBitmapGenerator
 ) {
 
-    fun createPomodoroNotificationContent(
+    fun createPomodoroNotificationContent(isRest: Boolean): RemoteViews {
+        val remoteViews = RemoteViews(context.packageName, R.layout.notification_pomodoro_standard)
+
+        val titleBitmap = generateTitleBitmap(isRest)
+        val contentBitmap = generateContentBitmap(isRest)
+
+        setTitle(remoteViews, titleBitmap)
+        setContent(remoteViews, contentBitmap)
+
+        return remoteViews
+    }
+
+    fun createPomodoroNotificationBigContent(
         category: PomodoroCategoryType?,
         time: String,
         overtime: String?
     ): RemoteViews {
+        val remoteViews = RemoteViews(context.packageName, R.layout.notification_pomodoro_expand)
+
         val formattedTime = formatTimeString(time)
         val formattedOvertime = formatOvertimeString(overtime)
 
         val (statusBitmap, iconRes) = getStatusBitmapAndIcon(category)
-        val remoteViews = RemoteViews(context.packageName, R.layout.notification_pomodoro)
 
         setStatus(remoteViews, statusBitmap)
         setTime(remoteViews, formattedTime)
@@ -34,12 +47,40 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
         return remoteViews
     }
 
+    private fun generateTitleBitmap(isRest: Boolean): Bitmap {
+        val titleRes = if (isRest) R.string.notification_rest_title else R.string.notification_focus_title
+        return bitmapGenerator.createTextBitmap(
+            text = titleRes,
+            color = R.color.notification_pomodoro_title,
+            font = R.font.pretendard_semibold,
+            textSize = 14f
+        )
+    }
+
+    private fun generateContentBitmap(isRest: Boolean): Bitmap {
+        val contentRes = if (isRest) R.string.notification_rest_content else R.string.notification_focus_content
+        return bitmapGenerator.createTextBitmap(
+            text = contentRes,
+            color = R.color.notification_pomodoro_content,
+            font = R.font.pretendard_regular,
+            textSize = 14f
+        )
+    }
+
+    private fun setTitle(remoteViews: RemoteViews, titleBitmap: Bitmap) {
+        remoteViews.setImageViewBitmap(R.id.iv_text_title, titleBitmap)
+    }
+
+    private fun setContent(remoteViews: RemoteViews, contentBitmap: Bitmap) {
+        remoteViews.setImageViewBitmap(R.id.iv_text_content, contentBitmap)
+    }
+
     private fun formatTimeString(timeStr: String): String {
         val totalSeconds = timeStr.toIntOrNull()
         return totalSeconds?.formatTime() ?: context.getString(R.string.notification_timer_default_time)
     }
 
-    private fun formatOvertimeString(overtime: String?): String? = if (overtime != null && overtime != "0") {
+    private fun formatOvertimeString(overtime: String?): String? = if (!overtime.isNullOrEmpty() && overtime != "0") {
         formatTimeString(overtime)
     } else {
         null
@@ -68,13 +109,11 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
         remoteViews.setImageViewResource(R.id.icon_category, iconRes)
     }
 
-    private fun getStatusBitmapAndIcon(category: PomodoroCategoryType?): Pair<Bitmap, Int> = if (category != null) {
-        val statusText = context.getString(category.kor)
-        val bitmap = bitmapGenerator.createStatusBitmap(statusText)
-        bitmap to category.iconRes
-    } else {
-        val statusText = context.getString(R.string.notification_timer_rest)
-        val bitmap = bitmapGenerator.createStatusBitmap(statusText)
-        bitmap to R.drawable.ic_rest
+    private fun getStatusBitmapAndIcon(category: PomodoroCategoryType?): Pair<Bitmap, Int> {
+        val statusTextRes = category?.kor ?: R.string.notification_timer_rest
+        val statusText = context.getString(statusTextRes)
+        val statusBitmap = bitmapGenerator.createStatusBitmap(statusText)
+        val iconRes = category?.iconRes ?: R.drawable.ic_rest
+        return statusBitmap to iconRes
     }
 }

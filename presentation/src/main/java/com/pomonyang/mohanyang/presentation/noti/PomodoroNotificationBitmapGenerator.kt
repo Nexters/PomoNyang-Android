@@ -5,6 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
+import androidx.annotation.ColorRes
+import androidx.annotation.FontRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.mohanyang.presentation.R
@@ -24,18 +27,18 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
     }
 
     private val colonBitmap: Bitmap by lazy {
-        createColonBitmap(R.font.pretendard_bold, 40f, R.color.notification_pomodoro_time)
+        createTextBitmap(":", R.font.pretendard_bold, 40f, R.color.notification_pomodoro_time)
     }
 
     private val overtimeColonBitmap: Bitmap by lazy {
-        createColonBitmap(R.font.pretendard_semibold, 18f, R.color.notification_pomodoro_over_time)
+        createTextBitmap(":", R.font.pretendard_semibold, 18f, R.color.notification_pomodoro_over_time)
     }
 
-    fun createStatusBitmap(statusText: String): Bitmap = textToBitmap(
-        statusText,
-        ResourcesCompat.getFont(context, R.font.pretendard_semibold)!!,
-        16f,
-        ContextCompat.getColor(context, R.color.notification_pomodoro_category_text)
+    fun createStatusBitmap(statusText: String): Bitmap = createTextBitmap(
+        text = statusText,
+        fontResId = R.font.pretendard_semibold,
+        textSize = 16f,
+        colorResId = R.color.notification_pomodoro_category_text
     )
 
     fun combineTimeBitmaps(time: String, isOvertime: Boolean): Bitmap {
@@ -43,23 +46,31 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
         return combineBitmaps(digits, isOvertime)
     }
 
-    private fun generateNumberBitmaps(fontResId: Int, textSize: Float, colorResId: Int): Map<String, Bitmap> {
-        val typeface = ResourcesCompat.getFont(context, fontResId)!!
-        val textColor = ContextCompat.getColor(context, colorResId)
-        return (0..9).associate { number ->
-            number.toString() to textToBitmap(
-                number.toString(),
-                typeface,
-                textSize,
-                textColor
-            )
-        }
+    fun createTextBitmap(
+        @StringRes text: Int,
+        @ColorRes color: Int,
+        @FontRes font: Int,
+        textSize: Float
+    ): Bitmap = createTextBitmap(
+        text = context.getString(text),
+        fontResId = font,
+        textSize = textSize,
+        colorResId = color
+    )
+
+    private fun generateNumberBitmaps(@FontRes fontResId: Int, textSize: Float, @ColorRes colorResId: Int): Map<String, Bitmap> = (0..9).associate { number ->
+        number.toString() to createTextBitmap(
+            text = number.toString(),
+            fontResId = fontResId,
+            textSize = textSize,
+            colorResId = colorResId
+        )
     }
 
-    private fun createColonBitmap(fontResId: Int, textSize: Float, colorResId: Int): Bitmap {
+    private fun createTextBitmap(text: String, @FontRes fontResId: Int, textSize: Float, @ColorRes colorResId: Int): Bitmap {
         val typeface = ResourcesCompat.getFont(context, fontResId)!!
         val textColor = ContextCompat.getColor(context, colorResId)
-        return textToBitmap(":", typeface, textSize, textColor)
+        return textToBitmap(text, typeface, textSize, textColor)
     }
 
     private fun textToBitmap(text: String, typeface: Typeface, textSize: Float, textColor: Int): Bitmap {
@@ -100,11 +111,11 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
         }
 
         if (isOvertime) {
-            val extraTextBitmap = textToBitmap(
-                context.getString(R.string.timer_exceed_time),
-                ResourcesCompat.getFont(context, R.font.pretendard_semibold)!!,
-                18f,
-                ContextCompat.getColor(context, R.color.notification_pomodoro_over_time)
+            val extraTextBitmap = createTextBitmap(
+                text = context.getString(R.string.timer_exceed_time),
+                fontResId = R.font.pretendard_semibold,
+                textSize = 18f,
+                colorResId = R.color.notification_pomodoro_over_time
             )
             bitmaps.add(extraTextBitmap)
             totalWidth += extraTextBitmap.width

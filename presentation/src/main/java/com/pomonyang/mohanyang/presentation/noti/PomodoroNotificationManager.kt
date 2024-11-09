@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.mohanyang.presentation.R
@@ -19,7 +20,7 @@ internal class PomodoroNotificationManager @Inject constructor(
     @ApplicationContext private val context: Context,
     @PomodoroNotification private val notificationBuilder: NotificationCompat.Builder,
     private val notificationManager: NotificationManager,
-    private val pomodoroNotificationContentFactory: PomodoroNotificationContentFactory
+    private val contentFactory: PomodoroNotificationContentFactory
 ) {
 
     init {
@@ -41,32 +42,36 @@ internal class PomodoroNotificationManager @Inject constructor(
     }
 
     fun createNotification(category: PomodoroCategoryType? = null): Notification {
-        val remoteViews = pomodoroNotificationContentFactory.createPomodoroNotificationContent(
-            category = category,
-            time = context.getString(R.string.notification_timer_default_time),
-            overtime = null
-        )
-        return notificationBuilder
-            .setCustomContentView(remoteViews)
-            .setCustomBigContentView(remoteViews)
-            .setColor(ContextCompat.getColor(context, R.color.notification_background_color))
-            .setColorized(true)
-            .build()
+        val isRest = category == null
+        val defaultTime = context.getString(R.string.notification_timer_default_time)
+        val contentView = createContentView(isRest)
+        val bigContentView = createBigContentView(category, defaultTime, null)
+        return buildNotification(contentView, bigContentView)
     }
 
     fun updateNotification(category: PomodoroCategoryType?, time: String, overtime: String) {
-        val remoteViews = pomodoroNotificationContentFactory.createPomodoroNotificationContent(
-            category = category,
-            time = time,
-            overtime = overtime
-        )
-        val notification = notificationBuilder
-            .setCustomContentView(remoteViews)
-            .setCustomBigContentView(remoteViews)
-            .setColor(ContextCompat.getColor(context, R.color.notification_background_color))
-            .setColorized(true)
-            .build()
-
+        val isRest = category == null
+        val contentView = createContentView(isRest)
+        val bigContentView = createBigContentView(category, time, overtime)
+        val notification = buildNotification(contentView, bigContentView)
         notificationManager.notify(POMODORO_NOTIFICATION_ID, notification)
     }
+
+    private fun createContentView(isRest: Boolean): RemoteViews = contentFactory.createPomodoroNotificationContent(isRest)
+
+    private fun createBigContentView(
+        category: PomodoroCategoryType?,
+        time: String,
+        overtime: String?
+    ): RemoteViews = contentFactory.createPomodoroNotificationBigContent(category, time, overtime)
+
+    private fun buildNotification(
+        contentView: RemoteViews,
+        bigContentView: RemoteViews
+    ): Notification = notificationBuilder
+        .setCustomContentView(contentView)
+        .setCustomBigContentView(bigContentView)
+        .setColor(ContextCompat.getColor(context, R.color.notification_background_color))
+        .setColorized(true)
+        .build()
 }

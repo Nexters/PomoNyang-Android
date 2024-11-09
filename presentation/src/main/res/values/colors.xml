@@ -5,4 +5,6 @@
     <color name="notification_pomodoro_category_text">#8F887E</color>
     <color name="notification_pomodoro_time">#3D3732</color>
     <color name="notification_pomodoro_over_time">#FF7E65</color>
+    <color name="notification_pomodoro_title">#1D1B1B</color>
+    <color name="notification_pomodoro_content">#3F4946</color>
 </resources>
