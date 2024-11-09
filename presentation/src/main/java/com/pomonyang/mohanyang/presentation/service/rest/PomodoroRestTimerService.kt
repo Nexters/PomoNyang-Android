@@ -34,7 +34,11 @@ internal class PomodoroRestTimerService :
                     Random.nextInt(),
                     pomodoroNotificationManager.createNotification(false)
                 )
-                restTimer.startTimer(maxTime, this)
+                restTimer.startTimer(
+                    maxTime = maxTime,
+                    eventHandler = this,
+                    pomodoroNotificationManager = pomodoroNotificationManager
+                )
             }
 
             PomodoroTimerServiceExtras.ACTION_TIMER_STOP -> {

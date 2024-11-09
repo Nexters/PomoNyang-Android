@@ -36,7 +36,11 @@ internal class PomodoroFocusTimerService :
                     POMODORO_NOTIFICATION_ID,
                     pomodoroNotificationManager.createNotification(true)
                 )
-                focusTimer.startTimer(maxTime, this)
+                focusTimer.startTimer(
+                    maxTime = maxTime,
+                    eventHandler = this,
+                    pomodoroNotificationManager = pomodoroNotificationManager
+                )
             }
 
             PomodoroTimerServiceExtras.ACTION_TIMER_STOP -> {

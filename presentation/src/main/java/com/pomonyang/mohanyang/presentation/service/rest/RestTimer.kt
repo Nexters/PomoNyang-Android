@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang.presentation.service.rest
 
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
+import com.pomonyang.mohanyang.presentation.noti.PomodoroNotificationManager
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
@@ -22,7 +23,11 @@ internal class RestTimer @Inject constructor(
     private var timeElapsed = 0
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    override fun startTimer(maxTime: Int, eventHandler: PomodoroTimerEventHandler) {
+    override fun startTimer(
+        maxTime: Int,
+        eventHandler: PomodoroTimerEventHandler,
+        pomodoroNotificationManager: PomodoroNotificationManager
+    ) {
         Timber.tag("TIMER").d("startRest timer / maxTime : $maxTime")
         if (timer == null) {
             timeElapsed = 0
@@ -32,6 +37,10 @@ internal class RestTimer @Inject constructor(
                     timerRepository.incrementRestedTime()
 
                     Timber.tag("TIMER").d("countRestTime: $timeElapsed ")
+                    pomodoroNotificationManager.updateNotification(
+                        time = if (timeElapsed >= maxTime) maxTime.toString() else timeElapsed.toString(),
+                        overtime = if (maxTime >= timeElapsed) "0" else (timeElapsed - maxTime).toString()
+                    )
 
                     if (timeElapsed >= maxTime) {
                         eventHandler.onTimeEnd()

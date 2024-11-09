@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang.presentation.service.focus
 
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
+import com.pomonyang.mohanyang.presentation.noti.PomodoroNotificationManager
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
@@ -23,7 +24,11 @@ internal class FocusTimer @Inject constructor(
     private var timer: Timer? = null
     private var timeElapsed = 0
 
-    override fun startTimer(maxTime: Int, eventHandler: PomodoroTimerEventHandler) {
+    override fun startTimer(
+        maxTime: Int,
+        eventHandler: PomodoroTimerEventHandler,
+        pomodoroNotificationManager: PomodoroNotificationManager
+    ) {
         Timber.tag("TIMER").d("startFocus timer / maxTime : $maxTime")
         if (timer == null) {
             timeElapsed = 0
@@ -33,6 +38,11 @@ internal class FocusTimer @Inject constructor(
                     timerRepository.incrementFocusedTime()
 
                     Timber.tag("TIMER").d("countFocusTime: $timeElapsed ")
+
+                    pomodoroNotificationManager.updateNotification(
+                        time = if (timeElapsed >= maxTime) maxTime.toString() else timeElapsed.toString(),
+                        overtime = if (maxTime >= timeElapsed) "0" else (timeElapsed - maxTime).toString()
+                    )
 
                     if (timeElapsed >= maxTime) {
                         eventHandler.onTimeEnd()
