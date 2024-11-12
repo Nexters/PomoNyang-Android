@@ -1,15 +1,17 @@
 package com.pomonyang.mohanyang.presentation.screen.onboarding.naming
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -100,7 +102,9 @@ fun OnboardingNamingCatScreen(
                 focusManager.clearFocus(true)
                 keyboardController?.hide()
             }
-            .imePadding()
+            .verticalScroll(rememberScrollState(), reverseScrolling = true),
+        verticalArrangement = Arrangement.Bottom
+
 
     ) {
         MnTopAppBar(
@@ -112,58 +116,60 @@ fun OnboardingNamingCatScreen(
             }
         )
 
-        LazyColumn(
-            state = listState,
+        Column(
             modifier = Modifier
                 .padding(horizontal = MnSpacing.xLarge)
-
         ) {
-            item {
-                CatRive(
-                    modifier = Modifier
-                        .padding(top = 130.dp)
-                        .fillMaxWidth(),
-                    isAutoPlay = false,
-                    stateMachineInput = catType.pomodoroRiveCat,
-                    stateMachineName = "State Machine_Rename",
-                    riveResource = R.raw.cat_rename_2,
-                    tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
-                )
-                Text(
-                    modifier = Modifier.padding(
-                        top = MnSpacing.twoXLarge,
-                        bottom = MnSpacing.small
-                    ),
-                    text = stringResource(R.string.naming_cat),
-                    style = MnTheme.typography.subBodyRegular,
-                    color = MnTheme.textColorScheme.secondary
-                )
-                MnTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = name,
-                    isError = !nameValidationResult.isValid,
-                    errorMessage = nameValidationResult.message,
-                    backgroundColor = MnColor.White,
-                    onValueChange = { value -> name = value },
-                    hint = catName
-                )
-            }
+            CatRive(
+                modifier = Modifier
+                    .padding(top = 130.dp)
+                    .fillMaxWidth(),
+                isAutoPlay = false,
+                stateMachineInput = catType.pomodoroRiveCat,
+                stateMachineName = "State Machine_Rename",
+                riveResource = R.raw.cat_rename_2,
+                tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
+            )
+            Text(
+                modifier = Modifier.padding(
+                    top = MnSpacing.twoXLarge,
+                    bottom = MnSpacing.small
+                ),
+                text = stringResource(R.string.naming_cat),
+                style = MnTheme.typography.subBodyRegular,
+                color = MnTheme.textColorScheme.secondary
+            )
+            MnTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = name,
+                isError = !nameValidationResult.isValid,
+                errorMessage = nameValidationResult.message,
+                backgroundColor = MnColor.White,
+                onValueChange = { value -> name = value },
+                hint = catName
+            )
         }
+
+
         Spacer(modifier = Modifier.weight(1f))
 
-        MnBoxButton(
-            text = stringResource(R.string.complete),
-            containerPadding = PaddingValues(
-                bottom = MnSpacing.small,
-                start = MnSpacing.xLarge,
-                end = MnSpacing.xLarge
-            ),
-            onClick = { if (isEnabled()) onAction(NamingEvent.OnComplete(name)) },
-            isEnabled = isEnabled(),
-            modifier = Modifier.fillMaxWidth(),
-            colors = MnBoxButtonColorType.primary,
-            styles = MnBoxButtonStyles.large
-        )
+        Box(
+            modifier = Modifier
+                .padding(horizontal = MnSpacing.xLarge, vertical = MnSpacing.small)
+                .imePadding()
+        ) {
+            MnBoxButton(
+                text = stringResource(R.string.complete),
+                onClick = { if (isEnabled()) onAction(NamingEvent.OnComplete(name)) },
+                isEnabled = isEnabled(),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = MnBoxButtonColorType.primary,
+                styles = MnBoxButtonStyles.large
+            )
+        }
+
+
     }
 }
 
