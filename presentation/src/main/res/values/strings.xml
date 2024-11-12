@@ -92,8 +92,7 @@
     <string name="notification_rest_title">휴식을 취하고 있어요</string>
     <string name="notification_rest_content">지금은 편안한 쉬는 시간이다냥</string>
     <string name="notification_focus_title">집중하고 있어요</string>
-    <!-- 디자인 팀에서 완성하면 수정 예정 -->
-    <string name="notification_focus_content">휴식을 취하고 있어요</string>
+    <string name="notification_focus_content">뽀모도로에 푹 빠져있다냥</string>
     <string name="dialog_network_title">네트워크 연결 실패</string>
     <string name="dialog_network_content">네트워크 연결에 실패하였습니다.\n확인 후 다시 시도해 주세요</string>
     <string name="dialog_network_refresh">새로고침</string>
