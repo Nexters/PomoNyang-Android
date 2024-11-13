@@ -18,9 +18,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -208,38 +209,30 @@ fun MyPageScreen(
             }
         )
 
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.padding(
-                horizontal = MnSpacing.xLarge,
-                vertical = MnSpacing.medium
-            ),
+        Column(
+            modifier = Modifier
+                .padding(
+                    horizontal = MnSpacing.xLarge,
+                    vertical = MnSpacing.medium
+                )
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
-            item {
-                ProfileBox(
-                    catName = state.catName,
-                    onClick = {
-                        onAction(MyPageEvent.ClickCatProfile(isOffline))
-                    }
-                )
-            }
-
-            item {
-                CheckFocusTimeBox(onAction = onAction)
-            }
-
-            item {
-                NotificationBox(
-                    state = state,
-                    onAction = onAction
-                )
-            }
-            item {
-                SuggestionBox {
-                    onAction(MyPageEvent.ClickSuggestion)
+            ProfileBox(
+                catName = state.catName,
+                onClick = {
+                    onAction(MyPageEvent.ClickCatProfile(isOffline))
                 }
+            )
+            CheckFocusTimeBox(onAction = onAction)
+            NotificationBox(
+                state = state,
+                onAction = onAction
+            )
+            SuggestionBox {
+                onAction(MyPageEvent.ClickSuggestion)
             }
+
         }
     }
 }
