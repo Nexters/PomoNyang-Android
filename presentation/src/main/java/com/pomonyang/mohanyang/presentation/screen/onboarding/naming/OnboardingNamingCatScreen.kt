@@ -49,6 +49,7 @@ import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 fun OnboardingNamingCatRoute(
     catName: String,
     catType: CatType,
+    onNavToHomeClick: () -> Unit,
     onBackClick: () -> Unit,
     onNavToDestination: () -> Unit,
     modifier: Modifier = Modifier,
@@ -70,6 +71,7 @@ fun OnboardingNamingCatRoute(
         catName = catName,
         catType = catType,
         onAction = onboardingNamingCatViewModel::handleEvent,
+        onNavToHomeClick = onNavToHomeClick,
         onBackClick = onBackClick,
         modifier = modifier
     )
@@ -83,6 +85,7 @@ fun OnboardingNamingCatScreen(
     catName: String,
     catType: CatType,
     onAction: (NamingEvent) -> Unit,
+    onNavToHomeClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -104,7 +107,7 @@ fun OnboardingNamingCatScreen(
     }
 
     when {
-        state.isInternalError -> ServerErrorScreen(onClickNavigateToHome = { onBackClick() })
+        state.isInternalError -> ServerErrorScreen(onClickNavigateToHome = onNavToHomeClick)
         state.isInvalidError -> NetworkErrorScreen(onClickRetry = {
             onAction(NamingEvent.OnClickRetry)
         })
@@ -201,6 +204,7 @@ private fun PreviewOnboardingNamingCatScreen() {
         catName = "삼색이",
         catType = CatType.CHEESE,
         onAction = { _ -> },
+        onNavToHomeClick = {},
         onBackClick = {}
     )
 }

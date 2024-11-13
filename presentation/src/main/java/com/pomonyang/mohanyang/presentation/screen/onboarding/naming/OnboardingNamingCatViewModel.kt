@@ -7,9 +7,6 @@ import com.pomonyang.mohanyang.data.repository.cat.CatSettingRepository
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
-import com.pomonyang.mohanyang.presentation.base.NetworkViewState
-import com.pomonyang.mohanyang.presentation.base.ViewEvent
-import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -33,7 +30,6 @@ class OnboardingNamingCatViewModel @Inject constructor(
                     try {
                         pomodoroSettingRepository.fetchPomodoroSettingList()
                         updateCatName(event.name)
-
                     } catch (e: InternalException) {
                         updateState { copy(isInternalError = true) }
                     } catch (e: BadRequestException) {
