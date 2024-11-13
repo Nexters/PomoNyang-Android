@@ -3,7 +3,7 @@ package com.pomonyang.mohanyang.presentation.screen
 import com.mohanyang.presentation.BuildConfig
 
 object PomodoroConstants {
-    val TIMER_DELAY = if (BuildConfig.DEBUG) 10L else 1_000L
+    val TIMER_DELAY = if (BuildConfig.DEBUG) 100L else 1_000L
     val MAX_EXCEEDED_TIME = if (BuildConfig.DEBUG) 60 else 3600
     const val MAX_FOCUS_MINUTES = 60
     const val MAX_REST_MINUTES = 30
