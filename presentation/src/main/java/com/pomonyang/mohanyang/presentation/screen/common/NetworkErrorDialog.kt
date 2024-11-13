@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.dialog.MnDialog
+import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
 @Composable
 fun NetworkErrorDialog(
@@ -38,3 +40,4 @@ fun NetworkErrorDialog(
         onDismissRequest = onDismissRequest
     )
 }
+

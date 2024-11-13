@@ -35,7 +35,10 @@ fun ServerErrorScreen(
     val context = LocalContext.current
     val suggestionUrl = "https://forms.gle/wEUPH9Tvxgua4hCZ9"
 
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

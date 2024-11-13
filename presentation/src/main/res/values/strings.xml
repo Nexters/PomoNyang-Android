@@ -99,7 +99,7 @@
     <string name="dialog_network_content">네트워크 연결에 실패하였습니다.\n확인 후 다시 시도해 주세요</string>
     <string name="dialog_network_refresh">새로고침</string>
     <string name="network_error_title">인터넷 연결이 불안정해요</string>
-    <string name="network_error_content">연결 상태를 확인한 후\n다시 시도해 주세요.</string>
+    <string name="network_error_content">연결 상태를 확인한 후 다시 시도해 주세요.</string>
     <string name="network_refresh">다시 시도하기</string>
 
     <string name="my_page_static_title">나는 얼마나 집중하고 있을까?</string>

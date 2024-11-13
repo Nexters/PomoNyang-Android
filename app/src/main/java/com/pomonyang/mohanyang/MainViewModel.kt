@@ -69,15 +69,18 @@ class MainViewModel @Inject constructor(
                     } else {
                         onOffline()
                     }
-                    updateState { copy(isLoading = false) }
                 }
             } catch (e: TimeoutCancellationException) {
                 /* MAX TIME 초과시  Cancel 처리된 경우 네트워크 알림처리 */
                 updateState { copy(isLoading = false) }
                 setEffect(MainEffect.ShowDialog)
+            } catch (e: InternalException) {
+                updateState { copy(isInternalError = true) }
             } catch (e: Exception) {
                 Timber.w("${e.message}")
-                updateState { copy(isInvalidError = true, isLoading = false) }
+                updateState { copy(isInvalidError = true) }
+            } finally {
+                updateState { copy(isLoading = false) }
             }
 
         }
