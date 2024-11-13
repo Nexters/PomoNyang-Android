@@ -88,23 +88,17 @@ class MainViewModel @Inject constructor(
 
 
     // 온라인 상태일 때 실행할 초기화 로직
-    private fun onOnline() {
-        viewModelScope.launch {
-            fetchFcmToken()
-            fetchUserInfo().onSuccess {
-                setupUserAndNavigate(it.isNewUser())
-            }.onFailure {
-                updateState { copy(isInvalidError = true) }
-            }
-        }
+    private suspend fun onOnline() {
+        fetchFcmToken()
+        fetchUserInfo().onSuccess {
+            setupUserAndNavigate(it.isNewUser())
+        }.getOrThrow()
     }
 
     // 오프라인 상태일 때 실행할 초기화 로직
-    private fun onOffline() {
-        viewModelScope.launch {
-            val isNewUser = checkIfNewUser()
-            setupUserAndNavigate(isNewUser)
-        }
+    private suspend fun onOffline() {
+        val isNewUser = checkIfNewUser()
+        setupUserAndNavigate(isNewUser)
     }
 
     private suspend fun setupUserAndNavigate(isNewUser: Boolean) {
