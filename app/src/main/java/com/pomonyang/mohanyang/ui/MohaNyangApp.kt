@@ -1,16 +1,10 @@
 package com.pomonyang.mohanyang.ui
 
-import com.mohanyang.presentation.R as PresentationR
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration.Short
@@ -28,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mohanyang.presentation.R as PresentationR
 import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.navigation.MohaNyangNavHost
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
@@ -109,11 +104,7 @@ private fun MohaNyangApp(
             onForceGoHome = { isForceHome = true },
             mohaNyangAppState = mohaNyangAppState,
             modifier = Modifier
-                .windowInsetsPadding(
-                    WindowInsets.systemBars.only(
-                        WindowInsetsSides.Vertical
-                    )
-                )
+                .padding(innerPadding)
         )
     }
 }

@@ -2,16 +2,16 @@ package com.pomonyang.mohanyang.presentation.screen.onboarding.naming
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
@@ -78,7 +77,6 @@ fun OnboardingNamingCatScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val listState = rememberLazyListState()
 
     var name by rememberSaveable { mutableStateOf(catName) }
     val catNameValidator = remember { CatNameVerifier() }
@@ -97,15 +95,13 @@ fun OnboardingNamingCatScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
             .background(MnTheme.backgroundColorScheme.primary)
             .clickableSingle(activeRippleEffect = false) {
                 focusManager.clearFocus(true)
                 keyboardController?.hide()
-            }
-            .verticalScroll(rememberScrollState(), reverseScrolling = true),
-        verticalArrangement = Arrangement.Bottom
-
-
+            },
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         MnTopAppBar(
             navigationIcon = {
@@ -121,9 +117,7 @@ fun OnboardingNamingCatScreen(
                 .padding(horizontal = MnSpacing.xLarge)
         ) {
             CatRive(
-                modifier = Modifier
-                    .padding(top = 130.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 isAutoPlay = false,
                 stateMachineInput = catType.pomodoroRiveCat,
                 stateMachineName = "State Machine_Rename",
@@ -150,32 +144,25 @@ fun OnboardingNamingCatScreen(
             )
         }
 
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Box(
-            modifier = Modifier
-                .padding(horizontal = MnSpacing.xLarge, vertical = MnSpacing.small)
-                .imePadding()
-        ) {
-            MnBoxButton(
-                text = stringResource(R.string.complete),
-                onClick = { if (isEnabled()) onAction(NamingEvent.OnComplete(name)) },
-                isEnabled = isEnabled(),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                colors = MnBoxButtonColorType.primary,
-                styles = MnBoxButtonStyles.large
-            )
-        }
-
-
+        MnBoxButton(
+            text = stringResource(R.string.complete),
+            containerPadding = PaddingValues(
+                bottom = MnSpacing.small,
+                start = MnSpacing.xLarge,
+                end = MnSpacing.xLarge
+            ),
+            onClick = { if (isEnabled()) onAction(NamingEvent.OnComplete(name)) },
+            isEnabled = isEnabled(),
+            modifier = Modifier.fillMaxWidth(),
+            colors = MnBoxButtonColorType.primary,
+            styles = MnBoxButtonStyles.large
+        )
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewOnboardingNamingCatScreen() {
+private fun PreviewOnboardingNamingCatScreen() {
     OnboardingNamingCatScreen(
         catName = "삼색이",
         catType = CatType.CHEESE,
