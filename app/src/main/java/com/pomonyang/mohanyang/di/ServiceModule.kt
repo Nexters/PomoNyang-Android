@@ -28,7 +28,6 @@ internal object ServiceModule {
         .setContentTitle(context.getString(R.string.app_name))
         .setSmallIcon(R.drawable.ic_app_notification)
         .setVibrate(null)
-        .setDefaults(0)
         .setOngoing(true)
         .setContentIntent(ServiceHelper.clickPendingIntent(context, POMODORO_NOTIFICATION_ID))
 
