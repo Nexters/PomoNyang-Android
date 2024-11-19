@@ -24,7 +24,10 @@ fun Context.createNotificationChannel() {
             channelId,
             channelName,
             NotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            MnNotificationManager.setCustomAlarmSound(applicationContext,this)
+        }
+
     notificationManager.createNotificationChannel(channel)
 }
 
@@ -41,6 +44,7 @@ fun Context.defaultNotification(
     .setOnlyAlertOnce(true)
     .setCategory(NotificationCompat.CATEGORY_MESSAGE)
     .setGroup(getString(R.string.channel_group_name))
+
 
 fun Context.summaryNotification(pendingIntent: PendingIntent? = null): NotificationCompat.Builder = this.defaultNotification(pendingIntent)
     .setGroupSummary(true)

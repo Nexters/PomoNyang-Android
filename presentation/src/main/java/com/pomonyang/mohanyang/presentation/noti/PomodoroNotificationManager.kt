@@ -3,7 +3,10 @@ package com.pomonyang.mohanyang.presentation.noti
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Context
+import android.media.AudioAttributes
+import android.net.Uri
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -13,6 +16,7 @@ import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_CHANNEL_ID
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_CHANNEL_NAME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_ID
+import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -37,6 +41,7 @@ internal class PomodoroNotificationManager @Inject constructor(
             enableLights(false)
             enableVibration(false)
             vibrationPattern = null
+            MnNotificationManager.setCustomAlarmSound(context,this)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -78,4 +83,5 @@ internal class PomodoroNotificationManager @Inject constructor(
         .setColor(ContextCompat.getColor(context, R.color.notification_background_color))
         .setColorized(true)
         .build()
+
 }
