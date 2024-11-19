@@ -7,6 +7,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,10 +15,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,7 +32,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
@@ -97,7 +103,7 @@ fun MyPageRoute(
     myPageViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is MyPageSideEffect.ShowSnackBar -> {
-                onShowSnackBar(effect.message, null)
+                onShowSnackBar(effect.message, R.drawable.ic_alert)
             }
 
             is MyPageSideEffect.GoToCatProfilePage -> {
@@ -203,34 +209,30 @@ fun MyPageScreen(
             }
         )
 
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.padding(
-                horizontal = MnSpacing.xLarge,
-                vertical = MnSpacing.medium
-            ),
+        Column(
+            modifier = Modifier
+                .padding(
+                    horizontal = MnSpacing.xLarge,
+                    vertical = MnSpacing.medium
+                )
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
-            item {
-                ProfileBox(
-                    catName = state.catName,
-                    onClick = {
-                        onAction(MyPageEvent.ClickCatProfile(isOffline))
-                    }
-                )
+            ProfileBox(
+                catName = state.catName,
+                onClick = {
+                    onAction(MyPageEvent.ClickCatProfile(isOffline))
+                }
+            )
+            CheckFocusTimeBox(onAction = onAction)
+            NotificationBox(
+                state = state,
+                onAction = onAction
+            )
+            SuggestionBox {
+                onAction(MyPageEvent.ClickSuggestion)
             }
 
-            item {
-                NotificationBox(
-                    state = state,
-                    onAction = onAction
-                )
-            }
-            item {
-                SuggestionBox {
-                    onAction(MyPageEvent.ClickSuggestion)
-                }
-            }
         }
     }
 }
@@ -269,6 +271,61 @@ fun ProfileBox(
                 )
             }
             MnIconButton(onClick = onClick, iconResourceId = R.drawable.ic_chevron_right)
+        }
+    }
+}
+
+@Composable
+fun CheckFocusTimeBox(
+    onAction: (MyPageEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 375.dp)
+            .background(
+                color = MnTheme.backgroundColorScheme.secondary,
+                shape = RoundedCornerShape(MnRadius.medium)
+            )
+            .padding(MnSpacing.xLarge),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(MnSpacing.medium),
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_static_ready),
+                contentDescription = "static_ready_image",
+                modifier = Modifier.size(
+                    110.dp
+                )
+            )
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = R.string.my_page_static_title),
+                    style = MnTheme.typography.header4,
+                    color = MnTheme.textColorScheme.primary
+                )
+                Text(
+                    text = stringResource(id = R.string.my_page_static_subtitle),
+                    style = MnTheme.typography.subBodyRegular,
+                    color = MnTheme.textColorScheme.secondary
+                )
+            }
+
+            MnBoxButton(
+                text = stringResource(id = R.string.my_page_static_check),
+                onClick = { onAction.invoke(MyPageEvent.ClickStatic) },
+                colors = MnBoxButtonColorType.secondary,
+                styles = MnBoxButtonStyles.small
+            )
         }
     }
 }

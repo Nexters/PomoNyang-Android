@@ -103,7 +103,8 @@ private fun MohaNyangApp(
             onShowSnackbar = showSnackbar,
             onForceGoHome = { isForceHome = true },
             mohaNyangAppState = mohaNyangAppState,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
         )
     }
 }

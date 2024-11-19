@@ -1,15 +1,17 @@
 package com.pomonyang.mohanyang.presentation.screen.onboarding.naming
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,7 +25,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
@@ -76,7 +77,6 @@ fun OnboardingNamingCatScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val listState = rememberLazyListState()
 
     var name by rememberSaveable { mutableStateOf(catName) }
     val catNameValidator = remember { CatNameVerifier() }
@@ -95,13 +95,13 @@ fun OnboardingNamingCatScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
             .background(MnTheme.backgroundColorScheme.primary)
             .clickableSingle(activeRippleEffect = false) {
                 focusManager.clearFocus(true)
                 keyboardController?.hide()
-            }
-            .imePadding()
-
+            },
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         MnTopAppBar(
             navigationIcon = {
@@ -112,44 +112,37 @@ fun OnboardingNamingCatScreen(
             }
         )
 
-        LazyColumn(
-            state = listState,
+        Column(
             modifier = Modifier
                 .padding(horizontal = MnSpacing.xLarge)
-
         ) {
-            item {
-                CatRive(
-                    modifier = Modifier
-                        .padding(top = 130.dp)
-                        .fillMaxWidth(),
-                    isAutoPlay = false,
-                    stateMachineInput = catType.pomodoroRiveCat,
-                    stateMachineName = "State Machine_Rename",
-                    riveResource = R.raw.cat_rename_2,
-                    tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
-                )
-                Text(
-                    modifier = Modifier.padding(
-                        top = MnSpacing.twoXLarge,
-                        bottom = MnSpacing.small
-                    ),
-                    text = stringResource(R.string.naming_cat),
-                    style = MnTheme.typography.subBodyRegular,
-                    color = MnTheme.textColorScheme.secondary
-                )
-                MnTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = name,
-                    isError = !nameValidationResult.isValid,
-                    errorMessage = nameValidationResult.message,
-                    backgroundColor = MnColor.White,
-                    onValueChange = { value -> name = value },
-                    hint = catName
-                )
-            }
+            CatRive(
+                modifier = Modifier.fillMaxWidth(),
+                isAutoPlay = false,
+                stateMachineInput = catType.pomodoroRiveCat,
+                stateMachineName = "State Machine_Rename",
+                riveResource = R.raw.cat_rename_2,
+                tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
+            )
+            Text(
+                modifier = Modifier.padding(
+                    top = MnSpacing.twoXLarge,
+                    bottom = MnSpacing.small
+                ),
+                text = stringResource(R.string.naming_cat),
+                style = MnTheme.typography.subBodyRegular,
+                color = MnTheme.textColorScheme.secondary
+            )
+            MnTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = name,
+                isError = !nameValidationResult.isValid,
+                errorMessage = nameValidationResult.message,
+                backgroundColor = MnColor.White,
+                onValueChange = { value -> name = value },
+                hint = catName
+            )
         }
-        Spacer(modifier = Modifier.weight(1f))
 
         MnBoxButton(
             text = stringResource(R.string.complete),
@@ -169,7 +162,7 @@ fun OnboardingNamingCatScreen(
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewOnboardingNamingCatScreen() {
+private fun PreviewOnboardingNamingCatScreen() {
     OnboardingNamingCatScreen(
         catName = "삼색이",
         catType = CatType.CHEESE,
