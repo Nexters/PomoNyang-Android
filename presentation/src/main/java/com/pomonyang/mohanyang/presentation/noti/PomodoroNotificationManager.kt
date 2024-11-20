@@ -24,14 +24,13 @@ import kotlinx.coroutines.runBlocking
 
 internal class PomodoroNotificationManager @Inject constructor(
     @ApplicationContext private val context: Context,
-    @PomodoroNotification private val notificationBuilder: NotificationCompat.Builder,
     private val pushAlarmRepository: PushAlarmRepository,
+    @PomodoroNotification private val notificationBuilder: NotificationCompat.Builder,
     private val notificationManager: NotificationManager,
     private val contentFactory: PomodoroNotificationContentFactory
 ) {
 
-
-    private var lockScreenVisibility: Int = NotificationManager.IMPORTANCE_LOW;
+    private var lockScreenVisibility: Int = NotificationCompat.VISIBILITY_PUBLIC;
 
     init {
         lockScreenVisibility = getLockScreenVisibility()
