@@ -49,7 +49,12 @@ class MyPageViewModel @Inject constructor(
             }
 
             is MyPageEvent.ChangeLockScreenNotification -> {
-                setLockScreenNotification(event.isEnabled)
+                setEffect(
+                    MyPageSideEffect.CheckNotificationPermission(
+                        request = NotificationRequest.LOCKSCREEN,
+                        onGranted = { setLockScreenNotification(event.isEnabled) }
+                    )
+                )
             }
 
             is MyPageEvent.CloseDialog -> {

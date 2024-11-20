@@ -88,6 +88,10 @@ fun MyPageRoute(
                     NotificationRequest.INTERRUPT -> {
                         myPageViewModel.handleEvent(MyPageEvent.ChangeInterruptNotification(true))
                     }
+
+                    NotificationRequest.LOCKSCREEN -> {
+                        myPageViewModel.handleEvent(MyPageEvent.ChangeLockScreenNotification(true))
+                    }
                 }
             }
         }
@@ -147,7 +151,7 @@ fun MyPageRoute(
     )
 }
 
-enum class NotificationRequest { TIMER, INTERRUPT }
+enum class NotificationRequest { TIMER, INTERRUPT, LOCKSCREEN }
 
 @Composable
 fun MyPageScreen(
