@@ -11,6 +11,7 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.presentation.di.PomodoroNotification
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_CHANNEL_ID
@@ -19,17 +20,24 @@ import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NO
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.runBlocking
 
 internal class PomodoroNotificationManager @Inject constructor(
     @ApplicationContext private val context: Context,
     @PomodoroNotification private val notificationBuilder: NotificationCompat.Builder,
+    private val pushAlarmRepository: PushAlarmRepository,
     private val notificationManager: NotificationManager,
     private val contentFactory: PomodoroNotificationContentFactory
 ) {
 
+
+    private var lockScreenVisibility: Int = NotificationManager.IMPORTANCE_LOW;
+
     init {
+        lockScreenVisibility = getLockScreenVisibility()
         createNotificationChannel()
     }
+
 
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
@@ -51,14 +59,17 @@ internal class PomodoroNotificationManager @Inject constructor(
         val defaultTime = context.getString(R.string.notification_timer_default_time)
         val contentView = createContentView(isRest)
         val bigContentView = createBigContentView(category, defaultTime, null)
-        return buildNotification(contentView, bigContentView)
+        lockScreenVisibility = getLockScreenVisibility()
+
+        return buildNotification(contentView, bigContentView, lockScreenVisibility)
     }
 
     fun updateNotification(category: PomodoroCategoryType?, time: String, overtime: String) {
+
         val isRest = category == null
         val contentView = createContentView(isRest)
         val bigContentView = createBigContentView(category, time, overtime)
-        val notification = buildNotification(contentView, bigContentView)
+        val notification = buildNotification(contentView, bigContentView, lockScreenVisibility)
         notificationManager.notify(POMODORO_NOTIFICATION_ID, notification)
     }
 
@@ -76,12 +87,22 @@ internal class PomodoroNotificationManager @Inject constructor(
 
     private fun buildNotification(
         contentView: RemoteViews,
-        bigContentView: RemoteViews
+        bigContentView: RemoteViews,
+        visibility: Int,
     ): Notification = notificationBuilder
         .setCustomContentView(contentView)
         .setCustomBigContentView(bigContentView)
         .setColor(ContextCompat.getColor(context, R.color.notification_background_color))
         .setColorized(true)
+        .setVisibility(visibility)
         .build()
+
+    private fun getLockScreenVisibility(): Int = runBlocking {
+        if (pushAlarmRepository.isLockScreenNotificationEnabled()) {
+            NotificationCompat.VISIBILITY_PUBLIC
+        } else {
+            NotificationCompat.VISIBILITY_SECRET
+        }
+    }
 
 }
