@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="splash_background">#FFFFE9BF</color>
     <color name="splash_delay_background">#FFFAF6F3</color>
+    <color name="notification_background">#F47A0A</color>
 </resources>

@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import java.time.LocalDate
@@ -37,6 +38,8 @@ fun Context.defaultNotification(
     .setContentIntent(pendingIntent)
     .setSmallIcon(R.drawable.ic_app_notification)
     .setPriority(NotificationCompat.PRIORITY_HIGH)
+    .setColor(ContextCompat.getColor(this, R.color.notification_background))
+    .setColorized(true)
     .setAutoCancel(true)
     .setOnlyAlertOnce(true)
     .setCategory(NotificationCompat.CATEGORY_MESSAGE)

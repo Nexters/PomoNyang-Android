@@ -75,7 +75,9 @@ internal class PomodoroNotificationManager @Inject constructor(
     ): Notification = notificationBuilder
         .setCustomContentView(contentView)
         .setCustomBigContentView(bigContentView)
-        .setColor(ContextCompat.getColor(context, R.color.notification_background_color))
+        .setVibrate(null)
+        .setOngoing(true)
         .setColorized(true)
+        .setColor(ContextCompat.getColor(context, R.color.notification_background_color))
         .build()
 }
