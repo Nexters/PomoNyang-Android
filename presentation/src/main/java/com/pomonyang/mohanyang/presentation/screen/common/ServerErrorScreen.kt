@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.common
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,12 +10,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -33,34 +36,38 @@ fun ServerErrorScreen(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val suggestionUrl = "https://forms.gle/wEUPH9Tvxgua4hCZ9"
+    val suggestionUrl = "http://pf.kakao.com/_FvuAn"
 
     Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+
     ) {
         Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Image(
+                modifier = Modifier
+                    .size(240.dp)
+                    .padding(bottom = MnSpacing.threeXLarge),
+                painter = painterResource(id = R.drawable.ic_error), contentDescription = "server error"
+            )
+
             Column(
-                verticalArrangement = Arrangement.spacedBy(MnSpacing.threeXLarge), horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(MnSpacing.small)
             ) {
-                ErrorLottieBox()
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(MnSpacing.small)
-                ) {
-                    Text(
-                        style = MnTheme.typography.header4, color = MnTheme.textColorScheme.primary, text = stringResource(id = R.string.server_error_title)
-                    )
-                    Text(
-                        style = MnTheme.typography.subBodyRegular.copy(
-                            textAlign = TextAlign.Center
-                        ),
-                        color = MnTheme.textColorScheme.secondary,
-                        text = stringResource(id = R.string.server_error_content)
-                    )
-                }
+                Text(
+                    style = MnTheme.typography.header4, color = MnTheme.textColorScheme.primary, text = stringResource(id = R.string.server_error_title)
+                )
+                Text(
+                    style = MnTheme.typography.subBodyRegular.copy(
+                        textAlign = TextAlign.Center
+                    ),
+                    color = MnTheme.textColorScheme.secondary,
+                    text = stringResource(id = R.string.server_error_content)
+                )
             }
 
             MnBoxButton(
