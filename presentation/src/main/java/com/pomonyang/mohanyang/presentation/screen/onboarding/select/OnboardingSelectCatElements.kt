@@ -8,6 +8,7 @@ import com.pomonyang.mohanyang.presentation.model.cat.CatType
 
 data class SelectCatState(
     override val isLoading: Boolean = true,
+    override val isInternalError: Boolean = false,
     override val isInvalidError: Boolean = false,
     override val lastRequestAction: SelectCatEvent? = null,
     val cats: List<CatInfoModel> = emptyList(),

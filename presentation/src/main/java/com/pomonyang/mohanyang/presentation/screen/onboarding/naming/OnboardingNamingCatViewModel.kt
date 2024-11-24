@@ -9,8 +9,9 @@ import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.plus
 
 
 @HiltViewModel
@@ -20,27 +21,35 @@ class OnboardingNamingCatViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository
 ) : BaseViewModel<NamingState, NamingEvent, NamingSideEffect>() {
 
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        when (throwable) {
+            is InternalException -> {
+                updateState { copy(isInternalError = true) }
+            }
+
+            is BadRequestException -> {
+                updateState { copy(isInvalidError = true) }
+            }
+
+            else -> {
+                updateState { copy(isInvalidError = true) }
+            }
+        }
+    }
+
+    private val scope = viewModelScope + coroutineExceptionHandler
+
     override fun setInitialState(): NamingState = NamingState()
 
     override fun handleEvent(event: NamingEvent) {
         when (event) {
             is NamingEvent.OnComplete -> {
-                viewModelScope.launch {
-                    updateState { copy(isLoading = true, lastRequestAction = event) }
-                    try {
-                        pomodoroSettingRepository.fetchPomodoroSettingList()
-                        updateCatName(event.name)
-                    } catch (e: InternalException) {
-                        updateState { copy(isInternalError = true) }
-                    } catch (e: BadRequestException) {
-                        updateState { copy(isInvalidError = true) }
-                    } catch (e: Exception) {
-                        Timber.d(e);
-                    } finally {
-                        updateState { copy(isLoading = false) }
-                    }
-
+                updateState { copy(isLoading = true, lastRequestAction = event) }
+                scope.launch {
+                    pomodoroSettingRepository.fetchPomodoroSettingList()
+                    updateCatName(event.name)
                 }
+                updateState { copy(isLoading = false) }
 
             }
 
