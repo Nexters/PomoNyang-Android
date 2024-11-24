@@ -30,10 +30,10 @@ internal class PomodoroNotificationManager @Inject constructor(
     private val contentFactory: PomodoroNotificationContentFactory
 ) {
 
-    private var lockScreenVisibility: Int = NotificationCompat.VISIBILITY_PUBLIC;
+    private var lockScreenVisibility: Int = NotificationCompat.VISIBILITY_PUBLIC
 
     init {
-        lockScreenVisibility = getLockScreenVisibility()
+        updateLockScreenVisibility()
         createNotificationChannel()
     }
 
@@ -58,8 +58,7 @@ internal class PomodoroNotificationManager @Inject constructor(
         val defaultTime = context.getString(R.string.notification_timer_default_time)
         val contentView = createContentView(isRest)
         val bigContentView = createBigContentView(category, defaultTime, null)
-        lockScreenVisibility = getLockScreenVisibility()
-
+        updateLockScreenVisibility()
         return buildNotification(contentView, bigContentView, lockScreenVisibility)
     }
 
@@ -102,6 +101,10 @@ internal class PomodoroNotificationManager @Inject constructor(
         } else {
             NotificationCompat.VISIBILITY_SECRET
         }
+    }
+
+    private fun updateLockScreenVisibility() {
+        lockScreenVisibility = getLockScreenVisibility()
     }
 
 }
