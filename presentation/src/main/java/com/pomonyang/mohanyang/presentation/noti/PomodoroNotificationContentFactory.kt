@@ -118,7 +118,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     }
 
     private fun setRightContent(remoteViews: RemoteViews) {
-        remoteViews.setImageViewResource(R.id.iv_right_content, R.drawable.img_noti)
+        remoteViews.setImageViewResource(R.id.iv_right_content, R.drawable.img_touch_hair_ball)
     }
 
     private fun getStatusBitmapAndIcon(category: PomodoroCategoryType?): Pair<Bitmap, Int> {
