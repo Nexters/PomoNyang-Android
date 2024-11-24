@@ -15,8 +15,10 @@ import com.pomonyang.mohanyang.domain.usecase.GetTokenByDeviceIdUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 
@@ -31,6 +33,23 @@ class MainViewModel @Inject constructor(
     private val networkMonitor: NetworkMonitor
 ) : BaseViewModel<MainState, MainEvent, MainEffect>() {
 
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        when (throwable) {
+            is InternalException -> {
+                updateState { copy(isInternalError = true) }
+            }
+
+            is BadRequestException -> {
+                updateState { copy(isInvalidError = true) }
+            }
+
+            else -> {
+                updateState { copy(isInvalidError = true) }
+            }
+        }
+    }
+
+    private val scope = viewModelScope + coroutineExceptionHandler
 
     override fun setInitialState(): MainState {
         return MainState(isLoading = true)
@@ -72,23 +91,16 @@ class MainViewModel @Inject constructor(
                 }
             } catch (e: TimeoutCancellationException) {
                 /* MAX TIME 초과시  Cancel 처리된 경우 네트워크 알림처리 */
-                updateState { copy(isLoading = false) }
                 setEffect(MainEffect.ShowDialog)
-            } catch (e: InternalException) {
-                updateState { copy(isInternalError = true) }
-            } catch (e: Exception) {
-                Timber.w("${e.message}")
-                updateState { copy(isInvalidError = true) }
             } finally {
                 updateState { copy(isLoading = false) }
             }
-
         }
     }
 
 
     // 온라인 상태일 때 실행할 초기화 로직
-    private suspend fun onOnline() {
+    private fun onOnline() = scope.launch {
         fetchFcmToken()
         fetchUserInfo().onSuccess {
             setupUserAndNavigate(it.isNewUser())
@@ -96,7 +108,7 @@ class MainViewModel @Inject constructor(
     }
 
     // 오프라인 상태일 때 실행할 초기화 로직
-    private suspend fun onOffline() {
+    private fun onOffline() = scope.launch {
         val isNewUser = checkIfNewUser()
         setupUserAndNavigate(isNewUser)
     }
@@ -123,21 +135,10 @@ class MainViewModel @Inject constructor(
 
     private fun onClickRefresh() {
         if (!networkMonitor.isConnected) return
-
-        viewModelScope.launch {
-            updateState { copy(isLoading = true) }
-
-            try {
-                val userInfo = fetchUserInfo().getOrThrow()
-                setEffect(MainEffect.DismissDialog)
-                setupUserAndNavigate(userInfo.isNewUser())
-            } catch (e: InternalException) {
-                updateState { copy(isInternalError = true) }
-            } catch (e: BadRequestException) {
-                updateState { copy(isInvalidError = true) }
-            } finally {
-                updateState { copy(isLoading = false) }
-            }
+        scope.launch {
+            val userInfo = fetchUserInfo().getOrThrow()
+            setEffect(MainEffect.DismissDialog)
+            setupUserAndNavigate(userInfo.isNewUser())
         }
     }
 
