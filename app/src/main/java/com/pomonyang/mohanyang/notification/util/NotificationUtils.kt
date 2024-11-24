@@ -25,7 +25,7 @@ fun Context.createNotificationChannel() {
             channelName,
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            MnNotificationManager.setCustomAlarmSound(applicationContext,this)
+            MnNotificationManager.setCustomAlarmSound(applicationContext, this)
         }
 
     notificationManager.createNotificationChannel(channel)
@@ -59,3 +59,13 @@ fun getTriggerTimeInMillis(time: LocalTime): Long {
 }
 
 fun Context.isNotificationGranted(): Boolean = MnNotificationManager.isNotificationGranted(this)
+
+
+fun Context.deleteNotificationChannelIfExists(channelId: String) {
+    val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+    val existingChannel = notificationManager.getNotificationChannel(channelId)
+    if (existingChannel != null) {
+        notificationManager.deleteNotificationChannel(channelId)
+    }
+}
