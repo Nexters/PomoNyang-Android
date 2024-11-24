@@ -38,7 +38,7 @@ fun Context.defaultNotification(
     .setContentIntent(pendingIntent)
     .setSmallIcon(R.drawable.ic_app_notification)
     .setPriority(NotificationCompat.PRIORITY_HIGH)
-    .setColor(ContextCompat.getColor(this, R.color.notification_background))
+    .setColor(ContextCompat.getColor(this, com.mohanyang.presentation.R.color.notification_background))
     .setColorized(true)
     .setAutoCancel(true)
     .setOnlyAlertOnce(true)
