@@ -68,7 +68,7 @@ fun PomodoroFocusRoute(
                 stopNotification(context)
                 goToRest(
                     context.getString(state.categoryType.kor),
-                    state.focusTime,
+                    state.currentFocusTime,
                     state.focusExceededTime
                 )
             }
@@ -109,7 +109,7 @@ fun PomodoroFocusRoute(
         if (state.forceGoRest) {
             goToRest(
                 context.getString(state.categoryType.kor),
-                state.focusTime,
+                state.remainingFocusTime,
                 state.focusExceededTime
             )
         }

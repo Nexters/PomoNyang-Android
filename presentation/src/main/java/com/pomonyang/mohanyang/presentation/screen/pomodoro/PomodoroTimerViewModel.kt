@@ -17,7 +17,7 @@ import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -26,10 +26,10 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 data class PomodoroTimerState(
-    val focusTime: Int = 0,
+    val remainingFocusTime: Int = 0,
     val focusExceededTime: Int = 0,
     val maxFocusTime: Int = 0,
-    val restTime: Int = 0,
+    val remainingRestTime: Int = 0,
     val restExceededTime: Int = 0,
     val maxRestTime: Int = 0,
     val title: String = "",
@@ -38,10 +38,13 @@ data class PomodoroTimerState(
     val categoryNo: Int = -1,
     val forceGoRest: Boolean = false
 ) : ViewState {
-    fun displayFocusTime(): String = focusTime.formatTime()
-    fun displayRestTime(): String = restTime.formatTime()
+    fun displayFocusTime(): String = remainingFocusTime.formatTime()
+    fun displayRestTime(): String = remainingRestTime.formatTime()
     fun displayFocusExceedTime(): String = focusExceededTime.formatTime()
     fun displayRestExceedTime(): String = restExceededTime.formatTime()
+
+    val currentFocusTime: Int
+        get() = maxFocusTime - remainingFocusTime
 }
 
 sealed interface PomodoroTimerEvent : ViewEvent {
@@ -115,16 +118,16 @@ class PomodoroTimerViewModel @Inject constructor(
     }
 
     private fun updateTimerState(timerData: PomodoroTimerEntity) {
-        val currentFocusTime = timerData.focusedTime.coerceAtMost(state.value.maxFocusTime)
-        val currentRestTime = timerData.restedTime.coerceAtMost(state.value.maxRestTime)
+        val remainingFocusTime = (state.value.maxFocusTime - timerData.focusedTime).coerceAtLeast(0)
+        val remainingRestTime = (state.value.maxRestTime - timerData.restedTime).coerceAtLeast(0)
         val focusExceededTime = (timerData.focusedTime - state.value.maxFocusTime).coerceAtLeast(0)
         val restExceededTime = (timerData.restedTime - state.value.maxRestTime).coerceAtLeast(0)
 
         updateState {
             copy(
-                focusTime = currentFocusTime,
+                remainingFocusTime = remainingFocusTime,
                 focusExceededTime = focusExceededTime,
-                restTime = currentRestTime,
+                remainingRestTime = remainingRestTime,
                 restExceededTime = restExceededTime
             )
         }
