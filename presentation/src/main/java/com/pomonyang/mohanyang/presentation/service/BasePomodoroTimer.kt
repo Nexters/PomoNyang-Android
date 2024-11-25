@@ -10,7 +10,7 @@ import timber.log.Timber
 
 internal abstract class BasePomodoroTimer : PomodoroTimer {
     private var timer: Timer? = null
-    private var timeElapsed = 0
+    private var remainingTime = 0
 
     protected abstract fun getTagName(): String
 
@@ -21,21 +21,24 @@ internal abstract class BasePomodoroTimer : PomodoroTimer {
     ) {
         Timber.tag(getTagName()).d("startTimer / maxTime : $maxTime")
         if (timer == null) {
-            timeElapsed = 0
+            remainingTime = maxTime
             timer = fixedRateTimer(initialDelay = TIMER_DELAY, period = TIMER_DELAY) {
-                timeElapsed += ONE_SECOND
+                remainingTime -= ONE_SECOND
 
-                Timber.tag(getTagName()).d("countTime: $timeElapsed ")
+                Timber.tag(getTagName()).d("remainingTime: $remainingTime")
+
+                val timeToDisplay = if (remainingTime >= 0) remainingTime else 0
+                val overtime = if (remainingTime >= 0) 0 else -remainingTime
 
                 eventHandler.updateTimer(
-                    time = if (timeElapsed >= maxTime) maxTime.toString() else timeElapsed.toString(),
-                    overtime = if (maxTime >= timeElapsed) "0" else (timeElapsed - maxTime).toString(),
+                    time = timeToDisplay.toString(),
+                    overtime = overtime.toString(),
                     category = category
                 )
 
-                if (timeElapsed == maxTime) {
+                if (remainingTime == 0) {
                     eventHandler.onTimeEnd()
-                } else if (timeElapsed >= maxTime + MAX_EXCEEDED_TIME) {
+                } else if (remainingTime <= -MAX_EXCEEDED_TIME) {
                     eventHandler.onTimeExceeded()
                     stopTimer()
                 }
