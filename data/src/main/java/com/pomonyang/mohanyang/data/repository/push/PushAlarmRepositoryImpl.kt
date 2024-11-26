@@ -30,6 +30,10 @@ internal class PushAlarmRepositoryImpl @Inject constructor(
 
     override suspend fun isTimerNotificationEnabled(): Boolean = notificationLocalDataSource.isTimerNotification()
 
+    override suspend fun isLockScreenNotificationEnabled(): Boolean = notificationLocalDataSource.isLockScreenNotification()
+
+    override suspend fun setLockScreenNotification(isEnabled: Boolean) = notificationLocalDataSource.saveLockScreenNotification(isEnabled)
+
     companion object {
         private const val DEVICE_TYPE = "ANDROID"
     }

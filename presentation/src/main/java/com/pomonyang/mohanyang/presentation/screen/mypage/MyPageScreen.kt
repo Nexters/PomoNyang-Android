@@ -88,6 +88,10 @@ fun MyPageRoute(
                     NotificationRequest.INTERRUPT -> {
                         myPageViewModel.handleEvent(MyPageEvent.ChangeInterruptNotification(true))
                     }
+
+                    NotificationRequest.LOCKSCREEN -> {
+                        myPageViewModel.handleEvent(MyPageEvent.ChangeLockScreenNotification(true))
+                    }
                 }
             }
         }
@@ -147,7 +151,7 @@ fun MyPageRoute(
     )
 }
 
-enum class NotificationRequest { TIMER, INTERRUPT }
+enum class NotificationRequest { TIMER, INTERRUPT, LOCKSCREEN }
 
 @Composable
 fun MyPageScreen(
@@ -357,6 +361,11 @@ fun NotificationBox(
                     onAction(MyPageEvent.ChangeInterruptNotification(isEnabled))
                 }
             )
+            LockScreenNotificationBox(
+                isChecked = state.isLockScreenNotificationEnabled,
+                onChangeValue = { isEnabled ->
+                    onAction(MyPageEvent.ChangeLockScreenNotification(isEnabled))
+                })
         }
     }
 }
@@ -413,6 +422,36 @@ fun InterruptNotificationBox(
             )
             Text(
                 text = stringResource(id = R.string.my_page_interrupt_push_content),
+                color = MnTheme.textColorScheme.tertiary,
+                style = MnTheme.typography.subBodyRegular
+            )
+        }
+        MnToggleButton(isChecked = isChecked, onCheckedChange = onChangeValue)
+    }
+}
+
+@Composable
+fun LockScreenNotificationBox(
+    modifier: Modifier = Modifier,
+    isChecked: Boolean,
+    onChangeValue: (Boolean) -> Unit
+) {
+    Row(
+        modifier = modifier.padding(MnSpacing.xLarge),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = stringResource(id = R.string.my_page_lockscreen_push_title),
+                color = MnTheme.textColorScheme.primary,
+                style = MnTheme.typography.header4
+            )
+            Text(
+                text = stringResource(id = R.string.my_page_lockscreen_push_content),
                 color = MnTheme.textColorScheme.tertiary,
                 style = MnTheme.typography.subBodyRegular
             )

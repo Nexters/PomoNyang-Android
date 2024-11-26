@@ -48,6 +48,15 @@ class MyPageViewModel @Inject constructor(
                 )
             }
 
+            is MyPageEvent.ChangeLockScreenNotification -> {
+                setEffect(
+                    MyPageSideEffect.CheckNotificationPermission(
+                        request = NotificationRequest.LOCKSCREEN,
+                        onGranted = { setLockScreenNotification(event.isEnabled) }
+                    )
+                )
+            }
+
             is MyPageEvent.CloseDialog -> {
                 setEffect(MyPageSideEffect.CloseDialog)
             }
@@ -80,18 +89,27 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
+    private fun setLockScreenNotification(isEnabled: Boolean) {
+        viewModelScope.launch {
+            pushAlarmRepository.setLockScreenNotification(isEnabled)
+            updateState { copy(isLockScreenNotificationEnabled = isEnabled) }
+        }
+    }
+
     private fun getUserProfile(appNotificationGranted: Boolean) {
         viewModelScope.launch {
             val userInfo = userRepository.getMyInfo()
 
             val isInterruptEnabled = appNotificationGranted && pushAlarmRepository.isInterruptNotificationEnabled()
             val isTimerEnabled = appNotificationGranted && pushAlarmRepository.isTimerNotificationEnabled()
+            val isLockScreenEnabled = appNotificationGranted && pushAlarmRepository.isLockScreenNotificationEnabled()
 
             updateState {
                 copy(
                     catName = userInfo.cat.name,
                     isInterruptNotificationEnabled = isInterruptEnabled,
-                    isTimerNotificationEnabled = isTimerEnabled
+                    isTimerNotificationEnabled = isTimerEnabled,
+                    isLockScreenNotificationEnabled = isLockScreenEnabled
                 )
             }
         }
