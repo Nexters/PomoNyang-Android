@@ -90,23 +90,25 @@ fun PomodoroFocusRoute(
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        pomodoroFocusViewModel.handleEvent(PomodoroFocusEvent.Resume)
+        stopNotification(context)
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
-        pomodoroFocusViewModel.handleEvent(PomodoroFocusEvent.Pause)
+        startInterrupt(context)
     }
 
-    DisposableEffect(state.maxFocusTime) {
+    DisposableEffect(Unit) {
+        onDispose {
+            stopNotification(context)
+        }
+    }
+
+    LaunchedEffect(state.maxFocusTime) {
         if (state.maxFocusTime != 0) {
             context.startFocusTimer(
                 maxTime = state.maxFocusTime,
                 category = state.categoryType
             )
-        }
-
-        onDispose {
-            pomodoroFocusViewModel.handleEvent(PomodoroFocusEvent.Dispose)
         }
     }
 

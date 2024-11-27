@@ -13,9 +13,6 @@ class PomodoroFocusViewModel @Inject constructor() : BaseViewModel<PomodoroFocus
         when (event) {
             PomodoroFocusEvent.ClickRest -> setEffect(PomodoroFocusEffect.GoToPomodoroRest)
             PomodoroFocusEvent.ClickHome -> setEffect(PomodoroFocusEffect.GoToPomodoroSetting)
-            PomodoroFocusEvent.Pause -> setEffect(PomodoroFocusEffect.StartFocusAlarm)
-            PomodoroFocusEvent.Resume -> setEffect(PomodoroFocusEffect.StopFocusAlarm)
-            PomodoroFocusEvent.Dispose -> setEffect(PomodoroFocusEffect.StopFocusAlarm)
         }
     }
 }
