@@ -114,28 +114,21 @@ fun CatRive(
             }
         }
 
-        Column(
-            modifier = catRiveModifier,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier.size(240.dp)
-            ) {
-                AndroidView(
-                    modifier = Modifier.matchParentSize(),
-                    factory = { riveView }
-                )
+        Box {
+            AndroidView(
+                modifier = Modifier.size(240.dp),
+                factory = { riveView }
+            )
 
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .clickableSingle(
-                            activeRippleEffect = false
-                        ) {
-                            onRiveClick(riveView)
-                        }
-                )
-            }
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickableSingle(
+                        activeRippleEffect = false
+                    ) {
+                        onRiveClick(riveView)
+                    }
+            )
         }
     }
 }

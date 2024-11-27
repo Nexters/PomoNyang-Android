@@ -11,4 +11,6 @@ interface PushAlarmRepository {
     suspend fun isInterruptNotificationEnabled(): Boolean
     suspend fun setTimerNotification(isEnabled: Boolean)
     suspend fun isTimerNotificationEnabled(): Boolean
+    suspend fun isLockScreenNotificationEnabled(): Boolean
+    suspend fun setLockScreenNotification(isEnabled: Boolean)
 }

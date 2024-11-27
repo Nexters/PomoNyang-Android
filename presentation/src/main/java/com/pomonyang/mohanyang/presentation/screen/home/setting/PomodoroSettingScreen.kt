@@ -79,7 +79,7 @@ fun PomodoroSettingRoute(
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
-    val catMessage = remember(state.cat.type) { state.cat.type.getRandomMessage() }
+
     val context = LocalContext.current
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         if (isNewUser && state.isEndOnBoardingTooltip.not()) return@collectWithLifecycle
@@ -107,7 +107,6 @@ fun PomodoroSettingRoute(
     PomodoroSettingScreen(
         onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
-        catMessage = catMessage,
         modifier = modifier,
         showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not()
     )
@@ -124,7 +123,6 @@ private fun stopAllNotification(context: Context) {
 fun PomodoroSettingScreen(
     onAction: (PomodoroSettingEvent) -> Unit,
     showOnboardingTooltip: Boolean,
-    catMessage: String,
     state: PomodoroSettingState,
     modifier: Modifier = Modifier
 ) {
@@ -134,6 +132,7 @@ fun PomodoroSettingScreen(
     var categoryTooltip by remember { mutableStateOf(false) }
     var timeTooltip by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    var catMessage by remember { mutableStateOf(state.cat.type.getRandomMessage()) }
 
     LaunchedEffect(Unit) {
         delay(0.5.seconds)
@@ -175,8 +174,9 @@ fun PomodoroSettingScreen(
                 onRiveClick = remember {
                     {
                         it.fireState("State Machine_Home", state.cat.type.catFireInput)
+                        catMessage = state.cat.type.getRandomMessage()
                     }
-                }
+                },
             )
 
             Text(
@@ -370,7 +370,6 @@ fun PomodoroStarterScreenPreview() {
     PomodoroSettingScreen(
         onAction = {},
         showOnboardingTooltip = false,
-        catMessage = "catMessage",
         state = PomodoroSettingState(
             categoryList = listOf(
                 PomodoroCategoryModel(

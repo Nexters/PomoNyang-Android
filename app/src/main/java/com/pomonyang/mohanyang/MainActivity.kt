@@ -30,9 +30,11 @@ import com.datadog.android.compose.NavigationViewTrackingEffect
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.notification.LocalNotificationReceiver
 import com.pomonyang.mohanyang.notification.util.createNotificationChannel
+import com.pomonyang.mohanyang.notification.util.deleteNotificationChannelIfExists
 import com.pomonyang.mohanyang.presentation.screen.common.LoadingScreen
 import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorDialog
 import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorScreen
+import com.pomonyang.mohanyang.presentation.screen.common.ServerErrorScreen
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -131,8 +133,14 @@ class MainActivity : ComponentActivity() {
         mohaNyangAppState: MohaNyangAppState,
     ) {
         when {
+            viewState.isInternalError -> ServerErrorScreen(onClickNavigateToHome = { })
+            viewState.isInvalidError ->
+                NetworkErrorScreen(
+                    modifier = modifier,
+                    onClickRetry = { viewModel.handleEvent(MainEvent.ClickRetry) }
+                )
+
             viewState.isLoading -> LoadingScreen(modifier = modifier)
-            viewState.isError -> NetworkErrorScreen(modifier = modifier)
             else -> {
                 MohaNyangApp(mohaNyangAppState = mohaNyangAppState)
             }
@@ -144,13 +152,18 @@ class MainActivity : ComponentActivity() {
         AppInitializer.getInstance(applicationContext)
             .initializeComponent(RiveInitializer::class.java)
 
-        createNotificationChannel()
-        registerNotificationService()
+        setupNotification()
 
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
         )
+    }
+
+    private fun setupNotification() {
+        deletePrevNotificationChannel()
+        createNotificationChannel()
+        registerNotificationService()
     }
 
 
@@ -179,6 +192,12 @@ class MainActivity : ComponentActivity() {
         }
         val receiver = LocalNotificationReceiver()
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilters)
+    }
+
+    private fun deletePrevNotificationChannel() {
+        val deprecatedNotificationChannel = listOf(R.string.channel_id_v1, R.string.pomodoro_channel_id_v1)
+        deprecatedNotificationChannel.forEach { deleteNotificationChannelIfExists(getString(it)) }
+
     }
 
 

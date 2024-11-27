@@ -92,6 +92,24 @@ fun NavGraphBuilder.onboardingScreen(
             OnboardingNamingCatRoute(
                 catName = catName,
                 catType = catType,
+                onNavToHomeClick = {
+                    when (destination) {
+                        //온보딩에서 에러가 발생하여 홈으로 돌아가는 경우 가이드로 navigate
+                        CatSettingDestination.POMODORO -> {
+                            navHostController.navigate(
+                                route = OnboardingGuide,
+                                navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build()
+                            )
+                        }
+                        //마이페이지에서 수정시 에러가 발생하여 홈으로 돌아가는 경우
+                        CatSettingDestination.MY_PAGE -> {
+                            navHostController.navigate(Home) {
+                                popUpTo(Home)
+                                launchSingleTop = true
+                            }
+                        }
+                    }
+                },
                 onBackClick = { navHostController.popBackStack() },
                 onNavToDestination = {
                     when (destination) {
