@@ -46,6 +46,7 @@ class OnboardingNamingCatViewModel @Inject constructor(
             is NamingEvent.OnComplete -> {
                 updateState { copy(isLoading = true, lastRequestAction = event) }
                 scope.launch {
+                    throw InternalException(msg = "500에러 유도")
                     pomodoroSettingRepository.fetchPomodoroSettingList()
                     updateCatName(event.name)
                 }
