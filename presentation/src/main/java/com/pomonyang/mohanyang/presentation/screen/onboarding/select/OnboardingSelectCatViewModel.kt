@@ -1,5 +1,8 @@
 package com.pomonyang.mohanyang.presentation.screen.onboarding.select
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.remote.util.BadRequestException
 import com.pomonyang.mohanyang.data.remote.util.InternalException
@@ -11,6 +14,7 @@ import com.pomonyang.mohanyang.presentation.model.cat.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 
@@ -21,6 +25,8 @@ class OnboardingSelectCatViewModel @Inject constructor(
     private val pushAlarmRepository: PushAlarmRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel<SelectCatState, SelectCatEvent, SelectCatSideEffect>() {
+
+    private var retryCount by mutableIntStateOf(0)
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         when (throwable) {
@@ -54,10 +60,17 @@ class OnboardingSelectCatViewModel @Inject constructor(
             }
 
             is SelectCatEvent.OnStartClick -> {
-                with(state.value) {
-                    cats.find { it.type == selectedType }?.no
-                }?.let { selectedNo ->
-                    updateSelectCatType(selectedNo)
+                retryCount++
+                if (retryCount % 2 == 1) {
+                    scope.launch {
+                        throw BadRequestException(msg = "400에러 발생 유도")
+                    }
+                } else {
+                    with(state.value) {
+                        cats.find { it.type == selectedType }?.no
+                    }?.let { selectedNo ->
+                        updateSelectCatType(selectedNo)
+                    }
                 }
                 updateState { copy(lastRequestAction = event) }
             }
@@ -79,8 +92,8 @@ class OnboardingSelectCatViewModel @Inject constructor(
     }
 
     private fun getCatTypes(selectedCatNo: Int?) {
-        updateState { copy(isLoading = true) }
         scope.launch {
+            updateState { copy(isLoading = true) }
             catSettingRepository.getCatTypes().onSuccess { cats ->
                 val catList = cats.map { it.toModel() }
                 updateState {
@@ -90,8 +103,10 @@ class OnboardingSelectCatViewModel @Inject constructor(
                     )
                 }
             }.getOrThrow()
+            delay(3000) // QA : Loading 화면 노출을 위한 delay
+            updateState { copy(isLoading = false) }
+
         }
-        updateState { copy(isLoading = false) }
     }
 
     private fun updateSelectCatType(catNo: Int) {
