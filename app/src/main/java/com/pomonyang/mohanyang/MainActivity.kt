@@ -31,7 +31,6 @@ import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.notification.LocalNotificationReceiver
 import com.pomonyang.mohanyang.notification.util.createNotificationChannel
 import com.pomonyang.mohanyang.notification.util.deleteNotificationChannelIfExists
-import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
 import com.pomonyang.mohanyang.presentation.screen.common.LoadingScreen
 import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorDialog
 import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorScreen
@@ -153,14 +152,18 @@ class MainActivity : ComponentActivity() {
         AppInitializer.getInstance(applicationContext)
             .initializeComponent(RiveInitializer::class.java)
 
-        deletePrevNotificationChannel()
-        createNotificationChannel()
-        registerNotificationService()
+        setupNotification()
 
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
         )
+    }
+
+    private fun setupNotification() {
+        deletePrevNotificationChannel()
+        createNotificationChannel()
+        registerNotificationService()
     }
 
 
@@ -192,9 +195,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun deletePrevNotificationChannel() {
-        val deprecatedNotificationChannel = listOf(getString(R.string.channel_id), PomodoroConstants.POMODORO_NOTIFICATION_CHANNEL_ID)
-
-        deprecatedNotificationChannel.forEach { deleteNotificationChannelIfExists(it) }
+        val deprecatedNotificationChannel = listOf(R.string.channel_id_v1, R.string.pomodoro_channel_id_v1)
+        deprecatedNotificationChannel.forEach { deleteNotificationChannelIfExists(getString(it)) }
 
     }
 
