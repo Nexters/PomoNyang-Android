@@ -9,5 +9,7 @@
     <string name="offline_mode_message">오프라인 모드</string>
     <string name="force_home_dialog_title">집중을 끝내고 돌아왔어요</string>
     <string name="force_home_dialog_subtitle">너무 오랜 시간동안 대기화면에 머물러서 홈화면으로 이동되었어요.</string>
+    <string name="channel_id_v1">moha-nyang-channel</string>
+    <string name="pomodoro_channel_id_v1">pomodoro_notification_channel</string>
 
 </resources>
