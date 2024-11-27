@@ -18,7 +18,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/icon_category"
+                android:id="@+id/iv_category"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="2dp"
@@ -45,8 +45,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/right_image"
+        android:id="@+id/iv_right_content"
         android:layout_width="86dp"
-        android:layout_height="86dp"
-        android:background="#A39A93" />
+        android:layout_height="86dp" />
 </LinearLayout>

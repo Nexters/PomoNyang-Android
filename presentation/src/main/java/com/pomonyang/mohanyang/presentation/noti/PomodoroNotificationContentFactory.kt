@@ -23,6 +23,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
 
         setTitle(remoteViews, titleBitmap)
         setContent(remoteViews, contentBitmap)
+        setRightContent(remoteViews)
 
         return remoteViews
     }
@@ -43,6 +44,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
         setTime(remoteViews, formattedTime)
         setOvertime(remoteViews, formattedOvertime)
         setIcon(remoteViews, iconRes)
+        setRightContent(remoteViews)
 
         return remoteViews
     }
@@ -68,11 +70,11 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     }
 
     private fun setTitle(remoteViews: RemoteViews, titleBitmap: Bitmap) {
-        remoteViews.setImageViewBitmap(R.id.iv_text_title, titleBitmap)
+        remoteViews.setImageViewBitmap(R.id.text_title, titleBitmap)
     }
 
     private fun setContent(remoteViews: RemoteViews, contentBitmap: Bitmap) {
-        remoteViews.setImageViewBitmap(R.id.iv_text_content, contentBitmap)
+        remoteViews.setImageViewBitmap(R.id.text_content, contentBitmap)
     }
 
     private fun formatTimeString(timeStr: String): String {
@@ -112,7 +114,11 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     }
 
     private fun setIcon(remoteViews: RemoteViews, iconRes: Int) {
-        remoteViews.setImageViewResource(R.id.icon_category, iconRes)
+        remoteViews.setImageViewResource(R.id.iv_category, iconRes)
+    }
+
+    private fun setRightContent(remoteViews: RemoteViews) {
+        remoteViews.setImageViewResource(R.id.iv_right_content, R.drawable.img_touch_hair_ball)
     }
 
     private fun getStatusBitmapAndIcon(category: PomodoroCategoryType?): Pair<Bitmap, Int> {

@@ -12,12 +12,12 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/iv_text_title"
+            android:id="@+id/text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <ImageView
-            android:id="@+id/iv_text_content"
+            android:id="@+id/text_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp" />
@@ -25,8 +25,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/right_image"
+        android:id="@+id/iv_right_content"
         android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="#A39A93" />
+        android:layout_height="48dp" />
 </LinearLayout>
