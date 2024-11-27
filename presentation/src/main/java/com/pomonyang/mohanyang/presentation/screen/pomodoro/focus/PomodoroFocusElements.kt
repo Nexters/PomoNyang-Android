@@ -9,6 +9,7 @@ data object PomodoroFocusState : ViewState
 sealed interface PomodoroFocusEvent : ViewEvent {
     data object ClickRest : PomodoroFocusEvent
     data object ClickHome : PomodoroFocusEvent
+    data object Pause : PomodoroFocusEvent
     data object Resume : PomodoroFocusEvent
     data object Dispose : PomodoroFocusEvent
 }
