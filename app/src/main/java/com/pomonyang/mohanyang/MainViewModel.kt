@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
+import com.pomonyang.mohanyang.data.remote.util.BadRequestException
+import com.pomonyang.mohanyang.data.remote.util.InternalException
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
@@ -13,8 +15,10 @@ import com.pomonyang.mohanyang.domain.usecase.GetTokenByDeviceIdUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 
@@ -29,6 +33,23 @@ class MainViewModel @Inject constructor(
     private val networkMonitor: NetworkMonitor
 ) : BaseViewModel<MainState, MainEvent, MainEffect>() {
 
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        when (throwable) {
+            is InternalException -> {
+                updateState { copy(isInternalError = true) }
+            }
+
+            is BadRequestException -> {
+                updateState { copy(isInvalidError = true) }
+            }
+
+            else -> {
+                updateState { copy(isInvalidError = true) }
+            }
+        }
+    }
+
+    private val scope = viewModelScope + coroutineExceptionHandler
 
     override fun setInitialState(): MainState {
         return MainState(isLoading = true)
@@ -38,16 +59,23 @@ class MainViewModel @Inject constructor(
         when (event) {
             MainEvent.Init -> {
                 initializeAppData()
+                updateState { copy(lastRequestAction = event) }
             }
 
             MainEvent.ClickRefresh -> {
                 onClickRefresh()
+                updateState { copy(lastRequestAction = event) }
             }
 
             MainEvent.ClickClose -> {
                 setEffect(MainEffect.ExitApp)
             }
+
+            MainEvent.ClickRetry -> {
+                state.value.lastRequestAction?.let { handleEvent(it) }
+            }
         }
+
     }
 
 
@@ -60,39 +88,29 @@ class MainViewModel @Inject constructor(
                     } else {
                         onOffline()
                     }
-                    updateState { copy(isLoading = false) }
                 }
             } catch (e: TimeoutCancellationException) {
                 /* MAX TIME 초과시  Cancel 처리된 경우 네트워크 알림처리 */
-                updateState { copy(isLoading = false) }
                 setEffect(MainEffect.ShowDialog)
-            } catch (e: Exception) {
-                Timber.w("${e.message}")
-                updateState { copy(isError = true, isLoading = false) }
+            } finally {
+                updateState { copy(isLoading = false) }
             }
-
         }
     }
 
 
     // 온라인 상태일 때 실행할 초기화 로직
-    private fun onOnline() {
-        viewModelScope.launch {
-            fetchFcmToken()
-            fetchUserInfo().onSuccess {
-                setupUserAndNavigate(it.isNewUser())
-            }.onFailure {
-                updateState { copy(isError = true) }
-            }
-        }
+    private fun onOnline() = scope.launch {
+        fetchFcmToken()
+        fetchUserInfo().onSuccess {
+            setupUserAndNavigate(it.isNewUser())
+        }.getOrThrow()
     }
 
     // 오프라인 상태일 때 실행할 초기화 로직
-    private fun onOffline() {
-        viewModelScope.launch {
-            val isNewUser = checkIfNewUser()
-            setupUserAndNavigate(isNewUser)
-        }
+    private fun onOffline() = scope.launch {
+        val isNewUser = checkIfNewUser()
+        setupUserAndNavigate(isNewUser)
     }
 
     private suspend fun setupUserAndNavigate(isNewUser: Boolean) {
@@ -117,18 +135,10 @@ class MainViewModel @Inject constructor(
 
     private fun onClickRefresh() {
         if (!networkMonitor.isConnected) return
-
-        viewModelScope.launch {
-            updateState { copy(isLoading = true) }
-
-            fetchUserInfo().onSuccess {
-                setEffect(MainEffect.DismissDialog)
-                setupUserAndNavigate(it.isNewUser())
-            }.onFailure {
-                updateState { copy(isError = true) }
-            }
-
-            updateState { copy(isLoading = false) }
+        scope.launch {
+            val userInfo = fetchUserInfo().getOrThrow()
+            setEffect(MainEffect.DismissDialog)
+            setupUserAndNavigate(userInfo.isNewUser())
         }
     }
 

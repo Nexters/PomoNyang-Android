@@ -35,6 +35,7 @@ import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
 import com.pomonyang.mohanyang.presentation.screen.common.LoadingScreen
 import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorDialog
 import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorScreen
+import com.pomonyang.mohanyang.presentation.screen.common.ServerErrorScreen
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -133,8 +134,14 @@ class MainActivity : ComponentActivity() {
         mohaNyangAppState: MohaNyangAppState,
     ) {
         when {
+            viewState.isInternalError -> ServerErrorScreen(onClickNavigateToHome = { })
+            viewState.isInvalidError ->
+                NetworkErrorScreen(
+                    modifier = modifier,
+                    onClickRetry = { viewModel.handleEvent(MainEvent.ClickRetry) }
+                )
+
             viewState.isLoading -> LoadingScreen(modifier = modifier)
-            viewState.isError -> NetworkErrorScreen(modifier = modifier)
             else -> {
                 MohaNyangApp(mohaNyangAppState = mohaNyangAppState)
             }

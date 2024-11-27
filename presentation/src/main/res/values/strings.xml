@@ -98,11 +98,21 @@
     <string name="dialog_network_title">네트워크 연결 실패</string>
     <string name="dialog_network_content">네트워크 연결에 실패하였습니다.\n확인 후 다시 시도해 주세요</string>
     <string name="dialog_network_refresh">새로고침</string>
+    <string name="network_error_title">인터넷 연결이 불안정해요</string>
+    <string name="network_error_content">연결 상태를 확인한 후 다시 시도해 주세요.</string>
+    <string name="network_refresh">다시 시도하기</string>
 
     <string name="my_page_static_title">나는 얼마나 집중하고 있을까?</string>
     <string name="my_page_static_subtitle">통계에서 집중시간을 모아볼 수 있어요</string>
     <string name="my_page_static_check">확인하기</string>
     <string name="my_page_static_check_toast">통계를 사용할 수 있도록 준비하고 있어요</string>
+
+
+
+    <string name="server_error_title">문제가 발생했어요</string>
+    <string name="server_error_content">잠시 후에 다시 확인해주세요.\n문제가 지속된다면 고객센터에 문의해주세요.</string>
+    <string name="move_to_home">홈으로 이동</string>
+    <string name="inquiry_service">고객센터 문의</string>
 
 
 </resources>
