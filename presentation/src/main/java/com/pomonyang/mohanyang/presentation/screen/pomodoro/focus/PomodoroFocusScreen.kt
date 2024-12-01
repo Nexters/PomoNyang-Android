@@ -90,7 +90,7 @@ fun PomodoroFocusRoute(
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        stopNotification(context)
+        stopInterrupt(context)
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
