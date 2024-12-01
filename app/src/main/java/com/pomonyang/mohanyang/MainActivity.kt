@@ -103,34 +103,35 @@ class MainActivity : ComponentActivity() {
                     MainEffect.GoToTimer -> {}
 
                     MainEffect.GoToOnBoarding -> {}
-
-
                 }
             }
 
             MnTheme {
-                if (showDialog) NetworkErrorDialog(
-                    onClickRefresh = {
-                        viewModel.handleEvent(MainEvent.ClickRefresh)
-                    }, onDismissRequest = {
-                        viewModel.handleEvent(MainEvent.ClickClose)
-                    }
-                )
-                else AppScreen(
-                    modifier = Modifier,
-                    viewState = state,
-                    mohaNyangAppState = mohaNyangAppState
-                )
+                if (showDialog) {
+                    NetworkErrorDialog(
+                        onClickRefresh = {
+                            viewModel.handleEvent(MainEvent.ClickRefresh)
+                        },
+                        onDismissRequest = {
+                            viewModel.handleEvent(MainEvent.ClickClose)
+                        }
+                    )
+                } else {
+                    AppScreen(
+                        modifier = Modifier,
+                        viewState = state,
+                        mohaNyangAppState = mohaNyangAppState
+                    )
+                }
             }
         }
-
     }
 
     @Composable
     fun AppScreen(
         modifier: Modifier,
         viewState: MainState,
-        mohaNyangAppState: MohaNyangAppState,
+        mohaNyangAppState: MohaNyangAppState
     ) {
         when {
             viewState.isInternalError -> ServerErrorScreen(onClickNavigateToHome = { })
@@ -146,7 +147,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
 
     private fun configureAppStartup() {
         AppInitializer.getInstance(applicationContext)
@@ -166,7 +166,6 @@ class MainActivity : ComponentActivity() {
         registerNotificationService()
     }
 
-
     private fun handleSplashScreen() {
         installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
         lifecycleScope.launch {
@@ -185,7 +184,6 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
     }
 
-
     private fun registerNotificationService() {
         val intentFilters = IntentFilter().apply {
             MnNotificationManager.intents.map { addAction(it) }
@@ -197,9 +195,7 @@ class MainActivity : ComponentActivity() {
     private fun deletePrevNotificationChannel() {
         val deprecatedNotificationChannel = listOf(R.string.channel_id_v1, R.string.pomodoro_channel_id_v1)
         deprecatedNotificationChannel.forEach { deleteNotificationChannelIfExists(getString(it)) }
-
     }
-
 
     companion object {
         private const val SPLASH_DELAY = 2000L

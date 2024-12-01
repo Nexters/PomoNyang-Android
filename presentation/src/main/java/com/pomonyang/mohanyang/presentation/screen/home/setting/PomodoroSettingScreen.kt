@@ -176,7 +176,7 @@ fun PomodoroSettingScreen(
                         it.fireState("State Machine_Home", state.cat.type.catFireInput)
                         catMessage = state.cat.type.getRandomMessage()
                     }
-                },
+                }
             )
 
             Text(

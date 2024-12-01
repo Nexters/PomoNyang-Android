@@ -46,7 +46,6 @@ fun PomodoroTimeSettingRoute(
     onShowSnackbar: (String, Int?) -> Unit,
     onEndSettingClick: () -> Unit
 ) {
-
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     viewModel.effects.collectWithLifecycle { effect ->
@@ -91,7 +90,6 @@ fun PomodoroTimeSettingRoute(
             }
         }
     }
-
 }
 
 @Composable

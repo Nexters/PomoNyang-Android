@@ -48,7 +48,6 @@ fun Context.defaultNotification(
     .setCategory(NotificationCompat.CATEGORY_MESSAGE)
     .setGroup(getString(R.string.channel_group_name))
 
-
 fun Context.summaryNotification(pendingIntent: PendingIntent? = null): NotificationCompat.Builder = this.defaultNotification(pendingIntent)
     .setGroupSummary(true)
 
@@ -62,7 +61,6 @@ fun getTriggerTimeInMillis(time: LocalTime): Long {
 }
 
 fun Context.isNotificationGranted(): Boolean = MnNotificationManager.isNotificationGranted(this)
-
 
 fun Context.deleteNotificationChannelIfExists(channelId: String) {
     val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager

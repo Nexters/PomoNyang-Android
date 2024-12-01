@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
-
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val pushAlarmRepository: PushAlarmRepository,

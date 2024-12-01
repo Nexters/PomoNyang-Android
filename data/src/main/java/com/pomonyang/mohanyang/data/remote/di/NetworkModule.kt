@@ -84,13 +84,11 @@ internal abstract class NetworkModule {
         fun provideOkHttpClient(
             httpRequestInterceptor: HttpRequestInterceptor,
             httpLoggingInterceptor: HttpLoggingInterceptor
-        ): OkHttpClient {
-            return OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .addInterceptor(httpRequestInterceptor)
-                .applyDatadogInterceptors(tracedHosts)
-                .build()
-        }
+        ): OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(httpRequestInterceptor)
+            .applyDatadogInterceptors(tracedHosts)
+            .build()
 
         @Provides
         @Singleton
@@ -106,17 +104,14 @@ internal abstract class NetworkModule {
             .applyDatadogInterceptors(tracedHosts)
             .build()
 
-        private fun OkHttpClient.Builder.applyDatadogInterceptors(tracedHosts: List<String>): OkHttpClient.Builder {
-            return this
-                .addInterceptor(DatadogInterceptor.Builder(tracedHosts).build())
-                .addNetworkInterceptor(TracingInterceptor.Builder(tracedHosts).build())
-                .eventListenerFactory(DatadogEventListener.Factory())
-        }
+        private fun OkHttpClient.Builder.applyDatadogInterceptors(tracedHosts: List<String>): OkHttpClient.Builder = this
+            .addInterceptor(DatadogInterceptor.Builder(tracedHosts).build())
+            .addNetworkInterceptor(TracingInterceptor.Builder(tracedHosts).build())
+            .eventListenerFactory(DatadogEventListener.Factory())
 
         @Provides
         @Singleton
         fun provideNetworkResultCallAdapter(): NetworkResultCallAdapterFactory = NetworkResultCallAdapterFactory()
-
 
         @Provides
         @Singleton

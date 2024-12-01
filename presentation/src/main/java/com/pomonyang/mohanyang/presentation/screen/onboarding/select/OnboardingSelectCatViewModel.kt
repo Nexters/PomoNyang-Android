@@ -14,7 +14,6 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 
-
 @HiltViewModel
 class OnboardingSelectCatViewModel @Inject constructor(
     private val catSettingRepository: CatSettingRepository,
@@ -72,10 +71,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
             is SelectCatEvent.OnClickRetry -> {
                 state.value.lastRequestAction?.let { handleEvent(it) }
             }
-
         }
-
-
     }
 
     private fun getCatTypes(selectedCatNo: Int?) {
@@ -86,7 +82,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
                 updateState {
                     copy(
                         cats = catList,
-                        selectedType = catList.find { it.no == selectedCatNo }?.type,
+                        selectedType = catList.find { it.no == selectedCatNo }?.type
                     )
                 }
             }.getOrThrow()
@@ -110,6 +106,4 @@ class OnboardingSelectCatViewModel @Inject constructor(
         }
         updateState { copy(isLoading = false) }
     }
-
-
 }

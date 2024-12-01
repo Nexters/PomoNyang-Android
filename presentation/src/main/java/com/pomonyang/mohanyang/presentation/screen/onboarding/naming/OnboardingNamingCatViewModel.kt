@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 
-
 @HiltViewModel
 class OnboardingNamingCatViewModel @Inject constructor(
     private val catSettingRepository: CatSettingRepository,
@@ -50,7 +49,6 @@ class OnboardingNamingCatViewModel @Inject constructor(
                     updateCatName(event.name)
                 }
                 updateState { copy(isLoading = false) }
-
             }
 
             is NamingEvent.OnClickRetry -> {

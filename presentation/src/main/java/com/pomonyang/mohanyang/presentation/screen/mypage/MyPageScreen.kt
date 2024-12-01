@@ -236,7 +236,6 @@ fun MyPageScreen(
             SuggestionBox {
                 onAction(MyPageEvent.ClickSuggestion)
             }
-
         }
     }
 }
@@ -282,7 +281,7 @@ fun ProfileBox(
 @Composable
 fun CheckFocusTimeBox(
     onAction: (MyPageEvent) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -293,11 +292,11 @@ fun CheckFocusTimeBox(
                 shape = RoundedCornerShape(MnRadius.medium)
             )
             .padding(MnSpacing.xLarge),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(MnSpacing.medium),
+            verticalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_static_ready),
@@ -365,7 +364,8 @@ fun NotificationBox(
                 isChecked = state.isLockScreenNotificationEnabled,
                 onChangeValue = { isEnabled ->
                     onAction(MyPageEvent.ChangeLockScreenNotification(isEnabled))
-                })
+                }
+            )
         }
     }
 }

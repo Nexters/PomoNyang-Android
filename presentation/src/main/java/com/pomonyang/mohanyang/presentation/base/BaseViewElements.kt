@@ -6,7 +6,6 @@ interface ViewEvent
 
 interface ViewSideEffect
 
-
 open class NetworkViewState(
     open val isLoading: Boolean = false,
     open val isInternalError: Boolean = false,

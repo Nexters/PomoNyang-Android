@@ -72,7 +72,7 @@ internal class NetworkResultCall<T : Any>(
                         500 -> {
                             InternalException(msg = "$errorBodyMessage / ${response.message()}")
                         }
-                        
+
                         else -> {
                             Exception("${response.code()} / $errorBodyMessage / ${response.message()}")
                         }

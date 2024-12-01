@@ -33,25 +33,23 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 @Composable
 fun ServerErrorScreen(
     onClickNavigateToHome: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val suggestionUrl = "http://pf.kakao.com/_FvuAn"
 
-    Box(
-
-    ) {
+    Box {
         Column(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Image(
                 modifier = Modifier
                     .size(240.dp)
                     .padding(bottom = MnSpacing.threeXLarge),
-                painter = painterResource(id = R.drawable.ic_error), contentDescription = "server error"
+                painter = painterResource(id = R.drawable.ic_error),
+                contentDescription = "server error"
             )
 
             Column(
@@ -59,7 +57,9 @@ fun ServerErrorScreen(
                 verticalArrangement = Arrangement.spacedBy(MnSpacing.small)
             ) {
                 Text(
-                    style = MnTheme.typography.header4, color = MnTheme.textColorScheme.primary, text = stringResource(id = R.string.server_error_title)
+                    style = MnTheme.typography.header4,
+                    color = MnTheme.textColorScheme.primary,
+                    text = stringResource(id = R.string.server_error_title)
                 )
                 Text(
                     style = MnTheme.typography.subBodyRegular.copy(
@@ -76,7 +76,7 @@ fun ServerErrorScreen(
                 onClick = onClickNavigateToHome,
                 colors = MnBoxButtonColorType.primary,
                 styles = MnBoxButtonStyles.large,
-                containerPadding = PaddingValues(top = 60.dp),
+                containerPadding = PaddingValues(top = 60.dp)
             )
 
             Text(
@@ -86,14 +86,13 @@ fun ServerErrorScreen(
                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(suggestionUrl)))
                     },
                 style = MnTheme.typography.subBodyRegular.copy(
-                    textDecoration = TextDecoration.Underline,
+                    textDecoration = TextDecoration.Underline
                 ),
                 color = MnTheme.textColorScheme.tertiary,
-                text = stringResource(id = R.string.inquiry_service),
+                text = stringResource(id = R.string.inquiry_service)
             )
         }
     }
-
 }
 
 @Preview

@@ -55,7 +55,6 @@ fun OnboardingNamingCatRoute(
     modifier: Modifier = Modifier,
     onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel()
 ) {
-
     val state by onboardingNamingCatViewModel.state.collectAsStateWithLifecycle()
 
     onboardingNamingCatViewModel.effects.collectWithLifecycle { effect ->
@@ -75,8 +74,6 @@ fun OnboardingNamingCatRoute(
         onBackClick = onBackClick,
         modifier = modifier
     )
-
-
 }
 
 @Composable
@@ -134,7 +131,6 @@ fun OnboardingNamingCatScreen(
                         }
                     )
 
-
                     Column(
                         modifier = Modifier
                             .padding(horizontal = MnSpacing.xLarge)
@@ -184,8 +180,6 @@ fun OnboardingNamingCatScreen(
             }
         }
     }
-
-
 }
 
 @Composable
