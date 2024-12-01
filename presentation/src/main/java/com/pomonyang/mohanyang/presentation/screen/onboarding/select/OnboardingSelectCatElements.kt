@@ -12,7 +12,7 @@ data class SelectCatState(
     override val isInvalidError: Boolean = false,
     override val lastRequestAction: SelectCatEvent? = null,
     val cats: List<CatInfoModel> = emptyList(),
-    val selectedType: CatType? = null,
+    val selectedType: CatType? = null
 ) : NetworkViewState()
 
 sealed interface SelectCatEvent : ViewEvent {

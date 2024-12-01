@@ -22,7 +22,6 @@ import kotlinx.coroutines.plus
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 
-
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val pomodoroTimerRepository: PomodoroTimerRepository,
@@ -51,9 +50,7 @@ class MainViewModel @Inject constructor(
 
     private val scope = viewModelScope + coroutineExceptionHandler
 
-    override fun setInitialState(): MainState {
-        return MainState(isLoading = true)
-    }
+    override fun setInitialState(): MainState = MainState(isLoading = true)
 
     override fun handleEvent(event: MainEvent) {
         when (event) {
@@ -75,9 +72,7 @@ class MainViewModel @Inject constructor(
                 state.value.lastRequestAction?.let { handleEvent(it) }
             }
         }
-
     }
-
 
     private fun initializeAppData() {
         viewModelScope.launch {
@@ -97,7 +92,6 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
 
     // 온라인 상태일 때 실행할 초기화 로직
     private fun onOnline() = scope.launch {
@@ -124,13 +118,11 @@ class MainViewModel @Inject constructor(
 
     fun checkIfNewUser() = userRepository.isNewUser()
 
-    private suspend fun fetchUserInfo(): Result<UserInfoResponse> {
-        return runCatching {
-            getTokenByDeviceIdUseCase().getOrThrow()
-            val userInfo = userRepository.fetchMyInfo().getOrThrow()
-            pomodoroSettingRepository.fetchPomodoroSettingList()
-            userInfo
-        }
+    private suspend fun fetchUserInfo(): Result<UserInfoResponse> = runCatching {
+        getTokenByDeviceIdUseCase().getOrThrow()
+        val userInfo = userRepository.fetchMyInfo().getOrThrow()
+        pomodoroSettingRepository.fetchPomodoroSettingList()
+        userInfo
     }
 
     private fun onClickRefresh() {
@@ -141,7 +133,6 @@ class MainViewModel @Inject constructor(
             setupUserAndNavigate(userInfo.isNewUser())
         }
     }
-
 
     private fun fetchFcmToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(
@@ -170,7 +161,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-
     private suspend fun savePomodoroCacheData() {
         pomodoroTimerRepository.savePomodoroCacheData()
     }
@@ -179,9 +169,7 @@ class MainViewModel @Inject constructor(
         pomodoroTimerRepository.updateRecentPomodoroDone()
     }
 
-
     companion object {
         const val FETCH_MAX_TIME = 3000L
     }
-
 }

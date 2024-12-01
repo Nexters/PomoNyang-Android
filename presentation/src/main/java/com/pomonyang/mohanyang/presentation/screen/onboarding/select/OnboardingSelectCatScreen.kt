@@ -106,9 +106,7 @@ fun OnboardingSelectCatRoute(
             }
         }
     }
-
 }
-
 
 @Composable
 private fun OnboardingSelectCatScreen(

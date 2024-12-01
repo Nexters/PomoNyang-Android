@@ -3,10 +3,7 @@ package com.pomonyang.mohanyang.presentation.noti
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ContentResolver
 import android.content.Context
-import android.media.AudioAttributes
-import android.net.Uri
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -37,7 +34,6 @@ internal class PomodoroNotificationManager @Inject constructor(
         createNotificationChannel()
     }
 
-
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
             POMODORO_NOTIFICATION_CHANNEL_ID,
@@ -48,7 +44,7 @@ internal class PomodoroNotificationManager @Inject constructor(
             enableLights(false)
             enableVibration(false)
             vibrationPattern = null
-            MnNotificationManager.setCustomAlarmSound(context,this)
+            MnNotificationManager.setCustomAlarmSound(context, this)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -63,7 +59,6 @@ internal class PomodoroNotificationManager @Inject constructor(
     }
 
     fun updateNotification(category: PomodoroCategoryType?, time: String, overtime: String) {
-
         val isRest = category == null
         val contentView = createContentView(isRest)
         val bigContentView = createBigContentView(category, time, overtime)
@@ -86,7 +81,7 @@ internal class PomodoroNotificationManager @Inject constructor(
     private fun buildNotification(
         contentView: RemoteViews,
         bigContentView: RemoteViews,
-        visibility: Int,
+        visibility: Int
     ): Notification = notificationBuilder
         .setCustomContentView(contentView)
         .setCustomBigContentView(bigContentView)
@@ -107,5 +102,4 @@ internal class PomodoroNotificationManager @Inject constructor(
     private fun updateLockScreenVisibility() {
         lockScreenVisibility = getLockScreenVisibility()
     }
-
 }

@@ -19,4 +19,3 @@ sealed interface NamingEvent : ViewEvent {
 sealed interface NamingSideEffect : ViewSideEffect {
     data object NavToNext : NamingSideEffect
 }
-

@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 
-
 @HiltViewModel
 class PomodoroTimeSettingViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
@@ -38,7 +37,6 @@ class PomodoroTimeSettingViewModel @Inject constructor(
     }
 
     private val scope = viewModelScope + coroutineExceptionHandler
-
 
     override fun setInitialState(): PomodoroTimeSettingState = PomodoroTimeSettingState()
 
@@ -104,6 +102,4 @@ class PomodoroTimeSettingViewModel @Inject constructor(
             updateState { copy(isLoading = false) }
         }
     }
-
-
 }

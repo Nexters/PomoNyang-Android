@@ -12,7 +12,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.spinner.MnSpinner
 
 @Composable
 fun LoadingScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -24,7 +24,6 @@ fun LoadingScreen(
         MnSpinner()
     }
 }
-
 
 @Composable
 fun LoadingContentContainer(

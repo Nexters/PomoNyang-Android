@@ -8,7 +8,7 @@ data class MyPageState(
     val catName: String = "",
     val isInterruptNotificationEnabled: Boolean = false,
     val isTimerNotificationEnabled: Boolean = false,
-    val isLockScreenNotificationEnabled: Boolean = false,
+    val isLockScreenNotificationEnabled: Boolean = false
 ) : ViewState
 
 sealed interface MyPageEvent : ViewEvent {

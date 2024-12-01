@@ -27,7 +27,7 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 @Composable
 fun NetworkErrorScreen(
     onClickRetry: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
@@ -39,7 +39,8 @@ fun NetworkErrorScreen(
             ) {
                 Image(
                     modifier = Modifier.size(240.dp),
-                    painter = painterResource(id = R.drawable.ic_internet), contentDescription = "network error"
+                    painter = painterResource(id = R.drawable.ic_internet),
+                    contentDescription = "network error"
                 )
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,13 +67,11 @@ fun NetworkErrorScreen(
                 onClick = onClickRetry,
                 colors = MnBoxButtonColorType.primary,
                 styles = MnBoxButtonStyles.large,
-                containerPadding = PaddingValues(top = 60.dp),
+                containerPadding = PaddingValues(top = 60.dp)
             )
         }
     }
-
 }
-
 
 @Preview
 @Composable

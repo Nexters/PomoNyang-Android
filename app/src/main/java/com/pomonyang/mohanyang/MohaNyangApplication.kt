@@ -45,14 +45,12 @@ class MohaNyangApplication : Application() {
                 ActivityViewTrackingStrategy(
                     trackExtras = true,
                     componentPredicate = object : ComponentPredicate<Activity> {
-                        override fun accept(component: Activity): Boolean {
-                            return component !is MainActivity
-                        }
+                        override fun accept(component: Activity): Boolean = component !is MainActivity
 
                         override fun getViewName(component: Activity): String? = null
-                    })
+                    }
+                )
             )
-
             .build()
 
         Rum.enable(rumConfiguration)

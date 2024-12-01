@@ -32,11 +32,12 @@ fun MnSpinner(
     ) {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.spinner))
         val progress by animateLottieCompositionAsState(
-            composition, iterations = LottieConstants.IterateForever,
+            composition,
+            iterations = LottieConstants.IterateForever
         )
         LottieAnimation(
             composition = composition,
-            progress = { progress },
+            progress = { progress }
         )
     }
 }
