@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -68,7 +69,7 @@ fun PomodoroFocusRoute(
                 stopNotification(context)
                 goToRest(
                     context.getString(state.categoryType.kor),
-                    state.focusTime,
+                    state.currentFocusTime,
                     state.focusExceededTime
                 )
             }
@@ -89,11 +90,17 @@ fun PomodoroFocusRoute(
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        pomodoroFocusViewModel.handleEvent(PomodoroFocusEvent.Resume)
+        stopInterrupt(context)
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
-        pomodoroFocusViewModel.handleEvent(PomodoroFocusEvent.Pause)
+        startInterrupt(context)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            stopNotification(context)
+        }
     }
 
     LaunchedEffect(state.maxFocusTime) {
@@ -109,7 +116,7 @@ fun PomodoroFocusRoute(
         if (state.forceGoRest) {
             goToRest(
                 context.getString(state.categoryType.kor),
-                state.focusTime,
+                state.remainingFocusTime,
                 state.focusExceededTime
             )
         }
