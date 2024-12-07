@@ -67,10 +67,6 @@ class MyPageViewModel @Inject constructor(
             is MyPageEvent.ClickSuggestion -> {
                 setEffect(MyPageSideEffect.OpenExternalWebPage("https://forms.gle/wEUPH9Tvxgua4hCZ9"))
             }
-
-            is MyPageEvent.ClickStatic -> {
-                setEffect(MyPageSideEffect.ShowSnackBar("통계를 사용할 수 있도록 준비하고 있어요"))
-            }
         }
     }
 
