@@ -28,15 +28,15 @@ fun Context.createNotificationChannel() {
         ).apply {
             MnNotificationManager.setCustomAlarmSound(applicationContext, this)
         }
-
     notificationManager.createNotificationChannel(channel)
 }
 
 fun Context.defaultNotification(
-    pendingIntent: PendingIntent? = null
+    pendingIntent: PendingIntent? = null,
+    channelId: String
 ): NotificationCompat.Builder = NotificationCompat.Builder(
     this,
-    getString(R.string.channel_id)
+    channelId
 )
     .setContentIntent(pendingIntent)
     .setSmallIcon(R.drawable.ic_app_notification)
@@ -48,7 +48,10 @@ fun Context.defaultNotification(
     .setCategory(NotificationCompat.CATEGORY_MESSAGE)
     .setGroup(getString(R.string.channel_group_name))
 
-fun Context.summaryNotification(pendingIntent: PendingIntent? = null): NotificationCompat.Builder = this.defaultNotification(pendingIntent)
+fun Context.summaryNotification(
+    pendingIntent: PendingIntent? = null,
+    channelId: String
+): NotificationCompat.Builder = this.defaultNotification(pendingIntent, channelId)
     .setGroupSummary(true)
 
 fun getTriggerTimeInMillis(time: LocalTime): Long {
@@ -69,4 +72,22 @@ fun Context.deleteNotificationChannelIfExists(channelId: String) {
     if (existingChannel != null) {
         notificationManager.deleteNotificationChannel(channelId)
     }
+}
+
+fun Context.createInterruptNotificationChannel() {
+    val notificationManager =
+        applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+    val channelId = applicationContext.getString(R.string.interrupt_channel_id)
+    val channelName = applicationContext.getString(R.string.interrupt_channel_name)
+
+    val channel =
+        NotificationChannel(
+            channelId,
+            channelName,
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            setSound(null, null)
+        }
+    notificationManager.createNotificationChannel(channel)
 }
