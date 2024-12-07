@@ -85,7 +85,8 @@ class FocusNotificationService : Service() {
 
     private fun addAlarm(time: LocalTime, message: String = "") {
         mnAlarmManager.createAlarm(
-            time,
+            scheduleTime = time,
+            channelId = getString(R.string.interrupt_channel_id),
             title = applicationContext.getString(R.string.app_name),
             message = message
         ).also {

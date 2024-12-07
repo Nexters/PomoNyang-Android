@@ -29,6 +29,7 @@ import com.datadog.android.compose.ExperimentalTrackingApi
 import com.datadog.android.compose.NavigationViewTrackingEffect
 import com.pomonyang.mohanyang.data.remote.util.NetworkMonitor
 import com.pomonyang.mohanyang.notification.LocalNotificationReceiver
+import com.pomonyang.mohanyang.notification.util.createInterruptNotificationChannel
 import com.pomonyang.mohanyang.notification.util.createNotificationChannel
 import com.pomonyang.mohanyang.notification.util.deleteNotificationChannelIfExists
 import com.pomonyang.mohanyang.presentation.screen.common.LoadingScreen
@@ -163,6 +164,7 @@ class MainActivity : ComponentActivity() {
     private fun setupNotification() {
         deletePrevNotificationChannel()
         createNotificationChannel()
+        createInterruptNotificationChannel()
         registerNotificationService()
     }
 

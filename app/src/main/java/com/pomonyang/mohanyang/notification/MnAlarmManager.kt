@@ -20,6 +20,7 @@ class MnAlarmManager @Inject constructor(
     @SuppressLint("ScheduleExactAlarm")
     fun createAlarm(
         scheduleTime: LocalTime,
+        channelId: String,
         id: Int = UUID.randomUUID().hashCode(),
         title: String = "",
         message: String = ""
@@ -30,6 +31,7 @@ class MnAlarmManager @Inject constructor(
                     putExtra(getString(R.string.local_notification_id), id)
                     putExtra(getString(R.string.local_notification_title), title)
                     putExtra(getString(R.string.local_notification_message), message)
+                    putExtra(getString(R.string.local_notification_channel_id), channelId)
                     action = MnNotificationManager.INTENT_SEND_MESSAGE
                 }
 
