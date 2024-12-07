@@ -90,6 +90,23 @@ fun CatRive(
         modifier = modifier,
         contentAlignment = Alignment.TopCenter
     ) {
+        Box {
+            AndroidView(
+                modifier = Modifier.size(240.dp),
+                factory = { riveView }
+            )
+
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickableSingle(
+                        activeRippleEffect = false
+                    ) {
+                        onRiveClick(riveView)
+                    }
+            )
+        }
+
         AnimatedVisibility(
             visible = showTooltip && tooltipMessage != null,
             enter = fadeIn(),
@@ -112,23 +129,6 @@ fun CatRive(
                     anchorColor = colors.containerColor
                 )
             }
-        }
-
-        Box {
-            AndroidView(
-                modifier = Modifier.size(240.dp),
-                factory = { riveView }
-            )
-
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clickableSingle(
-                        activeRippleEffect = false
-                    ) {
-                        onRiveClick(riveView)
-                    }
-            )
         }
     }
 }
