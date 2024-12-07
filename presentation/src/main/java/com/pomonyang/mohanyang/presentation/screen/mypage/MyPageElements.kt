@@ -20,7 +20,6 @@ sealed interface MyPageEvent : ViewEvent {
     data object CloseDialog : MyPageEvent
     data object OpenSetting : MyPageEvent
     data object ClickSuggestion : MyPageEvent
-    data object ClickStatic : MyPageEvent
 }
 
 sealed interface MyPageSideEffect : ViewSideEffect {
