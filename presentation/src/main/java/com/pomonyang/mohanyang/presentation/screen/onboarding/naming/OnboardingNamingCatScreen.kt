@@ -159,7 +159,7 @@ fun OnboardingNamingCatScreen(
                             errorMessage = nameValidationResult.message,
                             backgroundColor = MnColor.White,
                             onValueChange = { value -> name = value },
-                            hint = catName
+                            hint = catType.kor
                         )
                     }
 

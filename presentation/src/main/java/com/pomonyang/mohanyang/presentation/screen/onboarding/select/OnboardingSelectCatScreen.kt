@@ -322,7 +322,7 @@ private fun CatCategory(
                         }
                     },
                     titleContent = {
-                        Text(cat.name)
+                        Text(cat.type.kor)
                     }
                 )
             }
