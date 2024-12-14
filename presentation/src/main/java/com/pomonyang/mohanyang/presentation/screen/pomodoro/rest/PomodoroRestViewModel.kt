@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class PomodoroRestViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
-    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase,
+    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase
 ) : BaseViewModel<PomodoroRestState, PomodoroRestEvent, PomodoroRestEffect>() {
 
     init {
