@@ -78,7 +78,7 @@
     <string name="my_page_interrupt_push_title">딴 짓 방해하기</string>
     <string name="my_page_interrupt_push_content">다른 앱을 사용하면 고양이가 방해해요</string>
     <string name="my_page_lockscreen_push_title">잠금화면 표시하기</string>
-    <string name="my_page_lockscreen_push_content">잠금화면에 집중•휴식시간을 표시해요</string>
+    <string name="my_page_lockscreen_push_content">잠금화면에 집중・휴식시간을 표시해요</string>
     <string name="my_page_suggestion">의견보내기</string>
     <string name="my_page_offline_message">오프라인 모드에서 고양이 변경은 불가능합니다</string>
 

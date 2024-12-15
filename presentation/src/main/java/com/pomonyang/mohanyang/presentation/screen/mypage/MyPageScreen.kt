@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -229,7 +228,7 @@ fun MyPageScreen(
                     onAction(MyPageEvent.ClickCatProfile(isOffline))
                 }
             )
-            CheckFocusTimeBox(onAction = onAction)
+            CheckFocusTimeBox()
             NotificationBox(
                 state = state,
                 onAction = onAction
@@ -281,41 +280,40 @@ fun ProfileBox(
 
 @Composable
 fun CheckFocusTimeBox(
-    onAction: (MyPageEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 375.dp)
             .background(
                 color = MnTheme.backgroundColorScheme.secondary,
-                shape = RoundedCornerShape(MnRadius.medium)
+                shape = RoundedCornerShape(MnRadius.large)
             )
             .padding(MnSpacing.xLarge),
         contentAlignment = Alignment.Center
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(MnSpacing.medium)
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_static_ready),
                 contentDescription = "static_ready_image",
                 modifier = Modifier.size(
-                    110.dp
+                    96.dp
                 )
             )
 
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = MnSpacing.medium),
                 verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = stringResource(id = R.string.my_page_static_title),
-                    style = MnTheme.typography.header4,
-                    color = MnTheme.textColorScheme.primary
+                    style = MnTheme.typography.bodySemiBold,
+                    color = MnTheme.textColorScheme.secondary
                 )
                 Text(
                     text = stringResource(id = R.string.my_page_static_subtitle),
