@@ -14,7 +14,7 @@ import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.ui.ServiceHelper
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +43,15 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
                     val notificationId = intent.getIntExtra(context.getString(R.string.local_notification_id), 0)
                     val title = intent.getStringExtra(context.getString(R.string.local_notification_title)) ?: ""
                     val message = intent.getStringExtra(context.getString(R.string.local_notification_message)) ?: ""
-                    notifyMessage(context, notificationId, title, message)
+                    val channelId = intent.getStringExtra(context.getString(R.string.local_notification_channel_id)) ?: context.getString(R.string.channel_id)
+
+                    notifyMessage(
+                        context,
+                        notificationId = notificationId,
+                        channelId = channelId,
+                        title = title,
+                        message = message
+                    )
                 }
 
                 MnNotificationManager.INTENT_NOTIFY_REST_MESSAGE -> {
@@ -52,6 +60,7 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
                         notifyMessage(
                             context,
                             notificationId = id,
+                            channelId = context.getString(R.string.channel_id),
                             message = context.getString(cat.restEndPushContent)
                         )
                     }
@@ -63,6 +72,7 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
                         notifyMessage(
                             context,
                             notificationId = id,
+                            channelId = context.getString(R.string.channel_id),
                             message = context.getString(cat.timerEndPushContent)
                         )
                     }
@@ -81,19 +91,25 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
         }
     }
 
-    private fun notifyMessage(context: Context, notificationId: Int, title: String = context.getString(R.string.app_name), message: String) {
+    private fun notifyMessage(
+        context: Context,
+        notificationId: Int,
+        channelId: String,
+        title: String = context.getString(R.string.app_name),
+        message: String
+    ) {
         if (!context.isNotificationGranted()) return
 
         val pendingIntent = ServiceHelper.clickPendingIntent(context, notificationId)
 
         val notification =
-            context.defaultNotification(pendingIntent)
+            context.defaultNotification(pendingIntent, channelId = channelId)
                 .setContentTitle(title)
                 .setContentText(message)
                 .build()
 
         val summaryNotification =
-            context.summaryNotification(pendingIntent)
+            context.summaryNotification(pendingIntent, channelId = channelId)
                 .setContentTitle(title)
                 .setContentText(message)
                 .build()
