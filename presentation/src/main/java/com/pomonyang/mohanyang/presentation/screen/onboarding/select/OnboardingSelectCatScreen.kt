@@ -92,11 +92,11 @@ fun OnboardingSelectCatRoute(
         onboardingSelectCatViewModel.handleEvent(SelectCatEvent.Init(selectedCatNo))
     }
 
-    when {
-        state.isInvalidError -> NetworkErrorScreen(onClickRetry = { onboardingSelectCatViewModel.handleEvent(SelectCatEvent.OnClickRetry) })
+    LoadingContentContainer(isLoading = state.isLoading) {
+        when {
+            state.isInvalidError -> NetworkErrorScreen(onClickRetry = { onboardingSelectCatViewModel.handleEvent(SelectCatEvent.OnClickRetry) })
 
-        else -> {
-            LoadingContentContainer(isLoading = state.isLoading) {
+            else -> {
                 OnboardingSelectCatScreen(
                     onBackClick = onBackClick,
                     modifier = modifier,

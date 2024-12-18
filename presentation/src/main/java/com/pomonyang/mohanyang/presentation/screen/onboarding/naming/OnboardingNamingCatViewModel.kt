@@ -34,6 +34,7 @@ class OnboardingNamingCatViewModel @Inject constructor(
                 updateState { copy(isInvalidError = true) }
             }
         }
+        updateState { copy(isLoading = false) }
     }
 
     private val scope = viewModelScope + coroutineExceptionHandler
@@ -43,12 +44,12 @@ class OnboardingNamingCatViewModel @Inject constructor(
     override fun handleEvent(event: NamingEvent) {
         when (event) {
             is NamingEvent.OnComplete -> {
-                updateState { copy(isLoading = true, lastRequestAction = event) }
                 scope.launch {
+                    updateState { copy(isLoading = true, lastRequestAction = event) }
                     pomodoroSettingRepository.fetchPomodoroSettingList()
                     updateCatName(event.name)
+                    updateState { copy(isLoading = false) }
                 }
-                updateState { copy(isLoading = false) }
             }
 
             is NamingEvent.OnClickRetry -> {

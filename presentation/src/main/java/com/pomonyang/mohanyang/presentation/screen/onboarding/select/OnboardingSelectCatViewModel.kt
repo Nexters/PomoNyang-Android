@@ -35,6 +35,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
                 updateState { copy(isInvalidError = true) }
             }
         }
+        updateState { copy(isLoading = false) }
     }
 
     private val scope = viewModelScope + coroutineExceptionHandler
@@ -53,12 +54,12 @@ class OnboardingSelectCatViewModel @Inject constructor(
             }
 
             is SelectCatEvent.OnStartClick -> {
+                updateState { copy(lastRequestAction = event) }
                 with(state.value) {
                     cats.find { it.type == selectedType }?.no
                 }?.let { selectedNo ->
                     updateSelectCatType(selectedNo)
                 }
-                updateState { copy(lastRequestAction = event) }
             }
 
             is SelectCatEvent.OnGrantedAlarmPermission -> {
@@ -75,8 +76,8 @@ class OnboardingSelectCatViewModel @Inject constructor(
     }
 
     private fun getCatTypes(selectedCatNo: Int?) {
-        updateState { copy(isLoading = true) }
         scope.launch {
+            updateState { copy(isLoading = true) }
             catSettingRepository.getCatTypes().onSuccess { cats ->
                 val catList = cats.map { it.toModel() }
                 updateState {
@@ -86,13 +87,19 @@ class OnboardingSelectCatViewModel @Inject constructor(
                     )
                 }
             }.getOrThrow()
+            updateState {
+                copy(
+                    isLoading = false,
+                    isInternalError = false,
+                    isInvalidError = false
+                )
+            }
         }
-        updateState { copy(isLoading = false) }
     }
 
     private fun updateSelectCatType(catNo: Int) {
-        updateState { copy(isLoading = true) }
         scope.launch {
+            updateState { copy(isLoading = true) }
             catSettingRepository.updateCatType(catNo).getOrThrow()
             userRepository.fetchMyInfo().getOrThrow()
             val cat = state.value.cats.find { it.no == catNo }
@@ -103,7 +110,13 @@ class OnboardingSelectCatViewModel @Inject constructor(
                     state.value.selectedType?.name ?: ""
                 )
             )
+            updateState {
+                copy(
+                    isLoading = false,
+                    isInvalidError = false,
+                    isInternalError = false
+                )
+            }
         }
-        updateState { copy(isLoading = false) }
     }
 }
