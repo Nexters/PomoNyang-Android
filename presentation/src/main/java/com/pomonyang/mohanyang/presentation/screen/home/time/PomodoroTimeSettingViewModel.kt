@@ -34,6 +34,7 @@ class PomodoroTimeSettingViewModel @Inject constructor(
                 updateState { copy(isInvalidError = true) }
             }
         }
+        updateState { copy(isLoading = false) }
     }
 
     private val scope = viewModelScope + coroutineExceptionHandler
@@ -85,6 +86,8 @@ class PomodoroTimeSettingViewModel @Inject constructor(
                     initialFocusTime = selectedPomodoroSetting.focusTime,
                     initialRestTime = selectedPomodoroSetting.restTime,
                     isFocus = isFocusTime,
+                    isInternalError = false,
+                    isInvalidError = false,
                     isLoading = false
                 )
             }
@@ -99,7 +102,13 @@ class PomodoroTimeSettingViewModel @Inject constructor(
                 focusTime = state.value.pickFocusTime,
                 restTime = state.value.pickRestTime
             ).getOrThrow()
-            updateState { copy(isLoading = false) }
+            updateState {
+                copy(
+                    isInternalError = false,
+                    isInvalidError = false,
+                    isLoading = false
+                )
+            }
         }
     }
 }

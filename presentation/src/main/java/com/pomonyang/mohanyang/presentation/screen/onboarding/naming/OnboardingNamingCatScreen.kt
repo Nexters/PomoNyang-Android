@@ -103,14 +103,14 @@ fun OnboardingNamingCatScreen(
         }
     }
 
-    when {
-        state.isInternalError -> ServerErrorScreen(onClickNavigateToHome = onNavToHomeClick)
-        state.isInvalidError -> NetworkErrorScreen(onClickRetry = {
-            onAction(NamingEvent.OnClickRetry)
-        })
+    LoadingContentContainer(isLoading = state.isLoading) {
+        when {
+            state.isInternalError -> ServerErrorScreen(onClickNavigateToHome = onNavToHomeClick)
+            state.isInvalidError -> NetworkErrorScreen(onClickRetry = {
+                onAction(NamingEvent.OnClickRetry)
+            })
 
-        else -> {
-            LoadingContentContainer(isLoading = state.isLoading) {
+            else -> {
                 Column(
                     modifier = modifier
                         .fillMaxSize()
