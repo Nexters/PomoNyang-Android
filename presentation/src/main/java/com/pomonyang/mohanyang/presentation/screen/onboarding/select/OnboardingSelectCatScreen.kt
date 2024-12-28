@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,6 +46,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnAppBarColor
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
+import com.pomonyang.mohanyang.presentation.screen.common.LoadingContentContainer
+import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorScreen
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import kotlinx.collections.immutable.PersistentList
@@ -91,27 +92,19 @@ fun OnboardingSelectCatRoute(
         onboardingSelectCatViewModel.handleEvent(SelectCatEvent.Init(selectedCatNo))
     }
 
-    if (state.isLoading) {
-        OnboardingSelectCatLoadingScreen()
-    } else {
-        OnboardingSelectCatScreen(
-            onBackClick = onBackClick,
-            modifier = modifier,
-            onAction = onboardingSelectCatViewModel::handleEvent,
-            state = state
-        )
-    }
-}
+    LoadingContentContainer(isLoading = state.isLoading) {
+        when {
+            state.isInvalidError -> NetworkErrorScreen(onClickRetry = { onboardingSelectCatViewModel.handleEvent(SelectCatEvent.OnClickRetry) })
 
-@Composable
-private fun OnboardingSelectCatLoadingScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MnTheme.backgroundColorScheme.primary),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(modifier = Modifier.size(70.dp), color = MnColor.Orange500)
+            else -> {
+                OnboardingSelectCatScreen(
+                    onBackClick = onBackClick,
+                    modifier = modifier,
+                    onAction = onboardingSelectCatViewModel::handleEvent,
+                    state = state
+                )
+            }
+        }
     }
 }
 
@@ -329,7 +322,7 @@ private fun CatCategory(
                         }
                     },
                     titleContent = {
-                        Text(cat.name)
+                        Text(cat.type.kor)
                     }
                 )
             }

@@ -1,45 +1,18 @@
 package com.pomonyang.mohanyang.presentation.screen.home.time
 
 import androidx.lifecycle.viewModelScope
+import com.pomonyang.mohanyang.data.remote.util.BadRequestException
+import com.pomonyang.mohanyang.data.remote.util.InternalException
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.domain.usecase.GetSelectedPomodoroSettingUseCase
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
-import com.pomonyang.mohanyang.presentation.base.ViewEvent
-import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
-import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-
-data class PomodoroTimeSettingState(
-    val categoryNo: Int = 0,
-    val titleName: String = "",
-    val initialFocusTime: Int = 10,
-    val initialRestTime: Int = 10,
-    val pickFocusTime: Int = 10,
-    val pickRestTime: Int = 10,
-    val isFocus: Boolean = false
-) : ViewState
-
-sealed interface PomodoroTimeSettingEvent : ViewEvent {
-    data class Init(val isFocusTime: Boolean) : PomodoroTimeSettingEvent
-
-    data object Submit : PomodoroTimeSettingEvent
-
-    data class ChangePickTime(
-        val time: Int
-    ) : PomodoroTimeSettingEvent
-
-    data object OnCloseClick : PomodoroTimeSettingEvent
-}
-
-sealed interface PomodoroTimeSettingEffect : ViewSideEffect {
-    data object GoToPomodoroSettingScreen : PomodoroTimeSettingEffect
-
-    data object ClosePomodoroTimerSettingScreen : PomodoroTimeSettingEffect
-}
+import kotlinx.coroutines.plus
 
 @HiltViewModel
 class PomodoroTimeSettingViewModel @Inject constructor(
@@ -47,26 +20,36 @@ class PomodoroTimeSettingViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase
 ) : BaseViewModel<PomodoroTimeSettingState, PomodoroTimeSettingEvent, PomodoroTimeSettingEffect>() {
 
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        when (throwable) {
+            is InternalException -> {
+                updateState { copy(isInternalError = true) }
+            }
+
+            is BadRequestException -> {
+                updateState { copy(isInvalidError = true) }
+            }
+
+            else -> {
+                updateState { copy(isInvalidError = true) }
+            }
+        }
+        updateState { copy(isLoading = false) }
+    }
+
+    private val scope = viewModelScope + coroutineExceptionHandler
+
     override fun setInitialState(): PomodoroTimeSettingState = PomodoroTimeSettingState()
 
     override fun handleEvent(event: PomodoroTimeSettingEvent) {
         when (event) {
             is PomodoroTimeSettingEvent.Init -> {
-                viewModelScope.launch {
-                    val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
-                    updateState {
-                        copy(
-                            categoryNo = selectedPomodoroSetting.categoryNo,
-                            titleName = selectedPomodoroSetting.title,
-                            initialFocusTime = selectedPomodoroSetting.focusTime,
-                            initialRestTime = selectedPomodoroSetting.restTime,
-                            isFocus = event.isFocusTime
-                        )
-                    }
-                }
+                updateState { copy(lastRequestAction = event) }
+                getPomodoroCategoryTimeData(event.isFocusTime)
             }
 
-            PomodoroTimeSettingEvent.Submit -> {
+            is PomodoroTimeSettingEvent.Submit -> {
+                updateState { copy(lastRequestAction = event) }
                 updatePomodoroCategoryTime()
                 setEffect(PomodoroTimeSettingEffect.GoToPomodoroSettingScreen)
             }
@@ -82,19 +65,50 @@ class PomodoroTimeSettingViewModel @Inject constructor(
                 }
             }
 
-            is PomodoroTimeSettingEvent.OnCloseClick -> {
+            is PomodoroTimeSettingEvent.ClickClose -> {
                 setEffect(PomodoroTimeSettingEffect.ClosePomodoroTimerSettingScreen)
+            }
+
+            is PomodoroTimeSettingEvent.ClickRetry -> {
+                state.value.lastRequestAction?.let { handleEvent(it) }
+            }
+        }
+    }
+
+    private fun getPomodoroCategoryTimeData(isFocusTime: Boolean) {
+        scope.launch {
+            updateState { copy(isLoading = true) }
+            val selectedPomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
+            updateState {
+                copy(
+                    categoryNo = selectedPomodoroSetting.categoryNo,
+                    titleName = selectedPomodoroSetting.title,
+                    initialFocusTime = selectedPomodoroSetting.focusTime,
+                    initialRestTime = selectedPomodoroSetting.restTime,
+                    isFocus = isFocusTime,
+                    isInternalError = false,
+                    isInvalidError = false,
+                    isLoading = false
+                )
             }
         }
     }
 
     private fun updatePomodoroCategoryTime() {
-        viewModelScope.launch {
+        scope.launch {
+            updateState { copy(isLoading = true) }
             pomodoroSettingRepository.updatePomodoroCategoryTimes(
                 categoryNo = state.value.categoryNo,
                 focusTime = state.value.pickFocusTime,
                 restTime = state.value.pickRestTime
-            )
+            ).getOrThrow()
+            updateState {
+                copy(
+                    isInternalError = false,
+                    isInvalidError = false,
+                    isLoading = false
+                )
+            }
         }
     }
 }

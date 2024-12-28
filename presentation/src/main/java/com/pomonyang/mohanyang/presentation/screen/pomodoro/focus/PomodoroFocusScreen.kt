@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -44,8 +45,8 @@ import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.startInterrupt
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.stopInterrupt
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.startTimer
-import com.pomonyang.mohanyang.presentation.util.stopTimer
+import com.pomonyang.mohanyang.presentation.util.startFocusTimer
+import com.pomonyang.mohanyang.presentation.util.stopFocusTimer
 
 @Composable
 fun PomodoroFocusRoute(
@@ -68,7 +69,7 @@ fun PomodoroFocusRoute(
                 stopNotification(context)
                 goToRest(
                     context.getString(state.categoryType.kor),
-                    state.focusTime,
+                    state.currentFocusTime,
                     state.focusExceededTime
                 )
             }
@@ -89,16 +90,25 @@ fun PomodoroFocusRoute(
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        pomodoroFocusViewModel.handleEvent(PomodoroFocusEvent.Resume)
+        stopInterrupt(context)
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
-        pomodoroFocusViewModel.handleEvent(PomodoroFocusEvent.Pause)
+        startInterrupt(context)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            stopNotification(context)
+        }
     }
 
     LaunchedEffect(state.maxFocusTime) {
         if (state.maxFocusTime != 0) {
-            context.startTimer(true, state.maxFocusTime)
+            context.startFocusTimer(
+                maxTime = state.maxFocusTime,
+                category = state.categoryType
+            )
         }
     }
 
@@ -106,7 +116,7 @@ fun PomodoroFocusRoute(
         if (state.forceGoRest) {
             goToRest(
                 context.getString(state.categoryType.kor),
-                state.focusTime,
+                state.remainingFocusTime,
                 state.focusExceededTime
             )
         }
@@ -125,7 +135,7 @@ fun PomodoroFocusRoute(
 
 private fun stopNotification(context: Context) {
     stopInterrupt(context)
-    context.stopTimer(true)
+    context.stopFocusTimer()
 }
 
 @Composable

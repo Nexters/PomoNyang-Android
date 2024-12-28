@@ -60,7 +60,24 @@ internal class NetworkResultCall<T : Any>(
             } else {
                 val errorBodyMessage = response.errorBody()?.string()
                 Result.failure(
-                    Exception("${response.code()} / $errorBodyMessage / ${response.message()}")
+                    when (response.code()) {
+                        400 -> {
+                            BadRequestException(msg = "$errorBodyMessage / ${response.message()}")
+                        }
+
+                        401 -> {
+                            ForbiddenException(msg = "$errorBodyMessage / ${response.message()}")
+                        }
+
+                        500 -> {
+                            InternalException(msg = "$errorBodyMessage / ${response.message()}")
+                        }
+
+                        else -> {
+                            Exception("${response.code()} / $errorBodyMessage / ${response.message()}")
+                        }
+                    }
+
                 )
             }
         } catch (e: Exception) {

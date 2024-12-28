@@ -40,8 +40,8 @@ import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewMod
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.startTimer
-import com.pomonyang.mohanyang.presentation.util.stopTimer
+import com.pomonyang.mohanyang.presentation.util.startRestTimer
+import com.pomonyang.mohanyang.presentation.util.stopRestTimer
 
 @Composable
 fun PomodoroRestRoute(
@@ -59,12 +59,12 @@ fun PomodoroRestRoute(
         when (effect) {
             is PomodoroRestEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
             PomodoroRestEffect.GoToHome -> {
-                context.stopTimer(false)
+                context.stopRestTimer()
                 goToHome()
             }
 
             PomodoroRestEffect.GoToPomodoroFocus -> {
-                context.stopTimer(false)
+                context.stopRestTimer()
                 goToFocus()
             }
         }
@@ -76,7 +76,7 @@ fun PomodoroRestRoute(
 
     LaunchedEffect(timerState.maxRestTime) {
         if (timerState.maxRestTime != 0) {
-            context.startTimer(false, timerState.maxRestTime)
+            context.startRestTimer(timerState.maxRestTime)
         }
     }
 

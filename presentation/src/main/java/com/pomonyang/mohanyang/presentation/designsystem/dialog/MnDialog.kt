@@ -43,6 +43,7 @@ fun MnDialog(
     subTitle: String? = null,
     positiveButton: @Composable (() -> Unit)? = null,
     negativeButton: @Composable (() -> Unit)? = null,
+    onCloseClick: (() -> Unit)? = null,
     onDismissRequest: () -> Unit
 ) {
     MnTheme {
@@ -62,7 +63,12 @@ fun MnDialog(
                         title = title,
                         dialogTextStyles = dialogTextStyles,
                         dialogColors = dialogColors,
-                        onCloseClick = onDismissRequest
+                        onCloseClick = onCloseClick?.let { closeClick ->
+                            {
+                                closeClick()
+                                onDismissRequest()
+                            }
+                        }
                     )
                     DialogDescription(
                         subTitle = subTitle,
@@ -122,10 +128,10 @@ private fun DialogDescription(
 
 @Composable
 private fun DialogTitle(
-    onCloseClick: () -> Unit,
     title: String,
     dialogTextStyles: MnDialogTextStyles,
-    dialogColors: MnDialogColors
+    dialogColors: MnDialogColors,
+    onCloseClick: (() -> Unit)?
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -139,12 +145,14 @@ private fun DialogTitle(
             modifier = Modifier.padding(vertical = 7.5.dp),
             maxLines = 1
         )
-        MnMediumIcon(
-            resourceId = R.drawable.ic_close,
-            modifier = Modifier
-                .padding(8.dp)
-                .clickableSingle(activeRippleEffect = false) { onCloseClick() }
-        )
+        if (onCloseClick != null) {
+            MnMediumIcon(
+                resourceId = R.drawable.ic_close,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clickableSingle(activeRippleEffect = false) { onCloseClick() }
+            )
+        }
     }
 }
 
@@ -172,6 +180,7 @@ private fun MnDialogPreview() {
                     Text("취소")
                 }
             },
+            onCloseClick = {},
             onDismissRequest = {}
         )
     }

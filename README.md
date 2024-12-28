@@ -1,6 +1,6 @@
 # 모하냥
 
-<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F4bf0dd96-b0ba-47c1-9085-583521ec08d9%2Fdc934d4b-6ef6-475f-ad78-ffcb6b83e3e4%2FAppicon_1024x1024.png?table=block&id=eb91bfb7-5a17-4514-8986-111f12b0b530&spaceId=4bf0dd96-b0ba-47c1-9085-583521ec08d9&width=250&userId=490f3959-fd36-4f90-8dd0-ce12eac42113&cache=v27" width="120" height="120" align="left"/> 
+<img src="https://github.com/user-attachments/assets/923c0812-ff6e-4887-80a9-750bb008c621" width="120" height="120" align="left"/> 
 
 > 고양이와 함께하는 집중 시간, 모하냥!
 

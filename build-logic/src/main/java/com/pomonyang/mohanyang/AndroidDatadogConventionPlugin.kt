@@ -1,4 +1,3 @@
-
 import com.pomonyang.mohanyang.convention.findPluginId
 import com.pomonyang.mohanyang.convention.implementation
 import com.pomonyang.mohanyang.convention.libs
@@ -15,6 +14,7 @@ class AndroidDatadogConventionPlugin : Plugin<Project> {
 
             dependencies {
                 implementation(libs.findLibrary("datadog-rum"))
+                implementation(libs.findLibrary("datadog-compose"))
                 implementation(libs.findLibrary("datadog-okhttp"))
             }
         }

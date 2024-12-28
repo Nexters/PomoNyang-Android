@@ -1,12 +1,17 @@
 package com.pomonyang.mohanyang.presentation.util
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.AudioAttributes
+import android.net.Uri
 import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.mohanyang.presentation.R
 
 object MnNotificationManager {
 
@@ -47,5 +52,16 @@ object MnNotificationManager {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             return notificationManager.areNotificationsEnabled()
         }
+    }
+
+    fun setCustomAlarmSound(context: Context, channel: NotificationChannel) {
+        val audioAttributes = AudioAttributes.Builder()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+            .build()
+
+        val sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.packageName + "/" + R.raw.alarm)
+
+        channel.setSound(sound, audioAttributes)
     }
 }

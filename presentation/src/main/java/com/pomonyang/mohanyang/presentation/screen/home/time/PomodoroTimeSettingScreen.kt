@@ -11,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
@@ -26,6 +28,9 @@ import com.pomonyang.mohanyang.presentation.designsystem.picker.MnWheelMinutePic
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
+import com.pomonyang.mohanyang.presentation.screen.common.LoadingContentContainer
+import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorScreen
+import com.pomonyang.mohanyang.presentation.screen.common.ServerErrorScreen
 import com.pomonyang.mohanyang.presentation.screen.home.setting.SettingButton
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
@@ -41,6 +46,8 @@ fun PomodoroTimeSettingRoute(
     onShowSnackbar: (String, Int?) -> Unit,
     onEndSettingClick: () -> Unit
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     viewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is PomodoroTimeSettingEffect.GoToPomodoroSettingScreen -> {
@@ -60,13 +67,29 @@ fun PomodoroTimeSettingRoute(
         )
     }
 
-    PomodoroTimeSettingScreen(
-        modifier = modifier,
-        category = PomodoroCategoryType.safeValueOf(categoryName),
-        isFocusTime = isFocusTime,
-        initialSettingTime = initialSettingTime,
-        onAction = viewModel::handleEvent
-    )
+    when {
+        state.isInternalError -> {
+            ServerErrorScreen(onClickNavigateToHome = onEndSettingClick)
+        }
+
+        state.isInvalidError -> {
+            NetworkErrorScreen(onClickRetry = {
+                viewModel.handleEvent(PomodoroTimeSettingEvent.ClickRetry)
+            })
+        }
+
+        else -> {
+            LoadingContentContainer(isLoading = state.isLoading) {
+                PomodoroTimeSettingScreen(
+                    modifier = modifier,
+                    category = PomodoroCategoryType.safeValueOf(categoryName),
+                    isFocusTime = isFocusTime,
+                    initialSettingTime = initialSettingTime,
+                    onAction = viewModel::handleEvent
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -86,7 +109,7 @@ private fun PomodoroTimeSettingScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        TimeSettingTopAppBar { onAction(PomodoroTimeSettingEvent.OnCloseClick) }
+        TimeSettingTopAppBar { onAction(PomodoroTimeSettingEvent.ClickClose) }
 
         CategoryBox(
             iconRes = category.iconRes,

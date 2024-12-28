@@ -26,6 +26,12 @@ class NotificationLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun saveLockScreenNotification(isEnabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[LOCKSCREEN_NOTIFICATION_KEY] = isEnabled
+        }
+    }
+
     override suspend fun isInterruptNotificationEnabled(): Boolean = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
@@ -44,9 +50,19 @@ class NotificationLocalDataSourceImpl @Inject constructor(
             }
         }.first()[TIMER_NOTIFICATION_KEY] ?: false
 
+    override suspend fun isLockScreenNotification(): Boolean = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }.first()[LOCKSCREEN_NOTIFICATION_KEY] ?: true
+
     companion object {
         const val NOTIFICATION_PREFERENCES_NAME = "notification_preferences"
         private val INTERRUPT_NOTIFICATION_KEY = booleanPreferencesKey("interrupt_notification")
         private val TIMER_NOTIFICATION_KEY = booleanPreferencesKey("timer_notification")
+        private val LOCKSCREEN_NOTIFICATION_KEY = booleanPreferencesKey("lockscreen_notification")
     }
 }

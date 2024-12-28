@@ -9,6 +9,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.pomonyang.mohanyang.MainActivity
+import com.pomonyang.mohanyang.R
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.notification.util.defaultNotification
@@ -64,7 +65,7 @@ internal class MnFirebaseMessagingService : FirebaseMessagingService() {
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE // 일회용 펜딩 인텐트
         )
 
-        val builder = applicationContext.defaultNotification(pendingIntent)
+        val builder = applicationContext.defaultNotification(pendingIntent, getString(R.string.channel_id))
 
         builder.apply {
             setContentTitle(notification.title)

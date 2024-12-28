@@ -4,10 +4,10 @@ import androidx.annotation.RawRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
 import app.rive.runtime.kotlin.RiveAnimationView
-import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.MnTooltipDefaults
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.TooltipAnchor
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.TooltipContent
@@ -46,11 +45,6 @@ fun CatRive(
     fireState: String? = null,
     onRiveClick: (RiveAnimationView) -> Unit = {}
 ) {
-    val catRiveModifier = if (tooltipMessage != null) {
-        Modifier.padding(top = MnSpacing.threeXLarge)
-    } else {
-        Modifier
-    }
     var showTooltip by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val riveView = remember {
@@ -90,6 +84,23 @@ fun CatRive(
         modifier = modifier,
         contentAlignment = Alignment.TopCenter
     ) {
+        Box {
+            AndroidView(
+                modifier = Modifier.size(240.dp),
+                factory = { riveView }
+            )
+
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickableSingle(
+                        activeRippleEffect = false
+                    ) {
+                        onRiveClick(riveView)
+                    }
+            )
+        }
+
         AnimatedVisibility(
             visible = showTooltip && tooltipMessage != null,
             enter = fadeIn(),
@@ -97,7 +108,9 @@ fun CatRive(
         ) {
             val colors = MnTooltipDefaults.lightTooltipColors()
             Column(
-                modifier = Modifier.zIndex(1f),
+                modifier = Modifier
+                    .zIndex(1f)
+                    .clickable(enabled = false) {},
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -110,30 +123,6 @@ fun CatRive(
                 TooltipAnchor(
                     modifier = Modifier.width(MnTooltipDefaults.anchorWidth),
                     anchorColor = colors.containerColor
-                )
-            }
-        }
-
-        Column(
-            modifier = catRiveModifier,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier.size(240.dp)
-            ) {
-                AndroidView(
-                    modifier = Modifier.matchParentSize(),
-                    factory = { riveView }
-                )
-
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .clickableSingle(
-                            activeRippleEffect = false
-                        ) {
-                            onRiveClick(riveView)
-                        }
                 )
             }
         }

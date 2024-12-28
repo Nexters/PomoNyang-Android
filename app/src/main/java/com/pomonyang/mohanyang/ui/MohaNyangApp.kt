@@ -103,7 +103,8 @@ private fun MohaNyangApp(
             onShowSnackbar = showSnackbar,
             onForceGoHome = { isForceHome = true },
             mohaNyangAppState = mohaNyangAppState,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
         )
     }
 }
@@ -129,7 +130,7 @@ private fun OfflinePopup(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            MnXSmallIcon(resourceId = com.mohanyang.presentation.R.drawable.ic_null)
+            MnXSmallIcon(resourceId = com.mohanyang.presentation.R.drawable.ic_sort_offline)
             Text(
                 text = stringResource(R.string.offline_mode_message),
                 style = MnTheme.typography.bodySemiBold,

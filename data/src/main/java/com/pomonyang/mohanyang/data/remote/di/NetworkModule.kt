@@ -1,6 +1,9 @@
 package com.pomonyang.mohanyang.data.remote.di
 
 import android.content.Context
+import com.datadog.android.okhttp.DatadogEventListener
+import com.datadog.android.okhttp.DatadogInterceptor
+import com.datadog.android.okhttp.trace.TracingInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mohanyang.data.BuildConfig
 import com.pomonyang.mohanyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSource
@@ -36,6 +39,7 @@ internal abstract class NetworkModule {
 
     companion object {
         private const val BASE_URL = BuildConfig.BASE_URL
+        private val tracedHosts = listOf(BASE_URL)
 
         @Provides
         @Singleton
@@ -83,6 +87,7 @@ internal abstract class NetworkModule {
         ): OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(httpRequestInterceptor)
+            .applyDatadogInterceptors(tracedHosts)
             .build()
 
         @Provides
@@ -96,7 +101,13 @@ internal abstract class NetworkModule {
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(tokenRefreshInterceptor)
             .addInterceptor(httpRequestInterceptor)
+            .applyDatadogInterceptors(tracedHosts)
             .build()
+
+        private fun OkHttpClient.Builder.applyDatadogInterceptors(tracedHosts: List<String>): OkHttpClient.Builder = this
+            .addInterceptor(DatadogInterceptor.Builder(tracedHosts).build())
+            .addNetworkInterceptor(TracingInterceptor.Builder(tracedHosts).build())
+            .eventListenerFactory(DatadogEventListener.Factory())
 
         @Provides
         @Singleton

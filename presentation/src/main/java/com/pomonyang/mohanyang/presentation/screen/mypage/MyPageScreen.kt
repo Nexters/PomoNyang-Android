@@ -7,6 +7,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,9 +16,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,7 +31,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
@@ -82,6 +88,10 @@ fun MyPageRoute(
                     NotificationRequest.INTERRUPT -> {
                         myPageViewModel.handleEvent(MyPageEvent.ChangeInterruptNotification(true))
                     }
+
+                    NotificationRequest.LOCKSCREEN -> {
+                        myPageViewModel.handleEvent(MyPageEvent.ChangeLockScreenNotification(true))
+                    }
                 }
             }
         }
@@ -97,7 +107,7 @@ fun MyPageRoute(
     myPageViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is MyPageSideEffect.ShowSnackBar -> {
-                onShowSnackBar(effect.message, null)
+                onShowSnackBar(effect.message, R.drawable.ic_alert)
             }
 
             is MyPageSideEffect.GoToCatProfilePage -> {
@@ -141,7 +151,7 @@ fun MyPageRoute(
     )
 }
 
-enum class NotificationRequest { TIMER, INTERRUPT }
+enum class NotificationRequest { TIMER, INTERRUPT, LOCKSCREEN }
 
 @Composable
 fun MyPageScreen(
@@ -203,33 +213,28 @@ fun MyPageScreen(
             }
         )
 
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.padding(
-                horizontal = MnSpacing.xLarge,
-                vertical = MnSpacing.medium
-            ),
+        Column(
+            modifier = Modifier
+                .padding(
+                    horizontal = MnSpacing.xLarge,
+                    vertical = MnSpacing.medium
+                )
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(MnSpacing.medium)
         ) {
-            item {
-                ProfileBox(
-                    catName = state.catName,
-                    onClick = {
-                        onAction(MyPageEvent.ClickCatProfile(isOffline))
-                    }
-                )
-            }
-
-            item {
-                NotificationBox(
-                    state = state,
-                    onAction = onAction
-                )
-            }
-            item {
-                SuggestionBox {
-                    onAction(MyPageEvent.ClickSuggestion)
+            ProfileBox(
+                catName = state.catName,
+                onClick = {
+                    onAction(MyPageEvent.ClickCatProfile(isOffline))
                 }
+            )
+            CheckFocusTimeBox()
+            NotificationBox(
+                state = state,
+                onAction = onAction
+            )
+            SuggestionBox {
+                onAction(MyPageEvent.ClickSuggestion)
             }
         }
     }
@@ -274,6 +279,54 @@ fun ProfileBox(
 }
 
 @Composable
+fun CheckFocusTimeBox(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = MnTheme.backgroundColorScheme.secondary,
+                shape = RoundedCornerShape(MnRadius.large)
+            )
+            .padding(MnSpacing.xLarge),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_static_ready),
+                contentDescription = "static_ready_image",
+                modifier = Modifier.size(
+                    96.dp
+                )
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = MnSpacing.medium),
+                verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = R.string.my_page_static_title),
+                    style = MnTheme.typography.bodySemiBold,
+                    color = MnTheme.textColorScheme.secondary
+                )
+                Text(
+                    text = stringResource(id = R.string.my_page_static_subtitle),
+                    style = MnTheme.typography.subBodyRegular,
+                    color = MnTheme.textColorScheme.secondary,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun NotificationBox(
     modifier: Modifier = Modifier,
     state: MyPageState,
@@ -298,6 +351,12 @@ fun NotificationBox(
                 isChecked = state.isInterruptNotificationEnabled,
                 onChangeValue = { isEnabled ->
                     onAction(MyPageEvent.ChangeInterruptNotification(isEnabled))
+                }
+            )
+            LockScreenNotificationBox(
+                isChecked = state.isLockScreenNotificationEnabled,
+                onChangeValue = { isEnabled ->
+                    onAction(MyPageEvent.ChangeLockScreenNotification(isEnabled))
                 }
             )
         }
@@ -356,6 +415,36 @@ fun InterruptNotificationBox(
             )
             Text(
                 text = stringResource(id = R.string.my_page_interrupt_push_content),
+                color = MnTheme.textColorScheme.tertiary,
+                style = MnTheme.typography.subBodyRegular
+            )
+        }
+        MnToggleButton(isChecked = isChecked, onCheckedChange = onChangeValue)
+    }
+}
+
+@Composable
+fun LockScreenNotificationBox(
+    modifier: Modifier = Modifier,
+    isChecked: Boolean,
+    onChangeValue: (Boolean) -> Unit
+) {
+    Row(
+        modifier = modifier.padding(MnSpacing.xLarge),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = stringResource(id = R.string.my_page_lockscreen_push_title),
+                color = MnTheme.textColorScheme.primary,
+                style = MnTheme.typography.header4
+            )
+            Text(
+                text = stringResource(id = R.string.my_page_lockscreen_push_content),
                 color = MnTheme.textColorScheme.tertiary,
                 style = MnTheme.typography.subBodyRegular
             )
