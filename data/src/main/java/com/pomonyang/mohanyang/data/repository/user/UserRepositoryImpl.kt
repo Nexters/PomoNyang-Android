@@ -19,7 +19,7 @@ internal class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
     override suspend fun getDeviceId() = deviceLocalDataStore.getDeviceId()
 
-    override fun isNewUser(): Boolean = runBlocking { tokenLocalDataSource.getAccessToken().isEmpty() }
+    override fun isNewUser(): Boolean = runBlocking { tokenLocalDataSource.getAccessToken().isEmpty() || userLocalDataSource.getUserInfo().isNewUser() }
 
     override suspend fun login(deviceId: String) = authService.getTokenByDeviceId(TokenRequest(deviceId))
 
