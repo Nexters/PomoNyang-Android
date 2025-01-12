@@ -39,7 +39,7 @@ android {
             )
             signingConfig = signingConfigs.getByName("release")
             firebaseAppDistribution {
-                releaseNotes = "[${GithubUtils.commitHash()}]-${GithubUtils.lastCommitMessage()}"
+                releaseNotes = "[${GithubUtils.commitHash()}] - ${GithubUtils.lastCommitMessage()}"
                 groups = "뽀모냥"
             }
         }
