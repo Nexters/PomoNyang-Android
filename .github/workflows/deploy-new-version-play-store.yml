@@ -142,5 +142,5 @@ jobs:
           packageName: com.pomonyang.mohanyang
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           whatsNewDirectory: distribution/whatsnew
-          track: internal
-          status: draft
+          track: production
+          status: completed
