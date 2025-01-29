@@ -9,8 +9,8 @@ internal fun Project.configureSecret() {
     val releasePropertiesName = "release.secrets.properties"
     val debugPropertiedName = "debug.secrets.properties"
     extensions.configure<SecretsPluginExtension> {
-        propertiesFileName = releasePropertiesName
-        defaultPropertiesFileName = debugPropertiedName
+        val isDebug = project.gradle.startParameter.taskNames.any { it.contains("Debug", ignoreCase = true) }
+        propertiesFileName = if (isDebug) debugPropertiedName else releasePropertiesName
         ignoreList.add("keyToIgnore")
         ignoreList.add("sdk.*")
     }
