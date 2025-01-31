@@ -10,10 +10,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.focus.PomodoroFocusRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestRoute
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting.PomodoroRestWaitingRoute
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting.PomodoroBreakReadyRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -60,12 +59,8 @@ fun NavGraphBuilder.pomodoroScreen(
             )
         }
 
-        composable<PomodoroRestWaiting> { backStackEntry ->
-            val routeData = backStackEntry.toRoute<PomodoroRestWaiting>()
-            PomodoroRestWaitingRoute(
-                type = routeData.type,
-                focusTime = routeData.focusTime,
-                exceedTime = routeData.exceededTime,
+        composable<PomodoroRestWaiting> {
+            PomodoroBreakReadyRoute(
                 goToHome = {
                     navHostController.popBackStack()
                 },
