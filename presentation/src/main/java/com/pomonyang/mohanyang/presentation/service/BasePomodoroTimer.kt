@@ -15,6 +15,7 @@ internal abstract class BasePomodoroTimer : PomodoroTimer {
     protected abstract fun getTagName(): String
 
     override fun startTimer(
+        timerId: String,
         maxTime: Int,
         eventHandler: PomodoroTimerEventHandler,
         category: PomodoroCategoryType?,
@@ -31,6 +32,7 @@ internal abstract class BasePomodoroTimer : PomodoroTimer {
                 val overtime = if (remainingTime >= 0) 0 else -remainingTime
 
                 eventHandler.updateTimer(
+                    timerId = timerId,
                     time = timeToDisplay.toString(),
                     overtime = overtime.toString(),
                     category = category,

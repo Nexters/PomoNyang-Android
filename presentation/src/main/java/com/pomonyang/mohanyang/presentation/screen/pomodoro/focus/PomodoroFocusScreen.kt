@@ -39,7 +39,6 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroTimerViewModel
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.startInterrupt
@@ -47,16 +46,16 @@ import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.stopInter
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.startFocusTimer
 import com.pomonyang.mohanyang.presentation.util.stopFocusTimer
+import timber.log.Timber
 
 @Composable
 fun PomodoroFocusRoute(
-    pomodoroTimerViewModel: PomodoroTimerViewModel,
     modifier: Modifier = Modifier,
     pomodoroFocusViewModel: PomodoroFocusViewModel = hiltViewModel(),
-    goToRest: (type: String, focusTime: Int, exceededTime: Int) -> Unit,
-    goToHome: () -> Unit,
+    goToRest: (type: String, focusTime: Int, exceededTime: Int, pomodoroId: String) -> Unit,
+    goToHome: () -> Unit
 ) {
-    val state by pomodoroTimerViewModel.state.collectAsStateWithLifecycle()
+    val state by pomodoroFocusViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     BackHandler {
@@ -66,16 +65,15 @@ fun PomodoroFocusRoute(
     pomodoroFocusViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             is PomodoroFocusEffect.GoToPomodoroRest -> {
-                stopNotification(context)
                 goToRest(
                     context.getString(state.categoryType.kor),
                     state.currentFocusTime,
                     state.focusExceededTime,
+                    state.pomodoroId
                 )
             }
 
             PomodoroFocusEffect.GoToPomodoroSetting -> {
-                stopNotification(context)
                 goToHome()
             }
 
@@ -97,18 +95,16 @@ fun PomodoroFocusRoute(
         startInterrupt(context)
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            stopNotification(context)
-        }
-    }
-
-    LaunchedEffect(state.maxFocusTime) {
-        if (state.maxFocusTime != 0) {
+    DisposableEffect(state.maxFocusTime, state.pomodoroId) {
+        if (state.maxFocusTime != 0 && state.pomodoroId.isNotEmpty()) {
             context.startFocusTimer(
                 maxTime = state.maxFocusTime,
                 category = state.categoryType,
+                timerId = state.pomodoroId
             )
+        }
+        onDispose {
+            stopNotification(context, state.pomodoroId)
         }
     }
 
@@ -118,6 +114,7 @@ fun PomodoroFocusRoute(
                 context.getString(state.categoryType.kor),
                 state.remainingFocusTime,
                 state.focusExceededTime,
+                state.pomodoroId
             )
         }
     }
@@ -129,13 +126,13 @@ fun PomodoroFocusRoute(
         catType = state.cat,
         time = state.displayFocusTime(),
         exceededTime = state.displayFocusExceedTime(),
-        onAction = remember { pomodoroFocusViewModel::handleEvent },
+        onAction = remember { pomodoroFocusViewModel::handleEvent }
     )
 }
 
-private fun stopNotification(context: Context) {
+private fun stopNotification(context: Context, pomodoroId: String) {
     stopInterrupt(context)
-    context.stopFocusTimer()
+    context.stopFocusTimer(pomodoroId)
 }
 
 @Composable
@@ -146,24 +143,25 @@ private fun PomodoroTimerScreen(
     time: String,
     exceededTime: String,
     onAction: (PomodoroFocusEvent) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
-    val tooltipMessage = if (exceededTime != DEFAULT_TIME) R.string.exceed_cat_tooltip else R.string.focus_cat_tooltip
+    val tooltipMessage =
+        if (exceededTime != DEFAULT_TIME) R.string.exceed_cat_tooltip else R.string.focus_cat_tooltip
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MnTheme.backgroundColorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         MnTopAppBar(
             navigationIcon = {
                 CategoryBox(
                     iconRes = categoryType.iconRes,
                     categoryName = title,
-                    modifier = Modifier.padding(start = 12.dp),
+                    modifier = Modifier.padding(start = 12.dp)
                 )
-            },
+            }
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -176,7 +174,7 @@ private fun PomodoroTimerScreen(
             isAutoPlay = false,
             onRiveClick = {
                 it.fireState("State Machine_Focus", catType.catFireInput)
-            },
+            }
         )
 
         TimerType(type = stringResource(id = R.string.focus_time), iconRes = R.drawable.ic_focus)
@@ -184,7 +182,7 @@ private fun PomodoroTimerScreen(
         Timer(
             modifier = Modifier.weight(1f),
             time = time,
-            exceededTime = exceededTime,
+            exceededTime = exceededTime
         )
 
         MnBoxButton(
@@ -192,14 +190,14 @@ private fun PomodoroTimerScreen(
             styles = MnBoxButtonStyles.large,
             text = stringResource(id = R.string.rest_action),
             onClick = { onAction(PomodoroFocusEvent.ClickRest) },
-            colors = if (exceededTime != DEFAULT_TIME) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary,
+            colors = if (exceededTime != DEFAULT_TIME) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
         )
 
         MnTextButton(
             styles = MnTextButtonStyles.large,
             containerPadding = PaddingValues(bottom = MnSpacing.xLarge),
             text = stringResource(id = R.string.focus_end),
-            onClick = { onAction(PomodoroFocusEvent.ClickHome) },
+            onClick = { onAction(PomodoroFocusEvent.ClickHome) }
         )
     }
 }
@@ -214,7 +212,7 @@ private fun PomodoroTimerScreenPreview() {
             time = "25:00",
             exceededTime = "00:00",
             onAction = {},
-            catType = CatType.CHEESE,
+            catType = CatType.CHEESE
         )
     }
 }
@@ -229,7 +227,7 @@ private fun PomodoroTimerExceedScreenPreview() {
             time = "25:00",
             exceededTime = "10:00",
             onAction = {},
-            catType = CatType.CHEESE,
+            catType = CatType.CHEESE
         )
     }
 }

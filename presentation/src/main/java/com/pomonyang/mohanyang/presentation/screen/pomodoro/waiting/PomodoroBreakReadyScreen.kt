@@ -43,7 +43,7 @@ import com.pomonyang.mohanyang.presentation.util.formatTime
 fun PomodoroBreakReadyRoute(
     goToHome: () -> Unit,
     forceGoHome: () -> Unit,
-    goToPomodoroRest: () -> Unit,
+    goToPomodoroRest: (pomodoroId: String) -> Unit,
     modifier: Modifier = Modifier,
     pomodoroBreakReadyViewModel: PomodoroBreakReadyViewModel = hiltViewModel(),
     onShowSnackbar: (String, Int?) -> Unit
@@ -53,7 +53,7 @@ fun PomodoroBreakReadyRoute(
         when (effect) {
             PomodoroBreakReadySideEffect.GoToPomodoroSetting -> goToHome()
             is PomodoroBreakReadySideEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
-            PomodoroBreakReadySideEffect.GoToPomodoroRest -> goToPomodoroRest()
+            PomodoroBreakReadySideEffect.GoToPomodoroRest -> goToPomodoroRest(state.pomodoroId)
         }
     }
 

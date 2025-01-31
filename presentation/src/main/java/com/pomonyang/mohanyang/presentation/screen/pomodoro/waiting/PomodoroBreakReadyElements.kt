@@ -6,6 +6,7 @@ import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
 
 data class PomodoroBreakReadyState(
+    val pomodoroId: String = "",
     val plusButtonSelected: Boolean = false,
     val minusButtonSelected: Boolean = false,
     val plusButtonEnabled: Boolean = true,
@@ -13,7 +14,7 @@ data class PomodoroBreakReadyState(
     val forceGoHome: Boolean = false,
     val exceededTime: Int = 0,
     val focusedTime: Int = 0,
-    val type: String = "",
+    val type: String = ""
 ) : ViewState
 
 sealed interface PomodoroBreakReadyEvent : ViewEvent {
@@ -21,6 +22,7 @@ sealed interface PomodoroBreakReadyEvent : ViewEvent {
         val exceededTime: Int,
         val focusTime: Int,
         val type: String,
+        val pomodoroId: String,
     ) : PomodoroBreakReadyEvent
 
     data object OnNavigationClick : PomodoroBreakReadyEvent
@@ -36,6 +38,6 @@ sealed interface PomodoroBreakReadySideEffect : ViewSideEffect {
 
     data class ShowSnackbar(
         val message: String,
-        @DrawableRes val iconRes: Int,
+        @DrawableRes val iconRes: Int
     ) : PomodoroBreakReadySideEffect
 }

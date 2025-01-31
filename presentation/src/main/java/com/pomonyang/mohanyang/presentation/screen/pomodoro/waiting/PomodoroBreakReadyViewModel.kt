@@ -35,6 +35,7 @@ class PomodoroBreakReadyViewModel @Inject constructor(
                 exceededTime = data.exceededTime,
                 focusTime = data.focusTime,
                 type = data.type,
+                pomodoroId = data.pomodoroId
             )
         )
     }
@@ -48,6 +49,7 @@ class PomodoroBreakReadyViewModel @Inject constructor(
                     val pomodoroSetting = getSelectedPomodoroSettingUseCase().first().toModel()
                     updateState {
                         copy(
+                            pomodoroId = event.pomodoroId,
                             exceededTime = event.exceededTime,
                             focusedTime = event.focusTime,
                             type = event.type,

@@ -93,7 +93,7 @@ fun PomodoroSettingRoute(
 
     LaunchedEffect(Unit) {
         pomodoroSettingViewModel.handleEvent(PomodoroSettingEvent.Init)
-        stopAllNotification(context)
+        MnNotificationManager.stopInterrupt(context)
     }
 
     if (state.showCategoryBottomSheet) {
@@ -110,12 +110,6 @@ fun PomodoroSettingRoute(
         modifier = modifier,
         showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not(),
     )
-}
-
-private fun stopAllNotification(context: Context) {
-    context.stopFocusTimer()
-    context.stopRestTimer()
-    MnNotificationManager.stopInterrupt(context)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

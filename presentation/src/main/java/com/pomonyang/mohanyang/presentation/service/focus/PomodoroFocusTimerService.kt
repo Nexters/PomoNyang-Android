@@ -41,7 +41,11 @@ internal class PomodoroFocusTimerService :
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        val timerId = intent.getStringExtra(PomodoroTimerServiceExtras.INTENT_TIMER_ID) ?: run {
+            throw Exception("timerId is null or blank")
+        }
         val maxTime = intent.getIntExtra(PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME, 0)
+
         val category = intent.getSerializableExtraCompat<PomodoroCategoryType>(PomodoroTimerServiceExtras.INTENT_FOCUS_CATEGORY)
 
         Timber.tag("TIMER").d("onStartCommand > ${intent.action} / maxTime: $maxTime / category $category")
@@ -52,6 +56,7 @@ internal class PomodoroFocusTimerService :
                     pomodoroNotificationManager.createNotification(category),
                 )
                 focusTimer.startTimer(
+                    timerId = timerId,
                     maxTime = maxTime,
                     eventHandler = this,
                     category = category,
@@ -76,9 +81,14 @@ internal class PomodoroFocusTimerService :
         // TODO 여기 뭔가 로직이 필요하면 그때 추가
     }
 
-    override fun updateTimer(time: String, overtime: String, category: PomodoroCategoryType?) {
+    override fun updateTimer(
+        timerId: String,
+        time: String,
+        overtime: String,
+        category: PomodoroCategoryType?
+    ) {
         scope.launch {
-            timerRepository.incrementFocusedTime()
+            timerRepository.incrementFocusedTime(timerId)
         }
         pomodoroNotificationManager.updateNotification(
             time = time,

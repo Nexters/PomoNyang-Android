@@ -40,6 +40,9 @@ internal class PomodoroRestTimerService :
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        val timerId = intent.getStringExtra(PomodoroTimerServiceExtras.INTENT_TIMER_ID) ?: run {
+            throw Exception("timerId is null or blank")
+        }
         val maxTime = intent.getIntExtra(PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME, 0)
         when (intent.action) {
             PomodoroTimerServiceExtras.ACTION_TIMER_START -> {
@@ -48,6 +51,7 @@ internal class PomodoroRestTimerService :
                     pomodoroNotificationManager.createNotification(),
                 )
                 restTimer.startTimer(
+                    timerId = timerId,
                     maxTime = maxTime,
                     eventHandler = this,
                 )
@@ -71,9 +75,14 @@ internal class PomodoroRestTimerService :
         // TODO 여기 뭔가 로직이 필요하면 그때 추가
     }
 
-    override fun updateTimer(time: String, overtime: String, category: PomodoroCategoryType?) {
+    override fun updateTimer(
+        timerId: String,
+        time: String,
+        overtime: String,
+        category: PomodoroCategoryType?
+    ) {
         scope.launch {
-            timerRepository.incrementRestedTime()
+            timerRepository.incrementRestedTime(timerId)
         }
         pomodoroNotificationManager.updateNotification(
             time = time,

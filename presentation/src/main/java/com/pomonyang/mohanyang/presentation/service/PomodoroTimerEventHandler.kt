@@ -5,5 +5,10 @@ import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 internal interface PomodoroTimerEventHandler {
     fun onTimeEnd()
     fun onTimeExceeded()
-    fun updateTimer(time: String, overtime: String, category: PomodoroCategoryType?)
+    fun updateTimer(
+        timerId: String,
+        time: String,
+        overtime: String,
+        category: PomodoroCategoryType?
+    )
 }
