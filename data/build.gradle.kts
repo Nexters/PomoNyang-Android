@@ -5,6 +5,9 @@ plugins {
 
 android {
     namespace = "com.mohanyang.data"
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
 }
 
 dependencies {
