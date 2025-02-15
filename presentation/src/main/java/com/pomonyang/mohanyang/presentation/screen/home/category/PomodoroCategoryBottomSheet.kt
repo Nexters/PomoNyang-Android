@@ -1,4 +1,4 @@
-package com.pomonyang.mohanyang.presentation.screen.home.setting
+package com.pomonyang.mohanyang.presentation.screen.home.category
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,23 +18,26 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonC
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectListItem
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
+import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingEvent
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun PomodoroCategoryBottomSheet(
     onAction: (PomodoroSettingEvent) -> Unit,
-    categoryList: List<PomodoroCategoryModel>,
+    categoryList: ImmutableList<PomodoroCategoryModel>,
     initialCategoryNo: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var currentSelectedCategoryNo by remember { mutableIntStateOf(initialCategoryNo) }
 
     MnBottomSheet(
         onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
         modifier = modifier.fillMaxWidth(),
-        title = stringResource(R.string.change_category_title)
+        title = stringResource(R.string.change_category_title),
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             categoryList.forEach { pomodoroCategoryModel ->
@@ -44,9 +47,7 @@ fun PomodoroCategoryBottomSheet(
                     categoryType = pomodoroCategoryModel.title,
                     onClick = { currentSelectedCategoryNo = pomodoroCategoryModel.categoryNo },
                     isSelected = pomodoroCategoryModel.categoryNo == currentSelectedCategoryNo,
-                    restTime = stringResource(R.string.minute, pomodoroCategoryModel.restTime),
-                    focusTime = stringResource(R.string.minute, pomodoroCategoryModel.focusTime),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -55,8 +56,12 @@ fun PomodoroCategoryBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 styles = MnBoxButtonStyles.large,
                 text = stringResource(R.string.confirm),
-                onClick = { onAction(PomodoroSettingEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo)) },
-                colors = MnBoxButtonColorType.secondary
+                onClick = {
+                    onAction(
+                        PomodoroSettingEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo),
+                    )
+                },
+                colors = MnBoxButtonColorType.secondary,
             )
         }
     }
@@ -68,13 +73,23 @@ private fun PomodoroCategoryBottomSheetPreview() {
     MnTheme {
         PomodoroCategoryBottomSheet(
             onAction = {},
-            categoryList = listOf(PomodoroCategoryModel(
-                categoryNo = 1,
-                title = "Pomodoro",
-                categoryType = PomodoroCategoryType.valueOf("독서"),
-                focusTime = 25,
-                restTime = 5
-            )),
+            categoryList = persistentListOf(
+                PomodoroCategoryModel(
+                    categoryNo = 1,
+                    title = "Pomodoro",
+                    categoryType = PomodoroCategoryType.WORK,
+                ),
+                PomodoroCategoryModel(
+                    categoryNo = 1,
+                    title = "Pomodoro",
+                    categoryType = PomodoroCategoryType.WORK,
+                ),
+                PomodoroCategoryModel(
+                    categoryNo = 1,
+                    title = "Pomodoro",
+                    categoryType = PomodoroCategoryType.WORK,
+                ),
+            ),
             initialCategoryNo = 1,
         )
     }

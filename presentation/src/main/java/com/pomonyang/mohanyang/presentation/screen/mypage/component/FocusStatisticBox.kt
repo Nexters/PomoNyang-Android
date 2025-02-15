@@ -30,7 +30,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnLargeIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroSettingModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
@@ -72,8 +72,8 @@ fun FocusStatisticBox(
                 ) {
                     // TODO API 연결
                     LazyColumn {
-                        itemsIndexed(PomodoroCategoryType.values()) { idx, category ->
-                            FocusCategoryDataBox(categoryModel = PomodoroCategoryModel(categoryNo = 1, title = stringResource(id = category.kor), categoryType = category, focusTime = 10, restTime = 20))
+                        itemsIndexed(PomodoroCategoryType.entries.toTypedArray()) { idx, category ->
+                            FocusCategoryDataBox(categoryModel = PomodoroSettingModel(categoryNo = 1, title = stringResource(id = category.kor), categoryType = category, focusTime = 10, restTime = 20))
                         }
                     }
                 }
@@ -138,7 +138,7 @@ fun FocusTotalTime(
 
 @Composable
 fun FocusCategoryDataBox(
-    categoryModel: PomodoroCategoryModel,
+    categoryModel: PomodoroSettingModel,
     modifier: Modifier = Modifier,
 ) {
     Row(

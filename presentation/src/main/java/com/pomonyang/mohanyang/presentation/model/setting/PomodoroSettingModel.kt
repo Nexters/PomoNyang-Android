@@ -5,7 +5,7 @@ import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
 import java.time.Duration
 
 @Immutable
-data class PomodoroCategoryModel(
+data class PomodoroSettingModel(
     val categoryNo: Int,
     val title: String,
     val categoryType: PomodoroCategoryType,
@@ -13,7 +13,7 @@ data class PomodoroCategoryModel(
     val restTime: Int,
 )
 
-fun PomodoroSettingEntity.toModel() = PomodoroCategoryModel(
+fun PomodoroSettingEntity.toModel() = PomodoroSettingModel(
     categoryNo = categoryNo,
     title = title,
     categoryType = PomodoroCategoryType.safeValueOf(title),
