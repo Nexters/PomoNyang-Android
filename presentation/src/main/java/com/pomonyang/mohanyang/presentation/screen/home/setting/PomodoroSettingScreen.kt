@@ -165,7 +165,7 @@ fun PomodoroSettingScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            CatRive(
+            /*CatRive(
                 tooltipMessage = catMessage,
                 riveResource = R.raw.cat_home,
                 stateMachineInput = state.cat.type.pomodoroRiveCat,
@@ -177,7 +177,7 @@ fun PomodoroSettingScreen(
                         catMessage = state.cat.type.getRandomMessage()
                     }
                 },
-            )
+            )*/
 
             Text(
                 text = state.cat.name,
@@ -260,46 +260,6 @@ private fun TimeSetting(
             type = stringResource(R.string.rest),
             time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.restTime ?: 0),
         )
-    }
-}
-
-@Composable
-private fun PomodoroCategoryBottomSheet(
-    onAction: (PomodoroSettingEvent) -> Unit,
-    categoryList: List<PomodoroCategoryModel>,
-    initialCategoryNo: Int,
-    modifier: Modifier = Modifier,
-) {
-    var currentSelectedCategoryNo by remember { mutableIntStateOf(initialCategoryNo) }
-
-    MnBottomSheet(
-        onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
-        modifier = modifier.fillMaxWidth(),
-        title = stringResource(R.string.change_category_title),
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            categoryList.forEach { pomodoroCategoryModel ->
-                MnSelectListItem(
-                    containerPadding = PaddingValues(bottom = MnSpacing.small),
-                    iconResource = pomodoroCategoryModel.categoryType.iconRes,
-                    categoryType = pomodoroCategoryModel.title,
-                    onClick = { currentSelectedCategoryNo = pomodoroCategoryModel.categoryNo },
-                    isSelected = pomodoroCategoryModel.categoryNo == currentSelectedCategoryNo,
-                    restTime = stringResource(R.string.minute, pomodoroCategoryModel.restTime),
-                    focusTime = stringResource(R.string.minute, pomodoroCategoryModel.focusTime),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-
-            MnBoxButton(
-                containerPadding = PaddingValues(top = MnSpacing.xSmall, bottom = MnSpacing.medium),
-                modifier = Modifier.fillMaxWidth(),
-                styles = MnBoxButtonStyles.large,
-                text = stringResource(R.string.confirm),
-                onClick = { onAction(PomodoroSettingEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo)) },
-                colors = MnBoxButtonColorType.secondary,
-            )
-        }
     }
 }
 
