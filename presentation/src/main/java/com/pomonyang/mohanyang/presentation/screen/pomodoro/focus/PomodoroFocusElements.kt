@@ -6,9 +6,10 @@ import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.util.formatTime
+import java.util.*
 
 data class PomodoroFocusState(
-    val pomodoroId: String = "",
+    val pomodoroId: String = UUID.randomUUID().toString(),
     val remainingFocusTime: Int = 0,
     val focusExceededTime: Int = 0,
     val maxFocusTime: Int = 0,
@@ -27,7 +28,7 @@ data class PomodoroFocusState(
 }
 
 sealed interface PomodoroFocusEvent : ViewEvent {
-    data class Init(val pomodoroId: String) : PomodoroFocusEvent
+    data object Init : PomodoroFocusEvent
     data object ClickRest : PomodoroFocusEvent
     data object ClickHome : PomodoroFocusEvent
 }

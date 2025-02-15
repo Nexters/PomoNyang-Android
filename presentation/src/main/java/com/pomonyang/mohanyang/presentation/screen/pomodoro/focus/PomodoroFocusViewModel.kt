@@ -20,6 +20,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @HiltViewModel
 class PomodoroFocusViewModel @Inject constructor(
@@ -27,12 +28,10 @@ class PomodoroFocusViewModel @Inject constructor(
     private val pomodoroTimerRepository: PomodoroTimerRepository,
     private val userRepository: UserRepository,
     private val pomodoroInitialDataUseCase: InsertPomodoroInitialDataUseCase,
-    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<PomodoroFocusState, PomodoroFocusEvent, PomodoroFocusEffect>() {
 
     init {
-        val pomodoroId = savedStateHandle.toRoute<PomodoroFocusTimer>().pomodoroId
-        handleEvent(PomodoroFocusEvent.Init(pomodoroId))
+        handleEvent(PomodoroFocusEvent.Init)
     }
 
     override fun setInitialState(): PomodoroFocusState = PomodoroFocusState()
@@ -44,26 +43,26 @@ class PomodoroFocusViewModel @Inject constructor(
                 setEffect(PomodoroFocusEffect.GoToPomodoroSetting)
                 savePomodoroData()
             }
+
             is PomodoroFocusEvent.Init -> {
                 loadPomodoroSettingData()
-                loadPomodoroTimerData(event.pomodoroId)
-                initPomodoroData(event.pomodoroId)
+                loadPomodoroTimerData()
+                initPomodoroData()
             }
         }
     }
 
-    private fun loadPomodoroTimerData(pomodoroId: String) {
-        pomodoroTimerRepository.getPomodoroTimer(pomodoroId)
+    private fun loadPomodoroTimerData() {
+        pomodoroTimerRepository.getPomodoroTimer(state.value.pomodoroId)
             .onEach { timerData ->
                 timerData?.let { updateTimerState(it) }
             }
             .launchIn(viewModelScope)
     }
 
-    private fun initPomodoroData(pomodoroId: String) {
+    private fun initPomodoroData() {
         viewModelScope.launch {
-            updateState { copy(pomodoroId = pomodoroId) }
-            pomodoroInitialDataUseCase(pomodoroId)
+            pomodoroInitialDataUseCase(state.value.pomodoroId)
         }
     }
 

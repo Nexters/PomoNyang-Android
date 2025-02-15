@@ -15,9 +15,7 @@ import timber.log.Timber
 data object Pomodoro
 
 @Serializable
-data class PomodoroFocusTimer(
-    val pomodoroId: String,
-)
+data object PomodoroFocusTimer
 
 @Serializable
 data class PomodoroRestWaiting(
@@ -38,7 +36,7 @@ fun NavGraphBuilder.pomodoroScreen(
     navHostController: NavHostController
 ) {
     navigation<Pomodoro>(
-        startDestination = PomodoroFocusTimer(UUID.randomUUID().toString()),
+        startDestination = PomodoroFocusTimer,
     ) {
         composable<PomodoroFocusTimer> {
             PomodoroFocusRoute(
@@ -68,7 +66,6 @@ fun NavGraphBuilder.pomodoroScreen(
                     navHostController.popBackStack()
                 },
                 goToPomodoroRest = {
-                    Timber.tag("koni").d("goToPomodoroRest > ${it}")
                     navHostController.navigate(PomodoroRest(it)) {
                         popUpTo<PomodoroRestWaiting> {
                             inclusive = true
@@ -91,7 +88,7 @@ fun NavGraphBuilder.pomodoroScreen(
                 },
                 goToFocus = {
                     navHostController.navigate(
-                        PomodoroFocusTimer(UUID.randomUUID().toString())
+                        PomodoroFocusTimer
                     ) {
                         popUpTo<PomodoroRest> {
                             inclusive = true
