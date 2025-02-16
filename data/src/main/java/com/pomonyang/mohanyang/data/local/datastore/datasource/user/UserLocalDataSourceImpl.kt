@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class UserLocalDataSourceImpl @Inject constructor(
-    @UserDataStore private val dataStore: DataStore<Preferences>
+    @UserDataStore private val dataStore: DataStore<Preferences>,
 ) : UserLocalDataSource {
     override suspend fun saveUserInfo(userInfo: UserInfoResponse) {
         dataStore.edit { preferences ->
@@ -44,8 +44,8 @@ class UserLocalDataSourceImpl @Inject constructor(
             cat = CatTypeResponse(
                 no = it[intPreferencesKey(USER_CAT_NO_KEY)] ?: -1,
                 type = it[stringPreferencesKey(USER_CAT_TYPE_KEY)] ?: "",
-                name = it[stringPreferencesKey(USER_CAT_NAME_KEY)] ?: ""
-            )
+                name = it[stringPreferencesKey(USER_CAT_NAME_KEY)] ?: "",
+            ),
         )
     }.first()
 

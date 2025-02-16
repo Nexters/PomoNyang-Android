@@ -36,20 +36,20 @@ fun MnBottomSheet(
     subTitle: String? = null,
     textStyles: MnBottomSheetTextStyles = MnBottomSheetDefaults.textStyles(),
     colors: MnBottomSheetColors = MnBottomSheetDefaults.colors(),
-    contents: @Composable () -> Unit
+    contents: @Composable () -> Unit,
 ) {
     ModalBottomSheet(
         modifier = modifier,
         containerColor = colors.containerColor,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
     ) {
         BottomSheetContent(
             title = title,
             subTitle = subTitle,
             textStyles = textStyles,
             onCloseClick = onDismissRequest,
-            colors = colors
+            colors = colors,
         ) {
             Column(modifier = Modifier.padding(horizontal = MnSpacing.large)) {
                 contents()
@@ -66,7 +66,7 @@ private fun BottomSheetContent(
     modifier: Modifier = Modifier,
     title: String? = null,
     subTitle: String? = null,
-    contents: @Composable () -> Unit
+    contents: @Composable () -> Unit,
 ) {
     Column(modifier = modifier) {
         Row(
@@ -74,7 +74,7 @@ private fun BottomSheetContent(
                 .fillMaxWidth()
                 .padding(end = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             title?.let {
                 Text(
@@ -82,7 +82,7 @@ private fun BottomSheetContent(
                     style = textStyles.titleTextStyle,
                     color = colors.titleColor,
                     modifier = Modifier.padding(start = 20.dp),
-                    maxLines = 1
+                    maxLines = 1,
                 )
             }
 
@@ -90,7 +90,7 @@ private fun BottomSheetContent(
                 resourceId = R.drawable.ic_close,
                 modifier = Modifier
                     .padding(8.dp)
-                    .clickableSingle(activeRippleEffect = false) { onCloseClick() }
+                    .clickableSingle(activeRippleEffect = false) { onCloseClick() },
             )
         }
 
@@ -100,7 +100,7 @@ private fun BottomSheetContent(
                 maxLines = 2,
                 style = textStyles.subTitleTextStyle,
                 color = colors.subTitleColor,
-                modifier = Modifier.padding(start = 20.dp)
+                modifier = Modifier.padding(start = 20.dp),
             )
         }
 
@@ -118,7 +118,7 @@ private fun MnModalBottomSheetPreview() {
             onDismissRequest = {},
             modifier = Modifier.fillMaxWidth(),
             title = "Dialog Title",
-            subTitle = "Dialog SubText를 입력해주세요.\n최대 2줄을 넘지 않도록 해요."
+            subTitle = "Dialog SubText를 입력해주세요.\n최대 2줄을 넘지 않도록 해요.",
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 MnSelectListItem(
@@ -129,7 +129,7 @@ private fun MnModalBottomSheetPreview() {
                     isSelected = true,
                     restTime = "25",
                     focusTime = "25",
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 MnSelectListItem(
                     containerPadding = PaddingValues(bottom = MnSpacing.small),
@@ -138,7 +138,7 @@ private fun MnModalBottomSheetPreview() {
                     onClick = {},
                     restTime = "25",
                     focusTime = "25",
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 MnSelectListItem(
                     containerPadding = PaddingValues(bottom = MnSpacing.small),
@@ -147,7 +147,7 @@ private fun MnModalBottomSheetPreview() {
                     onClick = {},
                     restTime = "25",
                     focusTime = "25",
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 MnSelectListItem(
                     containerPadding = PaddingValues(bottom = MnSpacing.small),
@@ -156,7 +156,7 @@ private fun MnModalBottomSheetPreview() {
                     onClick = {},
                     restTime = "25",
                     focusTime = "25",
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 MnBoxButton(
@@ -167,7 +167,7 @@ private fun MnModalBottomSheetPreview() {
                     onClick = { },
                     colors = MnBoxButtonColorType.secondary,
                     rightIconResourceId = R.drawable.ic_null,
-                    leftIconResourceId = R.drawable.ic_null
+                    leftIconResourceId = R.drawable.ic_null,
                 )
                 Spacer(Modifier.height(MnSpacing.medium))
             }

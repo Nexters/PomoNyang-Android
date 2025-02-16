@@ -6,7 +6,7 @@ import com.pomonyang.mohanyang.data.remote.service.AuthService
 import javax.inject.Inject
 
 internal class AuthRemoteDataSourceImpl @Inject constructor(
-    private val authService: AuthService
+    private val authService: AuthService,
 ) : AuthRemoteDataSource {
 
     override suspend fun login(deviceId: String) = authService.getTokenByDeviceId(TokenRequest(deviceId))

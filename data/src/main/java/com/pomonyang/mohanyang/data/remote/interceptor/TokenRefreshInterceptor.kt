@@ -11,7 +11,7 @@ import okhttp3.Response
 internal class TokenRefreshInterceptor @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource,
     private val tokenLocalDataSource: TokenLocalDataSource,
-    private val deviceIdLocalDataSource: DeviceIdLocalDataSource
+    private val deviceIdLocalDataSource: DeviceIdLocalDataSource,
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {

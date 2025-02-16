@@ -26,9 +26,9 @@ data class PomodoroSettingState(
     val cat: CatInfoModel = CatInfoModel(
         no = -1,
         name = "",
-        type = CatType.CHEESE
+        type = CatType.CHEESE,
     ),
-    val isEndOnBoardingTooltip: Boolean = false
+    val isEndOnBoardingTooltip: Boolean = false,
 ) : ViewState {
     fun getSelectedCategory() = categoryList.find { it.categoryNo == selectedCategoryNo }
 }
@@ -51,13 +51,13 @@ sealed interface PomodoroSettingSideEffect : ViewSideEffect {
 
     data class ShowSnackBar(
         val message: String,
-        @DrawableRes val iconRes: Int
+        @DrawableRes val iconRes: Int,
     ) : PomodoroSettingSideEffect
 
     data class GoTimeSetting(
         val isFocusTime: Boolean,
         val initialTime: Int,
-        val category: String
+        val category: String,
     ) : PomodoroSettingSideEffect
 
     data object GoToMyPage : PomodoroSettingSideEffect
@@ -67,7 +67,7 @@ sealed interface PomodoroSettingSideEffect : ViewSideEffect {
 class PomodoroSettingViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
     private val getPomodoroSettingListUseCase: GetPomodoroSettingListUseCase,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel<PomodoroSettingState, PomodoroSettingEvent, PomodoroSettingSideEffect>() {
 
     override fun setInitialState(): PomodoroSettingState = PomodoroSettingState()
@@ -132,7 +132,7 @@ class PomodoroSettingViewModel @Inject constructor(
         state.value.getSelectedCategory()?.let {
             val initialTime = if (isFocusTime) it.focusTime else it.restTime
             setEffect(
-                PomodoroSettingSideEffect.GoTimeSetting(isFocusTime = isFocusTime, initialTime = initialTime, category = it.title)
+                PomodoroSettingSideEffect.GoTimeSetting(isFocusTime = isFocusTime, initialTime = initialTime, category = it.title),
             )
         }
     }

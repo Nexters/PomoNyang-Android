@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RegisterPushTokenRequest(
     val deviceToken: String,
-    val deviceType: String
+    val deviceType: String,
 )

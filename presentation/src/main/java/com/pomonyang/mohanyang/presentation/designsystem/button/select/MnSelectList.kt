@@ -35,7 +35,7 @@ fun MnSelectListItem(
     modifier: Modifier = Modifier,
     containerPadding: PaddingValues = PaddingValues(),
     isSelected: Boolean = false,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     MnSelectButton(
         modifier = modifier,
@@ -46,34 +46,34 @@ fun MnSelectListItem(
                 modifier = Modifier
                     .padding(MnSpacing.xLarge)
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 MnMediumIcon(
                     resourceId = iconResource,
-                    tint = Color.Unspecified
+                    tint = Color.Unspecified,
                 )
 
                 Text(
                     modifier = Modifier.padding(
                         start = MnSpacing.small,
-                        end = MnSpacing.medium
+                        end = MnSpacing.medium,
                     ),
                     text = categoryType,
                     style = MnTheme.typography.bodySemiBold,
-                    color = MnTheme.textColorScheme.primary
+                    color = MnTheme.textColorScheme.primary,
                 )
                 TimeComponent(
                     type = stringResource(R.string.focus),
-                    time = focusTime
+                    time = focusTime,
                 )
                 TimeDivider()
                 TimeComponent(
                     type = stringResource(R.string.rest),
-                    time = restTime
+                    time = restTime,
                 )
             }
         },
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
@@ -86,8 +86,8 @@ private fun TimeDivider() {
             .height(12.dp)
             .background(
                 color = MnTheme.iconColorScheme.tertiary,
-                shape = RoundedCornerShape(MnRadius.xSmall)
-            )
+                shape = RoundedCornerShape(MnRadius.xSmall),
+            ),
     )
 }
 
@@ -95,20 +95,20 @@ private fun TimeDivider() {
 private fun TimeComponent(
     type: String,
     time: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier) {
         Text(
             text = type,
             style = MnTheme.typography.subBodyRegular,
-            color = MnTheme.textColorScheme.tertiary
+            color = MnTheme.textColorScheme.tertiary,
         )
 
         Text(
             modifier = Modifier.padding(start = 4.dp),
             text = time,
             style = MnTheme.typography.subBodyRegular,
-            color = MnTheme.textColorScheme.tertiary
+            color = MnTheme.textColorScheme.tertiary,
         )
     }
 }
@@ -118,7 +118,7 @@ private fun TimeComponent(
 fun MnSelectListPreview(modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         MnSelectListItem(
             iconResource = R.drawable.ic_null,
@@ -127,7 +127,7 @@ fun MnSelectListPreview(modifier: Modifier = Modifier) {
             isSelected = true,
             restTime = "25",
             focusTime = "25",
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MnSelectListItem(
             iconResource = R.drawable.ic_null,
@@ -135,7 +135,7 @@ fun MnSelectListPreview(modifier: Modifier = Modifier) {
             onClick = {},
             restTime = "25",
             focusTime = "25",
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MnSelectListItem(
             iconResource = R.drawable.ic_null,
@@ -143,7 +143,7 @@ fun MnSelectListPreview(modifier: Modifier = Modifier) {
             onClick = {},
             restTime = "25",
             focusTime = "25",
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         MnSelectListItem(
             iconResource = R.drawable.ic_null,
@@ -151,7 +151,7 @@ fun MnSelectListPreview(modifier: Modifier = Modifier) {
             onClick = {},
             restTime = "25",
             focusTime = "25",
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

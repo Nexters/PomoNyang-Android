@@ -26,7 +26,7 @@ internal data object PomodoroFocusTimer
 internal data class PomodoroRestWaiting(
     val type: String,
     val focusTime: Int,
-    val exceededTime: Int
+    val exceededTime: Int,
 )
 
 @Serializable
@@ -35,10 +35,10 @@ internal data object PomodoroRest
 fun NavGraphBuilder.pomodoroScreen(
     onForceGoHome: () -> Unit,
     onShowSnackbar: (String, Int?) -> Unit,
-    navHostController: NavHostController
+    navHostController: NavHostController,
 ) {
     navigation<Pomodoro>(
-        startDestination = PomodoroFocusTimer
+        startDestination = PomodoroFocusTimer,
     ) {
         composable<PomodoroFocusTimer> {
             PomodoroFocusRoute(
@@ -48,15 +48,15 @@ fun NavGraphBuilder.pomodoroScreen(
                         PomodoroRestWaiting(
                             type = type,
                             focusTime = focusTime,
-                            exceededTime = exceededTime
-                        )
+                            exceededTime = exceededTime,
+                        ),
                     ) {
                         popUpTo(PomodoroFocusTimer) { inclusive = true }
                     }
                 },
                 goToHome = {
                     navHostController.popBackStack()
-                }
+                },
             )
         }
 
@@ -80,7 +80,7 @@ fun NavGraphBuilder.pomodoroScreen(
                     onForceGoHome()
                     navHostController.popBackStack()
                 },
-                onShowSnackbar = onShowSnackbar
+                onShowSnackbar = onShowSnackbar,
             )
         }
 
@@ -95,7 +95,7 @@ fun NavGraphBuilder.pomodoroScreen(
                     navHostController.navigate(Pomodoro) {
                         popUpTo(PomodoroRest) { inclusive = true }
                     }
-                }
+                },
             )
         }
     }

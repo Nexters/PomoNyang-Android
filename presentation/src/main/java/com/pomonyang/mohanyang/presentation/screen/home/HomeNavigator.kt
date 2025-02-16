@@ -25,30 +25,30 @@ internal data object PomodoroSetting
 internal data class TimeSetting(
     val isFocusTime: Boolean,
     val initialTime: Int,
-    val categoryName: String
+    val categoryName: String,
 )
 
 fun NavGraphBuilder.homeScreen(
     isNewUser: Boolean,
     onShowSnackbar: (String, Int?) -> Unit,
-    navHostController: NavHostController
+    navHostController: NavHostController,
 ) {
     navigation<Home>(
-        startDestination = PomodoroSetting
+        startDestination = PomodoroSetting,
     ) {
         val slideDuration = 500
 
         composable<PomodoroSetting>(
             popEnterTransition = {
                 EnterTransition.None
-            }
+            },
         ) {
             PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,
                 goTimeSetting = { isFocusTime, initialTime, categoryName ->
                     navHostController.navigate(
-                        TimeSetting(isFocusTime, initialTime, categoryName)
+                        TimeSetting(isFocusTime, initialTime, categoryName),
                     )
                 },
                 goToPomodoro = {
@@ -56,7 +56,7 @@ fun NavGraphBuilder.homeScreen(
                 },
                 goToMyPage = {
                     navHostController.navigate(MyPage)
-                }
+                },
             )
         }
 
@@ -66,7 +66,7 @@ fun NavGraphBuilder.homeScreen(
             },
             exitTransition = {
                 slideOutVertically(tween(slideDuration), targetOffsetY = { it })
-            }
+            },
 
         ) { backStackEntry ->
             val routeData = backStackEntry.toRoute<TimeSetting>()
@@ -74,7 +74,7 @@ fun NavGraphBuilder.homeScreen(
                 isFocusTime = routeData.isFocusTime,
                 initialSettingTime = routeData.initialTime,
                 categoryName = routeData.categoryName,
-                onShowSnackbar = onShowSnackbar
+                onShowSnackbar = onShowSnackbar,
             ) {
                 navHostController.popBackStack()
             }

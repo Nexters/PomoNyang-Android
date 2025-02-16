@@ -40,7 +40,7 @@ private fun Project.buildComposeMetricsParameters(): List<String> {
         metricParameters.add("-P")
         metricParameters.add(
             "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                metricsFolder.absolutePath
+                metricsFolder.absolutePath,
         )
     }
 
@@ -51,7 +51,7 @@ private fun Project.buildComposeMetricsParameters(): List<String> {
         metricParameters.add("-P")
         metricParameters.add(
             "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                reportsFolder.absolutePath
+                reportsFolder.absolutePath,
         )
     }
     return metricParameters.toList()

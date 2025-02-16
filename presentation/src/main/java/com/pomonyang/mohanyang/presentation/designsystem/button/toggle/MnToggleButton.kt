@@ -26,7 +26,7 @@ import kotlin.math.roundToInt
 fun MnToggleButton(
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     val minBound = with(density) { MnToggleButtonSize.padding.toPx() }
@@ -35,14 +35,14 @@ fun MnToggleButton(
     val slide by animateFloatAsState(
         targetValue = if (isChecked) maxBound else minBound,
         animationSpec = tween(durationMillis = 200),
-        label = "mn-toggle"
+        label = "mn-toggle",
     )
 
     Box(
         modifier = modifier
             .size(
                 width = MnToggleButtonSize.width,
-                height = MnToggleButtonSize.height
+                height = MnToggleButtonSize.height,
             )
             .clip(RoundedCornerShape(MnRadius.max))
             .background(
@@ -50,9 +50,9 @@ fun MnToggleButton(
                     MnTheme.backgroundColorScheme.accent1
                 } else {
                     MnTheme.iconColorScheme.disabled
-                }
+                },
             )
-            .clickableSingle(activeRippleEffect = false, onClick = { onCheckedChange(!isChecked) })
+            .clickableSingle(activeRippleEffect = false, onClick = { onCheckedChange(!isChecked) }),
     ) {
         Box(
             modifier = Modifier
@@ -61,12 +61,12 @@ fun MnToggleButton(
                         slide.roundToInt(),
                         MnToggleButtonSize.padding
                             .toPx()
-                            .roundToInt()
+                            .roundToInt(),
                     )
                 }
                 .size(MnToggleButtonSize.thumbSize)
                 .clip(CircleShape)
-                .background(MnTheme.iconColorScheme.inverse)
+                .background(MnTheme.iconColorScheme.inverse),
         )
     }
 }

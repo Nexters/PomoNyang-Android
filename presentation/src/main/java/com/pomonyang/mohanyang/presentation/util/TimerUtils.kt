@@ -11,7 +11,7 @@ import timber.log.Timber
 
 internal fun Context.startFocusTimer(
     maxTime: Int,
-    category: PomodoroCategoryType
+    category: PomodoroCategoryType,
 ) {
     Timber.tag("TIMER").d("startFocusTimer")
     startService(
@@ -20,10 +20,10 @@ internal fun Context.startFocusTimer(
             putExtras(
                 bundleOf(
                     PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME to maxTime,
-                    PomodoroTimerServiceExtras.INTENT_FOCUS_CATEGORY to category
-                )
+                    PomodoroTimerServiceExtras.INTENT_FOCUS_CATEGORY to category,
+                ),
             )
-        }
+        },
     )
 }
 
@@ -34,10 +34,10 @@ internal fun Context.startRestTimer(maxTime: Int) {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_START
             putExtras(
                 bundleOf(
-                    PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME to maxTime
-                )
+                    PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME to maxTime,
+                ),
             )
-        }
+        },
     )
 }
 
@@ -46,7 +46,7 @@ internal fun Context.stopFocusTimer() {
     startService(
         Intent(this, PomodoroFocusTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_STOP
-        }
+        },
     )
 }
 
@@ -55,6 +55,6 @@ internal fun Context.stopRestTimer() {
     startService(
         Intent(this, PomodoroRestTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_STOP
-        }
+        },
     )
 }

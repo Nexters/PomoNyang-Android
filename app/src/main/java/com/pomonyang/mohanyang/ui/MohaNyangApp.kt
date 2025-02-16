@@ -41,12 +41,12 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun MohaNyangApp(
     mohaNyangAppState: MohaNyangAppState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     MohaNyangApp(
         modifier = modifier,
         mohaNyangAppState = mohaNyangAppState,
-        snackbarHostState = remember { SnackbarHostState() }
+        snackbarHostState = remember { SnackbarHostState() },
     )
 }
 
@@ -54,14 +54,14 @@ internal fun MohaNyangApp(
 private fun MohaNyangApp(
     mohaNyangAppState: MohaNyangAppState,
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var snackbarIconRes by remember { mutableStateOf<Int?>(null) }
 
     Scaffold(
         modifier = modifier,
         containerColor = MnTheme.backgroundColorScheme.primary,
-        snackbarHost = { MnToastSnackbarHost(hostState = snackbarHostState, leadingIconResourceId = snackbarIconRes) }
+        snackbarHost = { MnToastSnackbarHost(hostState = snackbarHostState, leadingIconResourceId = snackbarIconRes) },
     ) { innerPadding ->
         val isOffline by mohaNyangAppState.isOffline.collectAsStateWithLifecycle()
         var isForceHome by remember { mutableStateOf(false) }
@@ -72,7 +72,7 @@ private fun MohaNyangApp(
                     snackbarHostState.currentSnackbarData?.dismiss()
                     snackbarHostState.showSnackbar(
                         message = message,
-                        duration = Short
+                        duration = Short,
                     )
                 }
             }
@@ -92,9 +92,9 @@ private fun MohaNyangApp(
                         text = stringResource(id = PresentationR.string.confirm),
                         onClick = { isForceHome = false },
                         colors = MnBoxButtonColorType.tertiary,
-                        styles = MnBoxButtonStyles.medium
+                        styles = MnBoxButtonStyles.medium,
                     )
-                }
+                },
             ) {
                 isForceHome = false
             }
@@ -104,14 +104,14 @@ private fun MohaNyangApp(
             onForceGoHome = { isForceHome = true },
             mohaNyangAppState = mohaNyangAppState,
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(innerPadding),
         )
     }
 }
 
 @Composable
 private fun OfflinePopup(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Popup(alignment = Alignment.TopCenter) {
         Row(
@@ -120,21 +120,21 @@ private fun OfflinePopup(
                 .shadow(
                     elevation = 6.dp,
                     shape = RoundedCornerShape(MnRadius.max),
-                    clip = true
+                    clip = true,
                 )
                 .background(
                     color = MnColor.White,
-                    shape = RoundedCornerShape(MnRadius.max)
+                    shape = RoundedCornerShape(MnRadius.max),
                 )
                 .padding(horizontal = MnSpacing.xLarge, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(5.dp)
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             MnXSmallIcon(resourceId = com.mohanyang.presentation.R.drawable.ic_sort_offline)
             Text(
                 text = stringResource(R.string.offline_mode_message),
                 style = MnTheme.typography.bodySemiBold,
-                color = MnTheme.textColorScheme.secondary
+                color = MnTheme.textColorScheme.secondary,
             )
         }
     }

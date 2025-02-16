@@ -10,14 +10,14 @@ data class PomodoroRestWaitingState(
     val minusButtonSelected: Boolean = false,
     val plusButtonEnabled: Boolean = true,
     val minusButtonEnabled: Boolean = true,
-    val forceGoHome: Boolean = false
+    val forceGoHome: Boolean = false,
 ) : ViewState
 
 sealed interface PomodoroRestWaitingEvent : ViewEvent {
     data class Init(
         val exceedTime: Int,
         val focusTime: Int,
-        val type: String
+        val type: String,
     ) : PomodoroRestWaitingEvent
 
     data object OnNavigationClick : PomodoroRestWaitingEvent
@@ -33,6 +33,6 @@ sealed interface PomodoroRestWaitingSideEffect : ViewSideEffect {
 
     data class ShowSnackbar(
         val message: String,
-        @DrawableRes val iconRes: Int
+        @DrawableRes val iconRes: Int,
     ) : PomodoroRestWaitingSideEffect
 }

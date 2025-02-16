@@ -17,7 +17,7 @@ internal abstract class BasePomodoroTimer : PomodoroTimer {
     override fun startTimer(
         maxTime: Int,
         eventHandler: PomodoroTimerEventHandler,
-        category: PomodoroCategoryType?
+        category: PomodoroCategoryType?,
     ) {
         Timber.tag(getTagName()).d("startTimer / maxTime : $maxTime")
         if (timer == null) {
@@ -33,7 +33,7 @@ internal abstract class BasePomodoroTimer : PomodoroTimer {
                 eventHandler.updateTimer(
                     time = timeToDisplay.toString(),
                     overtime = overtime.toString(),
-                    category = category
+                    category = category,
                 )
 
                 if (remainingTime == 0) {

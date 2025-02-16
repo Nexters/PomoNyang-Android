@@ -60,7 +60,7 @@ fun MyPageRoute(
     onBackClick: () -> Unit,
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
-    myPageViewModel: MyPageViewModel = hiltViewModel()
+    myPageViewModel: MyPageViewModel = hiltViewModel(),
 ) {
     val state by myPageViewModel.state.collectAsStateWithLifecycle()
 
@@ -76,7 +76,7 @@ fun MyPageRoute(
     }
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
+        contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
         if (MnNotificationManager.isNotificationGranted(context)) {
             permissionRequest?.let {
@@ -147,7 +147,7 @@ fun MyPageRoute(
         onBackClick = onBackClick,
         isOffline = isOffline,
         isShowDialog = isShowDialog,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -160,7 +160,7 @@ fun MyPageScreen(
     onBackClick: () -> Unit,
     isOffline: Boolean,
     isShowDialog: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
 
@@ -174,7 +174,7 @@ fun MyPageScreen(
                     text = stringResource(id = R.string.notification_dialog_cancel),
                     onClick = { onAction(MyPageEvent.CloseDialog) },
                     colors = MnBoxButtonColorType.tertiary,
-                    styles = MnBoxButtonStyles.medium
+                    styles = MnBoxButtonStyles.medium,
                 )
             },
             negativeButton = {
@@ -183,55 +183,55 @@ fun MyPageScreen(
                     text = stringResource(id = R.string.notification_dialog_move),
                     onClick = { onAction(MyPageEvent.OpenSetting) },
                     colors = MnBoxButtonColorType.primary,
-                    styles = MnBoxButtonStyles.medium
+                    styles = MnBoxButtonStyles.medium,
                 )
             },
             onDismissRequest = {
                 onAction(MyPageEvent.CloseDialog)
-            }
+            },
         )
     }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MnTheme.backgroundColorScheme.primary)
+            .background(MnTheme.backgroundColorScheme.primary),
     ) {
         MnTopAppBar(
             navigationIcon = {
                 MnIconButton(
                     onClick = onBackClick,
-                    iconResourceId = R.drawable.ic_chevron_left
+                    iconResourceId = R.drawable.ic_chevron_left,
                 )
             },
             content = {
                 Text(
                     text = stringResource(id = R.string.my_page_title),
                     style = MnTheme.typography.bodySemiBold,
-                    color = MnTheme.textColorScheme.primary
+                    color = MnTheme.textColorScheme.primary,
                 )
-            }
+            },
         )
 
         Column(
             modifier = Modifier
                 .padding(
                     horizontal = MnSpacing.xLarge,
-                    vertical = MnSpacing.medium
+                    vertical = MnSpacing.medium,
                 )
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(MnSpacing.medium)
+            verticalArrangement = Arrangement.spacedBy(MnSpacing.medium),
         ) {
             ProfileBox(
                 catName = state.catName,
                 onClick = {
                     onAction(MyPageEvent.ClickCatProfile(isOffline))
-                }
+                },
             )
             CheckFocusTimeBox()
             NotificationBox(
                 state = state,
-                onAction = onAction
+                onAction = onAction,
             )
             SuggestionBox {
                 onAction(MyPageEvent.ClickSuggestion)
@@ -244,33 +244,33 @@ fun MyPageScreen(
 fun ProfileBox(
     catName: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(
                 color = MnTheme.backgroundColorScheme.secondary,
-                shape = RoundedCornerShape(MnRadius.small)
+                shape = RoundedCornerShape(MnRadius.small),
             )
             .padding(MnSpacing.xLarge)
-            .clickableSingle(activeRippleEffect = false) { onClick() }
+            .clickableSingle(activeRippleEffect = false) { onClick() },
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = stringResource(id = R.string.my_page_cat_profile_title),
                     color = MnTheme.textColorScheme.tertiary,
-                    style = MnTheme.typography.subBodyRegular
+                    style = MnTheme.typography.subBodyRegular,
                 )
                 Text(
                     text = catName,
                     color = MnTheme.textColorScheme.primary,
-                    style = MnTheme.typography.header4
+                    style = MnTheme.typography.header4,
                 )
             }
             MnIconButton(onClick = onClick, iconResourceId = R.drawable.ic_chevron_right)
@@ -280,27 +280,27 @@ fun ProfileBox(
 
 @Composable
 fun CheckFocusTimeBox(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(
                 color = MnTheme.backgroundColorScheme.secondary,
-                shape = RoundedCornerShape(MnRadius.large)
+                shape = RoundedCornerShape(MnRadius.large),
             )
             .padding(MnSpacing.xLarge),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_static_ready),
                 contentDescription = "static_ready_image",
                 modifier = Modifier.size(
-                    96.dp
-                )
+                    96.dp,
+                ),
             )
 
             Column(
@@ -308,18 +308,18 @@ fun CheckFocusTimeBox(
                     .fillMaxWidth()
                     .padding(top = MnSpacing.medium),
                 verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(id = R.string.my_page_static_title),
                     style = MnTheme.typography.bodySemiBold,
-                    color = MnTheme.textColorScheme.secondary
+                    color = MnTheme.textColorScheme.secondary,
                 )
                 Text(
                     text = stringResource(id = R.string.my_page_static_subtitle),
                     style = MnTheme.typography.subBodyRegular,
                     color = MnTheme.textColorScheme.secondary,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -330,34 +330,34 @@ fun CheckFocusTimeBox(
 fun NotificationBox(
     modifier: Modifier = Modifier,
     state: MyPageState,
-    onAction: (MyPageEvent) -> Unit
+    onAction: (MyPageEvent) -> Unit,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(
                 color = MnTheme.backgroundColorScheme.secondary,
-                shape = RoundedCornerShape(MnRadius.small)
-            )
+                shape = RoundedCornerShape(MnRadius.small),
+            ),
     ) {
         Column {
             FocusNotificationBox(
                 isChecked = state.isTimerNotificationEnabled,
                 onChangeValue = { isEnabled ->
                     onAction(MyPageEvent.ChangeTimerNotification(isEnabled))
-                }
+                },
             )
             InterruptNotificationBox(
                 isChecked = state.isInterruptNotificationEnabled,
                 onChangeValue = { isEnabled ->
                     onAction(MyPageEvent.ChangeInterruptNotification(isEnabled))
-                }
+                },
             )
             LockScreenNotificationBox(
                 isChecked = state.isLockScreenNotificationEnabled,
                 onChangeValue = { isEnabled ->
                     onAction(MyPageEvent.ChangeLockScreenNotification(isEnabled))
-                }
+                },
             )
         }
     }
@@ -367,26 +367,26 @@ fun NotificationBox(
 fun FocusNotificationBox(
     modifier: Modifier = Modifier,
     isChecked: Boolean,
-    onChangeValue: (Boolean) -> Unit
+    onChangeValue: (Boolean) -> Unit,
 ) {
     Row(
         modifier = modifier.padding(MnSpacing.xLarge),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = stringResource(id = R.string.my_page_timer_push_title),
                 color = MnTheme.textColorScheme.primary,
-                style = MnTheme.typography.header4
+                style = MnTheme.typography.header4,
             )
             Text(
                 text = stringResource(id = R.string.my_page_timer_push_content),
                 color = MnTheme.textColorScheme.tertiary,
-                style = MnTheme.typography.subBodyRegular
+                style = MnTheme.typography.subBodyRegular,
             )
         }
         MnToggleButton(isChecked = isChecked, onCheckedChange = onChangeValue)
@@ -397,26 +397,26 @@ fun FocusNotificationBox(
 fun InterruptNotificationBox(
     modifier: Modifier = Modifier,
     isChecked: Boolean,
-    onChangeValue: (Boolean) -> Unit
+    onChangeValue: (Boolean) -> Unit,
 ) {
     Row(
         modifier = modifier.padding(MnSpacing.xLarge),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = stringResource(id = R.string.my_page_interrupt_push_title),
                 color = MnTheme.textColorScheme.primary,
-                style = MnTheme.typography.header4
+                style = MnTheme.typography.header4,
             )
             Text(
                 text = stringResource(id = R.string.my_page_interrupt_push_content),
                 color = MnTheme.textColorScheme.tertiary,
-                style = MnTheme.typography.subBodyRegular
+                style = MnTheme.typography.subBodyRegular,
             )
         }
         MnToggleButton(isChecked = isChecked, onCheckedChange = onChangeValue)
@@ -427,26 +427,26 @@ fun InterruptNotificationBox(
 fun LockScreenNotificationBox(
     modifier: Modifier = Modifier,
     isChecked: Boolean,
-    onChangeValue: (Boolean) -> Unit
+    onChangeValue: (Boolean) -> Unit,
 ) {
     Row(
         modifier = modifier.padding(MnSpacing.xLarge),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = stringResource(id = R.string.my_page_lockscreen_push_title),
                 color = MnTheme.textColorScheme.primary,
-                style = MnTheme.typography.header4
+                style = MnTheme.typography.header4,
             )
             Text(
                 text = stringResource(id = R.string.my_page_lockscreen_push_content),
                 color = MnTheme.textColorScheme.tertiary,
-                style = MnTheme.typography.subBodyRegular
+                style = MnTheme.typography.subBodyRegular,
             )
         }
         MnToggleButton(isChecked = isChecked, onCheckedChange = onChangeValue)
@@ -456,26 +456,26 @@ fun LockScreenNotificationBox(
 @Composable
 fun SuggestionBox(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(
                 color = MnTheme.backgroundColorScheme.secondary,
-                shape = RoundedCornerShape(MnRadius.small)
+                shape = RoundedCornerShape(MnRadius.small),
             )
             .padding(MnSpacing.xLarge)
             .clickableSingle(activeRippleEffect = false) {
                 onClick()
-            }
+            },
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 modifier = Modifier.weight(1f),
                 text = stringResource(id = R.string.my_page_suggestion),
                 color = MnTheme.textColorScheme.primary,
-                style = MnTheme.typography.header4
+                style = MnTheme.typography.header4,
             )
             MnIconButton(onClick = onClick, iconResourceId = R.drawable.ic_chevron_right)
         }
@@ -491,7 +491,7 @@ fun MyPageScreenPreview() {
             onAction = {},
             onBackClick = {},
             isOffline = false,
-            isShowDialog = false
+            isShowDialog = false,
         )
     }
 }
@@ -505,7 +505,7 @@ fun MyPageScreenOfflinePreview() {
             onAction = {},
             onBackClick = {},
             isOffline = true,
-            isShowDialog = false
+            isShowDialog = false,
         )
     }
 }

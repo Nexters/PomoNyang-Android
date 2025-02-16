@@ -8,12 +8,12 @@ data class PomodoroSettingResponse(
     val no: Int = -1,
     val title: String = "",
     val focusTime: String = "",
-    val restTime: String = ""
+    val restTime: String = "",
 )
 
 internal fun PomodoroSettingResponse.toEntity() = PomodoroSettingEntity(
     categoryNo = no,
     title = title,
     focusTime = focusTime,
-    restTime = restTime
+    restTime = restTime,
 )

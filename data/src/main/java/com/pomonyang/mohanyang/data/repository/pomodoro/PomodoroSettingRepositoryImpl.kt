@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.onEmpty
 internal class PomodoroSettingRepositoryImpl @Inject constructor(
     private val pomodoroSettingRemoteDataSource: PomodoroSettingRemoteDataSource,
     private val pomodoroLocalDataSource: PomodoroLocalDataSource,
-    private val pomodoroSettingDao: PomodoroSettingDao
+    private val pomodoroSettingDao: PomodoroSettingDao,
 ) : PomodoroSettingRepository {
 
     override fun getRecentUseCategoryNo(): Flow<Int> = pomodoroLocalDataSource.getRecentCategoryNo()
@@ -31,7 +31,7 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
             .also {
                 it.onSuccess { responses ->
                     pomodoroSettingDao.insertPomodoroSettingData(
-                        responses.map { response -> response.toEntity() }
+                        responses.map { response -> response.toEntity() },
                     )
                 }
             }
@@ -40,7 +40,7 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
     override suspend fun updatePomodoroCategoryTimes(
         categoryNo: Int,
         focusTime: Int,
-        restTime: Int
+        restTime: Int,
     ): Result<Unit> {
         val focusTimeDuration = Duration.ofMinutes(focusTime.toLong()).toString()
         val restTimeDuration = Duration.ofMinutes(restTime.toLong()).toString()
@@ -48,19 +48,19 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
         return pomodoroSettingRemoteDataSource.updatePomodoroCategoryTimes(
             categoryNo = categoryNo,
             focusTime = focusTimeDuration,
-            restTime = restTimeDuration
+            restTime = restTimeDuration,
         )
     }
 
     private suspend fun updateLocalPomodoroSetting(
         categoryNo: Int,
         focusTime: String,
-        restTime: String
+        restTime: String,
     ) {
         pomodoroSettingDao.updateTimes(
             categoryNo = categoryNo,
             focusTime = focusTime,
-            restTime = restTime
+            restTime = restTime,
         )
     }
 }

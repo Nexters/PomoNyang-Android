@@ -15,24 +15,24 @@ object MnTooltipDefaults {
     @Composable
     fun lightTooltipColors(
         containerColor: Color = MnColor.White,
-        contentColor: Color = MnTheme.textColorScheme.secondary
+        contentColor: Color = MnTheme.textColorScheme.secondary,
     ) = MnTooltipColors(
         containerColor = containerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
     )
 
     @Composable
     fun darkTooltipColors(
         containerColor: Color = MnTheme.backgroundColorScheme.inverse,
-        contentColor: Color = MnTheme.textColorScheme.inverse
+        contentColor: Color = MnTheme.textColorScheme.inverse,
     ) = MnTooltipColors(
         containerColor = containerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
     )
 }
 
 @Immutable
 data class MnTooltipColors(
     val containerColor: Color,
-    val contentColor: Color
+    val contentColor: Color,
 )

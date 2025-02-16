@@ -9,7 +9,7 @@ internal class DebugTimberTree : Timber.DebugTree() {
         priority: Int,
         tag: String?,
         message: String,
-        t: Throwable?
+        t: Throwable?,
     ) {
         val element =
             Throwable().stackTrace.first { stackElement ->

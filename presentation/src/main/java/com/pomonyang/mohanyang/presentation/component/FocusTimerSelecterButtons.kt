@@ -24,25 +24,25 @@ fun TimerSelectedButtons(
     plusButtonSelected: Boolean,
     minusButtonSelected: Boolean,
     plusButtonEnabled: Boolean,
-    minusButtonEnabled: Boolean
+    minusButtonEnabled: Boolean,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             modifier = Modifier.padding(top = MnSpacing.xLarge),
             text = title,
             style = MnTheme.typography.bodySemiBold,
-            color = MnTheme.textColorScheme.disabled
+            color = MnTheme.textColorScheme.disabled,
         )
         Row(
             modifier = modifier.padding(top = MnSpacing.medium),
-            horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+            horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
         ) {
             MnSelectButton(
                 modifier = Modifier.padding(
                     vertical = MnSpacing.small,
-                    horizontal = MnSpacing.medium
+                    horizontal = MnSpacing.medium,
                 ),
                 leftIconResourceId = R.drawable.ic_minus,
                 isEnabled = minusButtonEnabled,
@@ -50,13 +50,13 @@ fun TimerSelectedButtons(
                 onClick = { onMinusButtonClick() },
                 subTitleContent = {
                     Text(text = stringResource(R.string.five_minutes))
-                }
+                },
             )
 
             MnSelectButton(
                 modifier = Modifier.padding(
                     vertical = MnSpacing.small,
-                    horizontal = MnSpacing.medium
+                    horizontal = MnSpacing.medium,
                 ),
                 leftIconResourceId = R.drawable.ic_plus,
                 isEnabled = plusButtonEnabled,
@@ -64,7 +64,7 @@ fun TimerSelectedButtons(
                 onClick = { onPlusButtonClick() },
                 subTitleContent = {
                     Text(text = stringResource(R.string.five_minutes))
-                }
+                },
             )
         }
     }
@@ -81,7 +81,7 @@ private fun FocusTimerSelectedButtonsPreview() {
             plusButtonSelected = true,
             minusButtonSelected = false,
             plusButtonEnabled = true,
-            minusButtonEnabled = false
+            minusButtonEnabled = false,
 
         )
     }

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UpdateCategoryInfoRequest(
     val focusTime: String,
-    val restTime: String
+    val restTime: String,
 )

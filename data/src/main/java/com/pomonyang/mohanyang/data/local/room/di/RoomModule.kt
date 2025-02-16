@@ -19,11 +19,11 @@ internal object RoomModule {
     @Provides
     @Singleton
     fun providePomodoroSettingDataBase(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): PomodoroSettingDataBase = Room.databaseBuilder(
         context = context,
         klass = PomodoroSettingDataBase::class.java,
-        name = "pomodoro-category-database" // database name string 관리 필요
+        name = "pomodoro-category-database", // database name string 관리 필요
     )
         .fallbackToDestructiveMigration()
         .build()
@@ -31,12 +31,12 @@ internal object RoomModule {
     @Provides
     @Singleton
     fun providePomodoroTimerDataBase(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): PomodoroTimerDataBase = Room
         .databaseBuilder(
             context = context,
             klass = PomodoroTimerDataBase::class.java,
-            name = "pomodoro-timer-database" // database name string 관리 필요
+            name = "pomodoro-timer-database", // database name string 관리 필요
         )
         .fallbackToDestructiveMigration()
         .build()

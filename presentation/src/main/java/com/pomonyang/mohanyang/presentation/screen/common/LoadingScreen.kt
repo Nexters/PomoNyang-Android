@@ -12,14 +12,14 @@ import com.pomonyang.mohanyang.presentation.designsystem.spinner.MnSpinner
 
 @Composable
 fun LoadingScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Transparent)
             .pointerInput(Unit) {},
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         MnSpinner()
     }
@@ -28,7 +28,7 @@ fun LoadingScreen(
 @Composable
 fun LoadingContentContainer(
     isLoading: Boolean,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Box {
         content()

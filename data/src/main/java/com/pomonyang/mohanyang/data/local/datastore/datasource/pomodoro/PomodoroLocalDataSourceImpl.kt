@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 internal class PomodoroLocalDataSourceImpl @Inject constructor(
-    @DeviceIdDataStore private val dataStore: DataStore<Preferences>
+    @DeviceIdDataStore private val dataStore: DataStore<Preferences>,
 ) : PomodoroLocalDataSource {
 
     override fun getRecentCategoryNo(): Flow<Int> = dataStore.data.catch { exception ->

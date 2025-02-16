@@ -23,7 +23,7 @@ interface MohaNyangService {
     @PATCH("/api/v1/categories/{no}")
     suspend fun updatePomodoroSetting(
         @Path("no") no: Int,
-        @Body updateCategoryInfoRequest: UpdateCategoryInfoRequest
+        @Body updateCategoryInfoRequest: UpdateCategoryInfoRequest,
     ): Result<Unit>
 
     @GET("/api/v1/cats")
@@ -31,12 +31,12 @@ interface MohaNyangService {
 
     @PUT("/api/v1/users/cats")
     suspend fun updateCatType(
-        @Body updateCatTypeRequest: UpdateCatTypeRequest
+        @Body updateCatTypeRequest: UpdateCatTypeRequest,
     ): Result<Unit>
 
     @PUT("/api/v1/cats")
     suspend fun updateCatInfo(
-        @Body updateCatInfoRequest: UpdateCatInfoRequest
+        @Body updateCatInfoRequest: UpdateCatInfoRequest,
     ): Result<Unit>
 
     @GET("/api/v1/users/me")
@@ -44,7 +44,7 @@ interface MohaNyangService {
 
     @POST("/api/v1/device-tokens")
     suspend fun registerPushToken(
-        @Body registerPushTokenRequest: RegisterPushTokenRequest
+        @Body registerPushTokenRequest: RegisterPushTokenRequest,
     ): Result<Unit>
 
     @DELETE("/api/v1/device-tokens")
@@ -58,6 +58,6 @@ interface MohaNyangService {
 
     @POST("/api/v1/focus-times")
     suspend fun saveFocusTime(
-        @Body pomodoroTimerRequest: List<PomodoroTimerRequest>
+        @Body pomodoroTimerRequest: List<PomodoroTimerRequest>,
     ): Result<Unit>
 }

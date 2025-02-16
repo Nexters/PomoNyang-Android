@@ -40,7 +40,7 @@ fun MnSelectButton(
     @DrawableRes leftIconResourceId: Int? = null,
     @DrawableRes rightIconResourceId: Int? = null,
     titleContent: @Composable (() -> Unit) = {},
-    subTitleContent: @Composable (() -> Unit) = {}
+    subTitleContent: @Composable (() -> Unit) = {},
 ) {
     val colors = when {
         !isEnabled -> MnSelectButtonSelector.disabled
@@ -54,36 +54,36 @@ fun MnSelectButton(
         shape = RoundedCornerShape(MnRadius.xSmall),
         border = BorderStroke(
             MnStroke.small,
-            colors.borderColor
-        )
+            colors.borderColor,
+        ),
     ) {
         Column(
             modifier = modifier
                 .noRippleClickable { onClick() },
             verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (leftIconResourceId != null) {
                     CompositionLocalProvider(
-                        LocalContentColor provides colors.iconColor
+                        LocalContentColor provides colors.iconColor,
                     ) {
                         MnSmallIcon(resourceId = leftIconResourceId)
                     }
                 }
                 CompositionLocalProvider(
                     LocalContentColor provides colors.subtitleContentColor,
-                    LocalTextStyle provides MnTheme.typography.subBodyRegular
+                    LocalTextStyle provides MnTheme.typography.subBodyRegular,
                 ) {
                     subTitleContent()
                 }
 
                 if (rightIconResourceId != null) {
                     CompositionLocalProvider(
-                        LocalContentColor provides colors.iconColor
+                        LocalContentColor provides colors.iconColor,
                     ) {
                         MnSmallIcon(resourceId = rightIconResourceId)
                     }
@@ -92,7 +92,7 @@ fun MnSelectButton(
 
             CompositionLocalProvider(
                 LocalContentColor provides colors.titleContentColor,
-                LocalTextStyle provides MnTheme.typography.header5
+                LocalTextStyle provides MnTheme.typography.header5,
             ) {
                 titleContent()
             }
@@ -112,20 +112,20 @@ fun PreviewMnSelectButton() {
             MnSelectButton(
                 modifier = Modifier.padding(
                     vertical = MnSpacing.medium,
-                    horizontal = MnSpacing.small
+                    horizontal = MnSpacing.small,
                 ),
                 isSelected = selected,
                 onClick = { selected = !selected },
                 leftIconResourceId = R.drawable.ic_null,
                 subTitleContent = {
                     Text(text = "subTitle")
-                }
+                },
             )
 
             MnSelectButton(
                 modifier = Modifier.padding(
                     vertical = MnSpacing.medium,
-                    horizontal = MnSpacing.large
+                    horizontal = MnSpacing.large,
                 ),
                 isSelected = selected,
                 isEnabled = false,
@@ -136,12 +136,12 @@ fun PreviewMnSelectButton() {
                 titleContent = {
                     Column(
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(text = "button")
                     }
                 },
-                rightIconResourceId = R.drawable.ic_null
+                rightIconResourceId = R.drawable.ic_null,
             )
         }
     }

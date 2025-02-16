@@ -15,7 +15,7 @@ data class PomodoroTimeSettingState(
     override val isLoading: Boolean = false,
     override val isInternalError: Boolean = false,
     override val isInvalidError: Boolean = false,
-    override val lastRequestAction: PomodoroTimeSettingEvent? = null
+    override val lastRequestAction: PomodoroTimeSettingEvent? = null,
 ) : NetworkViewState()
 
 sealed interface PomodoroTimeSettingEvent : ViewEvent {
@@ -24,7 +24,7 @@ sealed interface PomodoroTimeSettingEvent : ViewEvent {
     data object Submit : PomodoroTimeSettingEvent
 
     data class ChangePickTime(
-        val time: Int
+        val time: Int,
     ) : PomodoroTimeSettingEvent
 
     data object ClickClose : PomodoroTimeSettingEvent

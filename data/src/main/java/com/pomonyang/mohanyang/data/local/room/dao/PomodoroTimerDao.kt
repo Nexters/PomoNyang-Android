@@ -29,7 +29,7 @@ interface PomodoroTimerDao {
                 ORDER BY ROWID DESC 
                 LIMIT 1
             )
-        """
+        """,
     )
     suspend fun incrementFocusedTime()
 
@@ -43,7 +43,7 @@ interface PomodoroTimerDao {
                 ORDER BY ROWID DESC 
                 LIMIT 1
             )
-        """
+        """,
     )
     suspend fun incrementRestTime()
 

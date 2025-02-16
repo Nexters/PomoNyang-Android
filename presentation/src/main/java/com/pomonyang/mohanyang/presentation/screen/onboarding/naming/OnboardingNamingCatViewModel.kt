@@ -17,7 +17,7 @@ import kotlinx.coroutines.plus
 class OnboardingNamingCatViewModel @Inject constructor(
     private val catSettingRepository: CatSettingRepository,
     private val userRepository: UserRepository,
-    private val pomodoroSettingRepository: PomodoroSettingRepository
+    private val pomodoroSettingRepository: PomodoroSettingRepository,
 ) : BaseViewModel<NamingState, NamingEvent, NamingSideEffect>() {
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->

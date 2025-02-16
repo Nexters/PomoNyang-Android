@@ -45,11 +45,11 @@ internal class PomodoroRestTimerService :
             PomodoroTimerServiceExtras.ACTION_TIMER_START -> {
                 startForeground(
                     PomodoroConstants.POMODORO_NOTIFICATION_ID,
-                    pomodoroNotificationManager.createNotification()
+                    pomodoroNotificationManager.createNotification(),
                 )
                 restTimer.startTimer(
                     maxTime = maxTime,
-                    eventHandler = this
+                    eventHandler = this,
                 )
             }
 
@@ -78,7 +78,7 @@ internal class PomodoroRestTimerService :
         pomodoroNotificationManager.updateNotification(
             time = time,
             overtime = overtime,
-            category = category
+            category = category,
         )
     }
 

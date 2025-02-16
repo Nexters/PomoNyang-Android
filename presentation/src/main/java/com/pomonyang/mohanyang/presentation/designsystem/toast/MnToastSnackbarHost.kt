@@ -41,24 +41,24 @@ fun MnToastSnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     leadingIconResourceId: Int? = null,
-    leadingIconColor: Color = Color.Unspecified
+    leadingIconColor: Color = Color.Unspecified,
 ) {
     SnackbarHost(
         hostState = hostState,
         modifier = modifier
             .padding(start = MnSpacing.xLarge, end = MnSpacing.xLarge, bottom = 30.dp)
-            .alpha(0.9f)
+            .alpha(0.9f),
     ) { data ->
         Card(
             shape = RoundedCornerShape(MnRadius.small),
             colors = CardDefaults.cardColors(
                 containerColor = MnColor.Black,
-                contentColor = MnColor.White
-            )
+                contentColor = MnColor.White,
+            ),
         ) {
             Row(
                 modifier = Modifier.padding(MnSpacing.large),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (leadingIconResourceId != null) {
                     MnMediumIcon(resourceId = leadingIconResourceId, tint = leadingIconColor)
@@ -68,7 +68,7 @@ fun MnToastSnackbarHost(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = data.visuals.message,
-                        style = MnTheme.typography.subBodyRegular
+                        style = MnTheme.typography.subBodyRegular,
                     )
                 }
 
@@ -79,7 +79,7 @@ fun MnToastSnackbarHost(
                             data.performAction()
                         },
                         text = label,
-                        style = MnTheme.typography.subBodySemiBold
+                        style = MnTheme.typography.subBodySemiBold,
                     )
                 }
             }
@@ -93,12 +93,12 @@ suspend fun showMnSnackbar(
     actionLabel: String? = null,
     duration: SnackbarDuration = SnackbarDuration.Short,
     actionPerformed: () -> Unit = {},
-    dismissed: () -> Unit = {}
+    dismissed: () -> Unit = {},
 ) {
     val result = snackbarHostState.showSnackbar(
         message = message,
         actionLabel = actionLabel,
-        duration = duration
+        duration = duration,
     )
 
     when (result) {
@@ -120,14 +120,14 @@ fun PreviewToast() {
             snackbarHost = {
                 MnToastSnackbarHost(
                     hostState = snackbarHostState,
-                    leadingIconResourceId = R.drawable.ic_null
+                    leadingIconResourceId = R.drawable.ic_null,
                 )
-            }
+            },
         ) { _ ->
             Box(
                 modifier = Modifier
                     .background(Color.Yellow)
-                    .fillMaxSize()
+                    .fillMaxSize(),
             ) {
                 Button(onClick = {
                     scope.launch {

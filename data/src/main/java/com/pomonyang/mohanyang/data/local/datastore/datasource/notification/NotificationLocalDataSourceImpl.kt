@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 
 class NotificationLocalDataSourceImpl @Inject constructor(
-    @NotificationDataStore private val dataStore: DataStore<Preferences>
+    @NotificationDataStore private val dataStore: DataStore<Preferences>,
 ) : NotificationLocalDataSource {
     override suspend fun saveInterruptNotification(isEnabled: Boolean) {
         dataStore.edit { preferences ->

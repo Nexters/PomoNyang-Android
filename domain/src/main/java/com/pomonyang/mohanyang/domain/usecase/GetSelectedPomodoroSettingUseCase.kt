@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
 class GetSelectedPomodoroSettingUseCase @Inject constructor(
-    private val pomodoroSettingRepository: PomodoroSettingRepository
+    private val pomodoroSettingRepository: PomodoroSettingRepository,
 ) {
 
     operator fun invoke(): Flow<PomodoroSettingEntity> {

@@ -27,36 +27,36 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 @Composable
 fun NetworkErrorScreen(
     onClickRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(MnSpacing.threeXLarge),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
                     modifier = Modifier.size(240.dp),
                     painter = painterResource(id = R.drawable.ic_internet),
-                    contentDescription = "network error"
+                    contentDescription = "network error",
                 )
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(MnSpacing.small)
+                    verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
                 ) {
                     Text(
                         style = MnTheme.typography.header4,
                         color = MnTheme.textColorScheme.primary,
-                        text = stringResource(id = R.string.network_error_title)
+                        text = stringResource(id = R.string.network_error_title),
                     )
                     Text(
                         style = MnTheme.typography.subBodyRegular.copy(
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
                         ),
                         color = MnTheme.textColorScheme.secondary,
-                        text = stringResource(id = R.string.network_error_content)
+                        text = stringResource(id = R.string.network_error_content),
                     )
                 }
             }
@@ -67,7 +67,7 @@ fun NetworkErrorScreen(
                 onClick = onClickRetry,
                 colors = MnBoxButtonColorType.primary,
                 styles = MnBoxButtonStyles.large,
-                containerPadding = PaddingValues(top = 60.dp)
+                containerPadding = PaddingValues(top = 60.dp),
             )
         }
     }

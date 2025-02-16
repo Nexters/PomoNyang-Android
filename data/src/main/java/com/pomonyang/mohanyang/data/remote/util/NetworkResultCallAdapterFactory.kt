@@ -10,7 +10,7 @@ internal class NetworkResultCallAdapterFactory : CallAdapter.Factory() {
     override fun get(
         returnType: Type,
         annotations: Array<out Annotation>,
-        retrofit: Retrofit
+        retrofit: Retrofit,
     ): CallAdapter<*, *>? {
         if (getRawType(returnType) != Call::class.java) {
             return null

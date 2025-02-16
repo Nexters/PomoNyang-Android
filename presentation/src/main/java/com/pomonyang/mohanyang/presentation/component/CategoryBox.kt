@@ -25,27 +25,27 @@ fun CategoryBox(
     categoryName: String,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MnTheme.backgroundColorScheme.secondary,
-    @DrawableRes iconRes: Int = R.drawable.ic_null
+    @DrawableRes iconRes: Int = R.drawable.ic_null,
 ) {
     Row(
         modifier = modifier
             .height(40.dp)
             .background(
                 color = backgroundColor,
-                shape = RoundedCornerShape(MnRadius.xSmall)
+                shape = RoundedCornerShape(MnRadius.xSmall),
             )
             .padding(horizontal = MnSpacing.medium),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
         MnMediumIcon(
             resourceId = iconRes,
-            tint = Color.Unspecified
+            tint = Color.Unspecified,
         )
         Text(
             text = categoryName,
             style = MnTheme.typography.subBodySemiBold,
-            color = MnTheme.textColorScheme.tertiary
+            color = MnTheme.textColorScheme.tertiary,
         )
     }
 }

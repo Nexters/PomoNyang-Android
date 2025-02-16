@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class MnAlarmManager @Inject constructor(
     @ApplicationContext private val applicationContext: Context,
-    private val alarmManager: AlarmManager
+    private val alarmManager: AlarmManager,
 ) {
     @SuppressLint("ScheduleExactAlarm")
     fun createAlarm(
@@ -23,35 +23,34 @@ class MnAlarmManager @Inject constructor(
         channelId: String,
         id: Int = UUID.randomUUID().hashCode(),
         title: String = "",
-        message: String = ""
-    ): PendingIntent =
-        with(applicationContext) {
-            val intent =
-                Intent(this, LocalNotificationReceiver::class.java).apply {
-                    putExtra(getString(R.string.local_notification_id), id)
-                    putExtra(getString(R.string.local_notification_title), title)
-                    putExtra(getString(R.string.local_notification_message), message)
-                    putExtra(getString(R.string.local_notification_channel_id), channelId)
-                    action = MnNotificationManager.INTENT_SEND_MESSAGE
-                }
+        message: String = "",
+    ): PendingIntent = with(applicationContext) {
+        val intent =
+            Intent(this, LocalNotificationReceiver::class.java).apply {
+                putExtra(getString(R.string.local_notification_id), id)
+                putExtra(getString(R.string.local_notification_title), title)
+                putExtra(getString(R.string.local_notification_message), message)
+                putExtra(getString(R.string.local_notification_channel_id), channelId)
+                action = MnNotificationManager.INTENT_SEND_MESSAGE
+            }
 
-            val pendingIntent =
-                PendingIntent.getBroadcast(
-                    this,
-                    id,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-
-            val triggerTime = getTriggerTimeInMillis(scheduleTime)
-
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                triggerTime,
-                pendingIntent
+        val pendingIntent =
+            PendingIntent.getBroadcast(
+                this,
+                id,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
-            return pendingIntent
-        }
+
+        val triggerTime = getTriggerTimeInMillis(scheduleTime)
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            triggerTime,
+            pendingIntent,
+        )
+        return pendingIntent
+    }
 
     fun cancelAlarm(pendingIntent: PendingIntent) {
         alarmManager.cancel(pendingIntent)

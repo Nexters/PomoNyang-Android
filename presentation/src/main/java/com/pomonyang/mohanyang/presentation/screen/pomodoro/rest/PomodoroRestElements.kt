@@ -9,7 +9,7 @@ data class PomodoroRestState(
     val plusButtonSelected: Boolean = false,
     val minusButtonSelected: Boolean = false,
     val plusButtonEnabled: Boolean = true,
-    val minusButtonEnabled: Boolean = true
+    val minusButtonEnabled: Boolean = true,
 ) : ViewState
 
 sealed interface PomodoroRestEvent : ViewEvent {

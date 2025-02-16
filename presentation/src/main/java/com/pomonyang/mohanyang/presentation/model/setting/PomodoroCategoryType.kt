@@ -4,24 +4,25 @@ import com.mohanyang.presentation.R
 
 enum class PomodoroCategoryType(
     val iconRes: Int,
-    val kor: Int
+    val kor: Int,
 ) {
     DEFAULT(
         iconRes = R.drawable.ic_category_default,
-        kor = R.string.category_default_kor
+        kor = R.string.category_default_kor,
     ),
     READ_BOOK(
         iconRes = R.drawable.ic_book,
-        kor = R.string.category_book_kor
+        kor = R.string.category_book_kor,
     ),
     STUDY(
         iconRes = R.drawable.ic_memo,
-        kor = R.string.category_study_kor
+        kor = R.string.category_study_kor,
     ),
     WORK(
         iconRes = R.drawable.ic_monitor,
-        kor = R.string.category_work_kor
-    );
+        kor = R.string.category_work_kor,
+    ),
+    ;
 
     companion object {
         fun safeValueOf(title: String): PomodoroCategoryType {

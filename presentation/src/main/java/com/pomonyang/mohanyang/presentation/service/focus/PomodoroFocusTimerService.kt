@@ -49,12 +49,12 @@ internal class PomodoroFocusTimerService :
             PomodoroTimerServiceExtras.ACTION_TIMER_START -> {
                 startForeground(
                     POMODORO_NOTIFICATION_ID,
-                    pomodoroNotificationManager.createNotification(category)
+                    pomodoroNotificationManager.createNotification(category),
                 )
                 focusTimer.startTimer(
                     maxTime = maxTime,
                     eventHandler = this,
-                    category = category
+                    category = category,
                 )
             }
 
@@ -83,7 +83,7 @@ internal class PomodoroFocusTimerService :
         pomodoroNotificationManager.updateNotification(
             time = time,
             overtime = overtime,
-            category = category
+            category = category,
         )
     }
 

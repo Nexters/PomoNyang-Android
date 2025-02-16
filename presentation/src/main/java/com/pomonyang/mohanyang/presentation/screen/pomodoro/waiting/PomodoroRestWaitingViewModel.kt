@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class PomodoroRestWaitingViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
-    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase
+    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase,
 ) : BaseViewModel<PomodoroRestWaitingState, PomodoroRestWaitingEvent, PomodoroRestWaitingSideEffect>() {
 
     override fun setInitialState(): PomodoroRestWaitingState = PomodoroRestWaitingState()
@@ -34,7 +34,7 @@ class PomodoroRestWaitingViewModel @Inject constructor(
                     updateState {
                         copy(
                             plusButtonEnabled = pomodoroSetting.focusTime < MAX_FOCUS_MINUTES,
-                            minusButtonEnabled = pomodoroSetting.focusTime > MIN_FOCUS_MINUTES
+                            minusButtonEnabled = pomodoroSetting.focusTime > MIN_FOCUS_MINUTES,
                         )
                     }
                     startForcePomodoroSettingCountdown()
@@ -50,8 +50,8 @@ class PomodoroRestWaitingViewModel @Inject constructor(
                     setEffect(
                         PomodoroRestWaitingSideEffect.ShowSnackbar(
                             message = "최대 60분까지만 집중할 수 있어요",
-                            iconRes = R.drawable.ic_clock
-                        )
+                            iconRes = R.drawable.ic_clock,
+                        ),
                     )
                 } else {
                     updateState { copy(plusButtonSelected = event.isPlusButtonSelected, minusButtonSelected = false) }
@@ -63,8 +63,8 @@ class PomodoroRestWaitingViewModel @Inject constructor(
                     setEffect(
                         PomodoroRestWaitingSideEffect.ShowSnackbar(
                             message = "10분은 집중해야 해요",
-                            iconRes = R.drawable.ic_clock
-                        )
+                            iconRes = R.drawable.ic_clock,
+                        ),
                     )
                 } else {
                     updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
@@ -105,7 +105,7 @@ class PomodoroRestWaitingViewModel @Inject constructor(
             viewModelScope.launch {
                 adjustPomodoroTimeUseCase(
                     isFocusTime = true,
-                    isIncrease = state.value.plusButtonSelected
+                    isIncrease = state.value.plusButtonSelected,
                 )
             }
         }

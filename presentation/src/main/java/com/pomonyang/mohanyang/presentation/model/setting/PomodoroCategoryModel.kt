@@ -10,7 +10,7 @@ data class PomodoroCategoryModel(
     val title: String,
     val categoryType: PomodoroCategoryType,
     val focusTime: Int,
-    val restTime: Int
+    val restTime: Int,
 )
 
 fun PomodoroSettingEntity.toModel() = PomodoroCategoryModel(
@@ -18,5 +18,5 @@ fun PomodoroSettingEntity.toModel() = PomodoroCategoryModel(
     title = title,
     categoryType = PomodoroCategoryType.safeValueOf(title),
     focusTime = Duration.parse(focusTime).toMinutes().toInt(),
-    restTime = Duration.parse(restTime).toMinutes().toInt()
+    restTime = Duration.parse(restTime).toMinutes().toInt(),
 )

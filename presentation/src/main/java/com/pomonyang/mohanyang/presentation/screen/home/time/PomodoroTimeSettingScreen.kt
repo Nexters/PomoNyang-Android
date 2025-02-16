@@ -44,7 +44,7 @@ fun PomodoroTimeSettingRoute(
     modifier: Modifier = Modifier,
     viewModel: PomodoroTimeSettingViewModel = hiltViewModel(),
     onShowSnackbar: (String, Int?) -> Unit,
-    onEndSettingClick: () -> Unit
+    onEndSettingClick: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -63,7 +63,7 @@ fun PomodoroTimeSettingRoute(
     }
     LaunchedEffect(Unit) {
         viewModel.handleEvent(
-            PomodoroTimeSettingEvent.Init(isFocusTime = isFocusTime)
+            PomodoroTimeSettingEvent.Init(isFocusTime = isFocusTime),
         )
     }
 
@@ -85,7 +85,7 @@ fun PomodoroTimeSettingRoute(
                     category = PomodoroCategoryType.safeValueOf(categoryName),
                     isFocusTime = isFocusTime,
                     initialSettingTime = initialSettingTime,
-                    onAction = viewModel::handleEvent
+                    onAction = viewModel::handleEvent,
                 )
             }
         }
@@ -98,7 +98,7 @@ private fun PomodoroTimeSettingScreen(
     isFocusTime: Boolean,
     category: PomodoroCategoryType,
     onAction: (PomodoroTimeSettingEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val iconResId = if (isFocusTime) R.drawable.ic_focus else R.drawable.ic_rest
 
@@ -107,14 +107,14 @@ private fun PomodoroTimeSettingScreen(
             .fillMaxSize()
             .background(MnTheme.backgroundColorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         TimeSettingTopAppBar { onAction(PomodoroTimeSettingEvent.ClickClose) }
 
         CategoryBox(
             iconRes = category.iconRes,
             categoryName = stringResource(id = category.kor),
-            backgroundColor = Color.Transparent
+            backgroundColor = Color.Transparent,
         )
 
         MnWheelMinutePicker(
@@ -123,7 +123,7 @@ private fun PomodoroTimeSettingScreen(
             maxTime = if (isFocusTime) PomodoroConstants.MAX_FOCUS_MINUTES else PomodoroConstants.MAX_REST_MINUTES,
             initialItem = initialSettingTime,
             onChangePickTime = remember { { onAction(PomodoroTimeSettingEvent.ChangePickTime(time = it)) } },
-            selectedIconResId = iconResId
+            selectedIconResId = iconResId,
         )
 
         SettingButton(
@@ -132,7 +132,7 @@ private fun PomodoroTimeSettingScreen(
             backgroundColor = MnTheme.backgroundColorScheme.inverse,
             onClick = {
                 onAction(PomodoroTimeSettingEvent.Submit)
-            }
+            },
         )
     }
 }
@@ -140,7 +140,7 @@ private fun PomodoroTimeSettingScreen(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun TimeSettingTopAppBar(
-    onActionClick: () -> Unit
+    onActionClick: () -> Unit,
 ) {
     MnTopAppBar(
         actions = {
@@ -148,14 +148,14 @@ private fun TimeSettingTopAppBar(
                 modifier = Modifier
                     .size(40.dp)
                     .clickableSingle(activeRippleEffect = false) { onActionClick() },
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 MnMediumIcon(
                     resourceId = R.drawable.ic_close,
-                    tint = TopAppBarDefaults.topAppBarColors().navigationIconContentColor
+                    tint = TopAppBarDefaults.topAppBarColors().navigationIconContentColor,
                 )
             }
-        }
+        },
     )
 }
 
@@ -167,7 +167,7 @@ private fun PomodoroTimeSettingScreenPreview() {
             initialSettingTime = 25,
             isFocusTime = true,
             onAction = {},
-            category = PomodoroCategoryType.DEFAULT
+            category = PomodoroCategoryType.DEFAULT,
         )
     }
 }

@@ -49,7 +49,7 @@ fun PomodoroRestWaitingRoute(
     goToPomodoroRest: () -> Unit,
     modifier: Modifier = Modifier,
     pomodoroRestWaitingViewModel: PomodoroRestWaitingViewModel = hiltViewModel(),
-    onShowSnackbar: (String, Int?) -> Unit
+    onShowSnackbar: (String, Int?) -> Unit,
 ) {
     val state by pomodoroRestWaitingViewModel.state.collectAsStateWithLifecycle()
     pomodoroRestWaitingViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
@@ -69,8 +69,8 @@ fun PomodoroRestWaitingRoute(
             PomodoroRestWaitingEvent.Init(
                 type = type,
                 exceedTime = exceedTime,
-                focusTime = focusTime
-            )
+                focusTime = focusTime,
+            ),
         )
     }
 
@@ -89,7 +89,7 @@ fun PomodoroRestWaitingRoute(
         plusButtonEnabled = state.plusButtonEnabled,
         minusButtonEnabled = state.minusButtonEnabled,
         onAction = { pomodoroRestWaitingViewModel.handleEvent(it) },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -103,13 +103,13 @@ private fun PomodoroRestWaitingScreen(
     plusButtonEnabled: Boolean,
     minusButtonEnabled: Boolean,
     onAction: (PomodoroRestWaitingEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MnTheme.backgroundColorScheme.primary),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
@@ -118,7 +118,7 @@ private fun PomodoroRestWaitingScreen(
         Timer(
             modifier = Modifier.padding(top = MnSpacing.small),
             time = focusTime,
-            exceededTime = exceedTime
+            exceededTime = exceedTime,
         )
 
         RestLottie(isCompleteFocus = exceedTime != DEFAULT_TIME)
@@ -130,7 +130,7 @@ private fun PomodoroRestWaitingScreen(
             minusButtonEnabled = minusButtonEnabled,
             title = stringResource(R.string.change_focus_time_prompt),
             onPlusButtonClick = { onAction(PomodoroRestWaitingEvent.OnPlusButtonClick(plusButtonSelected.not())) },
-            onMinusButtonClick = { onAction(PomodoroRestWaitingEvent.OnMinusButtonClick(minusButtonSelected.not())) }
+            onMinusButtonClick = { onAction(PomodoroRestWaitingEvent.OnMinusButtonClick(minusButtonSelected.not())) },
         )
         Spacer(modifier = Modifier.weight(1f))
 
@@ -139,14 +139,14 @@ private fun PomodoroRestWaitingScreen(
             styles = MnBoxButtonStyles.large,
             text = stringResource(id = R.string.rest_start),
             onClick = { onAction(PomodoroRestWaitingEvent.OnStartRestClick) },
-            colors = MnBoxButtonColorType.primary
+            colors = MnBoxButtonColorType.primary,
         )
 
         MnTextButton(
             styles = MnTextButtonStyles.large,
             containerPadding = PaddingValues(bottom = MnSpacing.xLarge),
             text = stringResource(id = R.string.focus_end),
-            onClick = { onAction(PomodoroRestWaitingEvent.OnEndFocusClick) }
+            onClick = { onAction(PomodoroRestWaitingEvent.OnEndFocusClick) },
         )
     }
 }
@@ -154,7 +154,7 @@ private fun PomodoroRestWaitingScreen(
 @Composable
 private fun RestLottie(
     modifier: Modifier = Modifier,
-    isCompleteFocus: Boolean
+    isCompleteFocus: Boolean,
 ) {
     val restWaitingLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loti_rest_waiting))
     val completeFocusLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loti_rest_waiting_complete_focus))
@@ -162,10 +162,10 @@ private fun RestLottie(
     Box(
         modifier = modifier
             .padding(top = MnSpacing.xLarge)
-            .size(240.dp)
+            .size(240.dp),
     ) {
         LottieAnimation(
-            composition = restWaitingLottie
+            composition = restWaitingLottie,
         )
 
         if (isCompleteFocus) {
@@ -186,7 +186,7 @@ private fun PomodoroRestScreenPreview() {
             minusButtonSelected = true,
             plusButtonEnabled = true,
             minusButtonEnabled = true,
-            onAction = {}
+            onAction = {},
         )
     }
 }

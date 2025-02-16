@@ -7,6 +7,6 @@ interface PomodoroSettingRemoteDataSource {
     suspend fun updatePomodoroCategoryTimes(
         categoryNo: Int,
         focusTime: String,
-        restTime: String
+        restTime: String,
     ): Result<Unit>
 }

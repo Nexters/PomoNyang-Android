@@ -40,7 +40,7 @@ internal fun CatProfileRoute(
     onCatChangeClick: (Int) -> Unit,
     onCatNameChangeClick: (String, Int, CatType) -> Unit,
     modifier: Modifier = Modifier,
-    catProfileViewModel: CatProfileViewModel = hiltViewModel()
+    catProfileViewModel: CatProfileViewModel = hiltViewModel(),
 ) {
     val state by catProfileViewModel.state.collectAsStateWithLifecycle()
 
@@ -62,7 +62,7 @@ internal fun CatProfileRoute(
         state = state,
         onBackClick = onBackClick,
         onAction = catProfileViewModel::handleEvent,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -71,7 +71,7 @@ private fun CatProfileScreen(
     state: CatProfileState,
     onBackClick: () -> Unit,
     onAction: (CatProfileEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LaunchedEffect(Unit) {
         onAction(CatProfileEvent.Init)
@@ -80,29 +80,29 @@ private fun CatProfileScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MnTheme.backgroundColorScheme.primary)
+            .background(MnTheme.backgroundColorScheme.primary),
     ) {
         MnTopAppBar(
             navigationIcon = {
                 MnIconButton(
                     onClick = onBackClick,
-                    iconResourceId = R.drawable.ic_chevron_left
+                    iconResourceId = R.drawable.ic_chevron_left,
                 )
             },
             content = {
                 Text(
                     text = "나의 고양이",
                     style = MnTheme.typography.bodySemiBold,
-                    color = MnTheme.textColorScheme.primary
+                    color = MnTheme.textColorScheme.primary,
                 )
-            }
+            },
         )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(horizontal = MnSpacing.xLarge)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Spacer(modifier = Modifier.weight(1f))
             CatRive(
@@ -111,24 +111,24 @@ private fun CatProfileScreen(
                 tooltipMessage = stringResource(id = R.string.cat_profile_tooltip),
                 riveResource = R.raw.cat_rename_2,
                 stateMachineName = "State Machine_Rename",
-                stateMachineInput = state.catType.pomodoroRiveCat
+                stateMachineInput = state.catType.pomodoroRiveCat,
             )
 
             Row(
                 modifier = Modifier
                     .padding(top = 20.dp)
                     .clickableSingle(
-                        activeRippleEffect = false
+                        activeRippleEffect = false,
                     ) {
                         onAction(CatProfileEvent.ClickNaming)
                     },
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall)
+                horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
             ) {
                 Text(
                     text = state.catName,
                     style = MnTheme.typography.header4,
-                    color = MnTheme.textColorScheme.tertiary
+                    color = MnTheme.textColorScheme.tertiary,
                 )
                 MnMediumIcon(resourceId = R.drawable.ic_pen, tint = MnTheme.iconColorScheme.primary)
             }
@@ -139,7 +139,7 @@ private fun CatProfileScreen(
                 text = "고양이 바꾸기",
                 onClick = { onAction(CatProfileEvent.ClickChangeType) },
                 colors = MnBoxButtonColorType.secondary,
-                styles = MnBoxButtonStyles.large
+                styles = MnBoxButtonStyles.large,
             )
         }
     }
@@ -152,7 +152,7 @@ fun PreviewCatProfileScreen() {
         CatProfileScreen(
             state = CatProfileState(),
             onBackClick = {},
-            onAction = {}
+            onAction = {},
         )
     }
 }

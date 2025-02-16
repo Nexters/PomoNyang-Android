@@ -60,7 +60,7 @@ fun OnboardingSelectCatRoute(
     onStartClick: (Int, String, String) -> Unit,
     onShowSnackBar: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel()
+    onboardingSelectCatViewModel: OnboardingSelectCatViewModel = hiltViewModel(),
 ) {
     val state by onboardingSelectCatViewModel.state.collectAsStateWithLifecycle()
 
@@ -70,7 +70,7 @@ fun OnboardingSelectCatRoute(
                 onStartClick(
                     effect.no,
                     effect.catName,
-                    effect.catTypeName
+                    effect.catTypeName,
                 )
             }
 
@@ -101,7 +101,7 @@ fun OnboardingSelectCatRoute(
                     onBackClick = onBackClick,
                     modifier = modifier,
                     onAction = onboardingSelectCatViewModel::handleEvent,
-                    state = state
+                    state = state,
                 )
             }
         }
@@ -113,19 +113,19 @@ private fun OnboardingSelectCatScreen(
     onBackClick: () -> Unit,
     onAction: (SelectCatEvent) -> Unit,
     state: SelectCatState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MnTheme.backgroundColorScheme.primary)
+            .background(MnTheme.backgroundColorScheme.primary),
     ) {
         MnTopAppBar(
             topAppBarColors = MnAppBarColors(
                 containerColor = MnTheme.backgroundColorScheme.primary,
                 navigationIconContentColor = MnTheme.iconColorScheme.primary,
                 titleContentColor = MnTheme.textColorScheme.primary,
-                actionIconContentColor = MnTheme.iconColorScheme.primary
+                actionIconContentColor = MnTheme.iconColorScheme.primary,
             ),
             navigationIcon = {
                 MnIconButton(onClick = onBackClick, iconResourceId = R.drawable.ic_chevron_left)
@@ -135,49 +135,49 @@ private fun OnboardingSelectCatScreen(
                     stringResource(R.string.onboarding_select),
                     style = MnTheme.typography.bodySemiBold,
                     color = MnTheme.textColorScheme.primary,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
-            }
+            },
         )
 
         Column(
             modifier = Modifier
                 .padding(horizontal = MnSpacing.large)
-                .padding(top = MnSpacing.medium, bottom = MnSpacing.small)
+                .padding(top = MnSpacing.medium, bottom = MnSpacing.small),
         ) {
             Text(
                 stringResource(R.string.onboarding_select_title),
                 style = MnTheme.typography.header3,
-                color = MnTheme.textColorScheme.primary
+                color = MnTheme.textColorScheme.primary,
             )
             Text(
                 stringResource(R.string.onboarding_select_subtitle),
                 modifier = Modifier.padding(bottom = 42.dp),
                 style = MnTheme.typography.bodyRegular,
-                color = MnTheme.textColorScheme.secondary
+                color = MnTheme.textColorScheme.secondary,
             )
             AlarmExample(
                 title = stringResource(R.string.onboarding_select_alarm_title),
-                selectedCat = state.selectedType
+                selectedCat = state.selectedType,
             )
 
             CatRive(
                 modifier = Modifier
                     .padding(
                         top = MnSpacing.medium,
-                        bottom = 42.dp
+                        bottom = 42.dp,
                     )
                     .fillMaxWidth(),
                 riveResource = R.raw.cat_select_2,
                 stateMachineName = "State Machine_selectCat",
-                fireState = state.selectedType?.catFireInput
+                fireState = state.selectedType?.catFireInput,
             )
             CatCategory(
                 cats = state.cats.toPersistentList(),
                 selectedType = state.selectedType,
                 onClickCatType = { type ->
                     onAction(SelectCatEvent.OnSelectType(type))
-                }
+                },
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -188,7 +188,7 @@ private fun OnboardingSelectCatScreen(
                 isEnabled = state.selectedType != null,
                 onClick = { onAction(SelectCatEvent.OnStartClick) },
                 colors = MnBoxButtonColorType.primary,
-                styles = MnBoxButtonStyles.large
+                styles = MnBoxButtonStyles.large,
             )
         }
     }
@@ -198,22 +198,22 @@ private fun OnboardingSelectCatScreen(
 private fun AlarmExample(
     title: String,
     selectedCat: CatType?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .background(
                 MnTheme.backgroundColorScheme.secondary,
-                shape = RoundedCornerShape(MnRadius.xSmall)
+                shape = RoundedCornerShape(MnRadius.xSmall),
             )
             .fillMaxWidth()
             .height(72.dp)
-            .padding(14.dp)
+            .padding(14.dp),
     ) {
         if (selectedCat != null) {
             SelectedAlarmExample(
                 title = title,
-                content = stringResource(selectedCat.backgroundPushContent)
+                content = stringResource(selectedCat.backgroundPushContent),
             )
         } else {
             EmptyAlarmExample()
@@ -225,25 +225,25 @@ private fun AlarmExample(
 fun SelectedAlarmExample(
     title: String,
     content: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.Top
+        verticalAlignment = Alignment.Top,
     ) {
         Row(
             modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 modifier = Modifier
                     .size(38.dp)
                     .background(
                         MnColor.Orange100,
-                        shape = RoundedCornerShape(8.5.dp)
+                        shape = RoundedCornerShape(8.5.dp),
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Image(painter = painterResource(id = R.drawable.ic_app), contentDescription = "alarm_img")
             }
@@ -252,36 +252,36 @@ fun SelectedAlarmExample(
                 Text(
                     title,
                     style = MnTheme.typography.bodySemiBold,
-                    color = MnTheme.textColorScheme.primary
+                    color = MnTheme.textColorScheme.primary,
                 )
                 Text(
                     content,
                     style = MnTheme.typography.bodyRegular,
-                    color = MnTheme.textColorScheme.secondary
+                    color = MnTheme.textColorScheme.secondary,
                 )
             }
         }
         Text(
             stringResource(id = R.string.onboarding_select_alarm_time),
             style = MnTheme.typography.bodyRegular,
-            color = MnTheme.textColorScheme.secondary
+            color = MnTheme.textColorScheme.secondary,
         )
     }
 }
 
 @Composable
 fun EmptyAlarmExample(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             stringResource(R.string.onboarding_select_alarm_empty),
             style = MnTheme.typography.bodyRegular,
             color = MnColor.Gray400,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -291,17 +291,17 @@ private fun CatCategory(
     cats: PersistentList<CatInfoModel>,
     selectedType: CatType?,
     onClickCatType: (CatType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
         cats.map { cat ->
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .height(80.dp)
+                    .height(80.dp),
             ) {
                 MnSelectButton(
                     modifier = Modifier.fillMaxSize(),
@@ -310,12 +310,12 @@ private fun CatCategory(
                     subTitleContent = {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
                                 stringResource(cat.type.personality),
                                 color = MnTheme.textColorScheme.tertiary,
-                                style = MnTheme.typography.subBodyRegular
+                                style = MnTheme.typography.subBodyRegular,
                             )
 
                             MnXSmallIcon(resourceId = cat.type.personalityIcon, tint = Color.Unspecified)
@@ -323,7 +323,7 @@ private fun CatCategory(
                     },
                     titleContent = {
                         Text(cat.type.kor)
-                    }
+                    },
                 )
             }
         }
@@ -333,7 +333,7 @@ private fun CatCategory(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun NotificationPermissionEffect(
-    onGranted: () -> Unit
+    onGranted: () -> Unit,
 ) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
         onGranted()
@@ -341,7 +341,7 @@ private fun NotificationPermissionEffect(
     }
 
     val notificationsPermissionState = rememberPermissionState(
-        android.Manifest.permission.POST_NOTIFICATIONS
+        android.Manifest.permission.POST_NOTIFICATIONS,
     )
 
     LaunchedEffect(notificationsPermissionState) {
@@ -371,9 +371,9 @@ fun PreviewOnboardingSelectScreen() {
             cats = listOf(
                 CatInfoModel(1, "이이오", type = CatType.CHEESE),
                 CatInfoModel(1, "까만냥", type = CatType.BLACK),
-                CatInfoModel(1, "삼색냥", type = CatType.THREE_COLOR)
-            )
+                CatInfoModel(1, "삼색냥", type = CatType.THREE_COLOR),
+            ),
         ),
-        onAction = { _ -> }
+        onAction = { _ -> },
     )
 }

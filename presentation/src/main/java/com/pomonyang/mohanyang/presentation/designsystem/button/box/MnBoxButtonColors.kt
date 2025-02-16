@@ -10,5 +10,5 @@ data class MnBoxButtonColors(
     val iconColor: Color,
     val disabledContainerColor: Color,
     val disabledContentColor: Color,
-    val disabledIconColor: Color
+    val disabledIconColor: Color,
 )

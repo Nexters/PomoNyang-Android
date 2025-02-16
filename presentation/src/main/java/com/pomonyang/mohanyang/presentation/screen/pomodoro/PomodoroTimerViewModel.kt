@@ -24,7 +24,7 @@ class PomodoroTimerViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
     private val pomodoroTimerRepository: PomodoroTimerRepository,
     private val userRepository: UserRepository,
-    private val pomodoroInitialDataUseCase: InsertPomodoroInitialDataUseCase
+    private val pomodoroInitialDataUseCase: InsertPomodoroInitialDataUseCase,
 ) : BaseViewModel<PomodoroTimerState, PomodoroTimerEvent, PomodoroTimerEffect>() {
 
     private val currentFocusTimerId = MutableStateFlow("")
@@ -63,7 +63,7 @@ class PomodoroTimerViewModel @Inject constructor(
                         categoryType = selectedPomodoroSetting.categoryType,
                         cat = cat.type,
                         maxFocusTime = (selectedPomodoroSetting.focusTime.times(60)),
-                        maxRestTime = (selectedPomodoroSetting.restTime.times(60))
+                        maxRestTime = (selectedPomodoroSetting.restTime.times(60)),
                     )
                 }
             }
@@ -89,7 +89,7 @@ class PomodoroTimerViewModel @Inject constructor(
                 remainingFocusTime = remainingFocusTime,
                 focusExceededTime = focusExceededTime,
                 remainingRestTime = remainingRestTime,
-                restExceededTime = restExceededTime
+                restExceededTime = restExceededTime,
             )
         }
 

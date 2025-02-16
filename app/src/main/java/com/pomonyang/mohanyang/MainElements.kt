@@ -8,7 +8,7 @@ data class MainState(
     override val isLoading: Boolean = true,
     override val isInternalError: Boolean = false,
     override val isInvalidError: Boolean = false,
-    override val lastRequestAction: MainEvent? = null
+    override val lastRequestAction: MainEvent? = null,
 ) : NetworkViewState()
 
 sealed interface MainEvent : ViewEvent {

@@ -22,7 +22,7 @@ internal data object OnboardingGuide
 @Serializable
 internal data class OnboardingSelectCat(
     val selectedCatNo: Int,
-    val destination: String
+    val destination: String,
 )
 
 @Serializable
@@ -30,20 +30,20 @@ internal data class OnboardingNamingCat(
     val catNo: Int,
     val catName: String,
     val destination: String,
-    val catTypeName: String
+    val catTypeName: String,
 )
 
 enum class CatSettingDestination {
     POMODORO,
-    MY_PAGE
+    MY_PAGE,
 }
 
 fun NavGraphBuilder.onboardingScreen(
     navHostController: NavHostController,
-    onShowSnackbar: (String, Int?) -> Unit
+    onShowSnackbar: (String, Int?) -> Unit,
 ) {
     navigation<Onboarding>(
-        startDestination = OnboardingGuide
+        startDestination = OnboardingGuide,
     ) {
         composable<OnboardingGuide> {
             OnboardingGuideRoute(
@@ -51,10 +51,10 @@ fun NavGraphBuilder.onboardingScreen(
                     navHostController.navigate(
                         OnboardingSelectCat(
                             selectedCatNo = -1,
-                            destination = CatSettingDestination.POMODORO.name
-                        )
+                            destination = CatSettingDestination.POMODORO.name,
+                        ),
                     )
-                }
+                },
             )
         }
 
@@ -79,7 +79,7 @@ fun NavGraphBuilder.onboardingScreen(
                 },
                 onShowSnackBar = {
                     onShowSnackbar(it, null)
-                }
+                },
             )
         }
 
@@ -98,7 +98,7 @@ fun NavGraphBuilder.onboardingScreen(
                         CatSettingDestination.POMODORO -> {
                             navHostController.navigate(
                                 route = OnboardingGuide,
-                                navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build()
+                                navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build(),
                             )
                         }
                         // 마이페이지에서 수정시 에러가 발생하여 홈으로 돌아가는 경우
@@ -116,7 +116,7 @@ fun NavGraphBuilder.onboardingScreen(
                         CatSettingDestination.POMODORO -> {
                             navHostController.navigate(
                                 route = Home,
-                                navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build()
+                                navOptions = NavOptions.Builder().setPopUpTo<OnboardingGuide>(true).build(),
                             )
                         }
 
@@ -124,7 +124,7 @@ fun NavGraphBuilder.onboardingScreen(
                             navHostController.popBackStack()
                         }
                     }
-                }
+                },
             )
         }
     }

@@ -53,7 +53,7 @@ fun OnboardingNamingCatRoute(
     onBackClick: () -> Unit,
     onNavToDestination: () -> Unit,
     modifier: Modifier = Modifier,
-    onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel()
+    onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel(),
 ) {
     val state by onboardingNamingCatViewModel.state.collectAsStateWithLifecycle()
 
@@ -72,7 +72,7 @@ fun OnboardingNamingCatRoute(
         onAction = onboardingNamingCatViewModel::handleEvent,
         onNavToHomeClick = onNavToHomeClick,
         onBackClick = onBackClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -84,7 +84,7 @@ fun OnboardingNamingCatScreen(
     onAction: (NamingEvent) -> Unit,
     onNavToHomeClick: () -> Unit,
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -120,20 +120,20 @@ fun OnboardingNamingCatScreen(
                             focusManager.clearFocus(true)
                             keyboardController?.hide()
                         },
-                    verticalArrangement = Arrangement.SpaceBetween
+                    verticalArrangement = Arrangement.SpaceBetween,
                 ) {
                     MnTopAppBar(
                         navigationIcon = {
                             MnIconButton(
                                 onClick = onBackClick,
-                                iconResourceId = R.drawable.ic_chevron_left
+                                iconResourceId = R.drawable.ic_chevron_left,
                             )
-                        }
+                        },
                     )
 
                     Column(
                         modifier = Modifier
-                            .padding(horizontal = MnSpacing.xLarge)
+                            .padding(horizontal = MnSpacing.xLarge),
                     ) {
                         CatRive(
                             modifier = Modifier.fillMaxWidth(),
@@ -141,16 +141,16 @@ fun OnboardingNamingCatScreen(
                             stateMachineInput = catType.pomodoroRiveCat,
                             stateMachineName = "State Machine_Rename",
                             riveResource = R.raw.cat_rename_2,
-                            tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
+                            tooltipMessage = stringResource(id = R.string.naming_cat_tooltip),
                         )
                         Text(
                             modifier = Modifier.padding(
                                 top = MnSpacing.twoXLarge,
-                                bottom = MnSpacing.small
+                                bottom = MnSpacing.small,
                             ),
                             text = stringResource(R.string.naming_cat),
                             style = MnTheme.typography.subBodyRegular,
-                            color = MnTheme.textColorScheme.secondary
+                            color = MnTheme.textColorScheme.secondary,
                         )
                         MnTextField(
                             modifier = Modifier.fillMaxWidth(),
@@ -159,7 +159,7 @@ fun OnboardingNamingCatScreen(
                             errorMessage = nameValidationResult.message,
                             backgroundColor = MnColor.White,
                             onValueChange = { value -> name = value },
-                            hint = catType.kor
+                            hint = catType.kor,
                         )
                     }
 
@@ -168,13 +168,13 @@ fun OnboardingNamingCatScreen(
                         containerPadding = PaddingValues(
                             bottom = MnSpacing.small,
                             start = MnSpacing.xLarge,
-                            end = MnSpacing.xLarge
+                            end = MnSpacing.xLarge,
                         ),
                         onClick = { if (isEnabled()) onAction(NamingEvent.OnComplete(name)) },
                         isEnabled = isEnabled(),
                         modifier = Modifier.fillMaxWidth(),
                         colors = MnBoxButtonColorType.primary,
-                        styles = MnBoxButtonStyles.large
+                        styles = MnBoxButtonStyles.large,
                     )
                 }
             }
@@ -191,6 +191,6 @@ private fun PreviewOnboardingNamingCatScreen() {
         catType = CatType.CHEESE,
         onAction = { _ -> },
         onNavToHomeClick = {},
-        onBackClick = {}
+        onBackClick = {},
     )
 }

@@ -12,15 +12,15 @@ import timber.log.Timber
 
 internal class PomodoroTimerRepositoryImpl @Inject constructor(
     private val pomodoroTimerDao: PomodoroTimerDao,
-    private val mohaNyangService: MohaNyangService
+    private val mohaNyangService: MohaNyangService,
 ) : PomodoroTimerRepository {
 
     override suspend fun insertPomodoroTimerInitData(categoryNo: Int, pomodoroTimerId: String) {
         pomodoroTimerDao.insertPomodoroSettingData(
             PomodoroTimerEntity(
                 focusTimeId = pomodoroTimerId,
-                categoryNo = categoryNo
-            )
+                categoryNo = categoryNo,
+            ),
         )
     }
 
@@ -42,7 +42,7 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
         Timber.tag(TAG).d("savePomodoroData > $pomodoro")
         pomodoro?.let {
             mohaNyangService.saveFocusTime(
-                listOf(it.toRequestModel())
+                listOf(it.toRequestModel()),
             ).onSuccess {
                 pomodoroTimerDao.deletePomodoroTimer(pomodoroTimerId)
             }

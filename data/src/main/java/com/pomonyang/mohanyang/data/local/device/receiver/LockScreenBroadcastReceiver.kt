@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 
 class LockScreenBroadcastReceiver(
-    private var lockStateListener: (Boolean) -> Unit
+    private var lockStateListener: (Boolean) -> Unit,
 ) : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {

@@ -11,7 +11,7 @@ data class MnSelectButtonColors(
     val containerColor: Color,
     val titleContentColor: Color,
     val subtitleContentColor: Color,
-    val iconColor: Color
+    val iconColor: Color,
 )
 
 object MnSelectButtonSelector {
@@ -22,7 +22,7 @@ object MnSelectButtonSelector {
             containerColor = MnTheme.backgroundColorScheme.secondary,
             titleContentColor = MnTheme.textColorScheme.secondary,
             subtitleContentColor = MnTheme.textColorScheme.tertiary,
-            iconColor = MnTheme.iconColorScheme.tertiary
+            iconColor = MnTheme.iconColorScheme.tertiary,
         )
 
     val selected: MnSelectButtonColors
@@ -32,7 +32,7 @@ object MnSelectButtonSelector {
             containerColor = MnTheme.backgroundColorScheme.accent2,
             titleContentColor = MnTheme.textColorScheme.primary,
             subtitleContentColor = MnTheme.textColorScheme.tertiary,
-            iconColor = MnTheme.iconColorScheme.tertiary
+            iconColor = MnTheme.iconColorScheme.tertiary,
 
         )
 
@@ -43,7 +43,7 @@ object MnSelectButtonSelector {
             containerColor = MnTheme.backgroundColorScheme.secondary,
             titleContentColor = MnTheme.textColorScheme.disabled,
             subtitleContentColor = MnTheme.textColorScheme.disabled,
-            iconColor = MnTheme.iconColorScheme.disabled
+            iconColor = MnTheme.iconColorScheme.disabled,
 
         )
 }

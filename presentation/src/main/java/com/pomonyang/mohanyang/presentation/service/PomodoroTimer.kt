@@ -7,7 +7,7 @@ internal interface PomodoroTimer {
     fun startTimer(
         maxTime: Int,
         eventHandler: PomodoroTimerEventHandler,
-        category: PomodoroCategoryType? = null
+        category: PomodoroCategoryType? = null,
     )
 
     fun stopTimer()

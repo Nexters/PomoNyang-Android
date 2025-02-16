@@ -13,15 +13,14 @@ import androidx.compose.ui.semantics.Role
 /**
  * 클릭 시 리플 효과가 없는 Modifier를 반환합니다.
  */
-fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier =
-    composed {
-        clickable(
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() }
-        ) {
-            onClick()
-        }
+fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
+    clickable(
+        indication = null,
+        interactionSource = remember { MutableInteractionSource() },
+    ) {
+        onClick()
     }
+}
 
 internal interface MultipleEventsCutter {
     fun processEvent(event: () -> Unit)
@@ -29,8 +28,7 @@ internal interface MultipleEventsCutter {
     companion object
 }
 
-internal fun MultipleEventsCutter.Companion.get(throttleTime: Long = 500L): MultipleEventsCutter =
-    MultipleEventsCutterImpl(throttleTime)
+internal fun MultipleEventsCutter.Companion.get(throttleTime: Long = 500L): MultipleEventsCutter = MultipleEventsCutterImpl(throttleTime)
 
 @Immutable
 private class MultipleEventsCutterImpl(val throttleTime: Long) : MultipleEventsCutter {
@@ -52,7 +50,7 @@ fun Modifier.clickableSingle(
     activeRippleEffect: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) = composed(
     inspectorInfo = debugInspectorInfo {
         name = "clickableSingle"
@@ -60,7 +58,7 @@ fun Modifier.clickableSingle(
         properties["onClickLabel"] = onClickLabel
         properties["role"] = role
         properties["onClick"] = onClick
-    }
+    },
 ) {
     val multipleEventsCutter = remember { MultipleEventsCutter.get() }
     Modifier.clickable(
@@ -69,6 +67,6 @@ fun Modifier.clickableSingle(
         onClick = { multipleEventsCutter.processEvent { onClick() } },
         role = role,
         indication = if (activeRippleEffect) LocalIndication.current else null,
-        interactionSource = remember { MutableInteractionSource() }
+        interactionSource = remember { MutableInteractionSource() },
     )
 }

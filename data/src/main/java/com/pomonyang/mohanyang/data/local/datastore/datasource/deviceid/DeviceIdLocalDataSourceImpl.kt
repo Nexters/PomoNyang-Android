@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.first
 
 internal class DeviceIdLocalDataSourceImpl @Inject constructor(
     @DeviceIdDataStore private val dataStore: DataStore<Preferences>,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) : DeviceIdLocalDataSource {
 
     override suspend fun getDeviceId(): String = getStoredDeviceId() ?: getSSAID() ?: getUUID()

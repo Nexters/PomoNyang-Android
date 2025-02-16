@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 internal class PomodoroNotificationContentFactory @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val bitmapGenerator: PomodoroNotificationBitmapGenerator
+    private val bitmapGenerator: PomodoroNotificationBitmapGenerator,
 ) {
 
     fun createPomodoroNotificationContent(isRest: Boolean): RemoteViews {
@@ -31,7 +31,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     fun createPomodoroNotificationBigContent(
         category: PomodoroCategoryType?,
         time: String,
-        overtime: String?
+        overtime: String?,
     ): RemoteViews {
         val remoteViews = RemoteViews(context.packageName, R.layout.notification_pomodoro_expand)
 
@@ -55,7 +55,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
             text = titleRes,
             color = R.color.notification_pomodoro_title,
             font = R.font.pretendard_semibold,
-            textSize = 14f
+            textSize = 14f,
         )
     }
 
@@ -65,7 +65,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
             text = contentRes,
             color = R.color.notification_pomodoro_content,
             font = R.font.pretendard_regular,
-            textSize = 14f
+            textSize = 14f,
         )
     }
 
@@ -95,7 +95,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     private fun setTime(remoteViews: RemoteViews, formattedTime: String) {
         val timeBitmap = bitmapGenerator.combineTimeBitmaps(
             time = formattedTime,
-            isOvertime = false
+            isOvertime = false,
         )
         remoteViews.setImageViewBitmap(R.id.text_time, timeBitmap)
     }
@@ -104,7 +104,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
         if (formattedOvertime != null) {
             val overtimeBitmap = bitmapGenerator.combineTimeBitmaps(
                 time = formattedOvertime,
-                isOvertime = true
+                isOvertime = true,
             )
             remoteViews.setImageViewBitmap(R.id.text_overtime, overtimeBitmap)
             remoteViews.setViewVisibility(R.id.text_overtime, View.VISIBLE)

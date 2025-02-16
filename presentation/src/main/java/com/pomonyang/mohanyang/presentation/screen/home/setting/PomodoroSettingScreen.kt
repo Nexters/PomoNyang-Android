@@ -76,7 +76,7 @@ fun PomodoroSettingRoute(
     goTimeSetting: (isFocusTime: Boolean, initialTime: Int, categoryName: String) -> Unit,
     goToMyPage: () -> Unit,
     modifier: Modifier = Modifier,
-    pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
+    pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel(),
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
 
@@ -100,7 +100,7 @@ fun PomodoroSettingRoute(
         PomodoroCategoryBottomSheet(
             onAction = pomodoroSettingViewModel::handleEvent,
             categoryList = state.categoryList,
-            initialCategoryNo = state.selectedCategoryNo
+            initialCategoryNo = state.selectedCategoryNo,
         )
     }
 
@@ -108,7 +108,7 @@ fun PomodoroSettingRoute(
         onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
         modifier = modifier,
-        showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not()
+        showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not(),
     )
 }
 
@@ -124,7 +124,7 @@ fun PomodoroSettingScreen(
     onAction: (PomodoroSettingEvent) -> Unit,
     showOnboardingTooltip: Boolean,
     state: PomodoroSettingState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val pomodoroSelectedCategoryModel by remember(state.selectedCategoryNo) {
         mutableStateOf(state.categoryList.find { it.categoryNo == state.selectedCategoryNo })
@@ -149,21 +149,21 @@ fun PomodoroSettingScreen(
                         modifier = Modifier
                             .size(40.dp)
                             .clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickMenu) },
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         MnMediumIcon(
                             resourceId = R.drawable.ic_menu,
-                            tint = MnTheme.iconColorScheme.primary
+                            tint = MnTheme.iconColorScheme.primary,
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             CatRive(
                 tooltipMessage = catMessage,
@@ -176,13 +176,13 @@ fun PomodoroSettingScreen(
                         it.fireState("State Machine_Home", state.cat.type.catFireInput)
                         catMessage = state.cat.type.getRandomMessage()
                     }
-                }
+                },
             )
 
             Text(
                 text = state.cat.name,
                 style = MnTheme.typography.header4,
-                color = MnTheme.textColorScheme.tertiary
+                color = MnTheme.textColorScheme.tertiary,
             )
 
             CategoryBox(
@@ -202,9 +202,9 @@ fun PomodoroSettingScreen(
                                 delay(250)
                                 timeTooltip = true
                             }
-                        }
+                        },
                     )
-                    .clickableSingle { onAction(PomodoroSettingEvent.ClickCategory) }
+                    .clickableSingle { onAction(PomodoroSettingEvent.ClickCategory) },
             )
 
             TimeSetting(
@@ -212,13 +212,13 @@ fun PomodoroSettingScreen(
                 onAction = onAction,
                 onDismiss = { timeTooltip = false },
                 pomodoroSelectedCategoryModel = pomodoroSelectedCategoryModel,
-                modifier = modifier
+                modifier = modifier,
             )
 
             SettingButton(
                 iconRes = R.drawable.ic_play_32,
                 onClick = { onAction(PomodoroSettingEvent.ClickStartPomodoroSetting) },
-                backgroundColor = MnTheme.backgroundColorScheme.accent1
+                backgroundColor = MnTheme.backgroundColorScheme.accent1,
             )
         }
     }
@@ -230,7 +230,7 @@ private fun TimeSetting(
     onAction: (PomodoroSettingEvent) -> Unit,
     onDismiss: () -> Unit,
     pomodoroSelectedCategoryModel: PomodoroCategoryModel?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
@@ -244,21 +244,21 @@ private fun TimeSetting(
                 onDismiss = {
                     onDismiss()
                     onAction(PomodoroSettingEvent.DismissOnBoardingTooltip)
-                }
+                },
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium)
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium),
     ) {
         TimeComponent(
             modifier = Modifier.clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickFocusTime) },
             type = stringResource(R.string.focus),
-            time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.focusTime ?: 0)
+            time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.focusTime ?: 0),
         )
         TimeDivider()
         TimeComponent(
             modifier = Modifier.clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickRestTime) },
             type = stringResource(R.string.rest),
-            time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.restTime ?: 0)
+            time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.restTime ?: 0),
         )
     }
 }
@@ -268,14 +268,14 @@ private fun PomodoroCategoryBottomSheet(
     onAction: (PomodoroSettingEvent) -> Unit,
     categoryList: List<PomodoroCategoryModel>,
     initialCategoryNo: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var currentSelectedCategoryNo by remember { mutableIntStateOf(initialCategoryNo) }
 
     MnBottomSheet(
         onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
         modifier = modifier.fillMaxWidth(),
-        title = stringResource(R.string.change_category_title)
+        title = stringResource(R.string.change_category_title),
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             categoryList.forEach { pomodoroCategoryModel ->
@@ -287,7 +287,7 @@ private fun PomodoroCategoryBottomSheet(
                     isSelected = pomodoroCategoryModel.categoryNo == currentSelectedCategoryNo,
                     restTime = stringResource(R.string.minute, pomodoroCategoryModel.restTime),
                     focusTime = stringResource(R.string.minute, pomodoroCategoryModel.focusTime),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -297,7 +297,7 @@ private fun PomodoroCategoryBottomSheet(
                 styles = MnBoxButtonStyles.large,
                 text = stringResource(R.string.confirm),
                 onClick = { onAction(PomodoroSettingEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo)) },
-                colors = MnBoxButtonColorType.secondary
+                colors = MnBoxButtonColorType.secondary,
             )
         }
     }
@@ -307,26 +307,26 @@ private fun PomodoroCategoryBottomSheet(
 private fun TimeComponent(
     type: String,
     time: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier.padding(
             vertical = MnSpacing.xSmall,
-            horizontal = MnSpacing.small
+            horizontal = MnSpacing.small,
         ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
         CompositionLocalProvider(
-            LocalContentColor provides MnColor.Gray500
+            LocalContentColor provides MnColor.Gray500,
         ) {
             Text(
                 text = type,
-                style = MnTheme.typography.bodySemiBold
+                style = MnTheme.typography.bodySemiBold,
             )
             Text(
                 text = time,
-                style = MnTheme.typography.header3
+                style = MnTheme.typography.header3,
             )
         }
     }
@@ -338,7 +338,7 @@ private fun TimeDivider(modifier: Modifier = Modifier) {
         modifier
             .width(2.dp)
             .height(20.dp)
-            .background(color = MnColor.Gray200, shape = RoundedCornerShape(MnRadius.xSmall))
+            .background(color = MnColor.Gray200, shape = RoundedCornerShape(MnRadius.xSmall)),
     )
 }
 
@@ -347,7 +347,7 @@ fun SettingButton(
     @DrawableRes iconRes: Int,
     backgroundColor: Color,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -355,11 +355,11 @@ fun SettingButton(
             .clip(CircleShape)
             .background(color = backgroundColor)
             .clickableSingle { onClick() },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         MnLargeIcon(
             resourceId = iconRes,
-            tint = MnTheme.iconColorScheme.inverse
+            tint = MnTheme.iconColorScheme.inverse,
         )
     }
 }
@@ -377,15 +377,15 @@ fun PomodoroStarterScreenPreview() {
                     title = "집중",
                     categoryType = PomodoroCategoryType.DEFAULT,
                     focusTime = 25,
-                    restTime = 10
-                )
+                    restTime = 10,
+                ),
             ),
             cat = CatInfoModel(
                 no = 0,
                 name = "이이오",
-                type = CatType.CHEESE
-            )
-        )
+                type = CatType.CHEESE,
+            ),
+        ),
     )
 }
 
@@ -394,6 +394,6 @@ fun PomodoroStarterScreenPreview() {
 fun StartButtonPreview() {
     SettingButton(
         iconRes = 0,
-        backgroundColor = MnTheme.backgroundColorScheme.accent1
+        backgroundColor = MnTheme.backgroundColorScheme.accent1,
     ) {}
 }

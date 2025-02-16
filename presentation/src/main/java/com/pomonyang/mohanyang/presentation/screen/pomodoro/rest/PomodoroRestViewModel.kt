@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class PomodoroRestViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
-    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase
+    private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase,
 ) : BaseViewModel<PomodoroRestState, PomodoroRestEvent, PomodoroRestEffect>() {
 
     init {
@@ -25,7 +25,7 @@ class PomodoroRestViewModel @Inject constructor(
             updateState {
                 copy(
                     plusButtonEnabled = selectedPomodoroSetting.restTime < MAX_REST_MINUTES,
-                    minusButtonEnabled = selectedPomodoroSetting.restTime > MIN_REST_MINUTES
+                    minusButtonEnabled = selectedPomodoroSetting.restTime > MIN_REST_MINUTES,
                 )
             }
         }
@@ -40,8 +40,8 @@ class PomodoroRestViewModel @Inject constructor(
                     setEffect(
                         PomodoroRestEffect.ShowSnackbar(
                             message = "최대 30분까지만 휴식할 수 있어요",
-                            iconRes = R.drawable.ic_clock
-                        )
+                            iconRes = R.drawable.ic_clock,
+                        ),
                     )
                 } else {
                     updateState { copy(plusButtonSelected = event.isPlusButtonSelected, minusButtonSelected = false) }
@@ -53,8 +53,8 @@ class PomodoroRestViewModel @Inject constructor(
                     setEffect(
                         PomodoroRestEffect.ShowSnackbar(
                             message = "5분은 휴식해야 다음에 집중할 수 있어요",
-                            iconRes = R.drawable.ic_clock
-                        )
+                            iconRes = R.drawable.ic_clock,
+                        ),
                     )
                 } else {
                     updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
@@ -78,7 +78,7 @@ class PomodoroRestViewModel @Inject constructor(
             viewModelScope.launch {
                 adjustPomodoroTimeUseCase(
                     isFocusTime = false,
-                    isIncrease = state.value.plusButtonSelected
+                    isIncrease = state.value.plusButtonSelected,
                 )
             }
         }

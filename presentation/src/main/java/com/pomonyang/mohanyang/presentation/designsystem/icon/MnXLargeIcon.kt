@@ -16,13 +16,13 @@ fun MnXLargeIcon(
     @DrawableRes resourceId: Int,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
-    tint: Color = LocalContentColor.current
+    tint: Color = LocalContentColor.current,
 ) {
     Icon(
         painter = painterResource(id = resourceId),
         contentDescription = contentDescription,
         modifier = modifier.size(MnIconSize.xLarge),
-        tint = tint
+        tint = tint,
     )
 }
 
@@ -31,12 +31,12 @@ fun MnXLargeIcon(
     imageVector: ImageVector,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
-    tint: Color = LocalContentColor.current
+    tint: Color = LocalContentColor.current,
 ) {
     Icon(
         imageVector = imageVector,
         contentDescription = contentDescription,
         modifier = modifier.size(MnIconSize.xLarge),
-        tint = tint
+        tint = tint,
     )
 }

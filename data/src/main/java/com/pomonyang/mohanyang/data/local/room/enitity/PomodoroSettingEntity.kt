@@ -9,5 +9,5 @@ data class PomodoroSettingEntity(
     val categoryNo: Int,
     val title: String,
     val focusTime: String,
-    val restTime: String
+    val restTime: String,
 )

@@ -34,34 +34,34 @@ fun MnTextButton(
     containerPadding: PaddingValues = PaddingValues(),
     isEnabled: Boolean = true,
     @DrawableRes rightIconResourceId: Int? = null,
-    @DrawableRes leftIconResourceId: Int? = null
+    @DrawableRes leftIconResourceId: Int? = null,
 ) {
     MnPressableWrapper(
         modifier = Modifier.padding(containerPadding).clip(styles.shape),
-        onClick = onClick
+        onClick = onClick,
     ) {
         Box(
             modifier = modifier
                 .height(styles.height)
                 .padding(styles.contentPadding),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
 
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(styles.spacing)
+                horizontalArrangement = Arrangement.spacedBy(styles.spacing),
             ) {
                 if (leftIconResourceId != null) {
                     MnMediumIcon(
                         resourceId = leftIconResourceId,
-                        tint = if (isEnabled) MnTheme.iconColorScheme.secondary else MnTheme.iconColorScheme.tertiary
+                        tint = if (isEnabled) MnTheme.iconColorScheme.secondary else MnTheme.iconColorScheme.tertiary,
                     )
                 }
                 Text(text = text, style = styles.textStyle, textAlign = TextAlign.Center, color = if (isEnabled) MnTheme.textColorScheme.secondary else MnTheme.textColorScheme.tertiary)
                 if (rightIconResourceId != null) {
                     MnMediumIcon(
                         resourceId = rightIconResourceId,
-                        tint = if (isEnabled) MnTheme.iconColorScheme.secondary else MnTheme.iconColorScheme.tertiary
+                        tint = if (isEnabled) MnTheme.iconColorScheme.secondary else MnTheme.iconColorScheme.tertiary,
                     )
                 }
             }
@@ -78,7 +78,7 @@ fun PreviewMnBoxButton() {
             MnTextButton(
                 styles = MnTextButtonStyles.large,
                 text = "Button",
-                onClick = {}
+                onClick = {},
             )
             MnTextButton(
                 modifier = Modifier.clickableSingle(activeRippleEffect = false) { },
@@ -87,7 +87,7 @@ fun PreviewMnBoxButton() {
                 onClick = {},
                 isEnabled = false,
                 rightIconResourceId = R.drawable.ic_null,
-                leftIconResourceId = R.drawable.ic_null
+                leftIconResourceId = R.drawable.ic_null,
             )
 
             MnTextButton(
@@ -96,12 +96,12 @@ fun PreviewMnBoxButton() {
                 text = "Button",
                 onClick = {},
                 isEnabled = false,
-                rightIconResourceId = R.drawable.ic_null
+                rightIconResourceId = R.drawable.ic_null,
             )
             MnTextButton(
                 styles = MnTextButtonStyles.small,
                 text = "Button",
-                onClick = {}
+                onClick = {},
             )
         }
     }

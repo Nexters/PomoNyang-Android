@@ -24,7 +24,7 @@ internal class PomodoroNotificationManager @Inject constructor(
     private val pushAlarmRepository: PushAlarmRepository,
     @PomodoroNotification private val notificationBuilder: NotificationCompat.Builder,
     private val notificationManager: NotificationManager,
-    private val contentFactory: PomodoroNotificationContentFactory
+    private val contentFactory: PomodoroNotificationContentFactory,
 ) {
 
     private var lockScreenVisibility: Int = NotificationCompat.VISIBILITY_PUBLIC
@@ -38,7 +38,7 @@ internal class PomodoroNotificationManager @Inject constructor(
         val channel = NotificationChannel(
             POMODORO_NOTIFICATION_CHANNEL_ID,
             POMODORO_NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_LOW,
         ).apply {
             setShowBadge(false)
             enableLights(false)
@@ -71,17 +71,17 @@ internal class PomodoroNotificationManager @Inject constructor(
     private fun createBigContentView(
         category: PomodoroCategoryType?,
         time: String,
-        overtime: String?
+        overtime: String?,
     ): RemoteViews = contentFactory.createPomodoroNotificationBigContent(
         category = category,
         time = time,
-        overtime = overtime
+        overtime = overtime,
     )
 
     private fun buildNotification(
         contentView: RemoteViews,
         bigContentView: RemoteViews,
-        visibility: Int
+        visibility: Int,
     ): Notification = notificationBuilder
         .setCustomContentView(contentView)
         .setCustomBigContentView(bigContentView)

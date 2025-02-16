@@ -17,7 +17,7 @@ import kotlinx.coroutines.plus
 @HiltViewModel
 class PomodoroTimeSettingViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
-    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase
+    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
 ) : BaseViewModel<PomodoroTimeSettingState, PomodoroTimeSettingEvent, PomodoroTimeSettingEffect>() {
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -60,7 +60,7 @@ class PomodoroTimeSettingViewModel @Inject constructor(
                 updateState {
                     copy(
                         pickFocusTime = pickFocusTime,
-                        pickRestTime = pickResetTime
+                        pickRestTime = pickResetTime,
                     )
                 }
             }
@@ -88,7 +88,7 @@ class PomodoroTimeSettingViewModel @Inject constructor(
                     isFocus = isFocusTime,
                     isInternalError = false,
                     isInvalidError = false,
-                    isLoading = false
+                    isLoading = false,
                 )
             }
         }
@@ -100,13 +100,13 @@ class PomodoroTimeSettingViewModel @Inject constructor(
             pomodoroSettingRepository.updatePomodoroCategoryTimes(
                 categoryNo = state.value.categoryNo,
                 focusTime = state.value.pickFocusTime,
-                restTime = state.value.pickRestTime
+                restTime = state.value.pickRestTime,
             ).getOrThrow()
             updateState {
                 copy(
                     isInternalError = false,
                     isInvalidError = false,
-                    isLoading = false
+                    isLoading = false,
                 )
             }
         }

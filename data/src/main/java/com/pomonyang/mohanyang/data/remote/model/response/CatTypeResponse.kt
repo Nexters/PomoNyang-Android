@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class CatTypeResponse(
     val no: Int = -1,
     val name: String = "",
-    val type: String = ""
+    val type: String = "",
 )
