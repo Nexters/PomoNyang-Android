@@ -2,10 +2,8 @@ package com.pomonyang.mohanyang.presentation.designsystem.button.select
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,19 +22,16 @@ fun MnSelectListItem(
     iconResource: Int,
     categoryType: String,
     modifier: Modifier = Modifier,
-    containerPadding: PaddingValues = PaddingValues(),
     isSelected: Boolean = false,
     onClick: () -> Unit,
 ) {
     MnSelectButton(
         modifier = modifier,
-        containerPadding = containerPadding,
         isSelected = isSelected,
         subTitleContent = {
             Row(
-                modifier = Modifier
-                    .padding(MnSpacing.xLarge)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(MnSpacing.xLarge),
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 MnMediumIcon(
@@ -53,6 +48,8 @@ fun MnSelectListItem(
                     style = MnTheme.typography.bodySemiBold,
                     color = MnTheme.textColorScheme.primary,
                 )
+
+                Spacer(Modifier.weight(1f))
             }
         },
         onClick = onClick,
@@ -63,7 +60,6 @@ fun MnSelectListItem(
 @Composable
 fun MnSelectListPreview(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         MnSelectListItem(
@@ -71,25 +67,21 @@ fun MnSelectListPreview(modifier: Modifier = Modifier) {
             categoryType = "기본",
             onClick = {},
             isSelected = true,
-            modifier = Modifier.fillMaxWidth(),
         )
         MnSelectListItem(
             iconResource = R.drawable.ic_null,
             categoryType = "공부",
             onClick = {},
-            modifier = Modifier.fillMaxWidth(),
         )
         MnSelectListItem(
             iconResource = R.drawable.ic_null,
             categoryType = "작업",
             onClick = {},
-            modifier = Modifier.fillMaxWidth(),
         )
         MnSelectListItem(
             iconResource = R.drawable.ic_null,
             categoryType = "운동",
             onClick = {},
-            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
