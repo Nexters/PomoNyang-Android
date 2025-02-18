@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,7 +41,6 @@ import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.startRestTimer
 import com.pomonyang.mohanyang.presentation.util.stopRestTimer
-import timber.log.Timber
 
 @Composable
 fun PomodoroRestRoute(
@@ -50,7 +48,7 @@ fun PomodoroRestRoute(
     goToHome: () -> Unit,
     goToFocus: () -> Unit,
     modifier: Modifier = Modifier,
-    pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel()
+    pomodoroRestViewModel: PomodoroRestViewModel = hiltViewModel(),
 ) {
     val state by pomodoroRestViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -66,7 +64,7 @@ fun PomodoroRestRoute(
             }
         }
     }
-    
+
     DisposableEffect(state.maxRestTime, state.pomodoroId) {
         if (state.maxRestTime != 0 && state.pomodoroId.isNotEmpty()) {
             context.startRestTimer(state.maxRestTime, timerId = state.pomodoroId)
@@ -91,7 +89,7 @@ fun PomodoroRestRoute(
         plusButtonEnabled = state.plusButtonEnabled,
         minusButtonEnabled = state.minusButtonEnabled,
         exceededTime = state.displayRestExceedTime(),
-        onAction = remember { pomodoroRestViewModel::handleEvent }
+        onAction = remember { pomodoroRestViewModel::handleEvent },
     )
 }
 
@@ -106,7 +104,7 @@ private fun PomodoroRestScreen(
     plusButtonEnabled: Boolean,
     minusButtonEnabled: Boolean,
     onAction: (PomodoroRestEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val tooltipMessage = if (exceededTime != DEFAULT_TIME) R.string.rest_exceed_cat_tooltip else R.string.rest_cat_tooltip
     Column(
@@ -114,16 +112,16 @@ private fun PomodoroRestScreen(
             .fillMaxSize()
             .background(MnTheme.backgroundColorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         MnTopAppBar(
             navigationIcon = {
                 CategoryBox(
                     categoryName = categoryType,
                     modifier = Modifier.padding(start = 12.dp),
-                    iconRes = PomodoroCategoryType.safeValueOf(categoryType).iconRes
+                    iconRes = PomodoroCategoryType.safeValueOf(categoryType).iconRes,
                 )
-            }
+            },
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -136,7 +134,7 @@ private fun PomodoroRestScreen(
             isAutoPlay = false,
             onRiveClick = {
                 it.fireState("State Machine_Home", catType.catFireInput)
-            }
+            },
         )
 
         TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)
@@ -144,7 +142,7 @@ private fun PomodoroRestScreen(
         Timer(
             modifier = Modifier,
             time = time,
-            exceededTime = exceededTime
+            exceededTime = exceededTime,
         )
 
         TimerSelectedButtons(
@@ -154,7 +152,7 @@ private fun PomodoroRestScreen(
             minusButtonEnabled = minusButtonEnabled,
             title = stringResource(R.string.change_rest_time_prompt),
             onPlusButtonClick = { onAction(PomodoroRestEvent.OnPlusButtonClick(plusButtonSelected.not())) },
-            onMinusButtonClick = { onAction(PomodoroRestEvent.OnMinusButtonClick(minusButtonSelected.not())) }
+            onMinusButtonClick = { onAction(PomodoroRestEvent.OnMinusButtonClick(minusButtonSelected.not())) },
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -164,14 +162,14 @@ private fun PomodoroRestScreen(
             styles = MnBoxButtonStyles.large,
             text = stringResource(id = R.string.one_more_focus),
             onClick = { onAction(PomodoroRestEvent.OnFocusClick) },
-            colors = if (exceededTime != DEFAULT_TIME) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary
+            colors = if (exceededTime != DEFAULT_TIME) MnBoxButtonColorType.primary else MnBoxButtonColorType.secondary,
         )
 
         MnTextButton(
             styles = MnTextButtonStyles.large,
             containerPadding = PaddingValues(bottom = MnSpacing.xLarge),
             text = stringResource(id = R.string.focus_end),
-            onClick = { onAction(PomodoroRestEvent.OnEndPomodoroClick) }
+            onClick = { onAction(PomodoroRestEvent.OnEndPomodoroClick) },
         )
     }
 }
@@ -189,7 +187,7 @@ private fun PomodoroTimerScreenPreview() {
             plusButtonEnabled = true,
             minusButtonEnabled = true,
             catType = CatType.CHEESE,
-            onAction = {}
+            onAction = {},
         )
     }
 }
@@ -207,7 +205,7 @@ private fun PomodoroTimerExceedScreenPreview() {
             plusButtonEnabled = true,
             minusButtonEnabled = true,
             catType = CatType.CHEESE,
-            onAction = {}
+            onAction = {},
         )
     }
 }

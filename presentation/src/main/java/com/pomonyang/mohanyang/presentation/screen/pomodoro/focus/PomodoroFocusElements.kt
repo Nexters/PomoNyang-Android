@@ -17,7 +17,7 @@ data class PomodoroFocusState(
     val categoryType: PomodoroCategoryType = PomodoroCategoryType.DEFAULT,
     val cat: CatType = CatType.CHEESE,
     val categoryNo: Int = -1,
-    val forceGoRest: Boolean = false
+    val forceGoRest: Boolean = false,
 ) : ViewState {
 
     fun displayFocusTime(): String = remainingFocusTime.formatTime()

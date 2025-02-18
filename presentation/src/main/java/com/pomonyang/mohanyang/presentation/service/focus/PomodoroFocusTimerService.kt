@@ -85,7 +85,7 @@ internal class PomodoroFocusTimerService :
         timerId: String,
         time: String,
         overtime: String,
-        category: PomodoroCategoryType?
+        category: PomodoroCategoryType?,
     ) {
         scope.launch {
             timerRepository.incrementFocusedTime(timerId)

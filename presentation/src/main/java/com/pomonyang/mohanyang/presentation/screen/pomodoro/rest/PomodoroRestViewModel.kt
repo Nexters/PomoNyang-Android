@@ -30,7 +30,7 @@ class PomodoroRestViewModel @Inject constructor(
     private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase,
     private val pomodoroTimerRepository: PomodoroTimerRepository,
     private val userRepository: UserRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<PomodoroRestState, PomodoroRestEvent, PomodoroRestEffect>() {
 
     init {
@@ -47,8 +47,8 @@ class PomodoroRestViewModel @Inject constructor(
                     setEffect(
                         PomodoroRestEffect.ShowSnackbar(
                             message = "최대 30분까지만 휴식할 수 있어요",
-                            iconRes = R.drawable.ic_clock
-                        )
+                            iconRes = R.drawable.ic_clock,
+                        ),
                     )
                 } else {
                     updateState { copy(plusButtonSelected = event.isPlusButtonSelected, minusButtonSelected = false) }
@@ -60,8 +60,8 @@ class PomodoroRestViewModel @Inject constructor(
                     setEffect(
                         PomodoroRestEffect.ShowSnackbar(
                             message = "5분은 휴식해야 다음에 집중할 수 있어요",
-                            iconRes = R.drawable.ic_clock
-                        )
+                            iconRes = R.drawable.ic_clock,
+                        ),
                     )
                 } else {
                     updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
@@ -91,7 +91,7 @@ class PomodoroRestViewModel @Inject constructor(
             viewModelScope.launch {
                 adjustPomodoroTimeUseCase(
                     isFocusTime = false,
-                    isIncrease = state.value.plusButtonSelected
+                    isIncrease = state.value.plusButtonSelected,
                 )
             }
         }
@@ -99,7 +99,7 @@ class PomodoroRestViewModel @Inject constructor(
 
     private fun loadPomodoroTimerData(pomodoroId: String) {
         pomodoroTimerRepository.getPomodoroTimer(
-            pomodoroId
+            pomodoroId,
         ).onEach { timerData ->
             timerData?.let { updateTimerState(it) }
         }.launchIn(viewModelScope)
@@ -112,7 +112,7 @@ class PomodoroRestViewModel @Inject constructor(
         updateState {
             copy(
                 remainingRestTime = remainingRestTime,
-                restExceededTime = restExceededTime
+                restExceededTime = restExceededTime,
             )
         }
     }

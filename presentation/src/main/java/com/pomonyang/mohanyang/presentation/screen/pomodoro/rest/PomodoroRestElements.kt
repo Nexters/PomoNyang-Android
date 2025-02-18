@@ -6,7 +6,6 @@ import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.focus.PomodoroFocusEvent
 import com.pomonyang.mohanyang.presentation.util.formatTime
 
 data class PomodoroRestState(
@@ -20,7 +19,7 @@ data class PomodoroRestState(
     val plusButtonSelected: Boolean = false,
     val minusButtonSelected: Boolean = false,
     val plusButtonEnabled: Boolean = true,
-    val minusButtonEnabled: Boolean = true
+    val minusButtonEnabled: Boolean = true,
 ) : ViewState {
     fun displayRestTime(): String = remainingRestTime.formatTime()
     fun displayRestExceedTime(): String = restExceededTime.formatTime()

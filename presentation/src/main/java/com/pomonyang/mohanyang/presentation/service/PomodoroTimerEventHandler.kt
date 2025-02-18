@@ -9,6 +9,6 @@ internal interface PomodoroTimerEventHandler {
         timerId: String,
         time: String,
         overtime: String,
-        category: PomodoroCategoryType?
+        category: PomodoroCategoryType?,
     )
 }

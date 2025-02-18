@@ -1,8 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro.focus
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroTimerEntity
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
@@ -12,7 +10,6 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.model.cat.toModel
 import com.pomonyang.mohanyang.presentation.model.setting.toModel
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.PomodoroFocusTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -20,7 +17,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @HiltViewModel
 class PomodoroFocusViewModel @Inject constructor(

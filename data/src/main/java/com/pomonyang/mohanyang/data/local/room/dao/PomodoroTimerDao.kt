@@ -24,7 +24,7 @@ interface PomodoroTimerDao {
             UPDATE pomodoro_timer 
             SET focusedTime = focusedTime + 1 
             WHERE focusTimeId = :pomodoroTimerId
-        """
+        """,
     )
     suspend fun incrementFocusedTime(pomodoroTimerId: String)
 
@@ -33,7 +33,7 @@ interface PomodoroTimerDao {
             UPDATE pomodoro_timer 
             SET restedTime = restedTime + 1 
             WHERE focusTimeId = :pomodoroTimerId
-        """
+        """,
     )
     suspend fun incrementRestTime(pomodoroTimerId: String)
 

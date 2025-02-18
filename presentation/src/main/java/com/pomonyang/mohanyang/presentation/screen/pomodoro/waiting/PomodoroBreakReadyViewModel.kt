@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 class PomodoroBreakReadyViewModel @Inject constructor(
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
     private val adjustPomodoroTimeUseCase: AdjustPomodoroTimeUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<PomodoroBreakReadyState, PomodoroBreakReadyEvent, PomodoroBreakReadySideEffect>() {
 
     init {
@@ -35,8 +35,8 @@ class PomodoroBreakReadyViewModel @Inject constructor(
                 exceededTime = data.exceededTime,
                 focusTime = data.focusTime,
                 type = data.type,
-                pomodoroId = data.pomodoroId
-            )
+                pomodoroId = data.pomodoroId,
+            ),
         )
     }
 
@@ -54,7 +54,7 @@ class PomodoroBreakReadyViewModel @Inject constructor(
                             focusedTime = event.focusTime,
                             type = event.type,
                             plusButtonEnabled = pomodoroSetting.focusTime < MAX_FOCUS_MINUTES,
-                            minusButtonEnabled = pomodoroSetting.focusTime > MIN_FOCUS_MINUTES
+                            minusButtonEnabled = pomodoroSetting.focusTime > MIN_FOCUS_MINUTES,
                         )
                     }
                     startForcePomodoroSettingCountdown()
@@ -70,8 +70,8 @@ class PomodoroBreakReadyViewModel @Inject constructor(
                     setEffect(
                         PomodoroBreakReadySideEffect.ShowSnackbar(
                             message = "최대 60분까지만 집중할 수 있어요",
-                            iconRes = R.drawable.ic_clock
-                        )
+                            iconRes = R.drawable.ic_clock,
+                        ),
                     )
                 } else {
                     updateState { copy(plusButtonSelected = event.isPlusButtonSelected, minusButtonSelected = false) }
@@ -83,8 +83,8 @@ class PomodoroBreakReadyViewModel @Inject constructor(
                     setEffect(
                         PomodoroBreakReadySideEffect.ShowSnackbar(
                             message = "10분은 집중해야 해요",
-                            iconRes = R.drawable.ic_clock
-                        )
+                            iconRes = R.drawable.ic_clock,
+                        ),
                     )
                 } else {
                     updateState { copy(minusButtonSelected = event.isMinusButtonSelected, plusButtonSelected = false) }
@@ -125,7 +125,7 @@ class PomodoroBreakReadyViewModel @Inject constructor(
             viewModelScope.launch {
                 adjustPomodoroTimeUseCase(
                     isFocusTime = true,
-                    isIncrease = state.value.plusButtonSelected
+                    isIncrease = state.value.plusButtonSelected,
                 )
             }
         }

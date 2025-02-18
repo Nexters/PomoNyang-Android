@@ -14,7 +14,7 @@ data class PomodoroBreakReadyState(
     val forceGoHome: Boolean = false,
     val exceededTime: Int = 0,
     val focusedTime: Int = 0,
-    val type: String = ""
+    val type: String = "",
 ) : ViewState
 
 sealed interface PomodoroBreakReadyEvent : ViewEvent {
@@ -38,6 +38,6 @@ sealed interface PomodoroBreakReadySideEffect : ViewSideEffect {
 
     data class ShowSnackbar(
         val message: String,
-        @DrawableRes val iconRes: Int
+        @DrawableRes val iconRes: Int,
     ) : PomodoroBreakReadySideEffect
 }

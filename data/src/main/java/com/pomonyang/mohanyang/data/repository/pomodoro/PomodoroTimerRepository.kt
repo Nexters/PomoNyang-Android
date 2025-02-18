@@ -9,8 +9,7 @@ interface PomodoroTimerRepository {
     suspend fun incrementRestedTime(pomodoroTimerId: String)
     suspend fun updatePomodoroDone(pomodoroTimerId: String)
     suspend fun updateRecentPomodoroDone()
-    suspend fun
-        savePomodoroData(pomodoroTimerId: String)
+    suspend fun savePomodoroData(pomodoroTimerId: String)
     suspend fun savePomodoroCacheData()
     fun getPomodoroTimer(timerId: String): Flow<PomodoroTimerEntity?>
 }

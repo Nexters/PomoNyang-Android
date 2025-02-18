@@ -46,7 +46,7 @@ fun PomodoroBreakReadyRoute(
     goToPomodoroRest: (pomodoroId: String) -> Unit,
     modifier: Modifier = Modifier,
     pomodoroBreakReadyViewModel: PomodoroBreakReadyViewModel = hiltViewModel(),
-    onShowSnackbar: (String, Int?) -> Unit
+    onShowSnackbar: (String, Int?) -> Unit,
 ) {
     val state by pomodoroBreakReadyViewModel.state.collectAsStateWithLifecycle()
     pomodoroBreakReadyViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
@@ -76,7 +76,7 @@ fun PomodoroBreakReadyRoute(
         plusButtonEnabled = state.plusButtonEnabled,
         minusButtonEnabled = state.minusButtonEnabled,
         onAction = { pomodoroBreakReadyViewModel.handleEvent(it) },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -90,13 +90,13 @@ private fun PomodoroBreakReadyScreen(
     plusButtonEnabled: Boolean,
     minusButtonEnabled: Boolean,
     onAction: (PomodoroBreakReadyEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MnTheme.backgroundColorScheme.primary),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
@@ -105,7 +105,7 @@ private fun PomodoroBreakReadyScreen(
         Timer(
             modifier = Modifier.padding(top = MnSpacing.small),
             time = focusedTime,
-            exceededTime = exceededTime
+            exceededTime = exceededTime,
         )
 
         RestLottie(isCompleteFocus = exceededTime != DEFAULT_TIME)
@@ -117,7 +117,7 @@ private fun PomodoroBreakReadyScreen(
             minusButtonEnabled = minusButtonEnabled,
             title = stringResource(R.string.change_focus_time_prompt),
             onPlusButtonClick = { onAction(PomodoroBreakReadyEvent.OnPlusButtonClick(plusButtonSelected.not())) },
-            onMinusButtonClick = { onAction(PomodoroBreakReadyEvent.OnMinusButtonClick(minusButtonSelected.not())) }
+            onMinusButtonClick = { onAction(PomodoroBreakReadyEvent.OnMinusButtonClick(minusButtonSelected.not())) },
         )
         Spacer(modifier = Modifier.weight(1f))
 
@@ -126,14 +126,14 @@ private fun PomodoroBreakReadyScreen(
             styles = MnBoxButtonStyles.large,
             text = stringResource(id = R.string.rest_start),
             onClick = { onAction(PomodoroBreakReadyEvent.OnStartRestClick) },
-            colors = MnBoxButtonColorType.primary
+            colors = MnBoxButtonColorType.primary,
         )
 
         MnTextButton(
             styles = MnTextButtonStyles.large,
             containerPadding = PaddingValues(bottom = MnSpacing.xLarge),
             text = stringResource(id = R.string.focus_end),
-            onClick = { onAction(PomodoroBreakReadyEvent.OnEndFocusClick) }
+            onClick = { onAction(PomodoroBreakReadyEvent.OnEndFocusClick) },
         )
     }
 }
@@ -141,7 +141,7 @@ private fun PomodoroBreakReadyScreen(
 @Composable
 private fun RestLottie(
     modifier: Modifier = Modifier,
-    isCompleteFocus: Boolean
+    isCompleteFocus: Boolean,
 ) {
     val restWaitingLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loti_rest_waiting))
     val completeFocusLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loti_rest_waiting_complete_focus))
@@ -149,10 +149,10 @@ private fun RestLottie(
     Box(
         modifier = modifier
             .padding(top = MnSpacing.xLarge)
-            .size(240.dp)
+            .size(240.dp),
     ) {
         LottieAnimation(
-            composition = restWaitingLottie
+            composition = restWaitingLottie,
         )
 
         if (isCompleteFocus) {
@@ -173,7 +173,7 @@ private fun PomodoroBreakReadyScreenPreview() {
             minusButtonSelected = true,
             plusButtonEnabled = true,
             minusButtonEnabled = true,
-            onAction = {}
+            onAction = {},
         )
     }
 }

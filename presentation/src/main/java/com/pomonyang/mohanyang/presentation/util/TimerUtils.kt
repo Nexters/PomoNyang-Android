@@ -12,7 +12,7 @@ import timber.log.Timber
 internal fun Context.startFocusTimer(
     maxTime: Int,
     category: PomodoroCategoryType,
-    timerId: String
+    timerId: String,
 ) {
     Timber.tag("TIMER").d("startFocusTimer $timerId / $maxTime / $category")
     startService(
@@ -22,16 +22,16 @@ internal fun Context.startFocusTimer(
                 bundleOf(
                     PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME to maxTime,
                     PomodoroTimerServiceExtras.INTENT_FOCUS_CATEGORY to category,
-                    PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId
-                )
+                    PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId,
+                ),
             )
-        }
+        },
     )
 }
 
 internal fun Context.startRestTimer(
     maxTime: Int,
-    timerId: String
+    timerId: String,
 ) {
     Timber.tag("TIMER").d("startRestTimer $timerId / $maxTime")
     startService(
@@ -40,10 +40,10 @@ internal fun Context.startRestTimer(
             putExtras(
                 bundleOf(
                     PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME to maxTime,
-                    PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId
-                )
+                    PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId,
+                ),
             )
-        }
+        },
     )
 }
 
@@ -53,9 +53,9 @@ internal fun Context.stopFocusTimer(timerId: String) {
         Intent(this, PomodoroFocusTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_STOP
             putExtras(
-                bundleOf(PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId)
+                bundleOf(PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId),
             )
-        }
+        },
     )
 }
 
@@ -65,8 +65,8 @@ internal fun Context.stopRestTimer(timerId: String) {
         Intent(this, PomodoroRestTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_STOP
             putExtras(
-                bundleOf(PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId)
+                bundleOf(PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId),
             )
-        }
+        },
     )
 }

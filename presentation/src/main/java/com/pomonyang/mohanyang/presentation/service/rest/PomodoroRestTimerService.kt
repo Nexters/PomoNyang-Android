@@ -79,7 +79,7 @@ internal class PomodoroRestTimerService :
         timerId: String,
         time: String,
         overtime: String,
-        category: PomodoroCategoryType?
+        category: PomodoroCategoryType?,
     ) {
         scope.launch {
             timerRepository.incrementRestedTime(timerId)

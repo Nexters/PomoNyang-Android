@@ -9,7 +9,6 @@ import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestRou
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting.PomodoroBreakReadyRoute
 import java.util.*
 import kotlinx.serialization.Serializable
-import timber.log.Timber
 
 @Serializable
 data object Pomodoro
@@ -22,18 +21,18 @@ data class PomodoroRestWaiting(
     val pomodoroId: String,
     val type: String,
     val focusTime: Int,
-    val exceededTime: Int
+    val exceededTime: Int,
 )
 
 @Serializable
 data class PomodoroRest(
-    val pomodoroId: String
+    val pomodoroId: String,
 )
 
 fun NavGraphBuilder.pomodoroScreen(
     onForceGoHome: () -> Unit,
     onShowSnackbar: (String, Int?) -> Unit,
-    navHostController: NavHostController
+    navHostController: NavHostController,
 ) {
     navigation<Pomodoro>(
         startDestination = PomodoroFocusTimer,
@@ -47,7 +46,7 @@ fun NavGraphBuilder.pomodoroScreen(
                             focusTime = focusTime,
                             exceededTime = exceededTime,
                             pomodoroId = pomodoroId,
-                        )
+                        ),
                     ) {
                         popUpTo<PomodoroFocusTimer> {
                             inclusive = true
@@ -56,7 +55,7 @@ fun NavGraphBuilder.pomodoroScreen(
                 },
                 goToHome = {
                     navHostController.popBackStack()
-                }
+                },
             )
         }
 
@@ -76,7 +75,7 @@ fun NavGraphBuilder.pomodoroScreen(
                     onForceGoHome()
                     navHostController.popBackStack()
                 },
-                onShowSnackbar = onShowSnackbar
+                onShowSnackbar = onShowSnackbar,
             )
         }
 
@@ -88,13 +87,13 @@ fun NavGraphBuilder.pomodoroScreen(
                 },
                 goToFocus = {
                     navHostController.navigate(
-                        PomodoroFocusTimer
+                        PomodoroFocusTimer,
                     ) {
                         popUpTo<PomodoroRest> {
                             inclusive = true
                         }
                     }
-                }
+                },
             )
         }
     }
