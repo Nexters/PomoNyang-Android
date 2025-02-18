@@ -25,6 +25,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnSmallIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
@@ -57,44 +58,43 @@ fun MnSelectButton(
             .border(
                 border = BorderStroke(
                     MnStroke.small,
-                    colors.borderColor
+                    colors.borderColor,
                 ),
-                shape = RoundedCornerShape(MnRadius.xSmall)
+                shape = RoundedCornerShape(MnRadius.xSmall),
             )
             .background(
                 color = colors.containerColor,
-                shape = RoundedCornerShape(MnRadius.xSmall)
+                shape = RoundedCornerShape(MnRadius.xSmall),
             )
             .noRippleClickable { onClick() }
             .semantics {
                 role = Role.Button
             }
-            .padding(contentPadding)
-        ,
+            .padding(contentPadding),
         verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             if (leftIconResourceId != null) {
                 CompositionLocalProvider(
-                    LocalContentColor provides colors.iconColor
+                    LocalContentColor provides colors.iconColor,
                 ) {
                     MnSmallIcon(resourceId = leftIconResourceId)
                 }
             }
             CompositionLocalProvider(
                 LocalContentColor provides colors.subtitleContentColor,
-                LocalTextStyle provides MnTheme.typography.subBodyRegular
+                LocalTextStyle provides MnTheme.typography.subBodyRegular,
             ) {
                 subTitleContent()
             }
 
             if (rightIconResourceId != null) {
                 CompositionLocalProvider(
-                    LocalContentColor provides colors.iconColor
+                    LocalContentColor provides colors.iconColor,
                 ) {
                     MnSmallIcon(resourceId = rightIconResourceId)
                 }
@@ -103,7 +103,7 @@ fun MnSelectButton(
 
         CompositionLocalProvider(
             LocalContentColor provides colors.titleContentColor,
-            LocalTextStyle provides MnTheme.typography.header5
+            LocalTextStyle provides MnTheme.typography.header5,
         ) {
             titleContent()
         }
@@ -111,16 +111,17 @@ fun MnSelectButton(
 }
 
 @ThemePreviews
-@Preview
 @Composable
 fun PreviewMnSelectButton() {
     var selected by remember {
         mutableStateOf(false)
     }
     MnTheme {
-        Column {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
             MnSelectButton(
-                modifier = Modifier.padding(
+                contentPadding = PaddingValues(
                     vertical = MnSpacing.medium,
                     horizontal = MnSpacing.small,
                 ),
@@ -133,7 +134,7 @@ fun PreviewMnSelectButton() {
             )
 
             MnSelectButton(
-                modifier = Modifier.padding(
+                contentPadding = PaddingValues(
                     vertical = MnSpacing.medium,
                     horizontal = MnSpacing.large,
                 ),
