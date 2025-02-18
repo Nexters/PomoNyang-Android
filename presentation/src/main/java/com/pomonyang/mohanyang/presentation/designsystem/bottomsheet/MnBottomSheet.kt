@@ -51,9 +51,7 @@ fun MnBottomSheet(
             onCloseClick = onDismissRequest,
             colors = colors,
         ) {
-            Column(modifier = Modifier.padding(horizontal = MnSpacing.large)) {
-                contents()
-            }
+            contents()
         }
     }
 }

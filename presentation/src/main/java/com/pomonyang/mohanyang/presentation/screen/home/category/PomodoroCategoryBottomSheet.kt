@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
 import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectListItem
@@ -41,10 +42,16 @@ fun PomodoroCategoryBottomSheet(
         title = stringResource(R.string.change_category_title),
     ) {
         CategoryBottomSheetContents(
+            modifier = Modifier.padding(
+                start = MnSpacing.large,
+                end = MnSpacing.large,
+                top = MnSpacing.xLarge,
+                bottom = 36.dp,
+            ),
             categoryList = categoryList,
             currentSelectedCategoryNo = currentSelectedCategoryNo,
             onCategoryClick = { currentSelectedCategoryNo = it },
-            onAction = onAction
+            onAction = onAction,
         )
     }
 }
@@ -54,14 +61,16 @@ private fun CategoryBottomSheetContents(
     categoryList: ImmutableList<PomodoroCategoryModel>,
     currentSelectedCategoryNo: Int,
     onCategoryClick: (Int) -> Unit,
-    onAction: (PomodoroSettingEvent) -> Unit
+    onAction: (PomodoroSettingEvent) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
         categoryList.chunked(2).forEach { rowCategoryModel ->
             Row(
-                horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+                horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
             ) {
                 rowCategoryModel.forEach { pomodoroCategoryModel ->
                     MnSelectListItem(
@@ -88,7 +97,7 @@ private class CategoryPreviewParameterProvider : PreviewParameterProvider<List<P
                 categoryNo = 1,
                 title = "집중",
                 categoryType = PomodoroCategoryType.WORK,
-            )
+            ),
         ),
         persistentListOf(
             PomodoroCategoryModel(
@@ -105,7 +114,7 @@ private class CategoryPreviewParameterProvider : PreviewParameterProvider<List<P
                 categoryNo = 3,
                 title = "집중",
                 categoryType = PomodoroCategoryType.WORK,
-            )
+            ),
         ),
         persistentListOf(
             PomodoroCategoryModel(
@@ -127,15 +136,15 @@ private class CategoryPreviewParameterProvider : PreviewParameterProvider<List<P
                 categoryNo = 4,
                 title = "집중",
                 categoryType = PomodoroCategoryType.WORK,
-            )
-        )
+            ),
+        ),
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun CategoryBottomSheetPreview(
-    @PreviewParameter(CategoryPreviewParameterProvider::class) categoryList: ImmutableList<PomodoroCategoryModel>
+    @PreviewParameter(CategoryPreviewParameterProvider::class) categoryList: ImmutableList<PomodoroCategoryModel>,
 ) {
     MnTheme {
         CategoryBottomSheetContents(
