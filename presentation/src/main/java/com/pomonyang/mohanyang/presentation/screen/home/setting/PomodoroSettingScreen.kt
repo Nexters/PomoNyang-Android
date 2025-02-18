@@ -1,7 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.home.setting
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -62,8 +61,6 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.stopFocusTimer
-import com.pomonyang.mohanyang.presentation.util.stopRestTimer
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -93,7 +90,7 @@ fun PomodoroSettingRoute(
 
     LaunchedEffect(Unit) {
         pomodoroSettingViewModel.handleEvent(PomodoroSettingEvent.Init)
-        stopAllNotification(context)
+        MnNotificationManager.stopInterrupt(context)
     }
 
     if (state.showCategoryBottomSheet) {
@@ -110,12 +107,6 @@ fun PomodoroSettingRoute(
         modifier = modifier,
         showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not(),
     )
-}
-
-private fun stopAllNotification(context: Context) {
-    context.stopFocusTimer()
-    context.stopRestTimer()
-    MnNotificationManager.stopInterrupt(context)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

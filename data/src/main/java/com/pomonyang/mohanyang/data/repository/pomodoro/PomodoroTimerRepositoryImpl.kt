@@ -24,12 +24,16 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun incrementFocusedTime() {
-        pomodoroTimerDao.incrementFocusedTime()
+    override suspend fun incrementFocusedTime(pomodoroTimerId: String) {
+        pomodoroTimerDao.incrementFocusedTime(pomodoroTimerId)
     }
 
-    override suspend fun incrementRestedTime() {
-        pomodoroTimerDao.incrementRestTime()
+    override suspend fun incrementRestedTime(pomodoroTimerId: String) {
+        pomodoroTimerDao.incrementRestTime(pomodoroTimerId)
+    }
+
+    override suspend fun updatePomodoroDone(pomodoroTimerId: String) {
+        pomodoroTimerDao.updateDoneAtPomodoro(getCurrentIsoInstant(), pomodoroTimerId)
     }
 
     override suspend fun updateRecentPomodoroDone() {
@@ -38,27 +42,44 @@ internal class PomodoroTimerRepositoryImpl @Inject constructor(
 
     override suspend fun savePomodoroData(pomodoroTimerId: String) {
         pomodoroTimerDao.updateDoneAt(getCurrentIsoInstant(), pomodoroTimerId)
-        val pomodoro = pomodoroTimerDao.getTimer(pomodoroTimerId).firstOrNull()
-        Timber.tag(TAG).d("savePomodoroData > $pomodoro")
-        pomodoro?.let {
-            mohaNyangService.saveFocusTime(
-                listOf(it.toRequestModel()),
-            ).onSuccess {
-                pomodoroTimerDao.deletePomodoroTimer(pomodoroTimerId)
+
+        pomodoroTimerDao.getTimer(pomodoroTimerId)
+            .firstOrNull()
+            ?.also { Timber.tag(TAG).d("savePomodoroData > $it") }
+            ?.let { pomodoro ->
+                when {
+                    pomodoro.focusedTime >= 60 -> mohaNyangService.saveFocusTime(
+                        listOf(pomodoro.toRequestModel()),
+                    ).onSuccess {
+                        pomodoroTimerDao.deletePomodoroTimer(pomodoroTimerId)
+                    }
+                    else -> pomodoroTimerDao.deletePomodoroTimer(pomodoroTimerId)
+                }
             }
-        }
     }
 
     override suspend fun savePomodoroCacheData() {
-        val pomodoroList = pomodoroTimerDao.getAllPomodoroTimers()
-            .filter { it.focusedTime >= 60 }
-            .map { pomodoro -> pomodoro.toRequestModel() }
-        Timber.tag(TAG).d("savePomodoroCacheData > $pomodoroList")
-        mohaNyangService.saveFocusTime(pomodoroList).onSuccess {
-            pomodoroTimerDao.deletePomodoroTimerAll()
-        }.onFailure {
-            Timber.tag(TAG).d("savePomodoroCacheData onFailure> $it")
-        }
+        pomodoroTimerDao.getAllPomodoroTimers()
+            .partition { it.focusedTime >= 60 }
+            .let { (validPomodoros, invalidPomodoros) ->
+                invalidPomodoros
+                    .map { it.focusTimeId }
+                    .forEach {
+                        Timber.tag(TAG).d("deletePomodoroTimer min 60s > $it")
+                        pomodoroTimerDao.deletePomodoroTimer(it)
+                    }
+
+                validPomodoros
+                    .map { it.toRequestModel() }
+                    .let { pomodoroList ->
+                        Timber.tag(TAG).d("savePomodoroCacheData > $pomodoroList")
+                        mohaNyangService.saveFocusTime(pomodoroList)
+                            .onSuccess { pomodoroTimerDao.deletePomodoroTimerAll() }
+                            .onFailure {
+                                Timber.tag(TAG).d("savePomodoroCacheData onFailure> $it")
+                            }
+                    }
+            }
     }
 
     override fun getPomodoroTimer(timerId: String): Flow<PomodoroTimerEntity?> = pomodoroTimerDao.getTimer(timerId)
