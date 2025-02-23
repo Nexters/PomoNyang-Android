@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -40,7 +41,7 @@ fun TimerSelectedButtons(
             horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
         ) {
             MnSelectButton(
-                modifier = Modifier.padding(
+                contentPadding = PaddingValues(
                     vertical = MnSpacing.small,
                     horizontal = MnSpacing.medium,
                 ),
@@ -54,7 +55,7 @@ fun TimerSelectedButtons(
             )
 
             MnSelectButton(
-                modifier = Modifier.padding(
+                contentPadding = PaddingValues(
                     vertical = MnSpacing.small,
                     horizontal = MnSpacing.medium,
                 ),

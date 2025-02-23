@@ -51,9 +51,7 @@ fun MnBottomSheet(
             onCloseClick = onDismissRequest,
             colors = colors,
         ) {
-            Column(modifier = Modifier.padding(horizontal = MnSpacing.large)) {
-                contents()
-            }
+            contents()
         }
     }
 }
@@ -122,41 +120,37 @@ private fun MnModalBottomSheetPreview() {
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 MnSelectListItem(
-                    containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = "기본",
                     onClick = {},
                     isSelected = true,
-                    restTime = "25",
-                    focusTime = "25",
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = MnSpacing.small),
                 )
                 MnSelectListItem(
-                    containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = "공부",
                     onClick = {},
-                    restTime = "25",
-                    focusTime = "25",
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = MnSpacing.small),
                 )
                 MnSelectListItem(
-                    containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = "작업",
                     onClick = {},
-                    restTime = "25",
-                    focusTime = "25",
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = MnSpacing.small),
                 )
                 MnSelectListItem(
-                    containerPadding = PaddingValues(bottom = MnSpacing.small),
                     iconResource = R.drawable.ic_null,
                     categoryType = "운동",
                     onClick = {},
-                    restTime = "25",
-                    focusTime = "25",
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = MnSpacing.small),
                 )
 
                 MnBoxButton(
