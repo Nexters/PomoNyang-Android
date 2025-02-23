@@ -4,7 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -68,23 +72,22 @@ private fun CategoryBottomSheetContents(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
-        categoryList.chunked(2).forEach { rowCategoryModel ->
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
-            ) {
-                rowCategoryModel.forEach { pomodoroCategoryModel ->
-                    MnSelectListItem(
-                        modifier = Modifier.weight(0.5f),
-                        iconResource = pomodoroCategoryModel.categoryType.iconRes,
-                        categoryType = pomodoroCategoryModel.title,
-                        onClick = { onCategoryClick(pomodoroCategoryModel.categoryNo) },
-                        isSelected = pomodoroCategoryModel.categoryNo == currentSelectedCategoryNo,
-                    )
+        val gridCells = if (categoryList.size == 1) GridCells.Fixed(1) else GridCells.Fixed(2)
 
-                    if (rowCategoryModel.size == 1) {
-                        Spacer(Modifier.weight(0.5f))
-                    }
-                }
+        LazyVerticalGrid(
+            columns = gridCells,
+            horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
+            verticalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        ) {
+            items(categoryList.size) { index ->
+                val item = categoryList[index]
+                MnSelectListItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    iconResource = item.categoryType.iconRes,
+                    categoryType = item.title,
+                    onClick = { onCategoryClick(item.categoryNo) },
+                    isSelected = item.categoryNo == currentSelectedCategoryNo,
+                )
             }
         }
     }
