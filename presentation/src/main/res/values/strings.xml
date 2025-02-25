@@ -13,7 +13,7 @@
     <string name="tooltip_time_content">눌러서 시간을 조정할 수 있어요</string>
     <string name="tooltip_rest_content">푹 쉬었나요?\n힘내서 다시 집중할까냥?</string>
     <string name="minute">%d분</string>
-    <string name="change_category_title">카테고리 변경</string>
+    <string name="change_category_title">카테고리</string>
     <string name="confirm">확인</string>
     <string name="onboarding_start">시작하기</string>
     <string-array name="onboarding_guide_title">
