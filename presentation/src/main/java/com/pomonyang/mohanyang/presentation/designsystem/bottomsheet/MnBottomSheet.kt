@@ -25,7 +25,6 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectL
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
-import com.pomonyang.mohanyang.presentation.util.clickableSingle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,6 +35,7 @@ fun MnBottomSheet(
     subTitle: String? = null,
     textStyles: MnBottomSheetTextStyles = MnBottomSheetDefaults.textStyles(),
     colors: MnBottomSheetColors = MnBottomSheetDefaults.colors(),
+    headerContents: @Composable () -> Unit = {},
     contents: @Composable () -> Unit,
 ) {
     ModalBottomSheet(
@@ -48,11 +48,10 @@ fun MnBottomSheet(
             title = title,
             subTitle = subTitle,
             textStyles = textStyles,
-            onCloseClick = onDismissRequest,
             colors = colors,
-        ) {
-            contents()
-        }
+            headerContents = headerContents,
+            contents = contents,
+        )
     }
 }
 
@@ -60,10 +59,10 @@ fun MnBottomSheet(
 private fun BottomSheetContent(
     textStyles: MnBottomSheetTextStyles,
     colors: MnBottomSheetColors,
-    onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
     subTitle: String? = null,
+    headerContents: @Composable () -> Unit,
     contents: @Composable () -> Unit,
 ) {
     Column(modifier = modifier) {
@@ -83,13 +82,7 @@ private fun BottomSheetContent(
                     maxLines = 1,
                 )
             }
-
-            MnMediumIcon(
-                resourceId = R.drawable.ic_close,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickableSingle(activeRippleEffect = false) { onCloseClick() },
-            )
+            headerContents()
         }
 
         subTitle?.let {
@@ -101,8 +94,6 @@ private fun BottomSheetContent(
                 modifier = Modifier.padding(start = 20.dp),
             )
         }
-
-        Spacer(Modifier.height(16.dp))
 
         contents()
     }
@@ -117,8 +108,15 @@ private fun MnModalBottomSheetPreview() {
             modifier = Modifier.fillMaxWidth(),
             title = "Dialog Title",
             subTitle = "Dialog SubText를 입력해주세요.\n최대 2줄을 넘지 않도록 해요.",
+            headerContents = {
+                MnMediumIcon(resourceId = R.drawable.ic_close)
+            },
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MnSpacing.medium),
+            ) {
                 MnSelectListItem(
                     iconResource = R.drawable.ic_null,
                     categoryType = "기본",
