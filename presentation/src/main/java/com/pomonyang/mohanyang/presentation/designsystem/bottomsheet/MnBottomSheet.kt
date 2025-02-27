@@ -78,7 +78,7 @@ private fun BottomSheetContent(
                     text = it,
                     style = textStyles.titleTextStyle,
                     color = colors.titleColor,
-                    modifier = Modifier.padding(start = 20.dp),
+                    modifier = Modifier.padding(start = MnSpacing.xLarge),
                     maxLines = 1,
                 )
             }
@@ -91,9 +91,11 @@ private fun BottomSheetContent(
                 maxLines = 2,
                 style = textStyles.subTitleTextStyle,
                 color = colors.subTitleColor,
-                modifier = Modifier.padding(start = 20.dp),
+                modifier = Modifier.padding(start = MnSpacing.xLarge),
             )
         }
+
+        Spacer(Modifier.height(MnSpacing.xLarge))
 
         contents()
     }

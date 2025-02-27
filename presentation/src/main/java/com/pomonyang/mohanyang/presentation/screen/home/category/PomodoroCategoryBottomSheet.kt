@@ -45,8 +45,7 @@ fun PomodoroCategoryBottomSheet(
             modifier = Modifier.padding(
                 start = MnSpacing.large,
                 end = MnSpacing.large,
-                top = MnSpacing.xLarge,
-                bottom = 36.dp,
+                bottom = MnSpacing.xLarge,
             ),
             categoryList = categoryList,
             currentSelectedCategoryNo = initialCategoryNo,
