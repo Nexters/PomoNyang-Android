@@ -22,8 +22,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -33,6 +39,8 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
@@ -44,24 +52,80 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnIconSize
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
+import com.pomonyang.mohanyang.presentation.screen.onboarding.naming.ValidationResult
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
+import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
+import com.pomonyang.mohanyang.presentation.util.noRippleClickable
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun CategorySettingRoute(
     categoryNo: Int?,
     modifier: Modifier = Modifier,
+    categorySettingViewModel: CategorySettingViewModel = hiltViewModel(),
+    onBackClick: () -> Unit,
 ) {
-    CategorySettingScreen(categoryNo = categoryNo)
+    var showDialog by remember { mutableStateOf(false) }
+
+    val state by categorySettingViewModel.state.collectAsStateWithLifecycle()
+
+    categorySettingViewModel.effects.collectWithLifecycle { effect ->
+        when (effect) {
+            CategorySettingSideEffect.GoToPomodoroSetting -> {
+                onBackClick()
+            }
+
+            CategorySettingSideEffect.DismissCategoryIconBottomSheet -> {
+                showDialog = false
+            }
+
+            CategorySettingSideEffect.ShowCategoryIconBottomSheet -> {
+                showDialog = true
+            }
+        }
+    }
+
+    if (showDialog) {
+        CategoryIconBottomSheet(
+            onAction = categorySettingViewModel::handleEvent,
+            icons = state.categoryIcons.toImmutableList(),
+            selectedIcon = state.selectedCategoryIcon,
+        )
+    }
+
+    CategorySettingScreen(
+        categoryNo = categoryNo,
+        categoryName = state.categoryName,
+        categoryIconResourceId = state.selectedCategoryIcon,
+        onAction = categorySettingViewModel::handleEvent,
+        onBackClick = onBackClick,
+        categoryNameVerifier = categorySettingViewModel::validateCategoryName,
+        modifier = modifier,
+    )
 }
 
 @Composable
 fun CategorySettingScreen(
-    modifier: Modifier = Modifier,
     categoryNo: Int?,
+    categoryName: String,
+    categoryIconResourceId: Int,
+    onAction: (CategorySettingEvent) -> Unit,
+    categoryNameVerifier: (String) -> ValidationResult,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    var name by remember { mutableStateOf(categoryName) }
+    var nameValidationResult by remember {
+        mutableStateOf(ValidationResult(name.isNotBlank()))
+    }
+
+    LaunchedEffect(name) {
+        nameValidationResult = categoryNameVerifier(name)
+    }
 
     Column(
         modifier = modifier
@@ -78,7 +142,7 @@ fun CategorySettingScreen(
         MnTopAppBar(
             navigationIcon = {
                 MnIconButton(
-                    onClick = {},
+                    onClick = onBackClick,
                     iconResourceId = R.drawable.ic_chevron_left,
                 )
             },
@@ -91,10 +155,11 @@ fun CategorySettingScreen(
             },
         )
 
-        CategorySelectIcon(
+        CategoryEditIcon(
             modifier = Modifier.padding(top = MnSpacing.threeXLarge, bottom = MnSpacing.twoXLarge),
-            categoryNo = 1,
-            onClickEdit = {},
+            categoryNo = categoryNo,
+            categoryResourceId = categoryIconResourceId,
+            onClickEdit = { onAction.invoke(CategorySettingEvent.ClickEdit(categoryNo = categoryNo)) },
         )
 
         MnTextField(
@@ -102,8 +167,11 @@ fun CategorySettingScreen(
                 .padding(horizontal = MnSpacing.xLarge),
             backgroundColor = MnColor.White,
             textStyle = MnTheme.typography.bodySemiBold,
-            value = "",
-            onValueChange = {},
+            hint = stringResource(id = R.string.category_setting_placeholder),
+            value = name,
+            onValueChange = { value -> name = value },
+            errorMessage = nameValidationResult.message,
+            isError = nameValidationResult.isValid.not(),
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -112,23 +180,26 @@ fun CategorySettingScreen(
             modifier = Modifier.fillMaxWidth(),
             containerPadding = PaddingValues(MnSpacing.xLarge),
             text = stringResource(id = R.string.complete),
-            onClick = { /*TODO*/ },
+            onClick = { onAction.invoke(CategorySettingEvent.ClickConfirm(categoryName = name)) },
             colors = MnBoxButtonColorType.primary,
             styles = MnBoxButtonStyles.large,
+            isEnabled = nameValidationResult.isValid,
         )
     }
 }
 
 @Composable
-private fun CategorySelectIcon(
-    categoryNo: Int,
+private fun CategoryEditIcon(
+    categoryNo: Int?,
+    categoryResourceId: Int,
     onClickEdit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .wrapContentSize()
-            .semantics { role = Role.Button },
+            .semantics { role = Role.Button }
+            .noRippleClickable { onClickEdit() },
     ) {
         Box(
             modifier = Modifier
@@ -139,9 +210,10 @@ private fun CategorySelectIcon(
                 .padding(MnSpacing.xLarge),
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_null),
+                painter = painterResource(id = categoryResourceId),
                 contentDescription = "categoryIcon",
                 modifier = Modifier.size(40.dp),
+                tint = Color.Unspecified,
             )
         }
         Box(
@@ -168,7 +240,11 @@ private fun CategorySelectIcon(
 @Composable
 fun PreviewCategorySelectIcon() {
     MnTheme {
-        CategorySelectIcon(categoryNo = 1, onClickEdit = {})
+        CategoryEditIcon(
+            categoryNo = 1,
+            categoryResourceId = R.drawable.ic_category_default,
+            onClickEdit = {},
+        )
     }
 }
 
@@ -178,7 +254,12 @@ fun PreviewCategorySettingScreen() {
     MnTheme {
         CategorySettingScreen(
             categoryNo = 1,
+            categoryName = "test",
+            categoryIconResourceId = R.drawable.ic_book,
+            onAction = {},
+            onBackClick = {},
             modifier = Modifier,
+            categoryNameVerifier = { s -> ValidationResult(true) },
         )
     }
 }
