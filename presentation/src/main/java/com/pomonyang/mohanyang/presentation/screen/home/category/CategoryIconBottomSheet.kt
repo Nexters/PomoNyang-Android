@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
@@ -58,14 +56,10 @@ private fun CategoryIconBottomSheetContent(
     selectedIcon: Int?,
     modifier: Modifier = Modifier,
 ) {
-    val cellCount = 4
-    val contentWidth = (LocalConfiguration.current.screenWidthDp - (MnSpacing.medium.value + MnSpacing.xLarge.value) * 2)
-    val cellSize = contentWidth / cellCount
-
     LazyVerticalGrid(
         modifier = modifier
             .padding(MnSpacing.medium),
-        columns = GridCells.Adaptive(cellSize.dp),
+        columns = GridCells.Fixed(4),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
         contentPadding = PaddingValues(MnSpacing.xLarge),
@@ -73,8 +67,6 @@ private fun CategoryIconBottomSheetContent(
         items(icons.size) { index ->
             val icon = icons[index]
             CategoryIconKey(
-                modifier = Modifier
-                    .aspectRatio(1f),
                 iconId = icon,
                 isSelected = selectedIcon == icon,
                 onClick = { onAction.invoke(CategorySettingEvent.SelectIcon(icon)) },
