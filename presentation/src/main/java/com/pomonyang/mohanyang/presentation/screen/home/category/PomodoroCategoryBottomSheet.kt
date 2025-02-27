@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
+import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectListItem
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
@@ -80,7 +81,16 @@ private fun CategoryBottomSheetHeader(
         )
         MnIconButton(
             onClick = {
-                onAction.invoke(PomodoroSettingEvent.ClickMenu)
+                // TODO 임시 라우팅 처리, 액션바 구현 후 변경 필요
+                onAction.invoke(
+                    PomodoroSettingEvent.ClickCategoryEdit(
+                        PomodoroCategoryModel(
+                            categoryNo = 1,
+                            title = "임시",
+                            categoryType = PomodoroCategoryType.DEFAULT,
+                        ),
+                    ),
+                )
             },
             iconResourceId = R.drawable.ic_ellipsis,
         )
