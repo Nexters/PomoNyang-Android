@@ -54,10 +54,10 @@ class PomodoroSettingViewModel @Inject constructor(
                 updateState { copy(showCategoryBottomSheet = false) }
             }
 
-            is PomodoroSettingEvent.ClickCategoryConfirmButton -> {
+            is PomodoroSettingEvent.SelectCategory -> {
                 handleCategoryConfirmButton(event)
                 viewModelScope.launch {
-                    pomodoroSettingRepository.updateRecentUseCategoryNo(event.confirmCategoryNo)
+                    pomodoroSettingRepository.updateRecentUseCategoryNo(event.categoryNo)
                 }
                 updateState { copy(showCategoryBottomSheet = false) }
             }
@@ -80,9 +80,9 @@ class PomodoroSettingViewModel @Inject constructor(
         }
     }
 
-    private fun handleCategoryConfirmButton(event: PomodoroSettingEvent.ClickCategoryConfirmButton) {
-        if (state.value.selectedSettingModel.categoryNo != event.confirmCategoryNo) {
-            val title = state.value.categoryList.find { it.categoryNo == event.confirmCategoryNo }?.title
+    private fun handleCategoryConfirmButton(event: PomodoroSettingEvent.SelectCategory) {
+        if (state.value.selectedSettingModel.categoryNo != event.categoryNo) {
+            val title = state.value.categoryList.find { it.categoryNo == event.categoryNo }?.title
             setEffect(PomodoroSettingSideEffect.ShowSnackBar("$title 카테고리로 변경했어요", R.drawable.ic_check))
         }
     }

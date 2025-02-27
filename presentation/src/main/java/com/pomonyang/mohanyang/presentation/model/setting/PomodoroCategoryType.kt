@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.model.setting
 
 import com.mohanyang.presentation.R
 
+// TODO 이거 [CategoryIcon] 으로 교체 해야 함
 enum class PomodoroCategoryType(
     val iconRes: Int,
     val kor: Int,

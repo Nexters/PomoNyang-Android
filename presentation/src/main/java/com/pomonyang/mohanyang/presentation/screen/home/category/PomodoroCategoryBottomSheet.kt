@@ -8,10 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,8 +33,6 @@ fun PomodoroCategoryBottomSheet(
     initialCategoryNo: Int,
     modifier: Modifier = Modifier,
 ) {
-    var currentSelectedCategoryNo by remember { mutableIntStateOf(initialCategoryNo) }
-
     MnBottomSheet(
         onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
         modifier = modifier,
@@ -55,10 +49,7 @@ fun PomodoroCategoryBottomSheet(
                 bottom = 36.dp,
             ),
             categoryList = categoryList,
-            currentSelectedCategoryNo = currentSelectedCategoryNo,
-            onCategoryClick = {
-                currentSelectedCategoryNo = it
-            },
+            currentSelectedCategoryNo = initialCategoryNo,
             onAction = onAction,
         )
     }
@@ -101,7 +92,6 @@ private fun CategoryBottomSheetHeader(
 private fun CategoryBottomSheetContents(
     categoryList: ImmutableList<PomodoroCategoryModel>,
     currentSelectedCategoryNo: Int,
-    onCategoryClick: (Int) -> Unit,
     onAction: (PomodoroSettingEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -122,7 +112,7 @@ private fun CategoryBottomSheetContents(
                     modifier = Modifier.fillMaxWidth(),
                     iconResource = item.categoryType.iconRes,
                     categoryType = item.title,
-                    onClick = { onCategoryClick(item.categoryNo) },
+                    onClick = { onAction(PomodoroSettingEvent.SelectCategory(item.categoryNo)) },
                     isSelected = item.categoryNo == currentSelectedCategoryNo,
                 )
             }
@@ -130,7 +120,8 @@ private fun CategoryBottomSheetContents(
     }
 }
 
-private class CategoryPreviewParameterProvider : PreviewParameterProvider<List<PomodoroCategoryModel>> {
+private class CategoryPreviewParameterProvider :
+    PreviewParameterProvider<List<PomodoroCategoryModel>> {
     override val values = sequenceOf(
         persistentListOf(
             PomodoroCategoryModel(
@@ -190,7 +181,6 @@ private fun CategoryBottomSheetPreview(
         CategoryBottomSheetContents(
             categoryList = categoryList,
             currentSelectedCategoryNo = 1,
-            onCategoryClick = {},
             onAction = {},
         )
     }
