@@ -9,6 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.pomonyang.mohanyang.presentation.screen.home.category.CategoryIcon
+import com.pomonyang.mohanyang.presentation.screen.home.category.CategorySettingRoute
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.home.time.PomodoroTimeSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
@@ -26,6 +28,13 @@ internal data class TimeSetting(
     val isFocusTime: Boolean,
     val initialTime: Int,
     val categoryName: String,
+)
+
+@Serializable
+internal data class CategorySetting(
+    val categoryNo: Int?,
+    val categoryName: String = "",
+    val categoryIconId: Int = CategoryIcon.DEFAULT.resourceId,
 )
 
 fun NavGraphBuilder.homeScreen(
@@ -57,6 +66,18 @@ fun NavGraphBuilder.homeScreen(
                 goToMyPage = {
                     navHostController.navigate(MyPage)
                 },
+                goToCategoryEdit = { category ->
+                    navHostController.navigate(
+                        CategorySetting(
+                            categoryNo = category.categoryNo,
+                            categoryName = category.title,
+                            categoryIconId = category.categoryType.iconRes,
+                        ),
+                    )
+                },
+                goToCategoryCreate = {
+                    navHostController.navigate(CategorySetting(categoryNo = null))
+                },
             )
         }
 
@@ -76,6 +97,17 @@ fun NavGraphBuilder.homeScreen(
                 categoryName = routeData.categoryName,
                 onShowSnackbar = onShowSnackbar,
             ) {
+                navHostController.popBackStack()
+            }
+        }
+
+        composable<CategorySetting>(
+            popEnterTransition = {
+                EnterTransition.None
+            },
+        ) { backStackEntry ->
+            val routeData = backStackEntry.toRoute<CategorySetting>()
+            CategorySettingRoute(categoryNo = routeData.categoryNo) {
                 navHostController.popBackStack()
             }
         }
