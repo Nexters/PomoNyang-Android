@@ -38,8 +38,6 @@ class PomodoroSettingViewModel @Inject constructor(
                 handleTimeSetting(isFocusTime = false)
             }
 
-            PomodoroSettingEvent.ClickMyInfo -> TODO()
-
             PomodoroSettingEvent.ClickStartPomodoroSetting -> {
                 setEffect(PomodoroSettingSideEffect.GoToPomodoro)
             }
