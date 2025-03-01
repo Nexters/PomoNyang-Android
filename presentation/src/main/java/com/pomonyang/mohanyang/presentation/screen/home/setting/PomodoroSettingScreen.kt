@@ -68,6 +68,8 @@ fun PomodoroSettingRoute(
     goToPomodoro: () -> Unit,
     goTimeSetting: (isFocusTime: Boolean, initialTime: Int, categoryName: String) -> Unit,
     goToMyPage: () -> Unit,
+    goToCategoryEdit: (PomodoroCategoryModel) -> Unit,
+    goToCategoryCreate: () -> Unit,
     modifier: Modifier = Modifier,
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel(),
 ) {
@@ -81,6 +83,8 @@ fun PomodoroSettingRoute(
             is PomodoroSettingSideEffect.GoTimeSetting -> goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
             PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro()
             PomodoroSettingSideEffect.GoToMyPage -> goToMyPage()
+            PomodoroSettingSideEffect.GoToCategoryCreate -> goToCategoryCreate()
+            is PomodoroSettingSideEffect.GoToCategoryEdit -> goToCategoryEdit(effect.category)
         }
     }
 

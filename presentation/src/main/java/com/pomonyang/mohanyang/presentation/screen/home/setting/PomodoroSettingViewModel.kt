@@ -69,6 +69,14 @@ class PomodoroSettingViewModel @Inject constructor(
             PomodoroSettingEvent.ClickMenu -> {
                 setEffect(PomodoroSettingSideEffect.GoToMyPage)
             }
+
+            is PomodoroSettingEvent.ClickCategoryEdit -> {
+                setEffect(PomodoroSettingSideEffect.GoToCategoryEdit(category = event.category))
+            }
+
+            PomodoroSettingEvent.ClickCategoryCreate -> {
+                setEffect(PomodoroSettingSideEffect.GoToCategoryCreate)
+            }
         }
     }
 
