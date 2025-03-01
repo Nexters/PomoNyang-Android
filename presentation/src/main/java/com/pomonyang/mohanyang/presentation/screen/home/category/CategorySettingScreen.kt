@@ -101,7 +101,6 @@ fun CategorySettingRoute(
         categoryIconResourceId = state.selectedCategoryIconId,
         onAction = categorySettingViewModel::handleEvent,
         onBackClick = onBackClick,
-        categoryNameVerifier = CategoryNameVerifier::validateCategoryName,
         modifier = modifier,
     )
 }
@@ -112,7 +111,6 @@ private fun CategorySettingScreen(
     categoryName: String,
     categoryIconResourceId: Int,
     onAction: (CategorySettingEvent) -> Unit,
-    categoryNameVerifier: (String) -> ValidationResult,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -261,7 +259,6 @@ fun PreviewCategorySettingScreen() {
             onAction = {},
             onBackClick = {},
             modifier = Modifier,
-            categoryNameVerifier = { s -> ValidationResult(true) },
         )
     }
 }
