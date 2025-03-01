@@ -59,7 +59,6 @@ import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.toImmutableList
-import timber.log.Timber
 
 @Composable
 fun CategorySettingRoute(
@@ -102,7 +101,7 @@ fun CategorySettingRoute(
         categoryIconResourceId = state.selectedCategoryIconId,
         onAction = categorySettingViewModel::handleEvent,
         onBackClick = onBackClick,
-        categoryNameVerifier = categorySettingViewModel::validateCategoryName,
+        categoryNameVerifier = CategoryNameVerifier::validateCategoryName,
         modifier = modifier,
     )
 }
@@ -121,12 +120,13 @@ private fun CategorySettingScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     var name by rememberSaveable { mutableStateOf(categoryName) }
-    var nameValidationResult by rememberSaveable {
+    val categoryNameValidator = remember { CategoryNameVerifier }
+    var nameValidationResult by remember {
         mutableStateOf(ValidationResult(name.isNotBlank()))
     }
 
     LaunchedEffect(name) {
-        nameValidationResult = categoryNameVerifier(name)
+        nameValidationResult = categoryNameValidator.validateCategoryName(name)
     }
 
     Column(
@@ -237,8 +237,6 @@ private fun CategoryEditIcon(
         }
     }
 }
-
-
 
 @Preview
 @Composable
