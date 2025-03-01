@@ -3,13 +3,14 @@ package com.pomonyang.mohanyang.presentation.screen.home.category
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 data class CategorySettingState(
     val categoryNo: Int? = null,
     val categoryName: String = "",
-    val selectedCategoryIcon: Int = CategoryIcon.DEFAULT.resourceId,
-    val categoryIcons: List<Int> = CategoryIcon.entries.map { it.resourceId }.toImmutableList(),
+    val selectedCategoryIconId: Int = CategoryIcon.DEFAULT.resourceId,
+    val categoryIcons: ImmutableList<Int> = CategoryIcon.entries.map { it.resourceId }.toImmutableList(),
 ) : ViewState {
     fun isCreateMode(): Boolean = categoryNo == null
 }

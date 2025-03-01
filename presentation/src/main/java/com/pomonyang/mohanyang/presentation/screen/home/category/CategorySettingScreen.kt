@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +59,7 @@ import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.toImmutableList
+import timber.log.Timber
 
 @Composable
 fun CategorySettingRoute(
@@ -90,14 +92,14 @@ fun CategorySettingRoute(
         CategoryIconBottomSheet(
             onAction = categorySettingViewModel::handleEvent,
             icons = state.categoryIcons.toImmutableList(),
-            selectedIcon = state.selectedCategoryIcon,
+            selectedIcon = state.selectedCategoryIconId,
         )
     }
 
     CategorySettingScreen(
         categoryNo = categoryNo,
         categoryName = state.categoryName,
-        categoryIconResourceId = state.selectedCategoryIcon,
+        categoryIconResourceId = state.selectedCategoryIconId,
         onAction = categorySettingViewModel::handleEvent,
         onBackClick = onBackClick,
         categoryNameVerifier = categorySettingViewModel::validateCategoryName,
@@ -106,7 +108,7 @@ fun CategorySettingRoute(
 }
 
 @Composable
-fun CategorySettingScreen(
+private fun CategorySettingScreen(
     categoryNo: Int?,
     categoryName: String,
     categoryIconResourceId: Int,
@@ -118,8 +120,8 @@ fun CategorySettingScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var name by remember { mutableStateOf(categoryName) }
-    var nameValidationResult by remember {
+    var name by rememberSaveable { mutableStateOf(categoryName) }
+    var nameValidationResult by rememberSaveable {
         mutableStateOf(ValidationResult(name.isNotBlank()))
     }
 
@@ -235,6 +237,8 @@ private fun CategoryEditIcon(
         }
     }
 }
+
+
 
 @Preview
 @Composable

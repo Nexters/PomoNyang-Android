@@ -65,11 +65,11 @@ private fun CategoryIconBottomSheetContent(
         contentPadding = PaddingValues(MnSpacing.xLarge),
     ) {
         items(icons.size) { index ->
-            val icon = icons[index]
+            val iconId = icons[index]
             CategoryIconKey(
-                iconId = icon,
-                isSelected = selectedIcon == icon,
-                onClick = { onAction.invoke(CategorySettingEvent.SelectIcon(icon)) },
+                iconId = iconId,
+                isSelected = selectedIcon == iconId,
+                onClick = { onAction.invoke(CategorySettingEvent.SelectIcon(iconId)) },
             )
         }
     }
@@ -141,9 +141,11 @@ private fun PreviewCategoryBottomSheetContent() {
 @Preview
 @Composable
 private fun PreviewCategoryBottomSheet() {
-    CategoryIconBottomSheet(
-        onAction = {},
-        icons = CategoryIcon.entries.map { it.resourceId }.toImmutableList(),
-        selectedIcon = R.drawable.ic_focus,
-    )
+    MnTheme {
+        CategoryIconBottomSheet(
+            onAction = {},
+            icons = CategoryIcon.entries.map { it.resourceId }.toImmutableList(),
+            selectedIcon = R.drawable.ic_focus,
+        )
+    }
 }
