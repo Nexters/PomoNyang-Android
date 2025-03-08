@@ -3,7 +3,6 @@ package com.pomonyang.mohanyang.presentation.screen.home.category
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -21,12 +20,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
-import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectListItem
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
-import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryBottomSheetHeader
+import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryBottomSheetHeaderContents
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryManagementControls
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryManageState
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingEvent
@@ -48,7 +46,7 @@ fun PomodoroCategoryBottomSheet(
         modifier = modifier,
         title = stringResource(R.string.change_category_title),
         headerContents = {
-            CategoryBottomSheetHeader(
+            CategoryBottomSheetHeaderContents(
                 onEditClick = {
                     onAction.invoke(PomodoroSettingEvent.ClickCategoryCreate)
                 },

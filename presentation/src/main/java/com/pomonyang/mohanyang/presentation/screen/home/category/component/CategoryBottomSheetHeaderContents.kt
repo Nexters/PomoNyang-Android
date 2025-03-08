@@ -10,7 +10,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButto
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
 @Composable
-fun CategoryBottomSheetHeader(
+fun CategoryBottomSheetHeaderContents(
     onEditClick: () -> Unit,
     onMoreMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -34,7 +34,7 @@ fun CategoryBottomSheetHeader(
 @Composable
 private fun CategoryBottomSheetHeaderPreview() {
     MnTheme {
-        CategoryBottomSheetHeader(
+        CategoryBottomSheetHeaderContents(
             onEditClick = {},
             onMoreMenuClick = {},
         )
