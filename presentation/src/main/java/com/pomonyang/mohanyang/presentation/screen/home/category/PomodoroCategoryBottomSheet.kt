@@ -26,6 +26,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectL
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryBottomSheetHeader
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryManagementControls
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryManageState
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingEvent
@@ -41,6 +42,7 @@ fun PomodoroCategoryBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     var showMoreMenuComponent by rememberSaveable { mutableStateOf(false) }
+    var categoryManageState: CategoryManageState by rememberSaveable { mutableStateOf(CategoryManageState.DEFAULT) }
     MnBottomSheet(
         onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
         modifier = modifier,
@@ -65,31 +67,14 @@ fun PomodoroCategoryBottomSheet(
             categoryList = categoryList,
             showMoreMenuComponent = showMoreMenuComponent,
             currentSelectedCategoryNo = initialCategoryNo,
+            onDeleteClick = { categoryManageState = CategoryManageState.DELETE },
+            onEditClick = { categoryManageState = CategoryManageState.EDIT },
             onAction = onAction,
         )
     }
 }
 
-@Composable
-private fun CategoryBottomSheetHeader(
-    onEditClick: () -> Unit,
-    onMoreMenuClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        MnIconButton(
-            onClick = onEditClick,
-            iconResourceId = R.drawable.ic_plus,
-        )
-        MnIconButton(
-            onClick = onMoreMenuClick,
-            iconResourceId = R.drawable.ic_ellipsis,
-        )
-    }
-}
+
 
 @Composable
 private fun CategoryBottomSheetContents(
@@ -97,9 +82,10 @@ private fun CategoryBottomSheetContents(
     currentSelectedCategoryNo: Int,
     showMoreMenuComponent: Boolean,
     onAction: (PomodoroSettingEvent) -> Unit,
+    onDeleteClick: () -> Unit,
+    onEditClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var categoryManageState: CategoryManageState by rememberSaveable { mutableStateOf(CategoryManageState.DEFAULT) }
     Box(
         modifier = modifier,
     ) {
@@ -130,8 +116,8 @@ private fun CategoryBottomSheetContents(
         if (showMoreMenuComponent) {
             CategoryManagementControls(
                 modifier = Modifier.align(Alignment.TopEnd),
-                onDeleteClick = { categoryManageState = CategoryManageState.DELETE },
-                onEditClick = { categoryManageState = CategoryManageState.EDIT },
+                onDeleteClick = onDeleteClick,
+                onEditClick = onEditClick,
             )
         }
     }
@@ -200,17 +186,9 @@ private fun CategoryBottomSheetPreview(
             currentSelectedCategoryNo = 1,
             onAction = {},
             showMoreMenuComponent = true,
+            onDeleteClick = {},
+            onEditClick = {},
         )
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun CategoryBottomSheetHeaderPreview() {
-    MnTheme {
-        CategoryBottomSheetHeader(
-            onEditClick = {},
-            onMoreMenuClick = {},
-        )
-    }
-}
