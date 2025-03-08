@@ -184,3 +184,13 @@ private fun CategoryBottomSheetPreview(
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun CategoryBottomSheetHeaderPreview() {
+    MnTheme {
+        CategoryBottomSheetHeader(
+            onAction = {},
+        )
+    }
+}
