@@ -22,7 +22,7 @@ object MnBottomSheetDefaults {
     @Composable
     fun textStyles(
         titleTextStyle: TextStyle = MnTheme.typography.header3,
-        subTitleTextStyle: TextStyle = MnTheme.typography.subBodyRegular,
+        subTitleTextStyle: TextStyle = MnTheme.typography.bodyRegular,
     ) = MnBottomSheetTextStyles(
         titleTextStyle = titleTextStyle,
         subTitleTextStyle = subTitleTextStyle,
