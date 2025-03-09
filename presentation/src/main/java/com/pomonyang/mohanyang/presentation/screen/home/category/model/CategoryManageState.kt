@@ -14,4 +14,6 @@ enum class CategoryManageState(
     fun isEdit() = this == EDIT
 
     fun isDefault() = this == DEFAULT
+
+    fun isDelete() = this == DELETE
 }

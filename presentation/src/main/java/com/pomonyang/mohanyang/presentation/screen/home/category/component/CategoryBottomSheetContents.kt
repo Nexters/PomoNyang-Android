@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -25,7 +29,8 @@ fun CategoryBottomSheetContents(
     categoryList: ImmutableList<PomodoroCategoryModel>,
     categoryManageState: CategoryManageState,
     currentSelectedCategoryNo: Int,
-    onCategoryClick: (Int) -> Unit,
+    onCategorySelected: (PomodoroCategoryModel) -> Unit,
+    onCategoryEdit: (PomodoroCategoryModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -40,13 +45,22 @@ fun CategoryBottomSheetContents(
         ) {
             items(categoryList.size) { index ->
                 val item = categoryList[index]
-                val isNonEditableItem = index == 0 && categoryManageState.isEdit()
+                val isNonEditableItem = index == 0 && categoryManageState.isDefault().not()
+                var selected by remember(categoryManageState) { mutableStateOf(item.categoryNo == currentSelectedCategoryNo) }
                 MnSelectListItem(
                     modifier = Modifier.fillMaxWidth(),
                     iconResource = if (isNonEditableItem) R.drawable.ic_lock else item.categoryType.iconRes,
                     categoryType = item.title,
-                    onClick = { onCategoryClick(item.categoryNo) },
-                    isSelected = item.categoryNo == currentSelectedCategoryNo,
+                    onClick = {
+                        when (categoryManageState) {
+                            CategoryManageState.DEFAULT -> onCategorySelected(item)
+                            CategoryManageState.EDIT -> onCategoryEdit(item)
+                            CategoryManageState.DELETE -> {
+                                selected = selected.not()
+                            }
+                        }
+                    },
+                    isSelected = if (categoryManageState.isDefault() || categoryManageState.isDelete()) selected else false,
                     isDisabled = isNonEditableItem,
                 )
             }
@@ -116,7 +130,8 @@ private fun CategoryBottomSheetPreview(
             categoryList = categoryList,
             categoryManageState = CategoryManageState.EDIT,
             currentSelectedCategoryNo = 1,
-            onCategoryClick = {},
+            onCategorySelected = {},
+            onCategoryEdit = {},
         )
     }
 }

@@ -5,10 +5,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -21,6 +23,7 @@ import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
+import com.pomonyang.mohanyang.presentation.designsystem.toast.MnToastSnackbarHost
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
@@ -32,6 +35,7 @@ import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingE
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 
 @Composable
 fun PomodoroCategoryBottomSheet(
@@ -76,6 +80,8 @@ private fun PomodoroCategoryBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     val subTitle = if (categoryManageState.isEdit()) stringResource(R.string.change_category_edit_sub_title) else null
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     MnBottomSheet(
         onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
         modifier = modifier,
@@ -92,7 +98,7 @@ private fun PomodoroCategoryBottomSheet(
             } else {
                 MnTextButton(
                     text = stringResource(R.string.change_category_title_content),
-                    styles = MnTextButtonStyles.large,
+                    styles = MnTextButtonStyles.medium,
                     onClick = onCancelClick,
                 )
             }
@@ -104,7 +110,16 @@ private fun PomodoroCategoryBottomSheet(
                 categoryManageState = categoryManageState,
                 categoryList = categoryList,
                 currentSelectedCategoryNo = initialCategoryNo,
-                onCategoryClick = { onAction(PomodoroSettingEvent.SelectCategory(it)) },
+                onCategorySelected = { onAction(PomodoroSettingEvent.SelectCategory(it.categoryNo)) },
+                onCategoryEdit = {
+                    if (it.categoryType == PomodoroCategoryType.DEFAULT) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("기본 카테고리는 수정/삭제가 불가능합니다.")
+                        }
+                    } else {
+                        onAction(PomodoroSettingEvent.ClickCategoryEdit(it))
+                    }
+                },
             )
 
             AnimatedVisibility(
@@ -118,6 +133,11 @@ private fun PomodoroCategoryBottomSheet(
                     onEditClick = onEditClick,
                 )
             }
+
+            MnToastSnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
         }
     }
 }
