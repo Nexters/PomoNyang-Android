@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.home.category.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,11 +25,10 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
-import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.dropShadow
 
 @Composable
-fun CategoryManagementControls(
+fun CategoryActionMoreMenuList(
     modifier: Modifier = Modifier,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -68,8 +68,8 @@ private fun CategoryActionMenu(
         modifier = modifier
             .height(40.dp)
             .padding(start = MnSpacing.medium, end = MnSpacing.large)
-            .clickableSingle { onClick() },
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+            .clickable { onClick() },
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         MnMediumIcon(
@@ -93,7 +93,7 @@ private fun CategoryManagementControlsPreview() {
                 .size(500.dp)
                 .background(Color.Gray),
         ) {
-            CategoryManagementControls(
+            CategoryActionMoreMenuList(
                 onDeleteClick = {},
                 onEditClick = {},
             )

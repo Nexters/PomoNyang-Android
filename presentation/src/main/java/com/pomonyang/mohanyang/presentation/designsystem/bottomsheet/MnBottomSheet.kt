@@ -95,8 +95,6 @@ private fun BottomSheetContent(
             )
         }
 
-        Spacer(Modifier.height(MnSpacing.xLarge))
-
         contents()
     }
 }
