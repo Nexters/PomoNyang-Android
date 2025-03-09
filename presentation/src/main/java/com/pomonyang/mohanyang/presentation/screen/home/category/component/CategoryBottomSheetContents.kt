@@ -10,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectListItem
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryManageState
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -21,6 +23,7 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun CategoryBottomSheetContents(
     categoryList: ImmutableList<PomodoroCategoryModel>,
+    categoryManageState: CategoryManageState,
     currentSelectedCategoryNo: Int,
     onCategoryClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -37,12 +40,14 @@ fun CategoryBottomSheetContents(
         ) {
             items(categoryList.size) { index ->
                 val item = categoryList[index]
+                val isNonEditableItem = index == 0 && categoryManageState.isEdit()
                 MnSelectListItem(
                     modifier = Modifier.fillMaxWidth(),
-                    iconResource = item.categoryType.iconRes,
+                    iconResource = if (isNonEditableItem) R.drawable.ic_lock else item.categoryType.iconRes,
                     categoryType = item.title,
                     onClick = { onCategoryClick(item.categoryNo) },
                     isSelected = item.categoryNo == currentSelectedCategoryNo,
+                    isDisabled = isNonEditableItem,
                 )
             }
         }
@@ -109,6 +114,7 @@ private fun CategoryBottomSheetPreview(
     MnTheme {
         CategoryBottomSheetContents(
             categoryList = categoryList,
+            categoryManageState = CategoryManageState.EDIT,
             currentSelectedCategoryNo = 1,
             onCategoryClick = {},
         )

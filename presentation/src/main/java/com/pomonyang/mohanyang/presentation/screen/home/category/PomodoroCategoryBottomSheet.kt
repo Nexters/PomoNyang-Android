@@ -24,9 +24,9 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryActionMoreMenuList
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryBottomSheetContents
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryBottomSheetHeaderContents
-import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryActionMoreMenuList
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryManageState
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingEvent
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -48,9 +48,16 @@ fun PomodoroCategoryBottomSheet(
         categoryList = categoryList,
         initialCategoryNo = initialCategoryNo,
         onAction = onAction,
-        onDeleteClick = { categoryManageState = CategoryManageState.DELETE },
-        onEditClick = { categoryManageState = CategoryManageState.EDIT },
+        onDeleteClick = {
+            showMoreMenuComponent = false
+            categoryManageState = CategoryManageState.DELETE
+        },
+        onEditClick = {
+            showMoreMenuComponent = false
+            categoryManageState = CategoryManageState.EDIT
+        },
         onMoreMenuClick = { showMoreMenuComponent = showMoreMenuComponent.not() },
+        onCancelClick = { categoryManageState = CategoryManageState.DEFAULT },
         modifier = modifier,
     )
 }
@@ -65,6 +72,7 @@ private fun PomodoroCategoryBottomSheet(
     onDeleteClick: () -> Unit,
     onEditClick: () -> Unit,
     onMoreMenuClick: () -> Unit,
+    onCancelClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val subTitle = if (categoryManageState.isEdit()) stringResource(R.string.change_category_edit_sub_title) else null
@@ -85,7 +93,7 @@ private fun PomodoroCategoryBottomSheet(
                 MnTextButton(
                     text = stringResource(R.string.change_category_title_content),
                     styles = MnTextButtonStyles.large,
-                    onClick = {},
+                    onClick = onCancelClick,
                 )
             }
         },
@@ -93,6 +101,7 @@ private fun PomodoroCategoryBottomSheet(
         Box {
             CategoryBottomSheetContents(
                 modifier = Modifier.padding(MnSpacing.xLarge),
+                categoryManageState = categoryManageState,
                 categoryList = categoryList,
                 currentSelectedCategoryNo = initialCategoryNo,
                 onCategoryClick = { onAction(PomodoroSettingEvent.SelectCategory(it)) },
@@ -102,7 +111,7 @@ private fun PomodoroCategoryBottomSheet(
                 modifier = Modifier.align(Alignment.TopEnd),
                 visible = showMoreMenuComponent,
                 enter = fadeIn(),
-                exit = fadeOut()
+                exit = fadeOut(),
             ) {
                 CategoryActionMoreMenuList(
                     onDeleteClick = onDeleteClick,
@@ -138,6 +147,7 @@ private fun CategoryBottomSheetPreview(
             onDeleteClick = { },
             onEditClick = { },
             onMoreMenuClick = { },
+            onCancelClick = { },
         )
     }
 }
