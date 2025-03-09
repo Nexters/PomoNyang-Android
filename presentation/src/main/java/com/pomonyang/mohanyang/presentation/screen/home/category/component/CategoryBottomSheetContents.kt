@@ -1,20 +1,25 @@
 package com.pomonyang.mohanyang.presentation.screen.home.category.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
+import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
+import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
+import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectListItem
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
@@ -33,11 +38,17 @@ fun CategoryBottomSheetContents(
     onCategoryEdit: (PomodoroCategoryModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier,
-    ) {
-        val gridCells = if (categoryList.size == 1) GridCells.Fixed(1) else GridCells.Fixed(2)
+    val selectedItems = remember(categoryManageState) { mutableStateMapOf<Int, Boolean>() }
+    val gridCells = if (categoryList.size == 1) GridCells.Fixed(1) else GridCells.Fixed(2)
 
+    LaunchedEffect(categoryManageState) {
+        selectedItems.clear()
+        if (categoryManageState.isDefault()) {
+            selectedItems[currentSelectedCategoryNo] = true
+        }
+    }
+
+    Column(modifier = modifier) {
         LazyVerticalGrid(
             columns = gridCells,
             horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
@@ -46,17 +57,26 @@ fun CategoryBottomSheetContents(
             items(categoryList.size) { index ->
                 val item = categoryList[index]
                 val isNonEditableItem = index == 0 && categoryManageState.isDefault().not()
-                var selected by remember(categoryManageState) { mutableStateOf(item.categoryNo == currentSelectedCategoryNo) }
+                val selected = selectedItems.getOrElse(item.categoryNo) { false }
+                val iconResource = when {
+                    isNonEditableItem -> R.drawable.ic_lock
+                    categoryManageState.isDelete() -> if (selected) R.drawable.ic_check_circle else R.drawable.ic_circle
+                    else -> item.categoryType.iconRes
+                }
                 MnSelectListItem(
                     modifier = Modifier.fillMaxWidth(),
-                    iconResource = if (isNonEditableItem) R.drawable.ic_lock else item.categoryType.iconRes,
+                    iconResource = iconResource,
                     categoryType = item.title,
                     onClick = {
                         when (categoryManageState) {
                             CategoryManageState.DEFAULT -> onCategorySelected(item)
                             CategoryManageState.EDIT -> onCategoryEdit(item)
                             CategoryManageState.DELETE -> {
-                                selected = selected.not()
+                                if (item.categoryType == PomodoroCategoryType.DEFAULT) {
+                                    // TODO 기본 타입이 선택이 되었다면 스낵바로 알려줘야 함
+                                } else {
+                                    selectedItems[item.categoryNo] = !selected
+                                }
                             }
                         }
                     },
@@ -65,8 +85,20 @@ fun CategoryBottomSheetContents(
                 )
             }
         }
+
+        if (categoryManageState.isDelete()) {
+            MnBoxButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(id = R.string.change_category_delete_count, selectedItems.values.count { it }),
+                onClick = { /* TODO 삭제 동작 처리 */ },
+                colors = MnBoxButtonColorType.primary,
+                styles = MnBoxButtonStyles.large,
+                containerPadding = PaddingValues(top = 23.dp),
+            )
+        }
     }
 }
+
 
 private class CategoryPreviewParameterProvider :
     PreviewParameterProvider<List<PomodoroCategoryModel>> {
