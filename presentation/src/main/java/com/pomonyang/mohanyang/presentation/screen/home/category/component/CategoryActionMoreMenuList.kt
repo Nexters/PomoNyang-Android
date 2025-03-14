@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,28 +34,37 @@ fun CategoryActionMoreMenuList(
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
-    Column(
-        modifier = modifier
-            .dropShadow(
-                shape = RoundedCornerShape(MnRadius.small),
-                blur = 8.dp,
-                offsetY = 2.dp,
-            )
-            .background(color = MnColor.White, shape = RoundedCornerShape(MnRadius.small))
-            .padding(vertical = MnSpacing.medium, horizontal = MnSpacing.small),
+    val blurSpreadSize = 8.dp
+    Box(
+        modifier =
+        Modifier
+            .padding(blurSpreadSize)
+            .wrapContentSize(align = Alignment.Center)
     ) {
-        CategoryActionMenu(
-            resourceId = R.drawable.ic_pen,
-            onClick = onEditClick,
-            text = stringResource(R.string.category_setting_edit),
-        )
-        CategoryActionMenu(
-            resourceId = R.drawable.ic_trashcan,
-            onClick = onDeleteClick,
-            text = stringResource(R.string.category_setting_delete),
-        )
+        Column(
+            modifier = modifier
+                .dropShadow(
+                    shape = RoundedCornerShape(MnRadius.small),
+                    blur = blurSpreadSize,
+                    offsetY = 2.dp,
+                )
+                .background(color = MnColor.White, shape = RoundedCornerShape(MnRadius.small))
+                .padding(vertical = MnSpacing.medium, horizontal = MnSpacing.small),
+        ) {
+            CategoryActionMenu(
+                resourceId = R.drawable.ic_pen,
+                onClick = onEditClick,
+                text = stringResource(R.string.category_setting_edit),
+            )
+            CategoryActionMenu(
+                resourceId = R.drawable.ic_trashcan,
+                onClick = onDeleteClick,
+                text = stringResource(R.string.category_setting_delete),
+            )
+        }
     }
 }
+
 
 
 @Composable
