@@ -28,6 +28,7 @@ import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryM
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import timber.log.Timber
 
 @Composable
 fun CategoryBottomSheetContents(
@@ -38,7 +39,7 @@ fun CategoryBottomSheetContents(
     onCategoryEdit: (PomodoroCategoryModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val selectedItems = remember(categoryManageState) { mutableStateMapOf<Int, Boolean>() }
+    val selectedItems: MutableMap<Int, Boolean> = remember(categoryManageState) { mutableStateMapOf<Int, Boolean>() }
     val gridCells = if (categoryList.size == 1) GridCells.Fixed(1) else GridCells.Fixed(2)
 
     LaunchedEffect(categoryManageState) {
@@ -87,11 +88,14 @@ fun CategoryBottomSheetContents(
         }
 
         if (categoryManageState.isDelete()) {
+            val isEnabled = selectedItems.values.count { it } != 0
+            val buttonColor = if (isEnabled) MnBoxButtonColorType.secondary else MnBoxButtonColorType.primary
             MnBoxButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(id = R.string.change_category_delete_count, selectedItems.values.count { it }),
                 onClick = { /* TODO 삭제 동작 처리 */ },
-                colors = MnBoxButtonColorType.primary,
+                colors = buttonColor,
+                isEnabled = isEnabled,
                 styles = MnBoxButtonStyles.large,
                 containerPadding = PaddingValues(top = 23.dp),
             )
