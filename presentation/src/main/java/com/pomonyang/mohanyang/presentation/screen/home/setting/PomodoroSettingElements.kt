@@ -34,13 +34,13 @@ sealed interface PomodoroSettingEvent : ViewEvent {
     data object ClickRestTime : PomodoroSettingEvent
     data object ClickFocusTime : PomodoroSettingEvent
     data object ClickStartPomodoroSetting : PomodoroSettingEvent
-    data object ClickMyInfo : PomodoroSettingEvent
     data object DismissCategoryDialog : PomodoroSettingEvent
     data object DismissOnBoardingTooltip : PomodoroSettingEvent
-    data class ClickCategoryConfirmButton(val confirmCategoryNo: Int) : PomodoroSettingEvent
+    data class SelectCategory(val categoryNo: Int) : PomodoroSettingEvent
     data object ClickMenu : PomodoroSettingEvent
     data class ClickCategoryEdit(val category: PomodoroCategoryModel) : PomodoroSettingEvent
     data object ClickCategoryCreate : PomodoroSettingEvent
+    data class ClickCategoryDelete(val category: PomodoroCategoryModel) : PomodoroSettingEvent
 }
 
 sealed interface PomodoroSettingSideEffect : ViewSideEffect {

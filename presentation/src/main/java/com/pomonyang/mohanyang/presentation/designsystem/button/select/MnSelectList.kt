@@ -23,11 +23,14 @@ fun MnSelectListItem(
     categoryType: String,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
+    isDisabled: Boolean = false,
+    colors: MnSelectListColors = MnSelectListDefaults.colors(),
     onClick: () -> Unit,
 ) {
     MnSelectButton(
         modifier = modifier,
         isSelected = isSelected,
+        isEnabled = isDisabled.not(),
         subTitleContent = {
             Row(
                 modifier = Modifier.padding(MnSpacing.xLarge),
@@ -36,7 +39,7 @@ fun MnSelectListItem(
             ) {
                 MnMediumIcon(
                     resourceId = iconResource,
-                    tint = Color.Unspecified,
+                    tint = if (isDisabled) colors.disabledIconTint else colors.enabledIconTint,
                 )
 
                 Text(
@@ -46,7 +49,7 @@ fun MnSelectListItem(
                     ),
                     text = categoryType,
                     style = MnTheme.typography.bodySemiBold,
-                    color = MnTheme.textColorScheme.primary,
+                    color = if (isDisabled) colors.disabledTextColor else colors.enabledTextColor,
                 )
 
                 Spacer(Modifier.weight(1f))
