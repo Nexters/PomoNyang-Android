@@ -9,4 +9,8 @@ interface PomodoroSettingRemoteDataSource {
         focusTime: String,
         restTime: String,
     ): Result<Unit>
+    suspend fun addPomodoroCategory(
+        title: String,
+        iconType: String,
+    ): Result<Unit>
 }

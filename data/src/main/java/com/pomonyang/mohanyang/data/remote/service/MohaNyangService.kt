@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.data.remote.service
 
+import com.pomonyang.mohanyang.data.remote.model.request.AddCategoryRequest
 import com.pomonyang.mohanyang.data.remote.model.request.PomodoroTimerRequest
 import com.pomonyang.mohanyang.data.remote.model.request.RegisterPushTokenRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCatInfoRequest
@@ -19,6 +20,11 @@ import retrofit2.http.Path
 interface MohaNyangService {
     @GET("/api/v1/categories")
     suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
+
+    @POST("/api/v1/categories")
+    suspend fun addPomodoroCategory(
+        @Body addCategoryRequest: AddCategoryRequest,
+    ): Result<Unit>
 
     @PATCH("/api/v1/categories/{no}")
     suspend fun updatePomodoroSetting(

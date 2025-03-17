@@ -18,4 +18,9 @@ interface PomodoroSettingRepository {
         focusTime: Int,
         restTime: Int,
     ): Result<Unit>
+
+    suspend fun addPomodoroCategory(
+        title: String,
+        iconType: String,
+    ): Result<Unit>
 }
