@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.view.View
 import android.widget.RemoteViews
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -29,7 +29,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     }
 
     fun createPomodoroNotificationBigContent(
-        category: PomodoroCategoryType?,
+        category: CategoryModel?,
         time: String,
         overtime: String?,
     ): RemoteViews {
@@ -121,11 +121,10 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
         remoteViews.setImageViewResource(R.id.iv_right_content, R.drawable.img_touch_hair_ball)
     }
 
-    private fun getStatusBitmapAndIcon(category: PomodoroCategoryType?): Pair<Bitmap, Int> {
-        val statusTextRes = category?.kor ?: R.string.notification_timer_rest
-        val statusText = context.getString(statusTextRes)
+    private fun getStatusBitmapAndIcon(category: CategoryModel?): Pair<Bitmap, Int> {
+        val statusText = category?.name ?: context.getString(R.string.notification_timer_rest)
         val statusBitmap = bitmapGenerator.createStatusBitmap(statusText)
-        val iconRes = category?.iconRes ?: R.drawable.ic_rest
+        val iconRes = category?.icon?.resourceId ?: R.drawable.ic_rest
         return statusBitmap to iconRes
     }
 }

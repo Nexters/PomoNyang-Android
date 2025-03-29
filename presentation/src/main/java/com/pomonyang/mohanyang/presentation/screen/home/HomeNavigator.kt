@@ -9,13 +9,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.pomonyang.mohanyang.presentation.screen.home.category.CategoryIcon
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon.CategoryIconNavType
 import com.pomonyang.mohanyang.presentation.screen.home.category.CategorySettingRoute
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.home.time.PomodoroTimeSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
+import kotlin.reflect.typeOf
 import kotlinx.serialization.Serializable
+import timber.log.Timber
 
 @Serializable
 data object Home
@@ -34,7 +37,7 @@ internal data class TimeSetting(
 internal data class CategorySetting(
     val categoryNo: Int?,
     val categoryName: String = "",
-    val categoryIconId: Int = CategoryIcon.DEFAULT.resourceId,
+    val categoryIcon: CategoryIcon = CategoryIcon.CAT,
 )
 
 fun NavGraphBuilder.homeScreen(
@@ -67,11 +70,12 @@ fun NavGraphBuilder.homeScreen(
                     navHostController.navigate(MyPage)
                 },
                 goToCategoryEdit = { category ->
+                    Timber.tag("koni").d("category > $category")
                     navHostController.navigate(
                         CategorySetting(
                             categoryNo = category.categoryNo,
                             categoryName = category.title,
-                            categoryIconId = category.categoryType.iconRes,
+                            categoryIcon = category.categoryIcon,
                         ),
                     )
                 },
@@ -89,7 +93,7 @@ fun NavGraphBuilder.homeScreen(
                 slideOutVertically(tween(slideDuration), targetOffsetY = { it })
             },
 
-        ) { backStackEntry ->
+            ) { backStackEntry ->
             val routeData = backStackEntry.toRoute<TimeSetting>()
             PomodoroTimeSettingRoute(
                 isFocusTime = routeData.isFocusTime,
@@ -105,6 +109,7 @@ fun NavGraphBuilder.homeScreen(
             popEnterTransition = {
                 EnterTransition.None
             },
+            typeMap = mapOf(typeOf<CategoryIcon>() to CategoryIconNavType),
         ) { backStackEntry ->
             val routeData = backStackEntry.toRoute<CategorySetting>()
             CategorySettingRoute(categoryNo = routeData.categoryNo) {

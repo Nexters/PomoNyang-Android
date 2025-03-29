@@ -37,8 +37,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager.startInterrupt
@@ -65,7 +65,7 @@ fun PomodoroFocusRoute(
         when (effect) {
             is PomodoroFocusEffect.GoToPomodoroRest -> {
                 goToRest(
-                    context.getString(state.categoryType.kor),
+                    state.title,
                     state.currentFocusTime,
                     state.focusExceededTime,
                     state.pomodoroId,
@@ -98,7 +98,8 @@ fun PomodoroFocusRoute(
         if (state.maxFocusTime != 0 && state.pomodoroId.isNotEmpty()) {
             context.startFocusTimer(
                 maxTime = state.maxFocusTime,
-                category = state.categoryType,
+                categoryTitle = state.title,
+                categoryIconRes = state.categoryIcon.resourceId,
                 timerId = state.pomodoroId,
             )
         }
@@ -110,7 +111,7 @@ fun PomodoroFocusRoute(
     LaunchedEffect(state.forceGoRest) {
         if (state.forceGoRest) {
             goToRest(
-                context.getString(state.categoryType.kor),
+                state.title,
                 state.remainingFocusTime,
                 state.focusExceededTime,
                 state.pomodoroId,
@@ -121,7 +122,7 @@ fun PomodoroFocusRoute(
     PomodoroTimerScreen(
         modifier = modifier,
         title = state.title,
-        categoryType = state.categoryType,
+        categoryIcon = state.categoryIcon,
         catType = state.cat,
         time = state.displayFocusTime(),
         exceededTime = state.displayFocusExceedTime(),
@@ -137,7 +138,7 @@ private fun stopNotification(context: Context, pomodoroId: String) {
 @Composable
 private fun PomodoroTimerScreen(
     title: String,
-    categoryType: PomodoroCategoryType,
+    categoryIcon: CategoryIcon,
     catType: CatType,
     time: String,
     exceededTime: String,
@@ -156,7 +157,7 @@ private fun PomodoroTimerScreen(
         MnTopAppBar(
             navigationIcon = {
                 CategoryBox(
-                    iconRes = categoryType.iconRes,
+                    iconRes = categoryIcon.resourceId,
                     categoryName = title,
                     modifier = Modifier.padding(start = 12.dp),
                 )
@@ -207,7 +208,7 @@ private fun PomodoroTimerScreenPreview() {
     MnTheme {
         PomodoroTimerScreen(
             title = "공부",
-            categoryType = PomodoroCategoryType.DEFAULT,
+            categoryIcon = CategoryIcon.CAT,
             time = "25:00",
             exceededTime = "00:00",
             onAction = {},
@@ -222,7 +223,7 @@ private fun PomodoroTimerExceedScreenPreview() {
     MnTheme {
         PomodoroTimerScreen(
             title = "공부",
-            categoryType = PomodoroCategoryType.DEFAULT,
+            categoryIcon = CategoryIcon.CAT,
             time = "25:00",
             exceededTime = "10:00",
             onAction = {},

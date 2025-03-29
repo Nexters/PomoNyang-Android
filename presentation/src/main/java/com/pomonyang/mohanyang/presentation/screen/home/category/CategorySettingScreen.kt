@@ -58,7 +58,6 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun CategorySettingRoute(
@@ -90,15 +89,15 @@ fun CategorySettingRoute(
     if (showDialog) {
         CategoryIconBottomSheet(
             onAction = categorySettingViewModel::handleEvent,
-            icons = state.categoryIcons.toImmutableList(),
-            selectedIcon = state.selectedCategoryIconId,
+            icons = state.categoryIcons,
+            selectedIcon = state.selectedCategoryIcon,
         )
     }
 
     CategorySettingScreen(
         categoryNo = categoryNo,
         categoryName = state.categoryName,
-        categoryIconResourceId = state.selectedCategoryIconId,
+        categoryIconResourceId = state.selectedCategoryIcon.resourceId,
         onAction = categorySettingViewModel::handleEvent,
         onBackClick = onBackClick,
         modifier = modifier,

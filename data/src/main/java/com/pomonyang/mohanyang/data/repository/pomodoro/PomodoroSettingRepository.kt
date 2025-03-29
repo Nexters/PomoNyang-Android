@@ -5,11 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface PomodoroSettingRepository {
 
-    fun getRecentUseCategoryNo(): Flow<Int>
-
-    suspend fun updateRecentUseCategoryNo(categoryNo: Int)
-
     fun getPomodoroSettingList(): Flow<List<PomodoroSettingEntity>>
+
+    fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity>
 
     suspend fun fetchPomodoroSettingList()
 
@@ -23,4 +21,6 @@ interface PomodoroSettingRepository {
         title: String,
         iconType: String,
     ): Result<Unit>
+
+    suspend fun updateRecentUseCategoryNo(categoryNo: Int)
 }

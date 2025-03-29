@@ -49,8 +49,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroSettingModel
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.home.category.PomodoroCategoryBottomSheet
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
@@ -174,7 +174,7 @@ fun PomodoroSettingScreen(
             )
 
             CategoryBox(
-                iconRes = state.selectedSettingModel.categoryType.iconRes,
+                iconRes = state.selectedSettingModel.categoryType.resourceId,
                 categoryName = state.selectedSettingModel.title,
                 modifier = Modifier
                     .padding(bottom = MnSpacing.medium, top = 40.dp)
@@ -323,7 +323,7 @@ fun PomodoroStarterScreenPreview() {
                 PomodoroCategoryModel(
                     categoryNo = 0,
                     title = "집중",
-                    categoryType = PomodoroCategoryType.DEFAULT,
+                    categoryIcon = CategoryIcon.CAT,
                 ),
             ),
             cat = CatInfoModel(

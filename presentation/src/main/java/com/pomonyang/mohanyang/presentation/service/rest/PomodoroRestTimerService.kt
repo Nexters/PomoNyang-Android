@@ -8,6 +8,8 @@ import com.pomonyang.mohanyang.presentation.di.RestTimerType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.noti.PomodoroNotificationManager
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerEventHandler
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
@@ -79,7 +81,7 @@ internal class PomodoroRestTimerService :
         timerId: String,
         time: String,
         overtime: String,
-        category: PomodoroCategoryType?,
+        category: CategoryModel?,
     ) {
         scope.launch {
             timerRepository.incrementRestedTime(timerId)

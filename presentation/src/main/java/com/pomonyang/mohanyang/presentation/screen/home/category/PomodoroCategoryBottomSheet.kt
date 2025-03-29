@@ -26,10 +26,10 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.toast.MnToastSnackbarHost
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryActionMoreMenuList
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryBottomSheetContents
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryBottomSheetHeaderContents
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryManageState
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingEvent
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -112,7 +112,7 @@ private fun PomodoroCategoryBottomSheet(
                 currentSelectedCategoryNo = initialCategoryNo,
                 onCategorySelected = { onAction(PomodoroSettingEvent.SelectCategory(it.categoryNo)) },
                 onCategoryEdit = {
-                    if (it.categoryType == PomodoroCategoryType.DEFAULT) {
+                    if (it.categoryIcon == CategoryIcon.CAT) {
                         scope.launch {
                             snackbarHostState.showSnackbar("기본 카테고리는 수정/삭제가 불가능합니다.")
                         }
@@ -159,7 +159,7 @@ private fun CategoryBottomSheetPreview(
                 PomodoroCategoryModel(
                     categoryNo = 1,
                     title = "집중",
-                    categoryType = PomodoroCategoryType.DEFAULT,
+                    categoryIcon = CategoryIcon.CAT,
                 ),
             ),
             initialCategoryNo = 1,

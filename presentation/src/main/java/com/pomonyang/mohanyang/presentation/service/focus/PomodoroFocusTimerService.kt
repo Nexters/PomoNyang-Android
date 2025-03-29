@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.IBinder
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.presentation.di.FocusTimerType
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.noti.PomodoroNotificationManager
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_ID
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerEventHandler
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
@@ -46,7 +46,7 @@ internal class PomodoroFocusTimerService :
         }
         val maxTime = intent.getIntExtra(PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME, 0)
 
-        val category = intent.getSerializableExtraCompat<PomodoroCategoryType>(PomodoroTimerServiceExtras.INTENT_FOCUS_CATEGORY)
+        val category = intent.getSerializableExtraCompat<CategoryModel>(PomodoroTimerServiceExtras.INTENT_FOCUS_CATEGORY_TITLE)
 
         Timber.tag("TIMER").d("onStartCommand > ${intent.action} / maxTime: $maxTime / category $category")
         when (intent.action) {
@@ -85,7 +85,7 @@ internal class PomodoroFocusTimerService :
         timerId: String,
         time: String,
         overtime: String,
-        category: PomodoroCategoryType?,
+        category: CategoryModel?,
     ) {
         scope.launch {
             timerRepository.incrementFocusedTime(timerId)

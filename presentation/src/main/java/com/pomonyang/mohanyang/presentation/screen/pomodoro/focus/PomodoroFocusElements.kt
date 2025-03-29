@@ -4,7 +4,7 @@ import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import java.util.*
 
@@ -14,7 +14,7 @@ data class PomodoroFocusState(
     val focusExceededTime: Int = 0,
     val maxFocusTime: Int = 0,
     val title: String = "",
-    val categoryType: PomodoroCategoryType = PomodoroCategoryType.DEFAULT,
+    val categoryIcon: CategoryIcon = CategoryIcon.CAT,
     val cat: CatType = CatType.CHEESE,
     val categoryNo: Int = -1,
     val forceGoRest: Boolean = false,

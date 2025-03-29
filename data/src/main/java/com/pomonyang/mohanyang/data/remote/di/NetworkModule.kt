@@ -38,7 +38,7 @@ internal abstract class NetworkModule {
     abstract fun bindNetworkConnectivityManager(networkMonitorImpl: NetworkMonitorImpl): NetworkMonitor
 
     companion object {
-        private const val BASE_URL = BuildConfig.BASE_URL
+        private const val BASE_URL = "https://dev.api.pomonyang.com"
         private val tracedHosts = listOf(BASE_URL)
 
         @Provides

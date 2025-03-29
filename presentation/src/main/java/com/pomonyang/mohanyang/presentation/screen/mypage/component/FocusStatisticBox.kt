@@ -32,6 +32,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroSettingModel
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 
@@ -72,8 +73,15 @@ fun FocusStatisticBox(
                 ) {
                     // TODO API 연결
                     LazyColumn {
-                        itemsIndexed(PomodoroCategoryType.entries.toTypedArray()) { idx, category ->
-                            FocusCategoryDataBox(categoryModel = PomodoroSettingModel(categoryNo = 1, title = stringResource(id = category.kor), categoryType = category, focusTime = 10, restTime = 20))
+                        itemsIndexed(CategoryIcon.entries.toTypedArray()) { idx, category ->
+                            FocusCategoryDataBox(categoryModel = PomodoroSettingModel(
+                                categoryNo = 1,
+                                title = "temp" /* FIXME stringResource(id = category.kor)*/,
+                                categoryType = category,
+                                focusTime = 10,
+                                restTime = 20,
+                                isSelected = false
+                            ))
                         }
                     }
                 }
@@ -146,7 +154,7 @@ fun FocusCategoryDataBox(
         horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        MnLargeIcon(resourceId = categoryModel.categoryType.iconRes, tint = Color.Unspecified)
+        MnLargeIcon(resourceId = categoryModel.categoryType.resourceId, tint = Color.Unspecified)
         Text(
             modifier = Modifier.weight(1f),
             text = categoryModel.title,

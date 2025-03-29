@@ -34,6 +34,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -100,7 +101,7 @@ private fun PomodoroBreakReadyScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        CategoryBox(categoryName = type, iconRes = PomodoroCategoryType.safeValueOf(type).iconRes)
+        CategoryBox(categoryName = type, iconRes = CategoryIcon.safeValueOf(type).resourceId)
 
         Timer(
             modifier = Modifier.padding(top = MnSpacing.small),

@@ -1,23 +1,30 @@
 package com.pomonyang.mohanyang.presentation.screen.home.category
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroSettingRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.screen.home.CategorySetting
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon.CategoryIconNavType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.reflect.typeOf
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class CategorySettingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val pomodoroSettingRepository: PomodoroSettingRepository,
 ) : BaseViewModel<CategorySettingState, CategorySettingEvent, CategorySettingSideEffect>() {
     init {
-        val category = savedStateHandle.toRoute<CategorySetting>()
+        val category = savedStateHandle.toRoute<CategorySetting>(typeMap = mapOf(typeOf<CategoryIcon>() to CategoryIconNavType),)
         handleEvent(
             CategorySettingEvent.Init(
                 categoryNo = category.categoryNo,
                 categoryName = category.categoryName,
-                categoryIconId = category.categoryIconId,
+                categoryIcon = category.categoryIcon,
             ),
         )
     }
@@ -31,7 +38,7 @@ class CategorySettingViewModel @Inject constructor(
                     copy(
                         categoryNo = event.categoryNo,
                         categoryName = event.categoryName,
-                        selectedCategoryIconId = event.categoryIconId,
+                        selectedCategoryIcon = event.categoryIcon,
                     )
                 }
             }
@@ -42,7 +49,12 @@ class CategorySettingViewModel @Inject constructor(
 
             is CategorySettingEvent.ClickConfirm -> {
                 if (state.value.isCreateMode()) {
-                    // TODO 카테고리 생성 API
+                    viewModelScope.launch {
+                        pomodoroSettingRepository.addPomodoroCategory(
+                            event.categoryName,
+                            state.value.selectedCategoryIcon.name
+                        )
+                    }
                 } else {
                     // TODO 카테고리 수정 API
                 }
@@ -50,7 +62,7 @@ class CategorySettingViewModel @Inject constructor(
             }
 
             is CategorySettingEvent.SelectIcon -> {
-                updateState { copy(selectedCategoryIconId = event.iconId) }
+                updateState { copy(selectedCategoryIcon = event.icon) }
                 setEffect(CategorySettingSideEffect.DismissCategoryIconBottomSheet)
             }
 

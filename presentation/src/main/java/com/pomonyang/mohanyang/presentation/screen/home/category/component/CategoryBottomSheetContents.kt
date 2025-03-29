@@ -23,12 +23,11 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonS
 import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectListItem
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryManageState
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import timber.log.Timber
 
 @Composable
 fun CategoryBottomSheetContents(
@@ -62,7 +61,7 @@ fun CategoryBottomSheetContents(
                 val iconResource = when {
                     isNonEditableItem -> R.drawable.ic_lock
                     categoryManageState.isDelete() -> if (selected) R.drawable.ic_check_circle else R.drawable.ic_circle
-                    else -> item.categoryType.iconRes
+                    else -> item.categoryIcon.resourceId
                 }
                 MnSelectListItem(
                     modifier = Modifier.fillMaxWidth(),
@@ -73,7 +72,7 @@ fun CategoryBottomSheetContents(
                             CategoryManageState.DEFAULT -> onCategorySelected(item)
                             CategoryManageState.EDIT -> onCategoryEdit(item)
                             CategoryManageState.DELETE -> {
-                                if (item.categoryType == PomodoroCategoryType.DEFAULT) {
+                                if (item.categoryIcon == CategoryIcon.CAT) {
                                     // TODO 기본 타입이 선택이 되었다면 스낵바로 알려줘야 함
                                 } else {
                                     selectedItems[item.categoryNo] = !selected
@@ -111,46 +110,46 @@ private class CategoryPreviewParameterProvider :
             PomodoroCategoryModel(
                 categoryNo = 1,
                 title = "집중",
-                categoryType = PomodoroCategoryType.DEFAULT,
+                categoryIcon = CategoryIcon.CAT,
             ),
         ),
         persistentListOf(
             PomodoroCategoryModel(
                 categoryNo = 1,
                 title = "집중",
-                categoryType = PomodoroCategoryType.DEFAULT,
+                categoryIcon = CategoryIcon.CAT,
             ),
             PomodoroCategoryModel(
                 categoryNo = 2,
                 title = "집중",
-                categoryType = PomodoroCategoryType.DEFAULT,
+                categoryIcon = CategoryIcon.CAT,
             ),
             PomodoroCategoryModel(
                 categoryNo = 3,
                 title = "집중",
-                categoryType = PomodoroCategoryType.DEFAULT,
+                categoryIcon = CategoryIcon.CAT,
             ),
         ),
         persistentListOf(
             PomodoroCategoryModel(
                 categoryNo = 1,
                 title = "집중",
-                categoryType = PomodoroCategoryType.DEFAULT,
+                categoryIcon = CategoryIcon.CAT,
             ),
             PomodoroCategoryModel(
                 categoryNo = 2,
                 title = "집중",
-                categoryType = PomodoroCategoryType.DEFAULT,
+                categoryIcon = CategoryIcon.CAT,
             ),
             PomodoroCategoryModel(
                 categoryNo = 3,
                 title = "집중",
-                categoryType = PomodoroCategoryType.DEFAULT,
+                categoryIcon = CategoryIcon.CAT,
             ),
             PomodoroCategoryModel(
                 categoryNo = 4,
                 title = "집중",
-                categoryType = PomodoroCategoryType.DEFAULT,
+                categoryIcon = CategoryIcon.CAT,
             ),
         ),
     )

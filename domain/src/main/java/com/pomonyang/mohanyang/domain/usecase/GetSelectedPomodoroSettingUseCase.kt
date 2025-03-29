@@ -11,11 +11,7 @@ class GetSelectedPomodoroSettingUseCase @Inject constructor(
 ) {
 
     operator fun invoke(): Flow<PomodoroSettingEntity> {
-        val settingListFlow = pomodoroSettingRepository.getPomodoroSettingList()
-        val recentUseCategoryNoFlow = pomodoroSettingRepository.getRecentUseCategoryNo()
-
-        return settingListFlow.combine(recentUseCategoryNoFlow) { settingList, recentUseCategoryNo ->
-            settingList.find { it.categoryNo == recentUseCategoryNo } ?: settingList.first()
-        }
+        val settingListFlow: Flow<PomodoroSettingEntity> = pomodoroSettingRepository.getSelectedPomodoroSetting()
+        return settingListFlow
     }
 }
