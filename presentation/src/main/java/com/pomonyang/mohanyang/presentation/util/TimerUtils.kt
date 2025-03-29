@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.core.os.bundleOf
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
 import com.pomonyang.mohanyang.presentation.service.focus.PomodoroFocusTimerService
 import com.pomonyang.mohanyang.presentation.service.rest.PomodoroRestTimerService
@@ -12,18 +14,20 @@ import timber.log.Timber
 internal fun Context.startFocusTimer(
     maxTime: Int,
     categoryTitle: String,
-    @DrawableRes categoryIconRes: Int,
+    categoryIcon: CategoryIcon,
     timerId: String,
 ) {
-    Timber.tag("TIMER").d("startFocusTimer $timerId / $maxTime / $categoryTitle / $categoryIconRes")
+    Timber.tag("TIMER").d("startFocusTimer $timerId / $maxTime / $categoryTitle / $categoryIcon")
     startService(
         Intent(this, PomodoroFocusTimerService::class.java).apply {
             action = PomodoroTimerServiceExtras.ACTION_TIMER_START
             putExtras(
                 bundleOf(
                     PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME to maxTime,
-                    PomodoroTimerServiceExtras.INTENT_FOCUS_CATEGORY_TITLE to categoryTitle,
-                    PomodoroTimerServiceExtras.INTENT_FOCUS_CATEGORY_ICON_RES to categoryIconRes,
+                    PomodoroTimerServiceExtras.INTENT_CATEGORY to CategoryModel(
+                        name = categoryTitle,
+                        icon = categoryIcon,
+                    ),
                     PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId,
                 ),
             )

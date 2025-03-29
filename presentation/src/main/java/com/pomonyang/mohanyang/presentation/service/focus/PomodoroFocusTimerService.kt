@@ -46,7 +46,7 @@ internal class PomodoroFocusTimerService :
         }
         val maxTime = intent.getIntExtra(PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME, 0)
 
-        val category = intent.getSerializableExtraCompat<CategoryModel>(PomodoroTimerServiceExtras.INTENT_FOCUS_CATEGORY_TITLE)
+        val category = intent.getSerializableExtraCompat<CategoryModel>(PomodoroTimerServiceExtras.INTENT_CATEGORY)
 
         Timber.tag("TIMER").d("onStartCommand > ${intent.action} / maxTime: $maxTime / category $category")
         when (intent.action) {

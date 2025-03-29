@@ -99,7 +99,7 @@ fun PomodoroFocusRoute(
             context.startFocusTimer(
                 maxTime = state.maxFocusTime,
                 categoryTitle = state.title,
-                categoryIconRes = state.categoryIcon.resourceId,
+                categoryIcon = state.categoryIcon,
                 timerId = state.pomodoroId,
             )
         }
