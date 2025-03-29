@@ -83,6 +83,7 @@ fun PomodoroTimeSettingRoute(
                     modifier = modifier,
                     category = state.categoryIcon,
                     isFocusTime = isFocusTime,
+                    categoryName = categoryName,
                     initialSettingTime = initialSettingTime,
                     onAction = viewModel::handleEvent,
                 )
@@ -96,6 +97,7 @@ private fun PomodoroTimeSettingScreen(
     initialSettingTime: Int,
     isFocusTime: Boolean,
     category: CategoryIcon,
+    categoryName: String,
     onAction: (PomodoroTimeSettingEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -112,7 +114,7 @@ private fun PomodoroTimeSettingScreen(
 
         CategoryBox(
             iconRes = category.resourceId,
-            categoryName = category.name, // FIXME 지훈 여기 바꿔야 함
+            categoryName = categoryName,
             backgroundColor = Color.Transparent,
         )
 
@@ -167,6 +169,7 @@ private fun PomodoroTimeSettingScreenPreview() {
             isFocusTime = true,
             onAction = {},
             category = CategoryIcon.CAT,
+            categoryName = "카테고리",
         )
     }
 }
