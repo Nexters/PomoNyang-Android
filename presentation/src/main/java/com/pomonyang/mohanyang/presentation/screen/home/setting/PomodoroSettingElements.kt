@@ -49,7 +49,12 @@ sealed interface PomodoroSettingSideEffect : ViewSideEffect {
 
     data class ShowSnackBar(
         val message: String,
-        @DrawableRes val iconRes: Int,
+        @DrawableRes val iconRes: Int?,
+    ) : PomodoroSettingSideEffect
+
+    data class ShowBottomSheetSnackBar(
+        val message: String,
+        @DrawableRes val iconRes: Int?,
     ) : PomodoroSettingSideEffect
 
     data class GoTimeSetting(

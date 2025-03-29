@@ -79,6 +79,9 @@ class PomodoroSettingViewModel @Inject constructor(
             is PomodoroSettingEvent.DeleteCategory -> {
                 viewModelScope.launch {
                     pomodoroSettingRepository.deleteCategoryNo(event.categoryId)
+                        .onFailure {
+                            setEffect(PomodoroSettingSideEffect.ShowBottomSheetSnackBar(it.message ?: "알 수 없는 오류가 발생했어요.", null))
+                        }
                 }
             }
         }

@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -74,8 +75,8 @@ fun PomodoroSettingRoute(
     pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel(),
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
-
     val context = LocalContext.current
+    val bottomSheetSnackbarHostState = remember { SnackbarHostState() }
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         if (isNewUser && state.isEndOnBoardingTooltip.not()) return@collectWithLifecycle
         when (effect) {
@@ -85,6 +86,11 @@ fun PomodoroSettingRoute(
             PomodoroSettingSideEffect.GoToMyPage -> goToMyPage()
             PomodoroSettingSideEffect.GoToCategoryCreate -> goToCategoryCreate()
             is PomodoroSettingSideEffect.GoToCategoryEdit -> goToCategoryEdit(effect.category)
+            is PomodoroSettingSideEffect.ShowBottomSheetSnackBar -> bottomSheetSnackbarHostState.showSnackbar(
+                message = effect.message,
+                actionLabel = null,
+                withDismissAction = true,
+            )
         }
     }
 
@@ -98,6 +104,7 @@ fun PomodoroSettingRoute(
             onAction = pomodoroSettingViewModel::handleEvent,
             categoryList = state.categoryList.toImmutableList(),
             initialCategoryNo = state.selectedSettingModel.categoryNo,
+            bottomSheetSnackbarHostState = bottomSheetSnackbarHostState,
         )
     }
 

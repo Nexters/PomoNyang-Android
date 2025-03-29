@@ -42,15 +42,18 @@ fun PomodoroCategoryBottomSheet(
     onAction: (PomodoroSettingEvent) -> Unit,
     categoryList: ImmutableList<PomodoroCategoryModel>,
     initialCategoryNo: Int,
+    bottomSheetSnackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     var showMoreMenuComponent by rememberSaveable { mutableStateOf(false) }
     var categoryManageState: CategoryManageState by remember { mutableStateOf(CategoryManageState.DEFAULT) }
+
     PomodoroCategoryBottomSheet(
         categoryManageState = categoryManageState,
         showMoreMenuComponent = showMoreMenuComponent,
         categoryList = categoryList,
         initialCategoryNo = initialCategoryNo,
+        snackbarHostState = bottomSheetSnackbarHostState,
         onAction = onAction,
         onDeleteClick = {
             showMoreMenuComponent = false
@@ -72,6 +75,7 @@ private fun PomodoroCategoryBottomSheet(
     showMoreMenuComponent: Boolean,
     categoryList: ImmutableList<PomodoroCategoryModel>,
     initialCategoryNo: Int,
+    snackbarHostState: SnackbarHostState,
     onAction: (PomodoroSettingEvent) -> Unit,
     onDeleteClick: () -> Unit,
     onEditClick: () -> Unit,
@@ -80,7 +84,6 @@ private fun PomodoroCategoryBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     val subTitle = if (categoryManageState.isEdit()) stringResource(R.string.change_category_edit_sub_title) else null
-    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     MnBottomSheet(
         onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
@@ -159,6 +162,7 @@ private fun CategoryBottomSheetPreview(
                     categoryIcon = CategoryIcon.CAT,
                 ),
             ),
+            snackbarHostState = SnackbarHostState(),
             initialCategoryNo = 1,
             onAction = { },
             onDeleteClick = { },
