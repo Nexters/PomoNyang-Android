@@ -23,4 +23,6 @@ interface PomodoroSettingRepository {
     ): Result<Unit>
 
     suspend fun updateRecentUseCategoryNo(categoryNo: Int)
+
+    suspend fun deleteCategoryNo(categoryNumbers: List<Int>)
 }

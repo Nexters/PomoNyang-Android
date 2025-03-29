@@ -76,8 +76,10 @@ class PomodoroSettingViewModel @Inject constructor(
                 setEffect(PomodoroSettingSideEffect.GoToCategoryCreate)
             }
 
-            is PomodoroSettingEvent.ClickCategoryDelete -> {
-                // TODO 지훈
+            is PomodoroSettingEvent.DeleteCategory -> {
+                viewModelScope.launch {
+                    pomodoroSettingRepository.deleteCategoryNo(event.categoryId)
+                }
             }
         }
     }

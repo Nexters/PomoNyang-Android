@@ -37,4 +37,7 @@ interface PomodoroSettingDao {
 
     @Query("SELECT * FROM pomodoro_setting LIMIT 1")
     suspend fun getFirstPomodoroSetting(): PomodoroSettingEntity?
+
+    @Query("DELETE FROM pomodoro_setting WHERE categoryNo IN (:categoryNos)")
+    suspend fun deletePomodoroSettingsByCategoryNos(categoryNos: List<Int>)
 }

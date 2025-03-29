@@ -120,6 +120,7 @@ private fun PomodoroCategoryBottomSheet(
                         onAction(PomodoroSettingEvent.ClickCategoryEdit(it))
                     }
                 },
+                onDeleteItemsClick = { onAction(PomodoroSettingEvent.DeleteCategory(it)) },
             )
 
             AnimatedVisibility(

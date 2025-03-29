@@ -28,6 +28,7 @@ import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryM
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import timber.log.Timber
 
 @Composable
 fun CategoryBottomSheetContents(
@@ -36,9 +37,10 @@ fun CategoryBottomSheetContents(
     currentSelectedCategoryNo: Int,
     onCategorySelected: (PomodoroCategoryModel) -> Unit,
     onCategoryEdit: (PomodoroCategoryModel) -> Unit,
+    onDeleteItemsClick: (List<Int>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val selectedItems: MutableMap<Int, Boolean> = remember(categoryManageState) { mutableStateMapOf<Int, Boolean>() }
+    val selectedItems: MutableMap<Int, Boolean> = remember(categoryList) { mutableStateMapOf<Int, Boolean>() }
     val gridCells = if (categoryList.size == 1) GridCells.Fixed(1) else GridCells.Fixed(2)
 
     LaunchedEffect(categoryManageState) {
@@ -72,9 +74,7 @@ fun CategoryBottomSheetContents(
                             CategoryManageState.DEFAULT -> onCategorySelected(item)
                             CategoryManageState.EDIT -> onCategoryEdit(item)
                             CategoryManageState.DELETE -> {
-                                if (item.categoryIcon == CategoryIcon.CAT) {
-                                    // TODO 기본 타입이 선택이 되었다면 스낵바로 알려줘야 함
-                                } else {
+                                if (isNonEditableItem.not()) {
                                     selectedItems[item.categoryNo] = !selected
                                 }
                             }
@@ -92,7 +92,7 @@ fun CategoryBottomSheetContents(
             MnBoxButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(id = R.string.change_category_delete_count, selectedItems.values.count { it }),
-                onClick = { /* TODO 삭제 동작 처리 */ },
+                onClick = { onDeleteItemsClick(selectedItems.map { it.key }) },
                 colors = buttonColor,
                 isEnabled = isEnabled,
                 styles = MnBoxButtonStyles.large,
@@ -165,6 +165,7 @@ private fun CategoryBottomSheetPreview(
             currentSelectedCategoryNo = 1,
             onCategorySelected = {},
             onCategoryEdit = {},
+            onDeleteItemsClick = {},
         )
     }
 }

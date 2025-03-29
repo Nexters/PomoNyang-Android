@@ -13,4 +13,6 @@ interface PomodoroSettingRemoteDataSource {
         title: String,
         iconType: String,
     ): Result<Unit>
+
+    suspend fun deleteCategoryNo(categoryNumbers: List<Int>): Result<Unit>
 }

@@ -1,7 +1,7 @@
 package com.pomonyang.mohanyang.data.remote.datasource.pomodoro
 
-import com.pomonyang.mohanyang.data.local.room.dao.PomodoroSettingDao
 import com.pomonyang.mohanyang.data.remote.model.request.AddCategoryRequest
+import com.pomonyang.mohanyang.data.remote.model.request.DeleteCategoryRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCategoryInfoRequest
 import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingResponse
 import com.pomonyang.mohanyang.data.remote.service.MohaNyangService
@@ -9,7 +9,6 @@ import javax.inject.Inject
 
 internal class PomodoroSettingRemoteDataSourceImpl @Inject constructor(
     private val mohaNyangService: MohaNyangService,
-    private val pomodoroSettingDao: PomodoroSettingDao,
 ) : PomodoroSettingRemoteDataSource {
 
     override suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>> = mohaNyangService.getPomodoroSettingList()
@@ -34,5 +33,9 @@ internal class PomodoroSettingRemoteDataSourceImpl @Inject constructor(
             title = title,
             iconType = iconType,
         ),
+    )
+
+    override suspend fun deleteCategoryNo(categoryNumbers: List<Int>): Result<Unit> = mohaNyangService.deleteCategories(
+        request = DeleteCategoryRequest(categoryNumbers),
     )
 }

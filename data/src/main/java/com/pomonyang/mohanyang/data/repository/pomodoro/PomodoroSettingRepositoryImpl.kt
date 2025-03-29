@@ -82,4 +82,11 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
     override suspend fun updateRecentUseCategoryNo(categoryNo: Int) {
         pomodoroSettingDao.updateSelectCategory(categoryNo)
     }
+
+    override suspend fun deleteCategoryNo(categoryNumbers: List<Int>) {
+        pomodoroSettingRemoteDataSource.deleteCategoryNo(categoryNumbers)
+            .onSuccess {
+                pomodoroSettingDao.deletePomodoroSettingsByCategoryNos(categoryNumbers)
+            }
+    }
 }
