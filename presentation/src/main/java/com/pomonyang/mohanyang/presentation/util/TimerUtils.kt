@@ -38,6 +38,8 @@ internal fun Context.startFocusTimer(
 internal fun Context.startRestTimer(
     maxTime: Int,
     timerId: String,
+    categoryTitle: String,
+    categoryIcon: CategoryIcon,
 ) {
     Timber.tag("TIMER").d("startRestTimer $timerId / $maxTime")
     startService(
@@ -47,6 +49,10 @@ internal fun Context.startRestTimer(
                 bundleOf(
                     PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME to maxTime,
                     PomodoroTimerServiceExtras.INTENT_TIMER_ID to timerId,
+                    PomodoroTimerServiceExtras.INTENT_CATEGORY to CategoryModel(
+                        name = categoryTitle,
+                        icon = categoryIcon,
+                    ),
                 ),
             )
         },

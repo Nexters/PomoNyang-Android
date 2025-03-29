@@ -67,7 +67,12 @@ fun PomodoroRestRoute(
 
     DisposableEffect(state.maxRestTime, state.pomodoroId) {
         if (state.maxRestTime != 0 && state.pomodoroId.isNotEmpty()) {
-            context.startRestTimer(state.maxRestTime, timerId = state.pomodoroId)
+            context.startRestTimer(
+                maxTime = state.maxRestTime,
+                timerId = state.pomodoroId,
+                categoryTitle = state.categoryName,
+                categoryIcon = state.categoryIcon,
+            )
         }
 
         onDispose {

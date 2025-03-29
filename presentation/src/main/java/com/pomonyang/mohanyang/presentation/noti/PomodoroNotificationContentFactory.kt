@@ -9,6 +9,7 @@ import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryM
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import timber.log.Timber
 
 internal class PomodoroNotificationContentFactory @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -33,6 +34,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
         time: String,
         overtime: String?,
     ): RemoteViews {
+        Timber.tag("koni").d("createPomodoroNotificationBigContent > $category")
         val remoteViews = RemoteViews(context.packageName, R.layout.notification_pomodoro_expand)
 
         val formattedTime = formatTimeString(time)
@@ -124,6 +126,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     private fun getStatusBitmapAndIcon(category: CategoryModel?): Pair<Bitmap, Int> {
         val statusText = category?.name ?: context.getString(R.string.notification_timer_rest)
         val statusBitmap = bitmapGenerator.createStatusBitmap(statusText)
+        Timber.tag("koni").d("category?.icon?.resourceId ${category?.icon?.resourceId}")
         val iconRes = category?.icon?.resourceId ?: R.drawable.ic_lightning
         return statusBitmap to iconRes
     }

@@ -18,6 +18,7 @@ import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
+import timber.log.Timber
 
 internal class PomodoroNotificationManager @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -49,8 +50,10 @@ internal class PomodoroNotificationManager @Inject constructor(
         notificationManager.createNotificationChannel(channel)
     }
 
-    fun createNotification(category: CategoryModel? = null): Notification {
-        val isRest = category == null
+    fun createNotification(
+        category: CategoryModel? = null,
+        isRest: Boolean = false,
+    ): Notification {
         val defaultTime = context.getString(R.string.notification_timer_default_time)
         val contentView = createContentView(isRest)
         val bigContentView = createBigContentView(category, defaultTime, null)
