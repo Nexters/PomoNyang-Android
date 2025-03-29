@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdateCategoryInfoRequest(
-    val focusTime: String,
-    val restTime: String,
+    val title: String? = null,
+    val iconType: String? = null,
+    val focusTime: String? = null,
+    val restTime: String? = null,
 )

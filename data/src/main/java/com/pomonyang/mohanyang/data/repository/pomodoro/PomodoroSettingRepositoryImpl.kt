@@ -22,16 +22,7 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
         .getPomodoroSetting()
         .onEmpty { fetchPomodoroSettingList() }
 
-    override fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity> = pomodoroSettingDao.getSelectedPomodoroSetting().flatMapLatest { selected ->
-        if (selected != null) {
-            flowOf(selected)
-        } else {
-            // 임시 코드 아무것도 선택 안한 유저에게는 첫번째 카테고리로 설정이 되게 해줄 수 있는 확인 필요
-            flow {
-                emit(getPomodoroSettingList().first().first())
-            }
-        }
-    }
+    override fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity> = pomodoroSettingDao.getSelectedPomodoroSetting()
 
     override suspend fun fetchPomodoroSettingList() {
         pomodoroSettingRemoteDataSource.getPomodoroSettingList()
@@ -42,30 +33,50 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun updatePomodoroCategoryTimes(
+    override suspend fun updatePomodoroCategorySetting(
         categoryNo: Int,
-        focusTime: Int,
-        restTime: Int,
+        title: String?,
+        iconType: String?,
+        focusTime: Int?,
+        restTime: Int?,
     ): Result<Unit> {
-        val focusTimeDuration = Duration.ofMinutes(focusTime.toLong()).toString()
-        val restTimeDuration = Duration.ofMinutes(restTime.toLong()).toString()
-        updateLocalPomodoroSetting(categoryNo, focusTimeDuration, restTimeDuration)
-        return pomodoroSettingRemoteDataSource.updatePomodoroCategoryTimes(
+        val focusTimeDuration = focusTime?.let {
+            Duration.ofMinutes(it.toLong()).toString()
+        }
+
+        val restTimeDuration = restTime?.let {
+            Duration.ofMinutes(it.toLong()).toString()
+        }
+        return pomodoroSettingRemoteDataSource.modifyCategorySettingOption(
             categoryNo = categoryNo,
             focusTime = focusTimeDuration,
             restTime = restTimeDuration,
-        )
+            iconType = iconType,
+            title = title,
+        ).onSuccess {
+            updateLocalPomodoroSetting(
+                categoryNo,
+                focusTimeDuration,
+                restTimeDuration,
+                iconType,
+                title,
+            )
+        }
     }
 
     private suspend fun updateLocalPomodoroSetting(
         categoryNo: Int,
-        focusTime: String,
-        restTime: String,
+        focusTime: String?,
+        restTime: String?,
+        iconType: String?,
+        title: String?,
     ) {
-        pomodoroSettingDao.updateTimes(
+        pomodoroSettingDao.updateSetting(
             categoryNo = categoryNo,
             focusTime = focusTime,
             restTime = restTime,
+            iconType = iconType,
+            title = title,
         )
     }
 

@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -28,7 +29,6 @@ import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryM
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import timber.log.Timber
 
 @Composable
 fun CategoryBottomSheetContents(
@@ -38,10 +38,12 @@ fun CategoryBottomSheetContents(
     onCategorySelected: (PomodoroCategoryModel) -> Unit,
     onCategoryEdit: (PomodoroCategoryModel) -> Unit,
     onDeleteItemsClick: (List<Int>) -> Unit,
+    onSnackbarShow: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val selectedItems: MutableMap<Int, Boolean> = remember(categoryList) { mutableStateMapOf<Int, Boolean>() }
     val gridCells = if (categoryList.size == 1) GridCells.Fixed(1) else GridCells.Fixed(2)
+    val context = LocalContext.current
 
     LaunchedEffect(categoryManageState) {
         selectedItems.clear()
@@ -72,10 +74,19 @@ fun CategoryBottomSheetContents(
                     onClick = {
                         when (categoryManageState) {
                             CategoryManageState.DEFAULT -> onCategorySelected(item)
-                            CategoryManageState.EDIT -> onCategoryEdit(item)
+                            CategoryManageState.EDIT -> {
+                                if (isNonEditableItem.not()) {
+                                    onCategoryEdit(item)
+                                } else {
+                                    onSnackbarShow(context.getString(R.string.default_category_cannot_edit))
+                                }
+                            }
+
                             CategoryManageState.DELETE -> {
                                 if (isNonEditableItem.not()) {
                                     selectedItems[item.categoryNo] = !selected
+                                } else {
+                                    onSnackbarShow(context.getString(R.string.default_category_cannot_edit))
                                 }
                             }
                         }
@@ -166,6 +177,7 @@ private fun CategoryBottomSheetPreview(
             onCategorySelected = {},
             onCategoryEdit = {},
             onDeleteItemsClick = {},
+            onSnackbarShow = {},
         )
     }
 }

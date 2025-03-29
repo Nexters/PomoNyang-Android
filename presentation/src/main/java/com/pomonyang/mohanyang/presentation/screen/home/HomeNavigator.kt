@@ -70,7 +70,6 @@ fun NavGraphBuilder.homeScreen(
                     navHostController.navigate(MyPage)
                 },
                 goToCategoryEdit = { category ->
-                    Timber.tag("koni").d("category > $category")
                     navHostController.navigate(
                         CategorySetting(
                             categoryNo = category.categoryNo,

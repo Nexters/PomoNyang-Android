@@ -111,16 +111,11 @@ private fun PomodoroCategoryBottomSheet(
                 categoryList = categoryList,
                 currentSelectedCategoryNo = initialCategoryNo,
                 onCategorySelected = { onAction(PomodoroSettingEvent.SelectCategory(it.categoryNo)) },
-                onCategoryEdit = {
-                    if (it.categoryIcon == CategoryIcon.CAT) {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("기본 카테고리는 수정/삭제가 불가능합니다.")
-                        }
-                    } else {
-                        onAction(PomodoroSettingEvent.ClickCategoryEdit(it))
-                    }
-                },
+                onCategoryEdit = { onAction(PomodoroSettingEvent.ClickCategoryEdit(it)) },
                 onDeleteItemsClick = { onAction(PomodoroSettingEvent.DeleteCategory(it)) },
+                onSnackbarShow = {
+                    scope.launch { snackbarHostState.showSnackbar(it) }
+                },
             )
 
             AnimatedVisibility(

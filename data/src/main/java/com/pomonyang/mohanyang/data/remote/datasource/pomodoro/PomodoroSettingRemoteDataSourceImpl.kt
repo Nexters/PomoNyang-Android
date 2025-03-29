@@ -13,15 +13,19 @@ internal class PomodoroSettingRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>> = mohaNyangService.getPomodoroSettingList()
 
-    override suspend fun updatePomodoroCategoryTimes(
+    override suspend fun modifyCategorySettingOption(
         categoryNo: Int,
-        focusTime: String,
-        restTime: String,
+        focusTime: String?,
+        restTime: String?,
+        iconType: String?,
+        title: String?,
     ): Result<Unit> = mohaNyangService.updatePomodoroSetting(
         no = categoryNo,
         updateCategoryInfoRequest = UpdateCategoryInfoRequest(
             focusTime = focusTime,
             restTime = restTime,
+            iconType = iconType,
+            title = title,
         ),
     )
 

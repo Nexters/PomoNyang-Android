@@ -11,10 +11,12 @@ interface PomodoroSettingRepository {
 
     suspend fun fetchPomodoroSettingList()
 
-    suspend fun updatePomodoroCategoryTimes(
+    suspend fun updatePomodoroCategorySetting(
         categoryNo: Int,
-        focusTime: Int,
-        restTime: Int,
+        title: String? = null,
+        iconType: String? = null,
+        focusTime: Int? = null,
+        restTime: Int? = null,
     ): Result<Unit>
 
     suspend fun addPomodoroCategory(

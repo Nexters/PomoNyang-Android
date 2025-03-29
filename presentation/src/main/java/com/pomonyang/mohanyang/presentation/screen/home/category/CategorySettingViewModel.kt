@@ -48,8 +48,8 @@ class CategorySettingViewModel @Inject constructor(
             }
 
             is CategorySettingEvent.ClickConfirm -> {
-                if (state.value.isCreateMode()) {
-                    viewModelScope.launch {
+                viewModelScope.launch {
+                    if (state.value.isCreateMode()) {
                         pomodoroSettingRepository.addPomodoroCategory(
                             event.categoryName,
                             state.value.selectedCategoryIcon.name,
@@ -58,9 +58,19 @@ class CategorySettingViewModel @Inject constructor(
                         }.onFailure {
                             setEffect(CategorySettingSideEffect.ShowErrorMessage(it.message ?: ""))
                         }
+                    } else {
+                        state.value.categoryNo?.let {
+                            pomodoroSettingRepository.updatePomodoroCategorySetting(
+                                categoryNo = it,
+                                title = event.categoryName,
+                                iconType = state.value.selectedCategoryIcon.name,
+                            ).onSuccess {
+                                setEffect(CategorySettingSideEffect.GoToPomodoroSetting)
+                            }.onFailure {
+                                setEffect(CategorySettingSideEffect.ShowErrorMessage(it.message ?: ""))
+                            }
+                        }
                     }
-                } else {
-                    // TODO 카테고리 수정 API
                 }
             }
 
