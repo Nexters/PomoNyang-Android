@@ -97,7 +97,7 @@ private fun PomodoroCategoryBottomSheet(
                 )
             } else {
                 MnTextButton(
-                    text = stringResource(R.string.change_category_title_content),
+                    text = stringResource(R.string.common_cancel),
                     styles = MnTextButtonStyles.medium,
                     onClick = onCancelClick,
                 )
