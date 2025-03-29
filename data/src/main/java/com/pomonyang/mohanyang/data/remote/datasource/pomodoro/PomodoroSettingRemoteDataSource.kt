@@ -17,4 +17,6 @@ interface PomodoroSettingRemoteDataSource {
     ): Result<Unit>
 
     suspend fun deleteCategoryNo(categoryNumbers: List<Int>): Result<Unit>
+
+    suspend fun updateSelectPomodoroCategory(categoryNo: Int): Result<Unit>
 }

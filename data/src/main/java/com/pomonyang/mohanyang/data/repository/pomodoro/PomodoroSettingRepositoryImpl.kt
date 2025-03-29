@@ -7,11 +7,8 @@ import com.pomonyang.mohanyang.data.remote.model.response.toEntity
 import java.time.Duration
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEmpty
+import timber.log.Timber
 
 internal class PomodoroSettingRepositoryImpl @Inject constructor(
     private val pomodoroSettingRemoteDataSource: PomodoroSettingRemoteDataSource,
@@ -91,13 +88,14 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateRecentUseCategoryNo(categoryNo: Int) {
-        pomodoroSettingDao.updateSelectCategory(categoryNo)
+        pomodoroSettingRemoteDataSource.updateSelectPomodoroCategory(categoryNo).onSuccess {
+            pomodoroSettingDao.updateSelectCategory(categoryNo)
+        }
     }
 
     override suspend fun deleteCategoryNo(categoryNumbers: List<Int>) {
-        pomodoroSettingRemoteDataSource.deleteCategoryNo(categoryNumbers)
-            .onSuccess {
-                pomodoroSettingDao.deletePomodoroSettingsByCategoryNos(categoryNumbers)
-            }
+        pomodoroSettingRemoteDataSource.deleteCategoryNo(categoryNumbers).onSuccess {
+            pomodoroSettingDao.deletePomodoroSettingsByCategoryNos(categoryNumbers)
+        }
     }
 }

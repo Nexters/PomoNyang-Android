@@ -73,4 +73,9 @@ interface MohaNyangService {
     suspend fun deleteCategories(
         @Body request: DeleteCategoryRequest,
     ): Result<Unit>
+
+    @PATCH("/api/v1/categories/select/{no}")
+    suspend fun updateSelectPomodoroCategory(
+        @Path("no") no: Int,
+    ): Result<Unit>
 }
