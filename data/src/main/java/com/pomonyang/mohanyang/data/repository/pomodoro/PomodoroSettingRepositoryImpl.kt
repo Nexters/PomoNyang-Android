@@ -8,7 +8,6 @@ import java.time.Duration
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEmpty
-import timber.log.Timber
 
 internal class PomodoroSettingRepositoryImpl @Inject constructor(
     private val pomodoroSettingRemoteDataSource: PomodoroSettingRemoteDataSource,

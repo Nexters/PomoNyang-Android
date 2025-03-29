@@ -63,7 +63,7 @@ fun MnBoxButton(
                     .padding(styles.contentPadding),
                 contentAlignment = Alignment.Center,
 
-                ) {
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(styles.spacing),

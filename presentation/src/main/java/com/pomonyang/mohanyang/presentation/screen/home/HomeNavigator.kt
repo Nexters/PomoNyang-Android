@@ -18,7 +18,6 @@ import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
 import kotlin.reflect.typeOf
 import kotlinx.serialization.Serializable
-import timber.log.Timber
 
 @Serializable
 data object Home

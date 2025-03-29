@@ -12,7 +12,8 @@ interface PomodoroSettingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPomodoroSettingData(pomodoroSettingEntity: List<PomodoroSettingEntity>)
 
-    @Query("""
+    @Query(
+        """
         UPDATE pomodoro_setting 
         SET 
             focusTime = COALESCE(:focusTime, focusTime), 
@@ -20,13 +21,14 @@ interface PomodoroSettingDao {
             iconType = COALESCE(:iconType, iconType), 
             title = COALESCE(:title, title)
         WHERE categoryNo = :categoryNo
-    """)
+    """,
+    )
     suspend fun updateSetting(
         categoryNo: Int,
         focusTime: String?,
         restTime: String?,
         iconType: String?,
-        title: String?
+        title: String?,
     )
 
     @Query("DELETE FROM pomodoro_setting")
