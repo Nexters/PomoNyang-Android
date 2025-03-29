@@ -89,6 +89,7 @@ class PomodoroTimeSettingViewModel @Inject constructor(
                     isInternalError = false,
                     isInvalidError = false,
                     isLoading = false,
+                    categoryIcon = selectedPomodoroSetting.categoryIcon,
                 )
             }
         }

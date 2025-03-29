@@ -33,4 +33,5 @@ sealed interface CategorySettingSideEffect : ViewSideEffect {
     data object GoToPomodoroSetting : CategorySettingSideEffect
     data object ShowCategoryIconBottomSheet : CategorySettingSideEffect
     data object DismissCategoryIconBottomSheet : CategorySettingSideEffect
+    data class ShowErrorMessage(val message: String) : CategorySettingSideEffect
 }

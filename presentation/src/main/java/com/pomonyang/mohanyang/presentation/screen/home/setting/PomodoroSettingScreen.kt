@@ -174,7 +174,7 @@ fun PomodoroSettingScreen(
             )
 
             CategoryBox(
-                iconRes = state.selectedSettingModel.categoryType.resourceId,
+                iconRes = state.selectedSettingModel.categoryIcon.resourceId,
                 categoryName = state.selectedSettingModel.title,
                 modifier = Modifier
                     .padding(bottom = MnSpacing.medium, top = 40.dp)

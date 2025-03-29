@@ -13,7 +13,7 @@ data class PomodoroRestState(
     val remainingRestTime: Int = 0,
     val restExceededTime: Int = 0,
     val maxRestTime: Int = 0,
-    val categoryType: CategoryIcon = CategoryIcon.CAT,
+    val categoryIcon: CategoryIcon = CategoryIcon.CAT,
     val categoryName: String = "",
     val cat: CatType = CatType.CHEESE,
     val categoryNo: Int = -1,

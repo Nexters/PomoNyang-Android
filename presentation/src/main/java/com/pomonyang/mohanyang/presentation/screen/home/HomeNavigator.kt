@@ -112,7 +112,10 @@ fun NavGraphBuilder.homeScreen(
             typeMap = mapOf(typeOf<CategoryIcon>() to CategoryIconNavType),
         ) { backStackEntry ->
             val routeData = backStackEntry.toRoute<CategorySetting>()
-            CategorySettingRoute(categoryNo = routeData.categoryNo) {
+            CategorySettingRoute(
+                categoryNo = routeData.categoryNo,
+                onShowSnackbar = onShowSnackbar,
+            ) {
                 navHostController.popBackStack()
             }
         }

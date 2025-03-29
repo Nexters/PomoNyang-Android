@@ -83,6 +83,7 @@ fun PomodoroRestRoute(
         modifier = modifier,
         categoryName = state.categoryName,
         catType = state.cat,
+        categoryIcon = state.categoryIcon,
         time = state.displayRestTime(),
         plusButtonSelected = state.plusButtonSelected,
         minusButtonSelected = state.minusButtonSelected,
@@ -99,6 +100,7 @@ private fun PomodoroRestScreen(
     time: String,
     exceededTime: String,
     catType: CatType,
+    categoryIcon: CategoryIcon,
     plusButtonSelected: Boolean,
     minusButtonSelected: Boolean,
     plusButtonEnabled: Boolean,
@@ -119,7 +121,7 @@ private fun PomodoroRestScreen(
                 CategoryBox(
                     categoryName = categoryName,
                     modifier = Modifier.padding(start = 12.dp),
-                    iconRes = CategoryIcon.safeValueOf(categoryName).resourceId,
+                    iconRes = categoryIcon.resourceId,
                 )
             },
         )
@@ -137,7 +139,7 @@ private fun PomodoroRestScreen(
             },
         )
 
-        TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)
+        TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_lightning)
 
         Timer(
             modifier = Modifier,
@@ -187,6 +189,7 @@ private fun PomodoroTimerScreenPreview() {
             plusButtonEnabled = true,
             minusButtonEnabled = true,
             catType = CatType.CHEESE,
+            categoryIcon = CategoryIcon.CAT,
             onAction = {},
         )
     }
@@ -205,6 +208,7 @@ private fun PomodoroTimerExceedScreenPreview() {
             plusButtonEnabled = true,
             minusButtonEnabled = true,
             catType = CatType.CHEESE,
+            categoryIcon = CategoryIcon.CAT,
             onAction = {},
         )
     }

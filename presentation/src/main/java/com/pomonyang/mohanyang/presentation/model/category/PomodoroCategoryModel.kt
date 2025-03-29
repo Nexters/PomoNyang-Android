@@ -2,7 +2,6 @@ package com.pomonyang.mohanyang.presentation.model.category
 
 import androidx.compose.runtime.Immutable
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 
 @Immutable
@@ -15,5 +14,5 @@ data class PomodoroCategoryModel(
 fun PomodoroSettingEntity.toCategoryModel() = PomodoroCategoryModel(
     categoryNo = categoryNo,
     title = title,
-    categoryIcon = CategoryIcon.safeValueOf(title),
+    categoryIcon = CategoryIcon.valueOf(iconType)
 )

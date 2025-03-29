@@ -115,7 +115,7 @@ private fun PreviewCategoryIconKey() {
     MnTheme {
         Row {
             CategoryIconKey(
-                iconId = R.drawable.ic_focus,
+                iconId = R.drawable.ic_fire,
                 isSelected = true,
                 onClick = { },
             )
@@ -147,7 +147,7 @@ private fun PreviewCategoryBottomSheet() {
         CategoryIconBottomSheet(
             onAction = {},
             icons = CategoryIcon.entries.toImmutableList(),
-            selectedIcon = CategoryIcon.FOCUS,
+            selectedIcon = CategoryIcon.CAT,
         )
     }
 }

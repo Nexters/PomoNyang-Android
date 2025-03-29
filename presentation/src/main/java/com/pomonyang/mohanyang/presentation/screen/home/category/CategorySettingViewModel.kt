@@ -19,7 +19,7 @@ class CategorySettingViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
 ) : BaseViewModel<CategorySettingState, CategorySettingEvent, CategorySettingSideEffect>() {
     init {
-        val category = savedStateHandle.toRoute<CategorySetting>(typeMap = mapOf(typeOf<CategoryIcon>() to CategoryIconNavType),)
+        val category = savedStateHandle.toRoute<CategorySetting>(typeMap = mapOf(typeOf<CategoryIcon>() to CategoryIconNavType))
         handleEvent(
             CategorySettingEvent.Init(
                 categoryNo = category.categoryNo,
@@ -52,13 +52,16 @@ class CategorySettingViewModel @Inject constructor(
                     viewModelScope.launch {
                         pomodoroSettingRepository.addPomodoroCategory(
                             event.categoryName,
-                            state.value.selectedCategoryIcon.name
-                        )
+                            state.value.selectedCategoryIcon.name,
+                        ).onSuccess {
+                            setEffect(CategorySettingSideEffect.GoToPomodoroSetting)
+                        }.onFailure {
+                            setEffect(CategorySettingSideEffect.ShowErrorMessage(it.message ?: ""))
+                        }
                     }
                 } else {
                     // TODO 카테고리 수정 API
                 }
-                setEffect(CategorySettingSideEffect.GoToPomodoroSetting)
             }
 
             is CategorySettingEvent.SelectIcon -> {

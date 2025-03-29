@@ -64,6 +64,7 @@ fun CategorySettingRoute(
     categoryNo: Int?,
     modifier: Modifier = Modifier,
     categorySettingViewModel: CategorySettingViewModel = hiltViewModel(),
+    onShowSnackbar: (String, Int?) -> Unit,
     onBackClick: () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -82,6 +83,10 @@ fun CategorySettingRoute(
 
             CategorySettingSideEffect.ShowCategoryIconBottomSheet -> {
                 showDialog = true
+            }
+
+            is CategorySettingSideEffect.ShowErrorMessage -> {
+                onShowSnackbar(effect.message, null)
             }
         }
     }
@@ -254,7 +259,7 @@ fun PreviewCategorySettingScreen() {
         CategorySettingScreen(
             categoryNo = 1,
             categoryName = "test",
-            categoryIconResourceId = R.drawable.ic_book,
+            categoryIconResourceId = R.drawable.ic_open_book,
             onAction = {},
             onBackClick = {},
             modifier = Modifier,

@@ -9,7 +9,7 @@ import java.time.Duration
 data class PomodoroSettingModel(
     val categoryNo: Int,
     val title: String,
-    val categoryType: CategoryIcon,
+    val categoryIcon: CategoryIcon,
     val focusTime: Int,
     val restTime: Int,
     val isSelected: Boolean,
@@ -18,7 +18,7 @@ data class PomodoroSettingModel(
 fun PomodoroSettingEntity.toModel() = PomodoroSettingModel(
     categoryNo = categoryNo,
     title = title,
-    categoryType = CategoryIcon.safeValueOf(title),
+    categoryIcon = CategoryIcon.valueOf(iconType),
     focusTime = Duration.parse(focusTime).toMinutes().toInt(),
     restTime = Duration.parse(restTime).toMinutes().toInt(),
     isSelected = isSelected,

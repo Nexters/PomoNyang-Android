@@ -124,7 +124,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     private fun getStatusBitmapAndIcon(category: CategoryModel?): Pair<Bitmap, Int> {
         val statusText = category?.name ?: context.getString(R.string.notification_timer_rest)
         val statusBitmap = bitmapGenerator.createStatusBitmap(statusText)
-        val iconRes = category?.icon?.resourceId ?: R.drawable.ic_rest
+        val iconRes = category?.icon?.resourceId ?: R.drawable.ic_lightning
         return statusBitmap to iconRes
     }
 }

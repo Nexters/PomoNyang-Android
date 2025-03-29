@@ -81,7 +81,7 @@ fun PomodoroTimeSettingRoute(
             LoadingContentContainer(isLoading = state.isLoading) {
                 PomodoroTimeSettingScreen(
                     modifier = modifier,
-                    category = CategoryIcon.safeValueOf(categoryName),
+                    category = state.categoryIcon,
                     isFocusTime = isFocusTime,
                     initialSettingTime = initialSettingTime,
                     onAction = viewModel::handleEvent,
@@ -99,7 +99,7 @@ private fun PomodoroTimeSettingScreen(
     onAction: (PomodoroTimeSettingEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val iconResId = if (isFocusTime) R.drawable.ic_focus else R.drawable.ic_rest
+    val iconResId = if (isFocusTime) R.drawable.ic_fire else R.drawable.ic_lightning
 
     Column(
         modifier = modifier

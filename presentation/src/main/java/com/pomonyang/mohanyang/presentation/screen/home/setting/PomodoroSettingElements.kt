@@ -15,7 +15,7 @@ data class PomodoroSettingState(
     val selectedSettingModel: PomodoroSettingModel = PomodoroSettingModel(
         categoryNo = 0,
         title = "집중",
-        categoryType = CategoryIcon.CAT,
+        categoryIcon = CategoryIcon.CAT,
         focusTime = 0,
         restTime = 0,
         isSelected = false,

@@ -18,7 +18,7 @@ enum class CatType(
 ) {
     CHEESE(
         personality = R.string.cat_cheese_personality,
-        personalityIcon = R.drawable.ic_star,
+        personalityIcon = R.drawable.ic_asterisk,
         timerEndPushContent = R.string.cat_cheese_timer_end_push,
         restEndPushContent = R.string.cat_cheese_rest_end_push,
         backgroundPushContent = R.string.cat_cheese_background_push,
@@ -48,7 +48,7 @@ enum class CatType(
     ),
     THREE_COLOR(
         personality = R.string.cat_three_personality,
-        personalityIcon = R.drawable.ic_focus,
+        personalityIcon = R.drawable.ic_fire,
         timerEndPushContent = R.string.cat_three_timer_end_push,
         restEndPushContent = R.string.cat_cheese_rest_end_push,
         backgroundPushContent = R.string.cat_three_background_push,

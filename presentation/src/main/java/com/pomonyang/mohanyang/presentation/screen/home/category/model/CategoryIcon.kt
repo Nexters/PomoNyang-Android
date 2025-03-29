@@ -9,15 +9,15 @@ enum class CategoryIcon(
     @DrawableRes val resourceId: Int,
 ) {
     CAT(resourceId = com.mohanyang.presentation.R.drawable.ic_category_default),
-    MEMO(resourceId = com.mohanyang.presentation.R.drawable.ic_memo),
-    BOOK(resourceId = com.mohanyang.presentation.R.drawable.ic_book),
+    BOX_PEN(resourceId = com.mohanyang.presentation.R.drawable.ic_box_pen),
+    OPEN_BOOK(resourceId = com.mohanyang.presentation.R.drawable.ic_open_book),
     BRIFECASE(resourceId = com.mohanyang.presentation.R.drawable.ic_brifecase),
-    LAPTOP(resourceId = com.mohanyang.presentation.R.drawable.ic_laptop),
-    EXERCISE(resourceId = com.mohanyang.presentation.R.drawable.ic_exercise),
-    REST(resourceId = com.mohanyang.presentation.R.drawable.ic_rest),
-    FOCUS(resourceId = com.mohanyang.presentation.R.drawable.ic_focus),
+    LAPTOP(resourceId = com.mohanyang.presentation.R.drawable.ic_monitor),
+    DUMBBELL(resourceId = com.mohanyang.presentation.R.drawable.ic_dumbbell),
+    LIGHTNING(resourceId = com.mohanyang.presentation.R.drawable.ic_lightning),
+    FIRE(resourceId = com.mohanyang.presentation.R.drawable.ic_fire),
     HEART(resourceId = com.mohanyang.presentation.R.drawable.ic_heart),
-    STAR(resourceId = com.mohanyang.presentation.R.drawable.ic_star),
+    ASTERISK(resourceId = com.mohanyang.presentation.R.drawable.ic_asterisk),
     SUN(resourceId = com.mohanyang.presentation.R.drawable.ic_sun),
     MOON(resourceId = com.mohanyang.presentation.R.drawable.ic_moon),
 
@@ -37,19 +37,6 @@ enum class CategoryIcon(
 
         override fun put(bundle: android.os.Bundle, key: String, value: CategoryIcon) {
             bundle.putString(key, value.name)
-        }
-    }
-
-    companion object {
-
-        fun safeValueOf(title: String): CategoryIcon {
-            // TODO 추후에 서버에서 Icon까지 내려주면 이렇게 바꿀 필요가 없음
-            return when (title.lowercase()) {
-                "독서" -> BOOK
-                "공부" -> MEMO
-                "작업" -> LAPTOP
-                else -> CAT
-            }
         }
     }
 }
