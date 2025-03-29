@@ -72,14 +72,16 @@ fun FocusStatisticBox(
                     // TODO API 연결
                     LazyColumn {
                         itemsIndexed(CategoryIcon.entries.toTypedArray()) { idx, category ->
-                            FocusCategoryDataBox(categoryModel = PomodoroSettingModel(
-                                categoryNo = 1,
-                                title = "temp" /* FIXME stringResource(id = category.kor)*/,
-                                categoryIcon = category,
-                                focusTime = 10,
-                                restTime = 20,
-                                isSelected = false
-                            ))
+                            FocusCategoryDataBox(
+                                categoryModel = PomodoroSettingModel(
+                                    categoryNo = 1,
+                                    title = "temp" /* FIXME stringResource(id = category.kor)*/,
+                                    categoryIcon = category,
+                                    focusTime = 10,
+                                    restTime = 20,
+                                    isSelected = false,
+                                ),
+                            )
                         }
                     }
                 }

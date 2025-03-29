@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.service
 
-import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 
 internal interface PomodoroTimer {

@@ -22,15 +22,13 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
         .getPomodoroSetting()
         .onEmpty { fetchPomodoroSettingList() }
 
-    override fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity> {
-        return pomodoroSettingDao.getSelectedPomodoroSetting().flatMapLatest { selected ->
-            if (selected != null) {
-                flowOf(selected)
-            } else {
-                // 임시 코드 아무것도 선택 안한 유저에게는 첫번째 카테고리로 설정이 되게 해줄 수 있는 확인 필요
-                flow {
-                    emit(getPomodoroSettingList().first().first())
-                }
+    override fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity> = pomodoroSettingDao.getSelectedPomodoroSetting().flatMapLatest { selected ->
+        if (selected != null) {
+            flowOf(selected)
+        } else {
+            // 임시 코드 아무것도 선택 안한 유저에게는 첫번째 카테고리로 설정이 되게 해줄 수 있는 확인 필요
+            flow {
+                emit(getPomodoroSettingList().first().first())
             }
         }
     }
@@ -74,15 +72,12 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
     override suspend fun addPomodoroCategory(
         title: String,
         iconType: String,
-    ): Result<Unit> {
-        return pomodoroSettingRemoteDataSource.addPomodoroCategory(
-            title = title,
-            iconType = iconType,
-        ).onSuccess {
-            fetchPomodoroSettingList()
-        }
+    ): Result<Unit> = pomodoroSettingRemoteDataSource.addPomodoroCategory(
+        title = title,
+        iconType = iconType,
+    ).onSuccess {
+        fetchPomodoroSettingList()
     }
-
 
     override suspend fun updateRecentUseCategoryNo(categoryNo: Int) {
         pomodoroSettingDao.updateSelectCategory(categoryNo)

@@ -24,13 +24,15 @@ interface PomodoroSettingDao {
     @Query("SELECT * FROM pomodoro_setting WHERE isSelected = 1")
     fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity?>
 
-    @Query("""
+    @Query(
+        """
         UPDATE pomodoro_setting 
         SET isSelected = CASE 
             WHEN categoryNo = :selectedCategoryNo THEN 1 
             ELSE 0 
         END
-    """)
+    """,
+    )
     suspend fun updateSelectCategory(selectedCategoryNo: Int)
 
     @Query("SELECT * FROM pomodoro_setting LIMIT 1")

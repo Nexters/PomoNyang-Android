@@ -24,10 +24,8 @@ enum class CategoryIcon(
     ;
 
     object CategoryIconNavType : androidx.navigation.NavType<CategoryIcon>(isNullableAllowed = false) {
-        override fun get(bundle: android.os.Bundle, key: String): CategoryIcon? {
-            return bundle.getString(key)?.let { id ->
-                CategoryIcon.valueOf(id)
-            }
+        override fun get(bundle: android.os.Bundle, key: String): CategoryIcon? = bundle.getString(key)?.let { id ->
+            CategoryIcon.valueOf(id)
         }
 
         override fun parseValue(value: String): CategoryIcon {

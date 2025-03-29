@@ -14,5 +14,5 @@ data class PomodoroCategoryModel(
 fun PomodoroSettingEntity.toCategoryModel() = PomodoroCategoryModel(
     categoryNo = categoryNo,
     title = title,
-    categoryIcon = CategoryIcon.valueOf(iconType)
+    categoryIcon = CategoryIcon.valueOf(iconType),
 )

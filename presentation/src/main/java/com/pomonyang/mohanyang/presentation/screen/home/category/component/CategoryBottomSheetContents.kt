@@ -102,9 +102,7 @@ fun CategoryBottomSheetContents(
     }
 }
 
-
-private class CategoryPreviewParameterProvider :
-    PreviewParameterProvider<List<PomodoroCategoryModel>> {
+private class CategoryPreviewParameterProvider : PreviewParameterProvider<List<PomodoroCategoryModel>> {
     override val values = sequenceOf(
         persistentListOf(
             PomodoroCategoryModel(
@@ -170,4 +168,3 @@ private fun CategoryBottomSheetPreview(
         )
     }
 }
-

@@ -9,9 +9,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.pomonyang.mohanyang.presentation.screen.home.category.CategorySettingRoute
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon.CategoryIconNavType
-import com.pomonyang.mohanyang.presentation.screen.home.category.CategorySettingRoute
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.home.time.PomodoroTimeSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
@@ -93,7 +93,7 @@ fun NavGraphBuilder.homeScreen(
                 slideOutVertically(tween(slideDuration), targetOffsetY = { it })
             },
 
-            ) { backStackEntry ->
+        ) { backStackEntry ->
             val routeData = backStackEntry.toRoute<TimeSetting>()
             PomodoroTimeSettingRoute(
                 isFocusTime = routeData.isFocusTime,

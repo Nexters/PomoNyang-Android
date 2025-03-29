@@ -142,9 +142,10 @@ private fun PomodoroCategoryBottomSheet(
     }
 }
 
-private class CategoryStatePreviewParameterProvider : CollectionPreviewParameterProvider<CategoryManageState>(
-    CategoryManageState.entries,
-)
+private class CategoryStatePreviewParameterProvider :
+    CollectionPreviewParameterProvider<CategoryManageState>(
+        CategoryManageState.entries,
+    )
 
 @Preview(showBackground = true)
 @Composable
@@ -171,4 +172,3 @@ private fun CategoryBottomSheetPreview(
         )
     }
 }
-

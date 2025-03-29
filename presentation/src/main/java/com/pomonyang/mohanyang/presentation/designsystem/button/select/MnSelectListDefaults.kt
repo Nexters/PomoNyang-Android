@@ -19,7 +19,7 @@ object MnSelectListDefaults {
     fun colors(
         enabledTextColor: Color = MnTheme.textColorScheme.primary,
         disabledTextColor: Color = MnTheme.textColorScheme.disabled,
-        enabledIconTint: Color =  Color.Unspecified,
+        enabledIconTint: Color = Color.Unspecified,
         disabledIconTint: Color = MnTheme.textColorScheme.disabled,
     ) = MnSelectListColors(
         enabledTextColor = enabledTextColor,
