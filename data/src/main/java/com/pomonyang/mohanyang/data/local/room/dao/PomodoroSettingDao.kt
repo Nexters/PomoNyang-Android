@@ -37,7 +37,7 @@ interface PomodoroSettingDao {
     @Query("SELECT * FROM pomodoro_setting")
     fun getPomodoroSetting(): Flow<List<PomodoroSettingEntity>>
 
-    @Query("SELECT * FROM pomodoro_setting WHERE isSelected = 1")
+    @Query("SELECT * FROM pomodoro_setting ORDER BY isSelected DESC, categoryNo ASC LIMIT 1")
     fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity>
 
     @Query(
