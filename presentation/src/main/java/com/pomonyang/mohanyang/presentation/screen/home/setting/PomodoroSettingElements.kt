@@ -41,7 +41,7 @@ sealed interface PomodoroSettingEvent : ViewEvent {
     data object ClickMenu : PomodoroSettingEvent
     data class ClickCategoryEdit(val category: PomodoroCategoryModel) : PomodoroSettingEvent
     data object ClickCategoryCreate : PomodoroSettingEvent
-    data class DeleteCategory(val categoryId: List<Int>) : PomodoroSettingEvent
+    data class DeleteCategories(val categoryIds: List<Int>) : PomodoroSettingEvent
 }
 
 sealed interface PomodoroSettingSideEffect : ViewSideEffect {

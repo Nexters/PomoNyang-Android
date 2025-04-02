@@ -39,7 +39,7 @@ internal class PomodoroSettingRemoteDataSourceImpl @Inject constructor(
         ),
     )
 
-    override suspend fun deleteCategoryNo(categoryNumbers: List<Int>): Result<Unit> = mohaNyangService.deleteCategories(
+    override suspend fun deleteCategories(categoryNumbers: List<Int>): Result<Unit> = mohaNyangService.deleteCategories(
         request = DeleteCategoryRequest(categoryNumbers),
     )
 

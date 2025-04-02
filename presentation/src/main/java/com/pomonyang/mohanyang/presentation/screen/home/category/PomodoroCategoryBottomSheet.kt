@@ -115,7 +115,7 @@ private fun PomodoroCategoryBottomSheet(
                 currentSelectedCategoryNo = initialCategoryNo,
                 onCategorySelected = { onAction(PomodoroSettingEvent.SelectCategory(it.categoryNo)) },
                 onCategoryEdit = { onAction(PomodoroSettingEvent.ClickCategoryEdit(it)) },
-                onDeleteItemsClick = { onAction(PomodoroSettingEvent.DeleteCategory(it)) },
+                onDeleteItemsClick = { onAction(PomodoroSettingEvent.DeleteCategories(it)) },
                 onSnackbarShow = {
                     scope.launch { snackbarHostState.showSnackbar(it) }
                 },
