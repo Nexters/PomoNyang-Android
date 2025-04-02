@@ -112,7 +112,6 @@ fun NavGraphBuilder.homeScreen(
             val routeData = backStackEntry.toRoute<CategorySetting>()
             CategorySettingRoute(
                 categoryNo = routeData.categoryNo,
-                onShowSnackbar = onShowSnackbar,
             ) {
                 navHostController.popBackStack()
             }

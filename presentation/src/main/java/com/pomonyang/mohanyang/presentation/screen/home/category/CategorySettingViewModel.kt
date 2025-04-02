@@ -55,8 +55,8 @@ class CategorySettingViewModel @Inject constructor(
                             state.value.selectedCategoryIcon.name,
                         ).onSuccess {
                             setEffect(CategorySettingSideEffect.GoToPomodoroSetting)
-                        }.onFailure {
-                            setEffect(CategorySettingSideEffect.ShowErrorMessage(it.message ?: ""))
+                        }.onFailure { error ->
+                            setEffect(CategorySettingSideEffect.ShowErrorMessage(error.message ?: ""))
                         }
                     } else {
                         state.value.categoryNo?.let {
@@ -66,8 +66,8 @@ class CategorySettingViewModel @Inject constructor(
                                 iconType = state.value.selectedCategoryIcon.name,
                             ).onSuccess {
                                 setEffect(CategorySettingSideEffect.GoToPomodoroSetting)
-                            }.onFailure {
-                                setEffect(CategorySettingSideEffect.ShowErrorMessage(it.message ?: ""))
+                            }.onFailure { error ->
+                                setEffect(CategorySettingSideEffect.ShowErrorMessage(error.message ?: ""))
                             }
                         }
                     }

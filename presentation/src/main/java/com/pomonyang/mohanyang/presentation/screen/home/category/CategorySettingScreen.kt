@@ -30,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -64,16 +65,26 @@ fun CategorySettingRoute(
     categoryNo: Int?,
     modifier: Modifier = Modifier,
     categorySettingViewModel: CategorySettingViewModel = hiltViewModel(),
-    onShowSnackbar: (String, Int?) -> Unit,
     onBackClick: () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
-
     val state by categorySettingViewModel.state.collectAsStateWithLifecycle()
+    var name by rememberSaveable { mutableStateOf(state.categoryName) }
+    val categoryNameValidator = remember { CategoryNameVerifier }
+    var nameValidationResult by remember {
+        mutableStateOf(ValidationResult(name.isNotBlank()))
+    }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(name) {
+        nameValidationResult = categoryNameValidator.validateCategoryName(name)
+    }
 
     categorySettingViewModel.effects.collectWithLifecycle { effect ->
         when (effect) {
             CategorySettingSideEffect.GoToPomodoroSetting -> {
+                keyboardController?.hide()
                 onBackClick()
             }
 
@@ -86,7 +97,7 @@ fun CategorySettingRoute(
             }
 
             is CategorySettingSideEffect.ShowErrorMessage -> {
-                onShowSnackbar(effect.message, null)
+                nameValidationResult = ValidationResult(false, effect.message)
             }
         }
     }
@@ -101,45 +112,40 @@ fun CategorySettingRoute(
 
     CategorySettingScreen(
         categoryNo = categoryNo,
-        categoryName = state.categoryName,
+        name = name,
+        nameValidationResult = nameValidationResult,
         categoryIconResourceId = state.selectedCategoryIcon.resourceId,
         onAction = categorySettingViewModel::handleEvent,
         onBackClick = onBackClick,
-        modifier = modifier,
+        onTextChange = { name = it },
+        modifier = modifier.clickableSingle(activeRippleEffect = false) {
+            focusManager.clearFocus(true)
+            keyboardController?.hide()
+        },
     )
 }
 
 @Composable
 private fun CategorySettingScreen(
     categoryNo: Int?,
-    categoryName: String,
+    name: String,
+    nameValidationResult: ValidationResult,
     categoryIconResourceId: Int,
     onAction: (CategorySettingEvent) -> Unit,
     onBackClick: () -> Unit,
+    onTextChange: (newValue: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    var name by rememberSaveable { mutableStateOf(categoryName) }
-    val categoryNameValidator = remember { CategoryNameVerifier }
-    var nameValidationResult by remember {
-        mutableStateOf(ValidationResult(name.isNotBlank()))
-    }
-
-    LaunchedEffect(name) {
-        nameValidationResult = categoryNameValidator.validateCategoryName(name)
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
-            .background(MnTheme.backgroundColorScheme.primary)
-            .clickableSingle(activeRippleEffect = false) {
-                focusManager.clearFocus(true)
-                keyboardController?.hide()
-            },
+            .background(MnTheme.backgroundColorScheme.primary),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -161,7 +167,6 @@ private fun CategorySettingScreen(
 
         CategoryEditIcon(
             modifier = Modifier.padding(top = MnSpacing.threeXLarge, bottom = MnSpacing.twoXLarge),
-            categoryNo = categoryNo,
             categoryResourceId = categoryIconResourceId,
             onClickEdit = { onAction.invoke(CategorySettingEvent.ClickEdit(categoryNo = categoryNo)) },
         )
@@ -173,9 +178,10 @@ private fun CategorySettingScreen(
             textStyle = MnTheme.typography.bodySemiBold,
             hint = stringResource(id = R.string.category_setting_placeholder),
             value = name,
-            onValueChange = { value -> name = value },
+            onValueChange = onTextChange,
             errorMessage = nameValidationResult.message,
             isError = nameValidationResult.isValid.not(),
+            focusRequester = focusRequester,
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -194,7 +200,6 @@ private fun CategorySettingScreen(
 
 @Composable
 private fun CategoryEditIcon(
-    categoryNo: Int?,
     categoryResourceId: Int,
     onClickEdit: () -> Unit,
     modifier: Modifier = Modifier,
@@ -245,7 +250,6 @@ private fun CategoryEditIcon(
 fun PreviewCategorySelectIcon() {
     MnTheme {
         CategoryEditIcon(
-            categoryNo = 1,
             categoryResourceId = R.drawable.ic_category_default,
             onClickEdit = {},
         )
@@ -258,10 +262,12 @@ fun PreviewCategorySettingScreen() {
     MnTheme {
         CategorySettingScreen(
             categoryNo = 1,
-            categoryName = "test",
             categoryIconResourceId = R.drawable.ic_open_book,
             onAction = {},
             onBackClick = {},
+            name = "test",
+            nameValidationResult = ValidationResult(true),
+            onTextChange = {},
             modifier = Modifier,
         )
     }

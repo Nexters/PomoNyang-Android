@@ -32,6 +32,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -84,6 +86,7 @@ fun MnTextField(
         handleColor = MnTheme.backgroundColorScheme.accent1,
         backgroundColor = Color.Transparent,
     ),
+    focusRequester: FocusRequester = remember { FocusRequester() },
 ) {
     val height = 56.dp
     val containerColor = if (isEnabled) backgroundColor else MnTheme.backgroundColorScheme.secondary
@@ -110,7 +113,8 @@ fun MnTextField(
                                 bringIntoViewRequester.bringIntoView()
                             }
                         }
-                    },
+                    }
+                    .focusRequester(focusRequester),
                 value = value,
                 onValueChange = {
                     val newValue = if (counterMaxLength > 0) {
@@ -138,7 +142,7 @@ fun MnTextField(
                         ),
                         shape = RoundedCornerShape(MnRadius.small),
 
-                    ) {
+                        ) {
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(MnRadius.small))
