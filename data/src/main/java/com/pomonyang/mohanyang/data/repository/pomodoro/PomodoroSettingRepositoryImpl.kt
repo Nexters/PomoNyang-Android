@@ -18,7 +18,7 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
         .getPomodoroSetting()
         .onEmpty { fetchPomodoroSettingList() }
 
-    override fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity> = pomodoroSettingDao.getSelectedPomodoroSetting()
+    override fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity?> = pomodoroSettingDao.getSelectedPomodoroSetting()
 
     override suspend fun fetchPomodoroSettingList() {
         pomodoroSettingRemoteDataSource.getPomodoroSettingList()

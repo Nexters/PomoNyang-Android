@@ -7,7 +7,7 @@ interface PomodoroSettingRepository {
 
     fun getPomodoroSettingList(): Flow<List<PomodoroSettingEntity>>
 
-    fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity>
+    fun getSelectedPomodoroSetting(): Flow<PomodoroSettingEntity?>
 
     suspend fun fetchPomodoroSettingList()
 
