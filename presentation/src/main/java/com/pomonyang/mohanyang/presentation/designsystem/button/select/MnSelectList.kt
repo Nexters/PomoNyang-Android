@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
@@ -49,6 +50,8 @@ fun MnSelectListItem(
                     text = categoryType,
                     style = MnTheme.typography.bodySemiBold,
                     color = if (isDisabled) colors.disabledTextColor else colors.enabledTextColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
 
                 Spacer(Modifier.weight(1f))
