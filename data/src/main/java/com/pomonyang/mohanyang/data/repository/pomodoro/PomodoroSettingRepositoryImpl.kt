@@ -23,6 +23,7 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
     override suspend fun fetchPomodoroSettingList() {
         pomodoroSettingRemoteDataSource.getPomodoroSettingList()
             .onSuccess { responses ->
+                pomodoroSettingDao.deleteAllPomodoroSettings()
                 pomodoroSettingDao.insertPomodoroSettingData(
                     responses.map { response -> response.toEntity() },
                 )
