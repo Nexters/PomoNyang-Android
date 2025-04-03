@@ -4,9 +4,19 @@ import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingRespons
 
 interface PomodoroSettingRemoteDataSource {
     suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
-    suspend fun updatePomodoroCategoryTimes(
+    suspend fun modifyCategorySettingOption(
         categoryNo: Int,
-        focusTime: String,
-        restTime: String,
+        focusTime: String? = null,
+        restTime: String? = null,
+        iconType: String? = null,
+        title: String? = null,
     ): Result<Unit>
+    suspend fun addPomodoroCategory(
+        title: String,
+        iconType: String,
+    ): Result<Unit>
+
+    suspend fun deleteCategories(categoryNumbers: List<Int>): Result<Unit>
+
+    suspend fun updateSelectPomodoroCategory(categoryNo: Int): Result<Unit>
 }

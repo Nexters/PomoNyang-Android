@@ -53,6 +53,7 @@ class PomodoroBreakReadyViewModel @Inject constructor(
                             exceededTime = event.exceededTime,
                             focusedTime = event.focusTime,
                             type = event.type,
+                            categoryIcon = pomodoroSetting.categoryIcon,
                             plusButtonEnabled = pomodoroSetting.focusTime < MAX_FOCUS_MINUTES,
                             minusButtonEnabled = pomodoroSetting.focusTime > MIN_FOCUS_MINUTES,
                         )

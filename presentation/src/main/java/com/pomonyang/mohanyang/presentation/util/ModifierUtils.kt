@@ -87,7 +87,7 @@ fun Modifier.dropShadow(
     blur: Dp = 0.dp,
     offsetY: Dp = 0.dp,
     offsetX: Dp = 0.dp,
-    spread: Dp = 0.dp
+    spread: Dp = 0.dp,
 ) = this.drawBehind {
     val shadowSize = Size(size.width + spread.toPx(), size.height + spread.toPx())
     val shadowOutline = shape.createOutline(shadowSize, layoutDirection, this)

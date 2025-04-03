@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
 import com.pomonyang.mohanyang.presentation.base.ViewState
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 
 data class PomodoroBreakReadyState(
     val pomodoroId: String = "",
@@ -15,6 +16,7 @@ data class PomodoroBreakReadyState(
     val exceededTime: Int = 0,
     val focusedTime: Int = 0,
     val type: String = "",
+    val categoryIcon: CategoryIcon = CategoryIcon.CAT,
 ) : ViewState
 
 sealed interface PomodoroBreakReadyEvent : ViewEvent {

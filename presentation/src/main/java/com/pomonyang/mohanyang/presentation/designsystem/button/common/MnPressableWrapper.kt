@@ -22,16 +22,22 @@ import com.pomonyang.mohanyang.presentation.util.clickableSingle
 fun MnPressableWrapper(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    val clickableModifier = if (isEnabled) {
+        Modifier
+            .pressClickEffect(onClick)
+    } else {
+        Modifier
+    }
     Box(
         modifier = modifier
             .wrapContentSize(),
     ) {
         content()
         Box(
-            modifier = Modifier
-                .pressClickEffect(onClick)
+            modifier = clickableModifier
                 .matchParentSize(),
         )
     }

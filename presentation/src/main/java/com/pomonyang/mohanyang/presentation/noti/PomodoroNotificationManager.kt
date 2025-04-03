@@ -10,14 +10,15 @@ import androidx.core.content.ContextCompat
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.presentation.di.PomodoroNotification
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_CHANNEL_ID
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_CHANNEL_NAME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.POMODORO_NOTIFICATION_ID
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
+import timber.log.Timber
 
 internal class PomodoroNotificationManager @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -49,8 +50,10 @@ internal class PomodoroNotificationManager @Inject constructor(
         notificationManager.createNotificationChannel(channel)
     }
 
-    fun createNotification(category: PomodoroCategoryType? = null): Notification {
-        val isRest = category == null
+    fun createNotification(
+        category: CategoryModel? = null,
+        isRest: Boolean = false,
+    ): Notification {
         val defaultTime = context.getString(R.string.notification_timer_default_time)
         val contentView = createContentView(isRest)
         val bigContentView = createBigContentView(category, defaultTime, null)
@@ -58,7 +61,7 @@ internal class PomodoroNotificationManager @Inject constructor(
         return buildNotification(contentView, bigContentView, lockScreenVisibility)
     }
 
-    fun updateNotification(category: PomodoroCategoryType?, time: String, overtime: String) {
+    fun updateNotification(category: CategoryModel?, time: String, overtime: String) {
         val isRest = category == null
         val contentView = createContentView(isRest)
         val bigContentView = createBigContentView(category, time, overtime)
@@ -69,7 +72,7 @@ internal class PomodoroNotificationManager @Inject constructor(
     private fun createContentView(isRest: Boolean): RemoteViews = contentFactory.createPomodoroNotificationContent(isRest)
 
     private fun createBigContentView(
-        category: PomodoroCategoryType?,
+        category: CategoryModel?,
         time: String,
         overtime: String?,
     ): RemoteViews = contentFactory.createPomodoroNotificationBigContent(

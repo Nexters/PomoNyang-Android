@@ -44,7 +44,10 @@ fun MnBoxButton(
     val iconColor = if (isEnabled) colors.iconColor else colors.disabledIconColor
 
     MnPressableWrapper(
-        modifier = Modifier.padding(containerPadding).clip(shape = styles.shape),
+        modifier = Modifier
+            .padding(containerPadding)
+            .clip(shape = styles.shape),
+        isEnabled = isEnabled,
         onClick = onClick,
     ) {
         CompositionLocalProvider(

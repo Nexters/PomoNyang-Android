@@ -1,6 +1,6 @@
 package com.pomonyang.mohanyang.presentation.service
 
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 
 internal interface PomodoroTimerEventHandler {
     fun onTimeEnd()
@@ -9,6 +9,6 @@ internal interface PomodoroTimerEventHandler {
         timerId: String,
         time: String,
         overtime: String,
-        category: PomodoroCategoryType?,
+        category: CategoryModel?,
     )
 }

@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,11 +25,11 @@ import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.picker.MnWheelMinutePicker
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
 import com.pomonyang.mohanyang.presentation.screen.common.LoadingContentContainer
 import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorScreen
 import com.pomonyang.mohanyang.presentation.screen.common.ServerErrorScreen
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.home.setting.SettingButton
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
@@ -82,8 +81,9 @@ fun PomodoroTimeSettingRoute(
             LoadingContentContainer(isLoading = state.isLoading) {
                 PomodoroTimeSettingScreen(
                     modifier = modifier,
-                    category = PomodoroCategoryType.safeValueOf(categoryName),
+                    category = state.categoryIcon,
                     isFocusTime = isFocusTime,
+                    categoryName = categoryName,
                     initialSettingTime = initialSettingTime,
                     onAction = viewModel::handleEvent,
                 )
@@ -96,11 +96,12 @@ fun PomodoroTimeSettingRoute(
 private fun PomodoroTimeSettingScreen(
     initialSettingTime: Int,
     isFocusTime: Boolean,
-    category: PomodoroCategoryType,
+    category: CategoryIcon,
+    categoryName: String,
     onAction: (PomodoroTimeSettingEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val iconResId = if (isFocusTime) R.drawable.ic_focus else R.drawable.ic_rest
+    val iconResId = if (isFocusTime) R.drawable.ic_fire else R.drawable.ic_lightning
 
     Column(
         modifier = modifier
@@ -112,8 +113,8 @@ private fun PomodoroTimeSettingScreen(
         TimeSettingTopAppBar { onAction(PomodoroTimeSettingEvent.ClickClose) }
 
         CategoryBox(
-            iconRes = category.iconRes,
-            categoryName = stringResource(id = category.kor),
+            iconRes = category.resourceId,
+            categoryName = categoryName,
             backgroundColor = Color.Transparent,
         )
 
@@ -167,7 +168,8 @@ private fun PomodoroTimeSettingScreenPreview() {
             initialSettingTime = 25,
             isFocusTime = true,
             onAction = {},
-            category = PomodoroCategoryType.DEFAULT,
+            category = CategoryIcon.CAT,
+            categoryName = "카테고리",
         )
     }
 }

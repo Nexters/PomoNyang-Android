@@ -126,7 +126,8 @@ class PomodoroRestViewModel @Inject constructor(
                     plusButtonEnabled = selectedPomodoroSetting.restTime < MAX_REST_MINUTES,
                     minusButtonEnabled = selectedPomodoroSetting.restTime > MIN_REST_MINUTES,
                     maxRestTime = (selectedPomodoroSetting.restTime.times(60)),
-                    categoryType = selectedPomodoroSetting.categoryType,
+                    categoryIcon = selectedPomodoroSetting.categoryIcon,
+                    categoryName = selectedPomodoroSetting.title,
                     cat = cat.type,
                 )
             }

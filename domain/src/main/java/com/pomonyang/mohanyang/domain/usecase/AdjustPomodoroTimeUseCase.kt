@@ -19,7 +19,7 @@ class AdjustPomodoroTimeUseCase @Inject constructor(
         val updatedFocusTime = if (isFocusTime) focusTime + adjustment else focusTime
         val updatedRestTime = if (!isFocusTime) restTime + adjustment else restTime
 
-        pomodoroSettingRepository.updatePomodoroCategoryTimes(
+        pomodoroSettingRepository.updatePomodoroCategorySetting(
             categoryNo = selectedPomodoroSetting.categoryNo,
             focusTime = updatedFocusTime.toInt(),
             restTime = updatedRestTime.toInt(),

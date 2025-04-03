@@ -26,10 +26,10 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.toast.MnToastSnackbarHost
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryActionMoreMenuList
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryBottomSheetContents
 import com.pomonyang.mohanyang.presentation.screen.home.category.component.CategoryBottomSheetHeaderContents
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryManageState
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingEvent
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
@@ -42,15 +42,18 @@ fun PomodoroCategoryBottomSheet(
     onAction: (PomodoroSettingEvent) -> Unit,
     categoryList: ImmutableList<PomodoroCategoryModel>,
     initialCategoryNo: Int,
+    bottomSheetSnackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     var showMoreMenuComponent by rememberSaveable { mutableStateOf(false) }
     var categoryManageState: CategoryManageState by remember { mutableStateOf(CategoryManageState.DEFAULT) }
+
     PomodoroCategoryBottomSheet(
         categoryManageState = categoryManageState,
         showMoreMenuComponent = showMoreMenuComponent,
         categoryList = categoryList,
         initialCategoryNo = initialCategoryNo,
+        snackbarHostState = bottomSheetSnackbarHostState,
         onAction = onAction,
         onDeleteClick = {
             showMoreMenuComponent = false
@@ -72,6 +75,7 @@ private fun PomodoroCategoryBottomSheet(
     showMoreMenuComponent: Boolean,
     categoryList: ImmutableList<PomodoroCategoryModel>,
     initialCategoryNo: Int,
+    snackbarHostState: SnackbarHostState,
     onAction: (PomodoroSettingEvent) -> Unit,
     onDeleteClick: () -> Unit,
     onEditClick: () -> Unit,
@@ -80,7 +84,6 @@ private fun PomodoroCategoryBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     val subTitle = if (categoryManageState.isEdit()) stringResource(R.string.change_category_edit_sub_title) else null
-    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     MnBottomSheet(
         onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
@@ -97,7 +100,7 @@ private fun PomodoroCategoryBottomSheet(
                 )
             } else {
                 MnTextButton(
-                    text = stringResource(R.string.change_category_title_content),
+                    text = stringResource(R.string.common_cancel),
                     styles = MnTextButtonStyles.medium,
                     onClick = onCancelClick,
                 )
@@ -111,14 +114,10 @@ private fun PomodoroCategoryBottomSheet(
                 categoryList = categoryList,
                 currentSelectedCategoryNo = initialCategoryNo,
                 onCategorySelected = { onAction(PomodoroSettingEvent.SelectCategory(it.categoryNo)) },
-                onCategoryEdit = {
-                    if (it.categoryType == PomodoroCategoryType.DEFAULT) {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("기본 카테고리는 수정/삭제가 불가능합니다.")
-                        }
-                    } else {
-                        onAction(PomodoroSettingEvent.ClickCategoryEdit(it))
-                    }
+                onCategoryEdit = { onAction(PomodoroSettingEvent.ClickCategoryEdit(it)) },
+                onDeleteItemsClick = { onAction(PomodoroSettingEvent.DeleteCategories(it)) },
+                onSnackbarShow = {
+                    scope.launch { snackbarHostState.showSnackbar(it) }
                 },
             )
 
@@ -142,9 +141,10 @@ private fun PomodoroCategoryBottomSheet(
     }
 }
 
-private class CategoryStatePreviewParameterProvider : CollectionPreviewParameterProvider<CategoryManageState>(
-    CategoryManageState.entries,
-)
+private class CategoryStatePreviewParameterProvider :
+    CollectionPreviewParameterProvider<CategoryManageState>(
+        CategoryManageState.entries,
+    )
 
 @Preview(showBackground = true)
 @Composable
@@ -159,9 +159,10 @@ private fun CategoryBottomSheetPreview(
                 PomodoroCategoryModel(
                     categoryNo = 1,
                     title = "집중",
-                    categoryType = PomodoroCategoryType.DEFAULT,
+                    categoryIcon = CategoryIcon.CAT,
                 ),
             ),
+            snackbarHostState = SnackbarHostState(),
             initialCategoryNo = 1,
             onAction = { },
             onDeleteClick = { },
@@ -171,4 +172,3 @@ private fun CategoryBottomSheetPreview(
         )
     }
 }
-

@@ -32,8 +32,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonS
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -69,6 +69,7 @@ fun PomodoroBreakReadyRoute(
 
     PomodoroBreakReadyScreen(
         type = state.type,
+        categoryIcon = state.categoryIcon,
         focusedTime = state.focusedTime.formatTime(),
         exceededTime = state.exceededTime.formatTime(),
         plusButtonSelected = state.plusButtonSelected,
@@ -83,6 +84,7 @@ fun PomodoroBreakReadyRoute(
 @Composable
 private fun PomodoroBreakReadyScreen(
     type: String,
+    categoryIcon: CategoryIcon,
     focusedTime: String,
     exceededTime: String,
     plusButtonSelected: Boolean,
@@ -100,7 +102,7 @@ private fun PomodoroBreakReadyScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        CategoryBox(categoryName = type, iconRes = PomodoroCategoryType.safeValueOf(type).iconRes)
+        CategoryBox(categoryName = type, iconRes = categoryIcon.resourceId)
 
         Timer(
             modifier = Modifier.padding(top = MnSpacing.small),
@@ -167,6 +169,7 @@ private fun PomodoroBreakReadyScreenPreview() {
     MnTheme {
         PomodoroBreakReadyScreen(
             type = "작업",
+            categoryIcon = CategoryIcon.CAT,
             focusedTime = "30:00",
             exceededTime = "05:30",
             plusButtonSelected = false,

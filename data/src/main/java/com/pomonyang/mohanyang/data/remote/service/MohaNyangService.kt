@@ -1,5 +1,7 @@
 package com.pomonyang.mohanyang.data.remote.service
 
+import com.pomonyang.mohanyang.data.remote.model.request.AddCategoryRequest
+import com.pomonyang.mohanyang.data.remote.model.request.DeleteCategoryRequest
 import com.pomonyang.mohanyang.data.remote.model.request.PomodoroTimerRequest
 import com.pomonyang.mohanyang.data.remote.model.request.RegisterPushTokenRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCatInfoRequest
@@ -11,6 +13,7 @@ import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -19,6 +22,11 @@ import retrofit2.http.Path
 interface MohaNyangService {
     @GET("/api/v1/categories")
     suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
+
+    @POST("/api/v1/categories")
+    suspend fun addPomodoroCategory(
+        @Body addCategoryRequest: AddCategoryRequest,
+    ): Result<Unit>
 
     @PATCH("/api/v1/categories/{no}")
     suspend fun updatePomodoroSetting(
@@ -59,5 +67,15 @@ interface MohaNyangService {
     @POST("/api/v1/focus-times")
     suspend fun saveFocusTime(
         @Body pomodoroTimerRequest: List<PomodoroTimerRequest>,
+    ): Result<Unit>
+
+    @HTTP(method = "DELETE", path = "/api/v1/categories", hasBody = true)
+    suspend fun deleteCategories(
+        @Body request: DeleteCategoryRequest,
+    ): Result<Unit>
+
+    @PATCH("/api/v1/categories/select/{no}")
+    suspend fun updateSelectPomodoroCategory(
+        @Path("no") no: Int,
     ): Result<Unit>
 }

@@ -34,8 +34,8 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButto
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -67,7 +67,12 @@ fun PomodoroRestRoute(
 
     DisposableEffect(state.maxRestTime, state.pomodoroId) {
         if (state.maxRestTime != 0 && state.pomodoroId.isNotEmpty()) {
-            context.startRestTimer(state.maxRestTime, timerId = state.pomodoroId)
+            context.startRestTimer(
+                maxTime = state.maxRestTime,
+                timerId = state.pomodoroId,
+                categoryTitle = state.categoryName,
+                categoryIcon = state.categoryIcon,
+            )
         }
 
         onDispose {
@@ -81,8 +86,9 @@ fun PomodoroRestRoute(
 
     PomodoroRestScreen(
         modifier = modifier,
-        categoryType = stringResource(id = state.categoryType.kor),
+        categoryName = state.categoryName,
         catType = state.cat,
+        categoryIcon = state.categoryIcon,
         time = state.displayRestTime(),
         plusButtonSelected = state.plusButtonSelected,
         minusButtonSelected = state.minusButtonSelected,
@@ -95,10 +101,11 @@ fun PomodoroRestRoute(
 
 @Composable
 private fun PomodoroRestScreen(
-    categoryType: String,
+    categoryName: String,
     time: String,
     exceededTime: String,
     catType: CatType,
+    categoryIcon: CategoryIcon,
     plusButtonSelected: Boolean,
     minusButtonSelected: Boolean,
     plusButtonEnabled: Boolean,
@@ -117,9 +124,9 @@ private fun PomodoroRestScreen(
         MnTopAppBar(
             navigationIcon = {
                 CategoryBox(
-                    categoryName = categoryType,
+                    categoryName = categoryName,
                     modifier = Modifier.padding(start = 12.dp),
-                    iconRes = PomodoroCategoryType.safeValueOf(categoryType).iconRes,
+                    iconRes = categoryIcon.resourceId,
                 )
             },
         )
@@ -137,7 +144,7 @@ private fun PomodoroRestScreen(
             },
         )
 
-        TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_rest)
+        TimerType(type = stringResource(id = R.string.rest_time), iconRes = R.drawable.ic_lightning)
 
         Timer(
             modifier = Modifier,
@@ -179,7 +186,7 @@ private fun PomodoroRestScreen(
 private fun PomodoroTimerScreenPreview() {
     MnTheme {
         PomodoroRestScreen(
-            categoryType = "공부",
+            categoryName = "공부",
             time = "25:00",
             exceededTime = "00:00",
             plusButtonSelected = false,
@@ -187,6 +194,7 @@ private fun PomodoroTimerScreenPreview() {
             plusButtonEnabled = true,
             minusButtonEnabled = true,
             catType = CatType.CHEESE,
+            categoryIcon = CategoryIcon.CAT,
             onAction = {},
         )
     }
@@ -197,7 +205,7 @@ private fun PomodoroTimerScreenPreview() {
 private fun PomodoroTimerExceedScreenPreview() {
     MnTheme {
         PomodoroRestScreen(
-            categoryType = "공부",
+            categoryName = "공부",
             time = "25:00",
             exceededTime = "10:00",
             plusButtonSelected = false,
@@ -205,6 +213,7 @@ private fun PomodoroTimerExceedScreenPreview() {
             plusButtonEnabled = true,
             minusButtonEnabled = true,
             catType = CatType.CHEESE,
+            categoryIcon = CategoryIcon.CAT,
             onAction = {},
         )
     }

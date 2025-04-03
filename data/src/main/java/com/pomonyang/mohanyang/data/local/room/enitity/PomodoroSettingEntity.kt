@@ -10,4 +10,6 @@ data class PomodoroSettingEntity(
     val title: String,
     val focusTime: String,
     val restTime: String,
+    val iconType: String = "",
+    val isSelected: Boolean = false,
 )

@@ -7,17 +7,18 @@ import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.model.setting.PomodoroSettingModel
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 
 data class PomodoroSettingState(
     val categoryList: List<PomodoroCategoryModel> = emptyList(),
     val selectedSettingModel: PomodoroSettingModel = PomodoroSettingModel(
         categoryNo = 0,
         title = "집중",
-        categoryType = PomodoroCategoryType.DEFAULT,
+        categoryIcon = CategoryIcon.CAT,
         focusTime = 0,
         restTime = 0,
+        isSelected = false,
     ),
     val showCategoryBottomSheet: Boolean = false,
     val cat: CatInfoModel = CatInfoModel(
@@ -40,7 +41,7 @@ sealed interface PomodoroSettingEvent : ViewEvent {
     data object ClickMenu : PomodoroSettingEvent
     data class ClickCategoryEdit(val category: PomodoroCategoryModel) : PomodoroSettingEvent
     data object ClickCategoryCreate : PomodoroSettingEvent
-    data class ClickCategoryDelete(val category: PomodoroCategoryModel) : PomodoroSettingEvent
+    data class DeleteCategories(val categoryIds: List<Int>) : PomodoroSettingEvent
 }
 
 sealed interface PomodoroSettingSideEffect : ViewSideEffect {
@@ -48,7 +49,12 @@ sealed interface PomodoroSettingSideEffect : ViewSideEffect {
 
     data class ShowSnackBar(
         val message: String,
-        @DrawableRes val iconRes: Int,
+        @DrawableRes val iconRes: Int?,
+    ) : PomodoroSettingSideEffect
+
+    data class ShowBottomSheetSnackBar(
+        val message: String,
+        @DrawableRes val iconRes: Int?,
     ) : PomodoroSettingSideEffect
 
     data class GoTimeSetting(

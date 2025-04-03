@@ -1,7 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.home.category
 
 import com.pomonyang.mohanyang.presentation.screen.onboarding.naming.ValidationResult
-import timber.log.Timber
 
 object CategoryNameVerifier {
 

@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.home.category
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,6 +25,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.icon.MnLargeIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnIconSize
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import kotlinx.collections.immutable.ImmutableList
@@ -31,8 +34,8 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 fun CategoryIconBottomSheet(
     onAction: (CategorySettingEvent) -> Unit,
-    icons: ImmutableList<Int>,
-    selectedIcon: Int?,
+    icons: ImmutableList<CategoryIcon>,
+    selectedIcon: CategoryIcon?,
     modifier: Modifier = Modifier,
 ) {
     MnBottomSheet(
@@ -52,8 +55,8 @@ fun CategoryIconBottomSheet(
 @Composable
 private fun CategoryIconBottomSheetContent(
     onAction: (CategorySettingEvent) -> Unit,
-    icons: ImmutableList<Int>,
-    selectedIcon: Int?,
+    icons: ImmutableList<CategoryIcon>,
+    selectedIcon: CategoryIcon?,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -64,12 +67,11 @@ private fun CategoryIconBottomSheetContent(
         verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
         contentPadding = PaddingValues(MnSpacing.xLarge),
     ) {
-        items(icons.size) { index ->
-            val iconId = icons[index]
+        items(icons) { icon ->
             CategoryIconKey(
-                iconId = iconId,
-                isSelected = selectedIcon == iconId,
-                onClick = { onAction.invoke(CategorySettingEvent.SelectIcon(iconId)) },
+                iconId = icon.resourceId,
+                isSelected = selectedIcon == icon,
+                onClick = { onAction.invoke(CategorySettingEvent.SelectIcon(icon)) },
             )
         }
     }
@@ -77,7 +79,7 @@ private fun CategoryIconBottomSheetContent(
 
 @Composable
 private fun CategoryIconKey(
-    iconId: Int,
+    @DrawableRes iconId: Int,
     isSelected: Boolean,
     onClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -113,7 +115,7 @@ private fun PreviewCategoryIconKey() {
     MnTheme {
         Row {
             CategoryIconKey(
-                iconId = R.drawable.ic_focus,
+                iconId = R.drawable.ic_fire,
                 isSelected = true,
                 onClick = { },
             )
@@ -132,8 +134,8 @@ private fun PreviewCategoryBottomSheetContent() {
     MnTheme {
         CategoryIconBottomSheetContent(
             onAction = {},
-            icons = CategoryIcon.entries.map { it.resourceId }.toImmutableList(),
-            selectedIcon = R.drawable.ic_focus,
+            icons = CategoryIcon.entries.toImmutableList(),
+            selectedIcon = CategoryIcon.CAT,
         )
     }
 }
@@ -144,8 +146,8 @@ private fun PreviewCategoryBottomSheet() {
     MnTheme {
         CategoryIconBottomSheet(
             onAction = {},
-            icons = CategoryIcon.entries.map { it.resourceId }.toImmutableList(),
-            selectedIcon = R.drawable.ic_focus,
+            icons = CategoryIcon.entries.toImmutableList(),
+            selectedIcon = CategoryIcon.CAT,
         )
     }
 }

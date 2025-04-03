@@ -71,7 +71,7 @@ class PomodoroFocusViewModel @Inject constructor(
                     copy(
                         pomodoroId = pomodoroId,
                         title = selectedPomodoroSetting.title,
-                        categoryType = selectedPomodoroSetting.categoryType,
+                        categoryIcon = selectedPomodoroSetting.categoryIcon,
                         cat = cat.type,
                         maxFocusTime = (selectedPomodoroSetting.focusTime.times(60)),
                     )

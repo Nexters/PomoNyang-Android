@@ -39,7 +39,7 @@ fun CategoryActionMoreMenuList(
         modifier =
         Modifier
             .padding(blurSpreadSize)
-            .wrapContentSize(align = Alignment.Center)
+            .wrapContentSize(align = Alignment.Center),
     ) {
         Column(
             modifier = modifier
@@ -64,8 +64,6 @@ fun CategoryActionMoreMenuList(
         }
     }
 }
-
-
 
 @Composable
 private fun CategoryActionMenu(

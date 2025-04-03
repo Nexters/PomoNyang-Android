@@ -1,9 +1,9 @@
 package com.pomonyang.mohanyang.presentation.service
 
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.MAX_EXCEEDED_TIME
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.ONE_SECOND
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.TIMER_DELAY
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 import timber.log.Timber
@@ -18,7 +18,7 @@ internal abstract class BasePomodoroTimer : PomodoroTimer {
         timerId: String,
         maxTime: Int,
         eventHandler: PomodoroTimerEventHandler,
-        category: PomodoroCategoryType?,
+        category: CategoryModel?,
     ) {
         Timber.tag(getTagName()).d("startTimer / maxTime : $maxTime")
         if (timer == null) {
