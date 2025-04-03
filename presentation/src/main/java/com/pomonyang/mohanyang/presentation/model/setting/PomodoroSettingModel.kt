@@ -18,7 +18,7 @@ data class PomodoroSettingModel(
 fun PomodoroSettingEntity.toModel() = PomodoroSettingModel(
     categoryNo = categoryNo,
     title = title,
-    categoryIcon = CategoryIcon.valueOf(iconType),
+    categoryIcon = CategoryIcon.safeValueOf(iconType),
     focusTime = Duration.parse(focusTime).toMinutes().toInt(),
     restTime = Duration.parse(restTime).toMinutes().toInt(),
     isSelected = isSelected,

@@ -25,16 +25,25 @@ enum class CategoryIcon(
 
     object CategoryIconNavType : androidx.navigation.NavType<CategoryIcon>(isNullableAllowed = false) {
         override fun get(bundle: android.os.Bundle, key: String): CategoryIcon? = bundle.getString(key)?.let { id ->
-            CategoryIcon.valueOf(id)
+            CategoryIcon.safeValueOf(id)
         }
 
         override fun parseValue(value: String): CategoryIcon {
-            Timber.tag("koni").d("value > $value")
-            return CategoryIcon.valueOf(value)
+            return CategoryIcon.safeValueOf(value)
         }
 
         override fun put(bundle: android.os.Bundle, key: String, value: CategoryIcon) {
             bundle.putString(key, value.name)
+        }
+    }
+
+    companion object {
+        fun safeValueOf(value: String): CategoryIcon {
+            return try {
+                valueOf(value)
+            } catch (e: IllegalArgumentException) {
+                CAT
+            }
         }
     }
 }
