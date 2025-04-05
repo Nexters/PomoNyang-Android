@@ -51,7 +51,6 @@ class PomodoroTimeSettingViewModel @Inject constructor(
             is PomodoroTimeSettingEvent.Submit -> {
                 updateState { copy(lastRequestAction = event) }
                 updatePomodoroCategoryTime()
-                setEffect(PomodoroTimeSettingEffect.GoToPomodoroSettingScreen)
             }
 
             is PomodoroTimeSettingEvent.ChangePickTime -> {
@@ -110,6 +109,7 @@ class PomodoroTimeSettingViewModel @Inject constructor(
                     isLoading = false,
                 )
             }
+            setEffect(PomodoroTimeSettingEffect.GoToPomodoroSettingScreen)
         }
     }
 }
