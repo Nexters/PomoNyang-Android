@@ -46,7 +46,7 @@ fun PomodoroCategoryBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     var showMoreMenuComponent by rememberSaveable { mutableStateOf(false) }
-    var categoryManageState: CategoryManageState by remember { mutableStateOf(CategoryManageState.DEFAULT) }
+    var categoryManageState: CategoryManageState by remember(categoryList) { mutableStateOf(CategoryManageState.DEFAULT) }
 
     PomodoroCategoryBottomSheet(
         categoryManageState = categoryManageState,
