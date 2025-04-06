@@ -93,6 +93,7 @@ private fun PomodoroCategoryBottomSheet(
         headerContents = {
             if (categoryManageState.isDefault()) {
                 CategoryBottomSheetHeaderContents(
+                    isVisibleAddButton = categoryList.size != 10,
                     onEditClick = {
                         onAction.invoke(PomodoroSettingEvent.ClickCategoryCreate)
                     },
