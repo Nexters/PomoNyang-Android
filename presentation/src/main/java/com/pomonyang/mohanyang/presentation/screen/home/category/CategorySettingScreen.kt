@@ -230,7 +230,7 @@ private fun CategoryEditIcon(
                 .absoluteOffset(x = 52.dp, y = 44.dp)
                 .background(
                     color = MnTheme.backgroundColorScheme.inverse,
-                    shape = CircleShape,
+                    shape = RoundedCornerShape(MnRadius.medium),
                 )
                 .size(36.dp),
             contentAlignment = Alignment.Center,
