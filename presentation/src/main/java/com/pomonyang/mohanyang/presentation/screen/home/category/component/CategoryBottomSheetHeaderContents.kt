@@ -11,6 +11,7 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
 @Composable
 fun CategoryBottomSheetHeaderContents(
+    isVisibleAddButton: Boolean,
     onEditClick: () -> Unit,
     onMoreMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -19,10 +20,12 @@ fun CategoryBottomSheetHeaderContents(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        MnIconButton(
-            onClick = onEditClick,
-            iconResourceId = R.drawable.ic_plus,
-        )
+        if (isVisibleAddButton) {
+            MnIconButton(
+                onClick = onEditClick,
+                iconResourceId = R.drawable.ic_plus,
+            )
+        }
         MnIconButton(
             onClick = onMoreMenuClick,
             iconResourceId = R.drawable.ic_ellipsis,
@@ -35,6 +38,7 @@ fun CategoryBottomSheetHeaderContents(
 private fun CategoryBottomSheetHeaderPreview() {
     MnTheme {
         CategoryBottomSheetHeaderContents(
+            isVisibleAddButton = true,
             onEditClick = {},
             onMoreMenuClick = {},
         )

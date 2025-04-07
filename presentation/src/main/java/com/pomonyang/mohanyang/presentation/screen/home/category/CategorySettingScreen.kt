@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -78,7 +77,7 @@ fun CategorySettingRoute(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(name) {
-        nameValidationResult = categoryNameValidator.validateCategoryName(name)
+        nameValidationResult = categoryNameValidator.validateCategoryName(name, state.categoryList)
     }
 
     categorySettingViewModel.effects.collectWithLifecycle { effect ->
@@ -230,7 +229,7 @@ private fun CategoryEditIcon(
                 .absoluteOffset(x = 52.dp, y = 44.dp)
                 .background(
                     color = MnTheme.backgroundColorScheme.inverse,
-                    shape = CircleShape,
+                    shape = RoundedCornerShape(MnRadius.medium),
                 )
                 .size(36.dp),
             contentAlignment = Alignment.Center,
