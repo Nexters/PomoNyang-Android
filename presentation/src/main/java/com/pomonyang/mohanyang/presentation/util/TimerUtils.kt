@@ -2,7 +2,6 @@ package com.pomonyang.mohanyang.presentation.util
 
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.DrawableRes
 import androidx.core.os.bundleOf
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel

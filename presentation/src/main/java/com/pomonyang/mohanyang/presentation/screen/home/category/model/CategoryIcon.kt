@@ -2,7 +2,6 @@ package com.pomonyang.mohanyang.presentation.screen.home.category.model
 
 import androidx.annotation.DrawableRes
 import kotlinx.serialization.Serializable
-import timber.log.Timber
 
 @Serializable
 enum class CategoryIcon(
@@ -28,9 +27,7 @@ enum class CategoryIcon(
             CategoryIcon.safeValueOf(id)
         }
 
-        override fun parseValue(value: String): CategoryIcon {
-            return CategoryIcon.safeValueOf(value)
-        }
+        override fun parseValue(value: String): CategoryIcon = CategoryIcon.safeValueOf(value)
 
         override fun put(bundle: android.os.Bundle, key: String, value: CategoryIcon) {
             bundle.putString(key, value.name)
@@ -38,12 +35,10 @@ enum class CategoryIcon(
     }
 
     companion object {
-        fun safeValueOf(value: String): CategoryIcon {
-            return try {
-                valueOf(value)
-            } catch (e: IllegalArgumentException) {
-                CAT
-            }
+        fun safeValueOf(value: String): CategoryIcon = try {
+            valueOf(value)
+        } catch (e: IllegalArgumentException) {
+            CAT
         }
     }
 }

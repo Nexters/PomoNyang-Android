@@ -75,7 +75,7 @@ fun FocusStatisticBox(
                             FocusCategoryDataBox(
                                 categoryModel = PomodoroSettingModel(
                                     categoryNo = 1,
-                                    title = "temp" /* FIXME stringResource(id = category.kor)*/,
+                                    title = category.name,
                                     categoryIcon = category,
                                     focusTime = 10,
                                     restTime = 20,

@@ -142,7 +142,7 @@ fun MnTextField(
                         ),
                         shape = RoundedCornerShape(MnRadius.small),
 
-                        ) {
+                    ) {
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(MnRadius.small))
