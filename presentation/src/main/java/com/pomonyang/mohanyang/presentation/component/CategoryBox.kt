@@ -48,7 +48,7 @@ fun CategoryBox(
             style = MnTheme.typography.subBodySemiBold,
             color = MnTheme.textColorScheme.tertiary,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

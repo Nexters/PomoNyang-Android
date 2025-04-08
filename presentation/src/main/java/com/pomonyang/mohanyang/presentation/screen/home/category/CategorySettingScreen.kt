@@ -213,7 +213,7 @@ private fun CategoryEditIcon(
             modifier = Modifier
                 .background(
                     color = MnTheme.backgroundColorScheme.secondary,
-                    shape = RoundedCornerShape(MnRadius.xSmall),
+                    shape = RoundedCornerShape(MnRadius.medium),
                 )
                 .padding(MnSpacing.xLarge),
         ) {

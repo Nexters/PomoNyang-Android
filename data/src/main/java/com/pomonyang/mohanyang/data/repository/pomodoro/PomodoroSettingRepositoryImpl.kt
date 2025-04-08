@@ -93,9 +93,7 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteCategories(categoryNumbers: List<Int>): Result<Unit> {
-        return pomodoroSettingRemoteDataSource.deleteCategories(categoryNumbers).onSuccess {
-            pomodoroSettingDao.deletePomodoroSettingsByCategoryNos(categoryNumbers)
-        }
+    override suspend fun deleteCategories(categoryNumbers: List<Int>): Result<Unit> = pomodoroSettingRemoteDataSource.deleteCategories(categoryNumbers).onSuccess {
+        pomodoroSettingDao.deletePomodoroSettingsByCategoryNos(categoryNumbers)
     }
 }

@@ -18,7 +18,6 @@ import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
-import timber.log.Timber
 
 internal class PomodoroNotificationManager @Inject constructor(
     @ApplicationContext private val context: Context,
