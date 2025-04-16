@@ -40,7 +40,6 @@ runs:
           sed -i "s/\"patch\": [0-9]\+/\"patch\": ${{ inputs.patch }}/" $VERSION_FILE
           sed -i "s/\"code\": [0-9]\+/\"code\": ${{ inputs.code }}/" $VERSION_FILE
         fi
-        git pull --rebase
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"           
         git add $VERSION_FILE
