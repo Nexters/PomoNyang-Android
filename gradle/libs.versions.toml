@@ -107,6 +107,7 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaes-messaging" }
+firebase-analytics = { group = "com.google.firebase", module = "com.google.firebase:firebase-analytics", name = "firebase-analytics" }
 
 # etc
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
@@ -162,4 +163,5 @@ androidx-compose-debug = [
 firebase = [
     "firebase-crashlytics",
     "firebase-perf",
+    "firebase-analytics"
 ]

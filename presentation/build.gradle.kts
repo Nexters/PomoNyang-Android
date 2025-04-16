@@ -15,6 +15,8 @@ dependencies {
     implementation(libs.permission)
     implementation(libs.rive)
     implementation(libs.lottie.compose)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
     // module impl
     implementation(projects.domain)
