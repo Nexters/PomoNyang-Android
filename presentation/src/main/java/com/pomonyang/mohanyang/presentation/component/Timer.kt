@@ -26,15 +26,15 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 fun Timer(
     time: String,
     exceededTime: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             time.toCharArray().forEach { num ->
                 Text(
@@ -44,11 +44,11 @@ fun Timer(
                     text = "$num",
                     style = MnTheme.typography.header1.copy(
                         platformStyle = PlatformTextStyle(
-                            includeFontPadding = false
-                        )
+                            includeFontPadding = false,
+                        ),
                     ),
                     color = MnTheme.textColorScheme.primary,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -56,7 +56,7 @@ fun Timer(
         if (exceededTime != DEFAULT_TIME) {
             Row(
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 exceededTime.toCharArray().forEach { num ->
                     Text(
@@ -66,18 +66,18 @@ fun Timer(
                         text = "$num",
                         style = MnTheme.typography.header4.copy(
                             platformStyle = PlatformTextStyle(
-                                includeFontPadding = false
-                            )
+                                includeFontPadding = false,
+                            ),
                         ),
                         color = MnTheme.backgroundColorScheme.accent1,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
                 Text(
                     modifier = Modifier.padding(start = MnSpacing.xSmall),
                     text = stringResource(R.string.timer_exceed_time),
                     style = MnTheme.typography.header4,
-                    color = MnTheme.backgroundColorScheme.accent1
+                    color = MnTheme.backgroundColorScheme.accent1,
                 )
             }
         }
@@ -88,31 +88,31 @@ private class TimerPreviewParameterProvider : PreviewParameterProvider<TimerPrev
     override val values = sequenceOf(
         TimerPreviewParams(
             time = "30:00",
-            exceededTime = DEFAULT_TIME
+            exceededTime = DEFAULT_TIME,
         ),
         TimerPreviewParams(
             time = "00:00",
-            exceededTime = "00:01"
+            exceededTime = "00:01",
         ),
         TimerPreviewParams(
             time = "10:00",
-            exceededTime = DEFAULT_TIME
-        )
+            exceededTime = DEFAULT_TIME,
+        ),
     )
 }
 
 private data class TimerPreviewParams(
     val time: String,
-    val exceededTime: String
+    val exceededTime: String,
 )
 
 @Preview(showBackground = true)
 @Composable
 private fun TimerPreview(
-    @PreviewParameter(TimerPreviewParameterProvider::class) params: TimerPreviewParams
+    @PreviewParameter(TimerPreviewParameterProvider::class) params: TimerPreviewParams,
 ) {
     Timer(
         time = params.time,
-        exceededTime = params.exceededTime
+        exceededTime = params.exceededTime,
     )
 }

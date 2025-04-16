@@ -1,5 +1,7 @@
 package com.pomonyang.mohanyang.data.remote.service
 
+import com.pomonyang.mohanyang.data.remote.model.request.AddCategoryRequest
+import com.pomonyang.mohanyang.data.remote.model.request.DeleteCategoryRequest
 import com.pomonyang.mohanyang.data.remote.model.request.PomodoroTimerRequest
 import com.pomonyang.mohanyang.data.remote.model.request.RegisterPushTokenRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCatInfoRequest
@@ -11,6 +13,7 @@ import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -20,10 +23,15 @@ interface MohaNyangService {
     @GET("/api/v1/categories")
     suspend fun getPomodoroSettingList(): Result<List<PomodoroSettingResponse>>
 
+    @POST("/api/v1/categories")
+    suspend fun addPomodoroCategory(
+        @Body addCategoryRequest: AddCategoryRequest,
+    ): Result<Unit>
+
     @PATCH("/api/v1/categories/{no}")
     suspend fun updatePomodoroSetting(
         @Path("no") no: Int,
-        @Body updateCategoryInfoRequest: UpdateCategoryInfoRequest
+        @Body updateCategoryInfoRequest: UpdateCategoryInfoRequest,
     ): Result<Unit>
 
     @GET("/api/v1/cats")
@@ -31,12 +39,12 @@ interface MohaNyangService {
 
     @PUT("/api/v1/users/cats")
     suspend fun updateCatType(
-        @Body updateCatTypeRequest: UpdateCatTypeRequest
+        @Body updateCatTypeRequest: UpdateCatTypeRequest,
     ): Result<Unit>
 
     @PUT("/api/v1/cats")
     suspend fun updateCatInfo(
-        @Body updateCatInfoRequest: UpdateCatInfoRequest
+        @Body updateCatInfoRequest: UpdateCatInfoRequest,
     ): Result<Unit>
 
     @GET("/api/v1/users/me")
@@ -44,7 +52,7 @@ interface MohaNyangService {
 
     @POST("/api/v1/device-tokens")
     suspend fun registerPushToken(
-        @Body registerPushTokenRequest: RegisterPushTokenRequest
+        @Body registerPushTokenRequest: RegisterPushTokenRequest,
     ): Result<Unit>
 
     @DELETE("/api/v1/device-tokens")
@@ -58,6 +66,16 @@ interface MohaNyangService {
 
     @POST("/api/v1/focus-times")
     suspend fun saveFocusTime(
-        @Body pomodoroTimerRequest: List<PomodoroTimerRequest>
+        @Body pomodoroTimerRequest: List<PomodoroTimerRequest>,
+    ): Result<Unit>
+
+    @HTTP(method = "DELETE", path = "/api/v1/categories", hasBody = true)
+    suspend fun deleteCategories(
+        @Body request: DeleteCategoryRequest,
+    ): Result<Unit>
+
+    @PATCH("/api/v1/categories/select/{no}")
+    suspend fun updateSelectPomodoroCategory(
+        @Path("no") no: Int,
     ): Result<Unit>
 }

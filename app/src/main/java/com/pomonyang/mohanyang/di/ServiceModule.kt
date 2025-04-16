@@ -23,7 +23,7 @@ internal object ServiceModule {
     @PomodoroNotification
     @ServiceScoped
     fun provideNotificationBuilder(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): NotificationCompat.Builder = NotificationCompat.Builder(context, POMODORO_NOTIFICATION_CHANNEL_ID)
         .setContentTitle(context.getString(R.string.app_name))
         .setSmallIcon(R.drawable.ic_app_notification)
@@ -32,6 +32,6 @@ internal object ServiceModule {
     @Provides
     @ServiceScoped
     fun provideNotificationManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 }

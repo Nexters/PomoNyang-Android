@@ -62,7 +62,7 @@ internal class MnFirebaseMessagingService : FirebaseMessagingService() {
             applicationContext,
             UUID.randomUUID().hashCode(),
             Intent(applicationContext, MainActivity::class.java),
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE // 일회용 펜딩 인텐트
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE, // 일회용 펜딩 인텐트
         )
 
         val builder = applicationContext.defaultNotification(pendingIntent, getString(R.string.channel_id))

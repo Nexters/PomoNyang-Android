@@ -8,7 +8,7 @@ data class NamingState(
     override val isLoading: Boolean = false,
     override val isInvalidError: Boolean = false,
     override val isInternalError: Boolean = false,
-    override val lastRequestAction: NamingEvent? = null
+    override val lastRequestAction: NamingEvent? = null,
 ) : NetworkViewState()
 
 sealed interface NamingEvent : ViewEvent {

@@ -3,6 +3,7 @@ package com.pomonyang.mohanyang.presentation.screen.home.time
 import com.pomonyang.mohanyang.presentation.base.NetworkViewState
 import com.pomonyang.mohanyang.presentation.base.ViewEvent
 import com.pomonyang.mohanyang.presentation.base.ViewSideEffect
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 
 data class PomodoroTimeSettingState(
     val categoryNo: Int = 0,
@@ -12,10 +13,11 @@ data class PomodoroTimeSettingState(
     val pickFocusTime: Int = 10,
     val pickRestTime: Int = 10,
     val isFocus: Boolean = false,
+    val categoryIcon: CategoryIcon = CategoryIcon.CAT,
     override val isLoading: Boolean = false,
     override val isInternalError: Boolean = false,
     override val isInvalidError: Boolean = false,
-    override val lastRequestAction: PomodoroTimeSettingEvent? = null
+    override val lastRequestAction: PomodoroTimeSettingEvent? = null,
 ) : NetworkViewState()
 
 sealed interface PomodoroTimeSettingEvent : ViewEvent {
@@ -24,7 +26,7 @@ sealed interface PomodoroTimeSettingEvent : ViewEvent {
     data object Submit : PomodoroTimeSettingEvent
 
     data class ChangePickTime(
-        val time: Int
+        val time: Int,
     ) : PomodoroTimeSettingEvent
 
     data object ClickClose : PomodoroTimeSettingEvent

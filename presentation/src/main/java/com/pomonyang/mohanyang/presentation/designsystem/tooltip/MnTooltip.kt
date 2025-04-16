@@ -96,7 +96,7 @@ fun Modifier.tooltip(
     tooltipPadding: PaddingValues = PaddingValues(),
     anchorPadding: PaddingValues = PaddingValues(),
     contentAlign: TextAlign = TextAlign.Center,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ): Modifier {
     val density = LocalDensity.current
     var positionInRoot by remember { mutableStateOf(IntOffset.Zero) }
@@ -104,7 +104,7 @@ fun Modifier.tooltip(
     var componentSize by remember { mutableStateOf(IntSize(0, 0)) }
     val transition = updateTransition(
         targetState = enabled,
-        label = "tooltip transition"
+        label = "tooltip transition",
     )
     if (enabled) {
         Popup(
@@ -113,7 +113,7 @@ fun Modifier.tooltip(
                     anchorBounds: IntRect,
                     windowSize: IntSize,
                     layoutDirection: LayoutDirection,
-                    popupContentSize: IntSize
+                    popupContentSize: IntSize,
                 ): IntOffset {
                     val offset = calculateOffset(
                         positionInRoot = positionInRoot,
@@ -122,7 +122,7 @@ fun Modifier.tooltip(
                         screenWidthPx = windowSize.width,
                         screenHeightPx = windowSize.height,
                         horizontalAlignment = horizontalAlignment,
-                        verticalAlignment = verticalAlignment
+                        verticalAlignment = verticalAlignment,
                     )
                     val horizontalPadding = with(density) {
                         tooltipPadding.calculateLeftPadding(layoutDirection).roundToPx() -
@@ -135,10 +135,10 @@ fun Modifier.tooltip(
 
                     return IntOffset(
                         x = offset.x + horizontalPadding,
-                        y = offset.y + verticalPadding
+                        y = offset.y + verticalPadding,
                     )
                 }
-            }
+            },
         ) {
             MnTooltipImpl(
                 modifier = modifier
@@ -150,7 +150,7 @@ fun Modifier.tooltip(
                 content = content,
                 contentAlign = contentAlign,
                 arrowPadding = anchorPadding,
-                arrowAlignment = anchorAlignment
+                arrowAlignment = anchorAlignment,
             )
         }
     }
@@ -195,7 +195,7 @@ fun Modifier.guideTooltip(
     enabled: Boolean = true,
     showOverlay: Boolean = true,
     highlightComponent: Boolean = true,
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ): Modifier {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
@@ -217,13 +217,13 @@ fun Modifier.guideTooltip(
                 screenWidthPx = screenWidthPx,
                 screenHeightPx = screenHeightPx,
                 horizontalAlignment = horizontalAlignment,
-                verticalAlignment = verticalAlignment
+                verticalAlignment = verticalAlignment,
             )
         }
     }
     val transition = updateTransition(
         targetState = enabled,
-        label = "tooltip transition"
+        label = "tooltip transition",
     )
     if (enabled) {
         if (showOverlay) {
@@ -240,9 +240,9 @@ fun Modifier.guideTooltip(
                         positionInRoot = positionInRoot,
                         componentSize = componentSize,
                         backgroundColor = MnTooltipDefaults.overlayBackgroundColor,
-                        shape = ovalShape
+                        shape = ovalShape,
                     )
-                    .clickableSingle(activeRippleEffect = false) { onDismiss() }
+                    .clickableSingle(activeRippleEffect = false) { onDismiss() },
             ) {
                 MnTooltipImpl(
                     modifier = Modifier
@@ -255,7 +255,7 @@ fun Modifier.guideTooltip(
                     content = content,
                     contentAlign = contentAlign,
                     arrowPadding = anchorPadding,
-                    arrowAlignment = anchorAlignment
+                    arrowAlignment = anchorAlignment,
                 )
             }
         }
@@ -293,7 +293,7 @@ private fun MnTooltipImpl(
     contentAlign: TextAlign,
     arrowPadding: PaddingValues,
     arrowAlignment: Alignment,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         when (verticalAlignment) {
@@ -301,7 +301,7 @@ private fun MnTooltipImpl(
                 TooltipContent(
                     tooltipColors = tooltipColors,
                     content = content,
-                    contentAlign = contentAlign
+                    contentAlign = contentAlign,
                 )
 
                 TooltipAnchor(
@@ -310,10 +310,10 @@ private fun MnTooltipImpl(
                         .width(
                             tooltipContentSize.width
                                 .toFloat()
-                                .pxToDp()
+                                .pxToDp(),
                         ),
                     anchorColor = tooltipColors.containerColor,
-                    direction = arrowAlignment
+                    direction = arrowAlignment,
                 )
             }
 
@@ -324,16 +324,16 @@ private fun MnTooltipImpl(
                         .width(
                             tooltipContentSize.width
                                 .toFloat()
-                                .pxToDp()
+                                .pxToDp(),
                         ),
                     anchorColor = tooltipColors.containerColor,
-                    direction = arrowAlignment
+                    direction = arrowAlignment,
                 )
 
                 TooltipContent(
                     tooltipColors = tooltipColors,
                     content = content,
-                    contentAlign = contentAlign
+                    contentAlign = contentAlign,
                 )
             }
         }
@@ -345,22 +345,22 @@ internal fun TooltipContent(
     tooltipColors: MnTooltipColors,
     content: String,
     contentAlign: TextAlign,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Text(
         style = MnTheme.typography.bodySemiBold,
         modifier = modifier
             .background(
                 color = tooltipColors.containerColor,
-                shape = RoundedCornerShape(MnRadius.xSmall)
+                shape = RoundedCornerShape(MnRadius.xSmall),
             )
             .padding(
                 vertical = MnSpacing.medium,
-                horizontal = MnSpacing.large
+                horizontal = MnSpacing.large,
             ),
         text = content,
         textAlign = contentAlign,
-        color = tooltipColors.contentColor
+        color = tooltipColors.contentColor,
     )
 }
 
@@ -368,7 +368,7 @@ internal fun TooltipContent(
 internal fun TooltipAnchor(
     anchorColor: Color,
     modifier: Modifier = Modifier,
-    direction: Alignment = Alignment.BottomCenter
+    direction: Alignment = Alignment.BottomCenter,
 ) {
     val triangleWidth = MnTooltipDefaults.anchorWidth.dpToPx()
     val triangleHeight = MnTooltipDefaults.anchorHeight.dpToPx()
@@ -419,7 +419,7 @@ private fun calculateOffset(
     screenWidthPx: Int,
     screenHeightPx: Int,
     horizontalAlignment: Alignment.Horizontal,
-    verticalAlignment: Alignment.Vertical
+    verticalAlignment: Alignment.Vertical,
 ): IntOffset {
     val horizontalAlignmentPosition = when (horizontalAlignment) {
         Alignment.Start -> positionInRoot.x
@@ -433,7 +433,7 @@ private fun calculateOffset(
     }
     return IntOffset(
         x = min(screenWidthPx - tooltipSize.width, horizontalAlignmentPosition),
-        y = min(screenHeightPx - tooltipSize.height, verticalAlignmentPosition)
+        y = min(screenHeightPx - tooltipSize.height, verticalAlignmentPosition),
     )
 }
 
@@ -443,7 +443,7 @@ private fun Modifier.drawOverlayBackground(
     positionInRoot: IntOffset,
     componentSize: IntSize,
     backgroundColor: Color,
-    shape: Dp
+    shape: Dp,
 ): Modifier = if (showOverlay) {
     if (highlightComponent) {
         drawBehind {
@@ -451,8 +451,8 @@ private fun Modifier.drawOverlayBackground(
                 addRoundRect(
                     RoundRect(
                         rect = Rect(positionInRoot.toOffset(), componentSize.toSize()),
-                        cornerRadius = CornerRadius(shape.toPx())
-                    )
+                        cornerRadius = CornerRadius(shape.toPx()),
+                    ),
                 )
             }
             clipPath(highlightPath, clipOp = ClipOp.Difference) {
@@ -467,16 +467,16 @@ private fun Modifier.drawOverlayBackground(
 }
 
 private fun Modifier.animateTooltip(
-    transition: Transition<Boolean>
+    transition: Transition<Boolean>,
 ): Modifier = composed(
     inspectorInfo = debugInspectorInfo {
         name = "animateTooltip"
         properties["transition"] = transition
-    }
+    },
 ) {
     val commonTransitionSpec = tween<Float>(
         durationMillis = 200,
-        easing = LinearOutSlowInEasing
+        easing = LinearOutSlowInEasing,
     )
 
     val scale by transition.animateFloat(
@@ -487,7 +487,7 @@ private fun Modifier.animateTooltip(
                 commonTransitionSpec
             }
         },
-        label = "tooltip_transition_scaling"
+        label = "tooltip_transition_scaling",
     ) { if (it) 1f else 0f }
 
     val alpha by transition.animateFloat(
@@ -498,14 +498,14 @@ private fun Modifier.animateTooltip(
                 commonTransitionSpec
             }
         },
-        label = "tooltip_transition_alpha"
+        label = "tooltip_transition_alpha",
     ) { if (it) 1f else 0f }
 
     this.graphicsLayer(
         scaleX = scale,
         scaleY = scale,
         alpha = alpha,
-        transformOrigin = TransformOrigin.Center // 중심으로부터 스케일링
+        transformOrigin = TransformOrigin.Center, // 중심으로부터 스케일링
     )
 }
 
@@ -516,7 +516,7 @@ private fun MnTopTooltipPreview() {
         var isShowTooltip by remember { mutableStateOf(true) }
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = "Sample",
@@ -530,11 +530,11 @@ private fun MnTopTooltipPreview() {
                         ovalShape = 12.dp,
                         onDismiss = {
                             isShowTooltip = false
-                        }
+                        },
                     )
                     .background(color = MnTheme.backgroundColorScheme.secondary, shape = RoundedCornerShape(12.dp))
                     .padding(vertical = 9.5.dp, horizontal = 24.dp),
-                fontSize = 24.sp
+                fontSize = 24.sp,
             )
         }
     }
@@ -547,7 +547,7 @@ private fun MnBottomTooltipPreview() {
         var isShowTooltip by remember { mutableStateOf(true) }
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.CenterStart
+            contentAlignment = Alignment.CenterStart,
         ) {
             Text(
                 text = "Sample",
@@ -565,11 +565,11 @@ private fun MnBottomTooltipPreview() {
                         ovalShape = 12.dp,
                         onDismiss = {
                             isShowTooltip = false
-                        }
+                        },
                     )
                     .background(color = MnTheme.backgroundColorScheme.secondary, shape = RoundedCornerShape(12.dp))
                     .padding(vertical = 9.5.dp, horizontal = 24.dp),
-                fontSize = 24.sp
+                fontSize = 24.sp,
             )
         }
     }

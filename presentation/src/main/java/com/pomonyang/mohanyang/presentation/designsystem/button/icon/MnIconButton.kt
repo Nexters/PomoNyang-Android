@@ -28,7 +28,7 @@ fun MnIconButton(
     modifier: Modifier = Modifier,
     containerPadding: PaddingValues = PaddingValues(),
     @DrawableRes iconResourceId: Int,
-    iconColor: Color = LocalContentColor.current
+    iconColor: Color = LocalContentColor.current,
 ) {
     val buttonSize = 40.dp
 
@@ -36,15 +36,15 @@ fun MnIconButton(
         modifier = modifier
             .padding(containerPadding)
             .clip(CircleShape),
-        onClick = onClick
+        onClick = onClick,
     ) {
         Box(
             modifier = Modifier.size(buttonSize),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             MnMediumIcon(
                 resourceId = iconResourceId,
-                tint = iconColor
+                tint = iconColor,
             )
         }
     }

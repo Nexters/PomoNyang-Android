@@ -1,76 +1,71 @@
 package com.pomonyang.mohanyang.presentation.screen.pomodoro
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.focus.PomodoroFocusRoute
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.rest.PomodoroRestRoute
-import com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting.PomodoroRestWaitingRoute
+import com.pomonyang.mohanyang.presentation.screen.pomodoro.waiting.PomodoroBreakReadyRoute
+import java.util.*
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object Pomodoro
 
 @Serializable
-internal data object PomodoroFocusTimer
+data object PomodoroFocusTimer
 
 @Serializable
-internal data class PomodoroRestWaiting(
+data class PomodoroRestWaiting(
+    val pomodoroId: String,
     val type: String,
     val focusTime: Int,
-    val exceededTime: Int
+    val exceededTime: Int,
 )
 
 @Serializable
-internal data object PomodoroRest
+data class PomodoroRest(
+    val pomodoroId: String,
+)
 
 fun NavGraphBuilder.pomodoroScreen(
     onForceGoHome: () -> Unit,
     onShowSnackbar: (String, Int?) -> Unit,
-    navHostController: NavHostController
+    navHostController: NavHostController,
 ) {
     navigation<Pomodoro>(
-        startDestination = PomodoroFocusTimer
+        startDestination = PomodoroFocusTimer,
     ) {
         composable<PomodoroFocusTimer> {
             PomodoroFocusRoute(
-                pomodoroTimerViewModel = it.sharedViewModel(navHostController),
-                goToRest = { type, focusTime, exceededTime ->
+                goToRest = { type, focusTime, exceededTime, pomodoroId ->
                     navHostController.navigate(
                         PomodoroRestWaiting(
                             type = type,
                             focusTime = focusTime,
-                            exceededTime = exceededTime
-                        )
+                            exceededTime = exceededTime,
+                            pomodoroId = pomodoroId,
+                        ),
                     ) {
-                        popUpTo(PomodoroFocusTimer) { inclusive = true }
+                        popUpTo<PomodoroFocusTimer> {
+                            inclusive = true
+                        }
                     }
                 },
                 goToHome = {
                     navHostController.popBackStack()
-                }
+                },
             )
         }
 
-        composable<PomodoroRestWaiting> { backStackEntry ->
-            val routeData = backStackEntry.toRoute<PomodoroRestWaiting>()
-            PomodoroRestWaitingRoute(
-                type = routeData.type,
-                focusTime = routeData.focusTime,
-                exceedTime = routeData.exceededTime,
+        composable<PomodoroRestWaiting> {
+            PomodoroBreakReadyRoute(
                 goToHome = {
                     navHostController.popBackStack()
                 },
                 goToPomodoroRest = {
-                    navHostController.navigate(PomodoroRest) {
+                    navHostController.navigate(PomodoroRest(it)) {
                         popUpTo<PomodoroRestWaiting> {
                             inclusive = true
                         }
@@ -80,32 +75,26 @@ fun NavGraphBuilder.pomodoroScreen(
                     onForceGoHome()
                     navHostController.popBackStack()
                 },
-                onShowSnackbar = onShowSnackbar
+                onShowSnackbar = onShowSnackbar,
             )
         }
 
         composable<PomodoroRest> {
             PomodoroRestRoute(
-                pomodoroTimerViewModel = it.sharedViewModel(navHostController),
                 onShowSnackbar = onShowSnackbar,
                 goToHome = {
                     navHostController.popBackStack()
                 },
                 goToFocus = {
-                    navHostController.navigate(Pomodoro) {
-                        popUpTo(PomodoroRest) { inclusive = true }
+                    navHostController.navigate(
+                        PomodoroFocusTimer,
+                    ) {
+                        popUpTo<PomodoroRest> {
+                            inclusive = true
+                        }
                     }
-                }
+                },
             )
         }
     }
-}
-
-@Composable
-inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navHostController: NavHostController): T {
-    val navGraphRoute = destination.parent?.route ?: return viewModel()
-    val parentEntry = remember(this) {
-        navHostController.getBackStackEntry(navGraphRoute)
-    }
-    return hiltViewModel(parentEntry)
 }

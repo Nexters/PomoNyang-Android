@@ -61,7 +61,7 @@ fun MnWheelMinutePicker(
     selectedIconResId: Int,
     modifier: Modifier = Modifier,
     mnWheelPickerColor: MnWheelPickerColor = MnWheelPickerDefaults.colors(),
-    mnWheelPickerStyles: MnWheelPickerStyles = MnWheelPickerDefaults.styles()
+    mnWheelPickerStyles: MnWheelPickerStyles = MnWheelPickerDefaults.styles(),
 ) {
     val items = (minTime..maxTime step 5).toPersistentList()
     val screenHeightPixel = LocalConfiguration.current.screenHeightDp
@@ -82,12 +82,12 @@ fun MnWheelMinutePicker(
         modifier = modifier
             .height(wheelHeight)
             .fillMaxWidth()
-            .fadeEdge(brushColor)
+            .fadeEdge(brushColor),
     ) {
         CenterHighlightBox(
             itemHeight = itemHeight,
             highlightColor = MnTheme.backgroundColorScheme.secondary,
-            iconResId = selectedIconResId
+            iconResId = selectedIconResId,
         )
 
         WheelItemList(
@@ -112,7 +112,7 @@ fun MnWheelMinutePicker(
                 coroutineScope.launch {
                     scrollState.animateScrollToItem(index)
                 }
-            }
+            },
         )
     }
 }
@@ -125,7 +125,7 @@ private fun Modifier.fadeEdge(color: Color): Modifier {
             0.25f to color.copy(alpha = 0.3f),
             0.5f to Color.Transparent,
             0.75f to color.copy(alpha = 0.3f),
-            1f to color.copy(alpha = 0.95f)
+            1f to color.copy(alpha = 0.95f),
         )
     }
     return this
@@ -134,13 +134,13 @@ private fun Modifier.fadeEdge(color: Color): Modifier {
             val brush = Brush.verticalGradient(
                 colorStops = fadeEdgeBrushColor,
                 startY = 0f,
-                endY = size.height
+                endY = size.height,
             )
             onDrawWithContent {
                 drawContent()
                 drawRect(
                     brush = brush,
-                    blendMode = BlendMode.DstOut
+                    blendMode = BlendMode.DstOut,
                 )
             }
         }
@@ -151,7 +151,7 @@ private fun BoxScope.CenterHighlightBox(
     itemHeight: Dp,
     highlightColor: Color,
     iconResId: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
@@ -159,12 +159,12 @@ private fun BoxScope.CenterHighlightBox(
             .height(itemHeight * 1.2f)
             .align(Alignment.Center)
             .background(highlightColor, RoundedCornerShape(MnRadius.medium)),
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
     ) {
         MnMediumIcon(
             resourceId = iconResId,
             modifier = Modifier.padding(start = 20.dp),
-            tint = Color.Unspecified
+            tint = Color.Unspecified,
         )
     }
 }
@@ -183,7 +183,7 @@ private fun BoxScope.WheelItemList(
     onChangePickTime: (item: Int) -> Unit,
     onItemClick: (index: Int) -> Unit,
     onScrollEnd: (index: Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -200,11 +200,11 @@ private fun BoxScope.WheelItemList(
             .nestedScroll(nestedScrollConnection),
         contentPadding = PaddingValues(vertical = (itemHeight) * halfDisplayCount),
         state = scrollState,
-        flingBehavior = rememberSnapFlingBehavior(scrollState)
+        flingBehavior = rememberSnapFlingBehavior(scrollState),
     ) {
         itemsIndexed(
             items = items,
-            key = { _, item -> item.toString() }
+            key = { _, item -> item.toString() },
         ) { index, item ->
             val isCentralItem by remember {
                 derivedStateOf {
@@ -222,12 +222,12 @@ private fun BoxScope.WheelItemList(
                     .padding(start = if (isCentralItem) 36.dp else 0.dp)
                     .fillMaxWidth()
                     .clickableSingle(activeRippleEffect = false) { onItemClick(index) },
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = item.formatToMinutesAndSeconds(),
                     style = if (isCentralItem) selectedTextStyle else unSelectedTextStyle,
-                    color = if (isCentralItem) selectedTextColor else unSelectedTextColor
+                    color = if (isCentralItem) selectedTextColor else unSelectedTextColor,
                 )
             }
         }
@@ -250,14 +250,14 @@ private fun MnWheelPickerPreview() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MnTheme.backgroundColorScheme.primary)
+                .background(MnTheme.backgroundColorScheme.primary),
         )
         MnWheelMinutePicker(
             minTime = 5,
             maxTime = 60,
             onChangePickTime = {},
             initialItem = 25,
-            selectedIconResId = R.drawable.ic_null
+            selectedIconResId = R.drawable.ic_null,
         )
     }
 }

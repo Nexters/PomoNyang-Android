@@ -32,6 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -78,12 +81,14 @@ fun MnTextField(
         onDone = {
             keyboardController?.hide()
             focusManager.clearFocus(true)
-        }
+        },
     ),
     textSelectionColors: TextSelectionColors = TextSelectionColors(
         handleColor = MnTheme.backgroundColorScheme.accent1,
-        backgroundColor = Color.Transparent
-    )
+        backgroundColor = Color.Transparent,
+    ),
+    focusRequester: FocusRequester = remember { FocusRequester() },
+    onFocusChanged: (FocusState) -> Unit = {},
 ) {
     val height = 56.dp
     val containerColor = if (isEnabled) backgroundColor else MnTheme.backgroundColorScheme.secondary
@@ -97,7 +102,7 @@ fun MnTextField(
     }
 
     CompositionLocalProvider(
-        LocalTextSelectionColors provides textSelectionColors
+        LocalTextSelectionColors provides textSelectionColors,
     ) {
         Column(modifier = modifier) {
             BasicTextField(
@@ -110,7 +115,9 @@ fun MnTextField(
                                 bringIntoViewRequester.bringIntoView()
                             }
                         }
-                    },
+                        onFocusChanged(event)
+                    }
+                    .focusRequester(focusRequester),
                 value = value,
                 onValueChange = {
                     val newValue = if (counterMaxLength > 0) {
@@ -134,9 +141,9 @@ fun MnTextField(
                         color = containerColor,
                         border = BorderStroke(
                             borderWidth,
-                            if (isError) borderColor else containerColor
+                            if (isError) borderColor else containerColor,
                         ),
-                        shape = RoundedCornerShape(MnRadius.small)
+                        shape = RoundedCornerShape(MnRadius.small),
 
                     ) {
                         Box(
@@ -144,31 +151,31 @@ fun MnTextField(
                                 .clip(RoundedCornerShape(MnRadius.small))
                                 .background(containerColor)
                                 .padding(MnSpacing.large),
-                            contentAlignment = Alignment.CenterStart
+                            contentAlignment = Alignment.CenterStart,
                         ) {
                             if (!isFocused && value.isEmpty()) {
                                 Text(
                                     text = hint,
                                     color = MnTheme.textColorScheme.disabled,
-                                    style = hintTextStyle
+                                    style = hintTextStyle,
                                 )
                             }
                             innerTextField()
                         }
                     }
-                }
+                },
             )
             if (isError && errorMessage.isNotEmpty()) {
                 Text(
                     modifier = Modifier
                         .padding(
                             top = MnSpacing.xSmall,
-                            start = MnSpacing.xSmall
+                            start = MnSpacing.xSmall,
                         )
                         .bringIntoViewRequester(bringIntoViewRequester),
                     text = errorMessage,
                     style = errorTextStyle,
-                    color = MnColor.Red300
+                    color = MnColor.Red300,
                 )
             }
         }
@@ -191,11 +198,11 @@ fun PreviewMnTextField() {
                 .fillMaxSize()
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = null
+                    indication = null,
                 ) {
                     keyboardController?.hide()
                     focusManager.clearFocus(true)
-                }
+                },
         ) {
             MnTextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -207,7 +214,7 @@ fun PreviewMnTextField() {
                 isEnabled = false,
                 isError = false,
                 textColor = MnColor.Gray400,
-                errorMessage = "에러났다냥"
+                errorMessage = "에러났다냥",
             )
         }
     }

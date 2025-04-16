@@ -38,7 +38,7 @@ data class MnButtonStyleProperties(
     val shape: Shape,
     val contentPadding: PaddingValues,
     val spacing: Dp,
-    val textStyle: TextStyle
+    val textStyle: TextStyle,
 )
 
 @ThemePreviews
@@ -54,7 +54,7 @@ fun PreviewButtons() {
                     styles = MnBoxButtonStyles.medium,
                     text = "Button",
                     onClick = { Timber.d("click primary") },
-                    colors = MnBoxButtonColorType.primary
+                    colors = MnBoxButtonColorType.primary,
                 )
                 MnBoxButton(
                     styles = MnBoxButtonStyles.medium,
@@ -63,7 +63,7 @@ fun PreviewButtons() {
                     onClick = { Timber.d("click primary disable") },
                     colors = MnBoxButtonColorType.primary,
                     rightIconResourceId = R.drawable.ic_null,
-                    leftIconResourceId = R.drawable.ic_null
+                    leftIconResourceId = R.drawable.ic_null,
                 )
             }
 
@@ -72,7 +72,7 @@ fun PreviewButtons() {
                 text = "Button",
                 onClick = {},
                 colors = MnBoxButtonColorType.secondary,
-                leftIconResourceId = R.drawable.ic_null
+                leftIconResourceId = R.drawable.ic_null,
             )
 
             MnBoxButton(
@@ -80,7 +80,7 @@ fun PreviewButtons() {
                 text = "Button",
                 onClick = {},
                 leftIconResourceId = R.drawable.ic_null,
-                colors = MnBoxButtonColorType.tertiary
+                colors = MnBoxButtonColorType.tertiary,
             )
             Row {
                 MnTextButton(
@@ -88,7 +88,7 @@ fun PreviewButtons() {
                     text = "Button Disabled",
                     onClick = {},
                     isEnabled = false,
-                    leftIconResourceId = R.drawable.ic_null
+                    leftIconResourceId = R.drawable.ic_null,
                 )
                 MnTextButton(styles = MnTextButtonStyles.large, text = "textButton", onClick = {
                 })
@@ -98,7 +98,7 @@ fun PreviewButtons() {
                 colors = MnRoundButtonColorType.secondary,
                 iconResourceId = R.drawable.ic_null,
                 onClick = {
-                }
+                },
             )
 
             MnToggleButton(isChecked = checked, onCheckedChange = {
@@ -111,7 +111,7 @@ fun PreviewButtons() {
                 isSelected = selected,
                 titleContent = {
                     Text(text = "select button")
-                }
+                },
             )
             MnSelectButton(
                 modifier = Modifier.padding(10.dp),
@@ -124,7 +124,7 @@ fun PreviewButtons() {
                 titleContent = {
                     Text(text = "select button Disabled")
                 },
-                leftIconResourceId = R.drawable.ic_null
+                leftIconResourceId = R.drawable.ic_null,
             )
             MnIconButton(onClick = { }, iconResourceId = R.drawable.ic_null)
         }

@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
     private val userRepository: UserRepository,
     private val pushAlarmRepository: PushAlarmRepository,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<MainState, MainEvent, MainEffect>() {
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -144,7 +144,7 @@ class MainViewModel @Inject constructor(
                 val token = task.result
                 Timber.d("FCM : $token")
                 updateFcmToken(token)
-            }
+            },
         )
     }
 

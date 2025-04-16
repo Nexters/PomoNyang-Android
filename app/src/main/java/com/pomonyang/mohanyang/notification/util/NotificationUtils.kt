@@ -24,7 +24,7 @@ fun Context.createNotificationChannel() {
         NotificationChannel(
             channelId,
             channelName,
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_HIGH,
         ).apply {
             MnNotificationManager.setCustomAlarmSound(applicationContext, this)
         }
@@ -33,10 +33,10 @@ fun Context.createNotificationChannel() {
 
 fun Context.defaultNotification(
     pendingIntent: PendingIntent? = null,
-    channelId: String
+    channelId: String,
 ): NotificationCompat.Builder = NotificationCompat.Builder(
     this,
-    channelId
+    channelId,
 )
     .setContentIntent(pendingIntent)
     .setSmallIcon(R.drawable.ic_app_notification)
@@ -50,7 +50,7 @@ fun Context.defaultNotification(
 
 fun Context.summaryNotification(
     pendingIntent: PendingIntent? = null,
-    channelId: String
+    channelId: String,
 ): NotificationCompat.Builder = this.defaultNotification(pendingIntent, channelId)
     .setGroupSummary(true)
 
@@ -85,7 +85,7 @@ fun Context.createInterruptNotificationChannel() {
         NotificationChannel(
             channelId,
             channelName,
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_HIGH,
         ).apply {
             setSound(null, null)
         }

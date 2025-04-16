@@ -25,15 +25,15 @@ import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 private val pretendardStyle = FontFamily(
     Font(R.font.pretendard_regular, weight = FontWeight.Normal),
     Font(R.font.pretendard_semibold, weight = FontWeight.SemiBold),
-    Font(R.font.pretendard_bold, weight = FontWeight.Bold)
+    Font(R.font.pretendard_bold, weight = FontWeight.Bold),
 )
 
 private fun setDefaultLineHeight(
     alignment: LineHeightStyle.Alignment = LineHeightStyle.Alignment.Center,
-    trim: LineHeightStyle.Trim = LineHeightStyle.Trim.None
+    trim: LineHeightStyle.Trim = LineHeightStyle.Trim.None,
 ) = LineHeightStyle(
     alignment = alignment,
-    trim = trim
+    trim = trim,
 )
 
 @Immutable
@@ -44,7 +44,7 @@ data class MnTypography(
         fontSize = 64.sp,
         lineHeight = 77.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.02).em
+        letterSpacing = (-0.02).em,
 
     ),
     val header1: TextStyle = TextStyle(
@@ -53,7 +53,7 @@ data class MnTypography(
         fontSize = 48.sp,
         lineHeight = 58.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.02).em
+        letterSpacing = (-0.02).em,
     ),
     val header2: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
@@ -61,7 +61,7 @@ data class MnTypography(
         fontSize = 34.sp,
         lineHeight = 41.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.02).em
+        letterSpacing = (-0.02).em,
     ),
     val header3: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
@@ -69,7 +69,7 @@ data class MnTypography(
         fontSize = 24.sp,
         lineHeight = 38.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.02).em
+        letterSpacing = (-0.02).em,
     ),
     val header4: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
@@ -77,7 +77,7 @@ data class MnTypography(
         fontSize = 20.sp,
         lineHeight = 25.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.02).em
+        letterSpacing = (-0.02).em,
     ),
     val header5: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
@@ -85,7 +85,7 @@ data class MnTypography(
         fontSize = 18.sp,
         lineHeight = 22.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.02).em
+        letterSpacing = (-0.02).em,
     ),
     val bodySemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
@@ -93,7 +93,7 @@ data class MnTypography(
         fontSize = 16.sp,
         lineHeight = 22.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.01).em
+        letterSpacing = (-0.01).em,
     ),
     val bodyRegular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
@@ -101,7 +101,7 @@ data class MnTypography(
         fontSize = 16.sp,
         lineHeight = 22.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.01).em
+        letterSpacing = (-0.01).em,
     ),
 
     val subBodySemiBold: TextStyle = TextStyle(
@@ -110,7 +110,7 @@ data class MnTypography(
         fontSize = 14.sp,
         lineHeight = 21.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.01).em
+        letterSpacing = (-0.01).em,
     ),
 
     val subBodyRegular: TextStyle = TextStyle(
@@ -119,7 +119,7 @@ data class MnTypography(
         fontSize = 14.sp,
         lineHeight = 21.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.01).em
+        letterSpacing = (-0.01).em,
     ),
     val captionSemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
@@ -127,7 +127,7 @@ data class MnTypography(
         fontSize = 12.sp,
         lineHeight = 16.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.01).em
+        letterSpacing = (-0.01).em,
     ),
 
     val captionRegular: TextStyle = TextStyle(
@@ -136,8 +136,8 @@ data class MnTypography(
         fontSize = 12.sp,
         lineHeight = 16.sp,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = (-0.01).em
-    )
+        letterSpacing = (-0.01).em,
+    ),
 )
 
 internal val LocalMnTypo = staticCompositionLocalOf { MnTypography() }
@@ -149,7 +149,7 @@ fun TypoPreview() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
     ) {
         Text("time", style = MnTheme.typography.time)
 

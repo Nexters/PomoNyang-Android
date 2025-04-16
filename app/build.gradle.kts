@@ -32,10 +32,10 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-project.txt"
+                "proguard-project.txt",
             )
             signingConfig = signingConfigs.getByName("release")
             firebaseAppDistribution {
@@ -50,7 +50,7 @@ android {
             isDebuggable = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-project.txt"
+                "proguard-project.txt",
             )
             firebaseAppDistribution {
                 releaseNotes = "[${GithubUtils.commitHash()}]-${GithubUtils.lastCommitMessage()}"

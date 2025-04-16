@@ -15,13 +15,13 @@ import com.pomonyang.mohanyang.presentation.designsystem.dialog.MnDialog
 fun NetworkErrorDialog(
     onClickRefresh: () -> Unit,
     onDismissRequest: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) = with(LocalContext.current) {
     MnDialog(
         modifier = modifier,
         properties = DialogProperties(
             dismissOnClickOutside = false,
-            dismissOnBackPress = true
+            dismissOnBackPress = true,
         ),
         title = getString(R.string.network_error_title),
         subTitle = getString(R.string.network_error_content),
@@ -31,10 +31,10 @@ fun NetworkErrorDialog(
                 text = getString(R.string.network_refresh),
                 onClick = onClickRefresh,
                 colors = MnBoxButtonColorType.primary,
-                styles = MnBoxButtonStyles.medium
+                styles = MnBoxButtonStyles.medium,
 
             )
         },
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
     )
 }

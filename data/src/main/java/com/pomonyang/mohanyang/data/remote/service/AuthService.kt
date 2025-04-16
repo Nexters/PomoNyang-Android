@@ -9,11 +9,11 @@ import retrofit2.http.POST
 interface AuthService {
     @POST("/papi/v1/tokens/refresh")
     suspend fun refreshToken(
-        @Body request: RefreshTokenRequest
+        @Body request: RefreshTokenRequest,
     ): Result<TokenResponse>
 
     @POST("/papi/v1/tokens")
     suspend fun getTokenByDeviceId(
-        @Body request: TokenRequest
+        @Body request: TokenRequest,
     ): Result<TokenResponse>
 }

@@ -25,13 +25,13 @@ fun Context.lockScreenState() = callbackFlow {
         applicationContext.registerReceiver(
             lockScreenReceiver,
             screenEventIntentFilter,
-            RECEIVER_NOT_EXPORTED
+            RECEIVER_NOT_EXPORTED,
         )
     } else {
         applicationContext.registerReceiver(
             lockScreenReceiver,
             screenEventIntentFilter,
-            RECEIVER_EXPORTED
+            RECEIVER_EXPORTED,
         )
     }
 

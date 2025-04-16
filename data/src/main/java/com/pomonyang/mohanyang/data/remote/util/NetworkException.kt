@@ -1,5 +1,7 @@
 package com.pomonyang.mohanyang.data.remote.util
 
-class InternalException(code: Int = 500, msg: String) : Exception("$code: $msg")
-class BadRequestException(code: Int = 400, msg: String) : Exception("$code: $msg")
-class ForbiddenException(code: Int = 401, msg: String) : Exception("$code: $msg")
+import com.pomonyang.mohanyang.data.remote.model.response.ErrorResponse
+
+class InternalException(errorResponse: ErrorResponse) : Exception(errorResponse.message)
+class BadRequestException(errorResponse: ErrorResponse) : Exception(errorResponse.message)
+class ForbiddenException(errorResponse: ErrorResponse) : Exception(errorResponse.message)

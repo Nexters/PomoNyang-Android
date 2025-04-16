@@ -13,7 +13,12 @@
     <string name="tooltip_time_content">눌러서 시간을 조정할 수 있어요</string>
     <string name="tooltip_rest_content">푹 쉬었나요?\n힘내서 다시 집중할까냥?</string>
     <string name="minute">%d분</string>
-    <string name="change_category_title">카테고리 변경</string>
+    <string name="change_category_title">카테고리</string>
+    <string name="common_cancel">취소</string>
+    <string name="change_category_delete_title">카테고리 삭제</string>
+    <string name="change_category_edit_title">카테고리 수정</string>
+    <string name="change_category_edit_sub_title">수정할 카테고리를 선택해주세요.</string>
+    <string name="change_category_delete_count">%d개 삭제하기</string>
     <string name="confirm">확인</string>
     <string name="onboarding_start">시작하기</string>
     <string-array name="onboarding_guide_title">
@@ -110,5 +115,14 @@
     <string name="move_to_home">홈으로 이동</string>
     <string name="inquiry_service">고객센터 문의</string>
 
+    <string name="category_edit_title">카테고리 수정</string>
+    <string name="category_create_title">카테고리 생성</string>
+    <string name="category_setting_placeholder">카테고리 이름</string>
+    <string name="category_setting_edit">수정</string>
+    <string name="category_setting_delete">삭제</string>
+    <string name="default_category_cannot_edit">기본 카테고리는 수정/삭제가 불가능합니다.</string>
+    <string name="dialog_delete_category_title">카테고리를 삭제할까요?</string>
+    <string name="dialog_delete_category_subtitle">카테고리로 집중한 기록도 함께 사라져요.</string>
+    <string name="delete_category">삭제하기</string>
 
 </resources>

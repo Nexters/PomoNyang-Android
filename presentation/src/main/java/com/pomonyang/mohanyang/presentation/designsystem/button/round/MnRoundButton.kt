@@ -24,23 +24,23 @@ fun MnRoundButton(
     @DrawableRes iconResourceId: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    containerPadding: PaddingValues = PaddingValues()
+    containerPadding: PaddingValues = PaddingValues(),
 ) {
     val buttonSize = 88.dp
 
     MnPressableWrapper(
         modifier = Modifier.padding(containerPadding).clip(CircleShape),
-        onClick = onClick
+        onClick = onClick,
     ) {
         Box(
             modifier = modifier
                 .size(buttonSize)
                 .background(colors.containerColor),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             MnLargeIcon(
                 resourceId = iconResourceId,
-                tint = colors.iconColor
+                tint = colors.iconColor,
             )
         }
     }
@@ -53,7 +53,7 @@ fun PreviewRoundButton() {
         MnRoundButton(
             colors = MnRoundButtonColorType.primary,
             onClick = {},
-            iconResourceId = R.drawable.ic_null
+            iconResourceId = R.drawable.ic_null,
         )
     }
 }

@@ -8,12 +8,12 @@ object MnRoundButtonColorType {
         @Composable
         get() = MnRoundButtonColors(
             containerColor = MnTheme.backgroundColorScheme.accent1,
-            iconColor = MnTheme.iconColorScheme.inverse
+            iconColor = MnTheme.iconColorScheme.inverse,
         )
     val secondary: MnRoundButtonColors
         @Composable
         get() = MnRoundButtonColors(
             containerColor = MnTheme.backgroundColorScheme.inverse,
-            iconColor = MnTheme.iconColorScheme.tertiary
+            iconColor = MnTheme.iconColorScheme.tertiary,
         )
 }

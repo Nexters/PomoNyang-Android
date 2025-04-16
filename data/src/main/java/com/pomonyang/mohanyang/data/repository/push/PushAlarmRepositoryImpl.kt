@@ -9,7 +9,7 @@ import javax.inject.Inject
 internal class PushAlarmRepositoryImpl @Inject constructor(
     private val mohaNyangService: MohaNyangService,
     private val tokenLocalDataSource: TokenLocalDataSource,
-    private val notificationLocalDataSource: NotificationLocalDataSource
+    private val notificationLocalDataSource: NotificationLocalDataSource,
 ) : PushAlarmRepository {
     override suspend fun saveFcmToken(fcmToken: String) = tokenLocalDataSource.saveFcmToken(fcmToken)
 

@@ -14,7 +14,7 @@ import dagger.hilt.components.SingletonComponent
 internal object ManagerModule {
     @Provides
     internal fun provideMnAlarmManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): MnAlarmManager {
         val alarmManager =
             context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

@@ -21,23 +21,23 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 
 @Composable
 fun MnSpinner(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .background(MnTheme.backgroundColorScheme.inverse, RoundedCornerShape(MnRadius.small))
             .size(82.dp)
             .alpha(0.9f),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.spinner))
         val progress by animateLottieCompositionAsState(
             composition,
-            iterations = LottieConstants.IterateForever
+            iterations = LottieConstants.IterateForever,
         )
         LottieAnimation(
             composition = composition,
-            progress = { progress }
+            progress = { progress },
         )
     }
 }

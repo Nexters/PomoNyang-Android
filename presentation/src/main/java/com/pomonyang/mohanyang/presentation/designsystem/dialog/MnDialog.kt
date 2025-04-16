@@ -38,26 +38,26 @@ fun MnDialog(
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         usePlatformDefaultWidth = false,
-        decorFitsSystemWindows = true
+        decorFitsSystemWindows = true,
     ),
     subTitle: String? = null,
     positiveButton: @Composable (() -> Unit)? = null,
     negativeButton: @Composable (() -> Unit)? = null,
     onCloseClick: (() -> Unit)? = null,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
     MnTheme {
         Dialog(
             onDismissRequest = onDismissRequest,
-            properties = properties
+            properties = properties,
         ) {
             Surface(
                 modifier = modifier.width(MnDialogDefaults.containerWidth),
                 shape = RoundedCornerShape(MnRadius.medium),
-                color = dialogColors.containerColor
+                color = dialogColors.containerColor,
             ) {
                 Column(
-                    modifier = Modifier.padding(MnSpacing.xLarge)
+                    modifier = Modifier.padding(MnSpacing.xLarge),
                 ) {
                     DialogTitle(
                         title = title,
@@ -68,24 +68,24 @@ fun MnDialog(
                                 closeClick()
                                 onDismissRequest()
                             }
-                        }
+                        },
                     )
                     DialogDescription(
                         subTitle = subTitle,
                         dialogTextStyles = dialogTextStyles,
-                        dialogColors = dialogColors
+                        dialogColors = dialogColors,
                     )
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium),
-                        modifier = Modifier.padding(top = MnSpacing.large)
+                        modifier = Modifier.padding(top = MnSpacing.large),
                     ) {
                         if (positiveButton != null) {
                             Box(
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
                             ) {
                                 CompositionLocalProvider(
                                     LocalTextStyle provides dialogTextStyles.positiveButtonTextStyle,
-                                    LocalContentColor provides dialogColors.positiveButtonTextColor
+                                    LocalContentColor provides dialogColors.positiveButtonTextColor,
                                 ) {
                                     positiveButton()
                                 }
@@ -93,11 +93,11 @@ fun MnDialog(
                         }
                         if (negativeButton != null) {
                             Box(
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
                             ) {
                                 CompositionLocalProvider(
                                     LocalTextStyle provides dialogTextStyles.negativeButtonTextStyle,
-                                    LocalContentColor provides dialogColors.negativeButtonTextColor
+                                    LocalContentColor provides dialogColors.negativeButtonTextColor,
                                 ) {
                                     negativeButton()
                                 }
@@ -114,14 +114,14 @@ fun MnDialog(
 private fun DialogDescription(
     subTitle: String?,
     dialogTextStyles: MnDialogTextStyles,
-    dialogColors: MnDialogColors
+    dialogColors: MnDialogColors,
 ) {
     subTitle?.let {
         Text(
             text = it,
             maxLines = 2,
             style = dialogTextStyles.subTitleTextStyle,
-            color = dialogColors.subTitleColor
+            color = dialogColors.subTitleColor,
         )
     }
 }
@@ -131,26 +131,26 @@ private fun DialogTitle(
     title: String,
     dialogTextStyles: MnDialogTextStyles,
     dialogColors: MnDialogColors,
-    onCloseClick: (() -> Unit)?
+    onCloseClick: (() -> Unit)?,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = title,
             style = dialogTextStyles.titleTextStyle,
             color = dialogColors.titleColor,
             modifier = Modifier.padding(vertical = 7.5.dp),
-            maxLines = 1
+            maxLines = 1,
         )
         if (onCloseClick != null) {
             MnMediumIcon(
                 resourceId = R.drawable.ic_close,
                 modifier = Modifier
                     .padding(8.dp)
-                    .clickableSingle(activeRippleEffect = false) { onCloseClick() }
+                    .clickableSingle(activeRippleEffect = false) { onCloseClick() },
             )
         }
     }
@@ -167,7 +167,7 @@ private fun MnDialogPreview() {
             positiveButton = {
                 // TODO 나중에 변경 MnBoxButton으로 변경
                 Button(
-                    onClick = {}
+                    onClick = {},
                 ) {
                     Text("확인")
                 }
@@ -175,13 +175,13 @@ private fun MnDialogPreview() {
             negativeButton = {
                 // TODO 나중에 변경 MnBoxButton으로 변경
                 Button(
-                    onClick = {}
+                    onClick = {},
                 ) {
                     Text("취소")
                 }
             },
             onCloseClick = {},
-            onDismissRequest = {}
+            onDismissRequest = {},
         )
     }
 }
@@ -197,12 +197,12 @@ private fun MnDialogOnlyPositiveButtonPreview() {
             positiveButton = {
                 // TODO 나중에 변경 MnBoxButton으로 변경
                 Button(
-                    onClick = {}
+                    onClick = {},
                 ) {
                     Text("확인")
                 }
             },
-            onDismissRequest = {}
+            onDismissRequest = {},
         )
     }
 }
@@ -218,12 +218,12 @@ private fun MnDialogOnlyNegativeButtonPreview() {
             negativeButton = {
                 // TODO 나중에 변경 MnBoxButton으로 변경
                 Button(
-                    onClick = {}
+                    onClick = {},
                 ) {
                     Text("취소")
                 }
             },
-            onDismissRequest = {}
+            onDismissRequest = {},
         )
     }
 }
@@ -237,7 +237,7 @@ private fun MnDialogNoSubTitlePreview() {
             positiveButton = {
                 // TODO 나중에 변경 MnBoxButton으로 변경
                 Button(
-                    onClick = {}
+                    onClick = {},
                 ) {
                     Text("확인")
                 }
@@ -245,12 +245,12 @@ private fun MnDialogNoSubTitlePreview() {
             negativeButton = {
                 // TODO 나중에 변경 MnBoxButton으로 변경
                 Button(
-                    onClick = {}
+                    onClick = {},
                 ) {
                     Text("취소")
                 }
             },
-            onDismissRequest = {}
+            onDismissRequest = {},
         )
     }
 }

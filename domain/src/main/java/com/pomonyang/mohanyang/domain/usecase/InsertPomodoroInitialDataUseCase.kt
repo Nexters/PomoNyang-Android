@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.first
 
 class InsertPomodoroInitialDataUseCase @Inject constructor(
     private val pomodoroTimerRepository: PomodoroTimerRepository,
-    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase
+    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
 ) {
 
     suspend operator fun invoke(focusTimeId: String) {

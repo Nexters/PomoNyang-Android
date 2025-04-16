@@ -10,24 +10,23 @@ object GithubUtils {
 
     private fun runCommand(
         command: String,
-        workingDir: File = File(".")
-    ): String =
-        try {
-            val parts = command.split("\\s".toRegex())
-            val process =
-                ProcessBuilder(*parts.toTypedArray())
-                    .directory(workingDir)
-                    .redirectOutput(ProcessBuilder.Redirect.PIPE)
-                    .redirectError(ProcessBuilder.Redirect.PIPE)
-                    .start()
+        workingDir: File = File("."),
+    ): String = try {
+        val parts = command.split("\\s".toRegex())
+        val process =
+            ProcessBuilder(*parts.toTypedArray())
+                .directory(workingDir)
+                .redirectOutput(ProcessBuilder.Redirect.PIPE)
+                .redirectError(ProcessBuilder.Redirect.PIPE)
+                .start()
 
-            process.waitFor(60, TimeUnit.MINUTES)
-            process.inputStream
-                .bufferedReader()
-                .readText()
-                .trim()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            "Command failed"
-        }
+        process.waitFor(60, TimeUnit.MINUTES)
+        process.inputStream
+            .bufferedReader()
+            .readText()
+            .trim()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "Command failed"
+    }
 }

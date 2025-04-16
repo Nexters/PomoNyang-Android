@@ -23,7 +23,7 @@ data class OnboardingGuideUiState(val isNewUser: Boolean) : ViewState
 
 @HiltViewModel
 class OnboardingGuideViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel<OnboardingGuideUiState, OnboardingGuideEvent, OnboardingGuideSideEffect>() {
 
     override fun setInitialState(): OnboardingGuideUiState = OnboardingGuideUiState(isNewUser = true)
@@ -52,7 +52,7 @@ class OnboardingGuideViewModel @Inject constructor(
             userRepository.login(deviceId).onSuccess {
                 userRepository.saveToken(
                     accessToken = it.accessToken,
-                    refreshToken = it.refreshToken
+                    refreshToken = it.refreshToken,
                 )
             }.onFailure {
                 Timber.e("token fail: $it")
