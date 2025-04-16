@@ -9,6 +9,8 @@ import com.pomonyang.mohanyang.presentation.model.category.toCategoryModel
 import com.pomonyang.mohanyang.presentation.screen.home.CategorySetting
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon.CategoryIconNavType
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLog
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLogger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.reflect.typeOf
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 class CategorySettingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val pomodoroSettingRepository: PomodoroSettingRepository,
+    private val mohanyangEventLogger: MohanyangEventLogger,
 ) : BaseViewModel<CategorySettingState, CategorySettingEvent, CategorySettingSideEffect>() {
     init {
         val category = savedStateHandle.toRoute<CategorySetting>(typeMap = mapOf(typeOf<CategoryIcon>() to CategoryIconNavType))
@@ -65,13 +68,14 @@ class CategorySettingViewModel @Inject constructor(
                             setEffect(CategorySettingSideEffect.ShowErrorMessage(error.message ?: ""))
                         }
                     } else {
-                        state.value.categoryNo?.let {
+                        state.value.categoryNo?.let { categoryNo ->
                             pomodoroSettingRepository.updatePomodoroCategorySetting(
-                                categoryNo = it,
+                                categoryNo = categoryNo,
                                 title = event.categoryName,
                                 iconType = state.value.selectedCategoryIcon.name,
                             ).onSuccess {
                                 setEffect(CategorySettingSideEffect.GoToPomodoroSetting)
+                                mohanyangEventLogger.log(MohanyangEventLog.CategoryEditComplete)
                             }.onFailure { error ->
                                 setEffect(CategorySettingSideEffect.ShowErrorMessage(error.message ?: ""))
                             }
@@ -83,6 +87,7 @@ class CategorySettingViewModel @Inject constructor(
             is CategorySettingEvent.SelectIcon -> {
                 updateState { copy(selectedCategoryIcon = event.icon) }
                 setEffect(CategorySettingSideEffect.DismissCategoryIconBottomSheet)
+                mohanyangEventLogger.log(MohanyangEventLog.CategoryIconUsage(event.icon.name))
             }
 
             CategorySettingEvent.DismissBottomSheet -> {

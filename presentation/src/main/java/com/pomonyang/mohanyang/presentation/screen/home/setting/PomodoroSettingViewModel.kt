@@ -9,6 +9,8 @@ import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.model.cat.toModel
 import com.pomonyang.mohanyang.presentation.model.category.toCategoryModel
 import com.pomonyang.mohanyang.presentation.model.setting.toModel
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLog
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLogger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
@@ -20,6 +22,7 @@ class PomodoroSettingViewModel @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
     private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
     private val userRepository: UserRepository,
+    private val mohanyangEventLogger: MohanyangEventLogger,
 ) : BaseViewModel<PomodoroSettingState, PomodoroSettingEvent, PomodoroSettingSideEffect>() {
 
     override fun setInitialState(): PomodoroSettingState = PomodoroSettingState()
@@ -28,6 +31,7 @@ class PomodoroSettingViewModel @Inject constructor(
         when (event) {
             PomodoroSettingEvent.ClickCategory -> {
                 updateState { copy(showCategoryBottomSheet = true) }
+                mohanyangEventLogger.log(MohanyangEventLog.HomeCategoryClick)
             }
 
             PomodoroSettingEvent.ClickFocusTime -> {
@@ -70,15 +74,21 @@ class PomodoroSettingViewModel @Inject constructor(
 
             is PomodoroSettingEvent.ClickCategoryEdit -> {
                 setEffect(PomodoroSettingSideEffect.GoToCategoryEdit(category = event.category))
+                mohanyangEventLogger.log(MohanyangEventLog.CategoryEditClick)
             }
 
             PomodoroSettingEvent.ClickCategoryCreate -> {
                 setEffect(PomodoroSettingSideEffect.GoToCategoryCreate)
+                mohanyangEventLogger.log(MohanyangEventLog.CategoryAddClick)
             }
 
             is PomodoroSettingEvent.DeleteCategories -> {
                 viewModelScope.launch {
+                    mohanyangEventLogger.log(MohanyangEventLog.CategoryDeleteCTAClick)
                     pomodoroSettingRepository.deleteCategories(event.categoryIds)
+                        .onSuccess {
+                            mohanyangEventLogger.log(MohanyangEventLog.CategoryDeletedCount(count = event.categoryIds.count()))
+                        }
                         .onFailure {
                             setEffect(PomodoroSettingSideEffect.ShowBottomSheetSnackBar(it.message ?: "알 수 없는 오류가 발생했어요.", null))
                         }
@@ -110,6 +120,8 @@ class PomodoroSettingViewModel @Inject constructor(
         pomodoroSettingRepository.getPomodoroSettingList()
             .onEach { pomodoroSettingList ->
                 updateState { copy(categoryList = pomodoroSettingList.map { it.toCategoryModel() }) }
+            }.also {
+                mohanyangEventLogger.log(MohanyangEventLog.CategoryCreateCount(state.value.categoryList.count()))
             }
             .launchIn(viewModelScope)
     }
