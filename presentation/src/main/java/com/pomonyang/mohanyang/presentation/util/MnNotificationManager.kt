@@ -26,7 +26,7 @@ object MnNotificationManager {
         INTENT_NOTIFY_REST_MESSAGE,
         INTENT_START_INTERRUPT_MESSAGE,
         INTENT_STOP_INTERRUPT_MESSAGE,
-        INTENT_SEND_MESSAGE
+        INTENT_SEND_MESSAGE,
     )
 
     fun notifyFocusEnd(context: Context) {

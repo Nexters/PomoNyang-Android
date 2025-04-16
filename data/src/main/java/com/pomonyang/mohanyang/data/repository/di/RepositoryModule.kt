@@ -23,30 +23,30 @@ internal abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsPomodoroSettingRepository(
-        pomodoroSettingRepositoryImpl: PomodoroSettingRepositoryImpl
+        pomodoroSettingRepositoryImpl: PomodoroSettingRepositoryImpl,
     ): PomodoroSettingRepository
 
     @Binds
     @Singleton
     abstract fun provideUserRepository(
-        userRepositoryImpl: UserRepositoryImpl
+        userRepositoryImpl: UserRepositoryImpl,
     ): UserRepository
 
     @Binds
     @Singleton
     internal abstract fun provideCatSettingRepository(
-        catSettingRepositoryImpl: CatSettingRepositoryImpl
+        catSettingRepositoryImpl: CatSettingRepositoryImpl,
     ): CatSettingRepository
 
     @Binds
     @Singleton
     internal abstract fun providePushAlarmRepository(
-        pushAlarmRepositoryImpl: PushAlarmRepositoryImpl
+        pushAlarmRepositoryImpl: PushAlarmRepositoryImpl,
     ): PushAlarmRepository
 
     @Binds
     @Singleton
     internal abstract fun providePomodoroTimerRepository(
-        pomodoroTimerRepositoryImpl: PomodoroTimerRepositoryImpl
+        pomodoroTimerRepositoryImpl: PomodoroTimerRepositoryImpl,
     ): PomodoroTimerRepository
 }

@@ -50,7 +50,7 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
                         notificationId = notificationId,
                         channelId = channelId,
                         title = title,
-                        message = message
+                        message = message,
                     )
                 }
 
@@ -61,7 +61,7 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
                             context,
                             notificationId = id,
                             channelId = context.getString(R.string.channel_id),
-                            message = context.getString(cat.restEndPushContent)
+                            message = context.getString(cat.restEndPushContent),
                         )
                     }
                 }
@@ -73,7 +73,7 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
                             context,
                             notificationId = id,
                             channelId = context.getString(R.string.channel_id),
-                            message = context.getString(cat.timerEndPushContent)
+                            message = context.getString(cat.timerEndPushContent),
                         )
                     }
                 }
@@ -96,7 +96,7 @@ class LocalNotificationReceiver @Inject constructor() : BroadcastReceiver() {
         notificationId: Int,
         channelId: String,
         title: String = context.getString(R.string.app_name),
-        message: String
+        message: String,
     ) {
         if (!context.isNotificationGranted()) return
 

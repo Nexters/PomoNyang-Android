@@ -15,7 +15,7 @@ internal class UserRepositoryImpl @Inject constructor(
     private val tokenLocalDataSource: TokenLocalDataSource,
     private val userLocalDataSource: UserLocalDataSource,
     private val mohaNyangService: MohaNyangService,
-    private val authService: AuthService
+    private val authService: AuthService,
 ) : UserRepository {
     override suspend fun getDeviceId() = deviceLocalDataStore.getDeviceId()
 

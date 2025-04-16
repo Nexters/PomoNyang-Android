@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdateCatTypeRequest(
-    val catNo: Int
+    val catNo: Int,
 )

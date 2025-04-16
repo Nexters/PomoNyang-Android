@@ -19,7 +19,7 @@ internal fun MohaNyangNavHost(
     onShowSnackbar: (String, Int?) -> Unit,
     onForceGoHome: () -> Unit,
     mohaNyangAppState: MohaNyangAppState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val navHostController = mohaNyangAppState.navHostController
     val navigateUp: () -> Unit = { navHostController.navigateUp() }
@@ -43,45 +43,45 @@ internal fun MohaNyangNavHost(
         enterTransition = {
             slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Start,
-                tween(slideDuration)
+                tween(slideDuration),
             )
         },
         popEnterTransition = {
             slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.End,
-                tween(slideDuration)
+                tween(slideDuration),
             )
         },
 
         popExitTransition = {
             slideOutOfContainer(
                 AnimatedContentTransitionScope.SlideDirection.End,
-                tween(slideDuration)
+                tween(slideDuration),
             )
-        }
+        },
 
     ) {
         onboardingScreen(
             navHostController = mohaNyangAppState.navHostController,
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
         )
 
         homeScreen(
             isNewUser = mohaNyangAppState.isNewUser,
             navHostController = mohaNyangAppState.navHostController,
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
         )
 
         pomodoroScreen(
             onForceGoHome = onForceGoHome,
             onShowSnackbar = onShowSnackbar,
-            navHostController = mohaNyangAppState.navHostController
+            navHostController = mohaNyangAppState.navHostController,
         )
 
         myPageScreen(
             navHostController = navHostController,
             isOfflineState = mohaNyangAppState.isOffline,
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
         )
     }
 }

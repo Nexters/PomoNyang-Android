@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.first
 
 class AdjustPomodoroTimeUseCase @Inject constructor(
     private val pomodoroSettingRepository: PomodoroSettingRepository,
-    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase
+    private val getSelectedPomodoroSettingUseCase: GetSelectedPomodoroSettingUseCase,
 ) {
 
     suspend operator fun invoke(isFocusTime: Boolean, isIncrease: Boolean) {
@@ -19,10 +19,10 @@ class AdjustPomodoroTimeUseCase @Inject constructor(
         val updatedFocusTime = if (isFocusTime) focusTime + adjustment else focusTime
         val updatedRestTime = if (!isFocusTime) restTime + adjustment else restTime
 
-        pomodoroSettingRepository.updatePomodoroCategoryTimes(
+        pomodoroSettingRepository.updatePomodoroCategorySetting(
             categoryNo = selectedPomodoroSetting.categoryNo,
             focusTime = updatedFocusTime.toInt(),
-            restTime = updatedRestTime.toInt()
+            restTime = updatedRestTime.toInt(),
         )
     }
 

@@ -15,16 +15,16 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnTypography
 
 @Composable
 fun MnTheme(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
         LocalMnIconColorScheme provides MnTheme.iconColorScheme,
         LocalMnBackgroundColorScheme provides MnTheme.backgroundColorScheme,
         LocalMnTextColorScheme provides MnTheme.textColorScheme,
-        LocalDensity provides Density(LocalDensity.current.density, fontScale = 1f)
+        LocalDensity provides Density(LocalDensity.current.density, fontScale = 1f),
     ) {
         MaterialTheme(
-            content = content
+            content = content,
         )
     }
 }

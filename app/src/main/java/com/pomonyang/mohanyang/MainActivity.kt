@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 coroutineScope = coroutineScope,
                 navHostController = rememberNavController().apply {
                     NavigationViewTrackingEffect(navController = this)
-                }
+                },
             )
 
             var showDialog by remember { mutableStateOf(false) }
@@ -115,13 +115,13 @@ class MainActivity : ComponentActivity() {
                         },
                         onDismissRequest = {
                             viewModel.handleEvent(MainEvent.ClickClose)
-                        }
+                        },
                     )
                 } else {
                     AppScreen(
                         modifier = Modifier,
                         viewState = state,
-                        mohaNyangAppState = mohaNyangAppState
+                        mohaNyangAppState = mohaNyangAppState,
                     )
                 }
             }
@@ -132,14 +132,14 @@ class MainActivity : ComponentActivity() {
     fun AppScreen(
         modifier: Modifier,
         viewState: MainState,
-        mohaNyangAppState: MohaNyangAppState
+        mohaNyangAppState: MohaNyangAppState,
     ) {
         when {
             viewState.isInternalError -> ServerErrorScreen(onClickNavigateToHome = { })
             viewState.isInvalidError ->
                 NetworkErrorScreen(
                     modifier = modifier,
-                    onClickRetry = { viewModel.handleEvent(MainEvent.ClickRetry) }
+                    onClickRetry = { viewModel.handleEvent(MainEvent.ClickRetry) },
                 )
 
             viewState.isLoading -> LoadingScreen(modifier = modifier)
@@ -157,7 +157,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
         )
     }
 

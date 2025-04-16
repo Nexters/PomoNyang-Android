@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 data class CatProfileState(
     val catName: String = "",
     val catType: CatType = CatType.CHEESE,
-    val catNo: Int = -1
+    val catNo: Int = -1,
 ) : ViewState
 
 sealed interface CatProfileEvent : ViewEvent {
@@ -30,7 +30,7 @@ sealed interface CatProfileSideEffect : ViewSideEffect {
 
 @HiltViewModel
 class CatProfileViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel<CatProfileState, CatProfileEvent, CatProfileSideEffect>() {
     override fun setInitialState(): CatProfileState = CatProfileState()
 

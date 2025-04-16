@@ -16,12 +16,12 @@ object MnTopAppBarDefaults {
         containerColor: Color = MnColor.Gray50,
         navigationIconContentColor: Color = MnTheme.iconColorScheme.primary,
         titleContentColor: Color = MnTheme.textColorScheme.primary,
-        actionIconContentColor: Color = MnTheme.iconColorScheme.primary
+        actionIconContentColor: Color = MnTheme.iconColorScheme.primary,
     ) = MnAppBarColors(
         containerColor = containerColor,
         navigationIconContentColor = navigationIconContentColor,
         titleContentColor = titleContentColor,
-        actionIconContentColor = actionIconContentColor
+        actionIconContentColor = actionIconContentColor,
     )
 }
 
@@ -30,5 +30,5 @@ data class MnAppBarColors(
     val containerColor: Color,
     val navigationIconContentColor: Color,
     val titleContentColor: Color,
-    val actionIconContentColor: Color
+    val actionIconContentColor: Color,
 )

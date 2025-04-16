@@ -17,18 +17,18 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 fun TimerType(
     modifier: Modifier = Modifier,
     type: String,
-    iconRes: Int = R.drawable.ic_null
+    iconRes: Int = R.drawable.ic_null,
 ) {
     Row(
         modifier = modifier.padding(top = MnSpacing.xLarge),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         MnSmallIcon(resourceId = iconRes, tint = Color.Unspecified)
         Text(
             modifier = Modifier.padding(MnSpacing.xSmall),
             text = type,
             style = MnTheme.typography.header5,
-            color = MnTheme.textColorScheme.secondary
+            color = MnTheme.textColorScheme.secondary,
         )
     }
 }

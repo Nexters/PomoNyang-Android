@@ -88,7 +88,7 @@ class FocusNotificationService : Service() {
             scheduleTime = time,
             channelId = getString(R.string.interrupt_channel_id),
             title = applicationContext.getString(R.string.app_name),
-            message = message
+            message = message,
         ).also {
             focusNotifications.add(it)
         }

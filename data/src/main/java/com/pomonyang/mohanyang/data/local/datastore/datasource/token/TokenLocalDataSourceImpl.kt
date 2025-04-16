@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 
 internal class TokenLocalDataSourceImpl @Inject constructor(
-    @TokenDataStore private val dataStore: DataStore<Preferences>
+    @TokenDataStore private val dataStore: DataStore<Preferences>,
 ) : TokenLocalDataSource {
 
     override suspend fun saveAccessToken(accessToken: String) {

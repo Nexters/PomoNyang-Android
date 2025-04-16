@@ -18,7 +18,7 @@ import kotlinx.coroutines.plus
 class OnboardingSelectCatViewModel @Inject constructor(
     private val catSettingRepository: CatSettingRepository,
     private val pushAlarmRepository: PushAlarmRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel<SelectCatState, SelectCatEvent, SelectCatSideEffect>() {
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -83,7 +83,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
                 updateState {
                     copy(
                         cats = catList,
-                        selectedType = catList.find { it.no == selectedCatNo }?.type
+                        selectedType = catList.find { it.no == selectedCatNo }?.type,
                     )
                 }
             }.getOrThrow()
@@ -91,7 +91,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
                 copy(
                     isLoading = false,
                     isInternalError = false,
-                    isInvalidError = false
+                    isInvalidError = false,
                 )
             }
         }
@@ -107,14 +107,14 @@ class OnboardingSelectCatViewModel @Inject constructor(
                 SelectCatSideEffect.OnNavToNaming(
                     catNo,
                     cat?.name ?: "",
-                    state.value.selectedType?.name ?: ""
-                )
+                    state.value.selectedType?.name ?: "",
+                ),
             )
             updateState {
                 copy(
                     isLoading = false,
                     isInvalidError = false,
-                    isInternalError = false
+                    isInternalError = false,
                 )
             }
         }

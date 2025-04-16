@@ -67,7 +67,7 @@ internal abstract class NetworkModule {
         fun provideHTTPRequestInterceptor(
             tokenLocalDataSource: TokenLocalDataSource,
             deviceIdLocalDataSource: DeviceIdLocalDataSource,
-            @ApplicationContext context: Context
+            @ApplicationContext context: Context,
         ): HttpRequestInterceptor = HttpRequestInterceptor(tokenLocalDataSource, deviceIdLocalDataSource, context)
 
         @Provides
@@ -75,7 +75,7 @@ internal abstract class NetworkModule {
         fun provideTokenRefreshInterceptor(
             authRemoteDataSource: AuthRemoteDataSource,
             tokenLocalDataSource: TokenLocalDataSource,
-            deviceIdLocalDataSource: DeviceIdLocalDataSource
+            deviceIdLocalDataSource: DeviceIdLocalDataSource,
         ): TokenRefreshInterceptor = TokenRefreshInterceptor(authRemoteDataSource, tokenLocalDataSource, deviceIdLocalDataSource)
 
         @Provides
@@ -83,7 +83,7 @@ internal abstract class NetworkModule {
         @DefaultClient
         fun provideOkHttpClient(
             httpRequestInterceptor: HttpRequestInterceptor,
-            httpLoggingInterceptor: HttpLoggingInterceptor
+            httpLoggingInterceptor: HttpLoggingInterceptor,
         ): OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(httpRequestInterceptor)
@@ -96,7 +96,7 @@ internal abstract class NetworkModule {
         fun provideTokenOkHttpClient(
             httpRequestInterceptor: HttpRequestInterceptor,
             httpLoggingInterceptor: HttpLoggingInterceptor,
-            tokenRefreshInterceptor: TokenRefreshInterceptor
+            tokenRefreshInterceptor: TokenRefreshInterceptor,
         ): OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(tokenRefreshInterceptor)
@@ -119,7 +119,7 @@ internal abstract class NetworkModule {
         fun provideRetrofit(
             @DefaultClient okHttpClient: OkHttpClient,
             networkResultCallAdapterFactory: NetworkResultCallAdapterFactory,
-            json: Json
+            json: Json,
         ): Retrofit = Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
@@ -133,7 +133,7 @@ internal abstract class NetworkModule {
         fun provideTokenInterceptorRetrofit(
             @TokenClient okHttpClient: OkHttpClient,
             networkResultCallAdapterFactory: NetworkResultCallAdapterFactory,
-            json: Json
+            json: Json,
         ): Retrofit = Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
@@ -144,13 +144,13 @@ internal abstract class NetworkModule {
         @Provides
         @Singleton
         fun provideApiService(
-            @TokenApi retrofit: Retrofit
+            @TokenApi retrofit: Retrofit,
         ): MohaNyangService = retrofit.create(MohaNyangService::class.java)
 
         @Provides
         @Singleton
         fun provideAuthApiService(
-            @DefaultApi retrofit: Retrofit
+            @DefaultApi retrofit: Retrofit,
         ): AuthService = retrofit.create(AuthService::class.java)
     }
 }

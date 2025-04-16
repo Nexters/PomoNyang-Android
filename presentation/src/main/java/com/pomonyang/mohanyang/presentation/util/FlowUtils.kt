@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 inline fun <reified T> Flow<T>.collectWithLifecycle(
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-    noinline action: suspend (T) -> Unit
+    noinline action: suspend (T) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 

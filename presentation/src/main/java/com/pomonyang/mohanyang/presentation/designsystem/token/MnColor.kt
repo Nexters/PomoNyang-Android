@@ -58,7 +58,7 @@ class MnColorScheme(
     val inverse: Color,
     val disabled: Color = Color.Unspecified,
     val accent1: Color = Color.Unspecified,
-    val accent2: Color = Color.Unspecified
+    val accent2: Color = Color.Unspecified,
 )
 
 private val MnIconColorScheme = MnColorScheme(
@@ -66,7 +66,7 @@ private val MnIconColorScheme = MnColorScheme(
     secondary = MnColor.Gray500,
     tertiary = MnColor.Gray300,
     disabled = MnColor.Gray200,
-    inverse = MnColor.White
+    inverse = MnColor.White,
 )
 
 private val MnTextColorScheme = MnColorScheme(
@@ -74,7 +74,7 @@ private val MnTextColorScheme = MnColorScheme(
     secondary = MnColor.Gray600,
     tertiary = MnColor.Gray500,
     disabled = MnColor.Gray300,
-    inverse = MnColor.White
+    inverse = MnColor.White,
 )
 
 private val MnBackgroundColorScheme = MnColorScheme(
@@ -83,7 +83,7 @@ private val MnBackgroundColorScheme = MnColorScheme(
     tertiary = MnColor.Gray400,
     inverse = MnColor.Gray900,
     accent1 = MnColor.Orange500,
-    accent2 = MnColor.Orange50
+    accent2 = MnColor.Orange50,
 )
 
 val LocalMnIconColorScheme = staticCompositionLocalOf { MnIconColorScheme }

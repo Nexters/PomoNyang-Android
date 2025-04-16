@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val pushAlarmRepository: PushAlarmRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel<MyPageState, MyPageEvent, MyPageSideEffect>() {
     override fun setInitialState(): MyPageState = MyPageState()
 
@@ -33,8 +33,8 @@ class MyPageViewModel @Inject constructor(
                 setEffect(
                     MyPageSideEffect.CheckNotificationPermission(
                         request = NotificationRequest.TIMER,
-                        onGranted = { setITimerNotification(event.isEnabled) }
-                    )
+                        onGranted = { setITimerNotification(event.isEnabled) },
+                    ),
                 )
             }
 
@@ -42,8 +42,8 @@ class MyPageViewModel @Inject constructor(
                 setEffect(
                     MyPageSideEffect.CheckNotificationPermission(
                         request = NotificationRequest.INTERRUPT,
-                        onGranted = { setInterruptNotification(event.isEnabled) }
-                    )
+                        onGranted = { setInterruptNotification(event.isEnabled) },
+                    ),
                 )
             }
 
@@ -51,8 +51,8 @@ class MyPageViewModel @Inject constructor(
                 setEffect(
                     MyPageSideEffect.CheckNotificationPermission(
                         request = NotificationRequest.LOCKSCREEN,
-                        onGranted = { setLockScreenNotification(event.isEnabled) }
-                    )
+                        onGranted = { setLockScreenNotification(event.isEnabled) },
+                    ),
                 )
             }
 
@@ -104,7 +104,7 @@ class MyPageViewModel @Inject constructor(
                     catName = userInfo.cat.name,
                     isInterruptNotificationEnabled = isInterruptEnabled,
                     isTimerNotificationEnabled = isTimerEnabled,
-                    isLockScreenNotificationEnabled = isLockScreenEnabled
+                    isLockScreenNotificationEnabled = isLockScreenEnabled,
                 )
             }
         }

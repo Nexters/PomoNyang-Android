@@ -1,7 +1,6 @@
 package com.pomonyang.mohanyang.presentation.screen.home.setting
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,12 +17,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -42,11 +40,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
-import com.pomonyang.mohanyang.presentation.designsystem.bottomsheet.MnBottomSheet
-import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButton
-import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonColorType
-import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
-import com.pomonyang.mohanyang.presentation.designsystem.button.select.MnSelectListItem
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnLargeIcon
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
@@ -56,15 +49,16 @@ import com.pomonyang.mohanyang.presentation.designsystem.tooltip.guideTooltip
 import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryModel
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
+import com.pomonyang.mohanyang.presentation.model.setting.PomodoroSettingModel
+import com.pomonyang.mohanyang.presentation.screen.home.category.PomodoroCategoryBottomSheet
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import com.pomonyang.mohanyang.presentation.util.stopFocusTimer
-import com.pomonyang.mohanyang.presentation.util.stopRestTimer
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -75,12 +69,14 @@ fun PomodoroSettingRoute(
     goToPomodoro: () -> Unit,
     goTimeSetting: (isFocusTime: Boolean, initialTime: Int, categoryName: String) -> Unit,
     goToMyPage: () -> Unit,
+    goToCategoryEdit: (PomodoroCategoryModel) -> Unit,
+    goToCategoryCreate: () -> Unit,
     modifier: Modifier = Modifier,
-    pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel()
+    pomodoroSettingViewModel: PomodoroSettingViewModel = hiltViewModel(),
 ) {
     val state by pomodoroSettingViewModel.state.collectAsStateWithLifecycle()
-
     val context = LocalContext.current
+    val bottomSheetSnackbarHostState = remember { SnackbarHostState() }
     pomodoroSettingViewModel.effects.collectWithLifecycle { effect ->
         if (isNewUser && state.isEndOnBoardingTooltip.not()) return@collectWithLifecycle
         when (effect) {
@@ -88,19 +84,27 @@ fun PomodoroSettingRoute(
             is PomodoroSettingSideEffect.GoTimeSetting -> goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
             PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro()
             PomodoroSettingSideEffect.GoToMyPage -> goToMyPage()
+            PomodoroSettingSideEffect.GoToCategoryCreate -> goToCategoryCreate()
+            is PomodoroSettingSideEffect.GoToCategoryEdit -> goToCategoryEdit(effect.category)
+            is PomodoroSettingSideEffect.ShowBottomSheetSnackBar -> bottomSheetSnackbarHostState.showSnackbar(
+                message = effect.message,
+                actionLabel = null,
+                withDismissAction = true,
+            )
         }
     }
 
     LaunchedEffect(Unit) {
         pomodoroSettingViewModel.handleEvent(PomodoroSettingEvent.Init)
-        stopAllNotification(context)
+        MnNotificationManager.stopInterrupt(context)
     }
 
     if (state.showCategoryBottomSheet) {
         PomodoroCategoryBottomSheet(
             onAction = pomodoroSettingViewModel::handleEvent,
-            categoryList = state.categoryList,
-            initialCategoryNo = state.selectedCategoryNo
+            categoryList = state.categoryList.toImmutableList(),
+            initialCategoryNo = state.selectedSettingModel.categoryNo,
+            bottomSheetSnackbarHostState = bottomSheetSnackbarHostState,
         )
     }
 
@@ -108,14 +112,8 @@ fun PomodoroSettingRoute(
         onAction = pomodoroSettingViewModel::handleEvent,
         state = state,
         modifier = modifier,
-        showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not()
+        showOnboardingTooltip = isNewUser && state.isEndOnBoardingTooltip.not(),
     )
-}
-
-private fun stopAllNotification(context: Context) {
-    context.stopFocusTimer()
-    context.stopRestTimer()
-    MnNotificationManager.stopInterrupt(context)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -124,11 +122,8 @@ fun PomodoroSettingScreen(
     onAction: (PomodoroSettingEvent) -> Unit,
     showOnboardingTooltip: Boolean,
     state: PomodoroSettingState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val pomodoroSelectedCategoryModel by remember(state.selectedCategoryNo) {
-        mutableStateOf(state.categoryList.find { it.categoryNo == state.selectedCategoryNo })
-    }
     var categoryTooltip by remember { mutableStateOf(false) }
     var timeTooltip by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -149,21 +144,21 @@ fun PomodoroSettingScreen(
                         modifier = Modifier
                             .size(40.dp)
                             .clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickMenu) },
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         MnMediumIcon(
                             resourceId = R.drawable.ic_menu,
-                            tint = MnTheme.iconColorScheme.primary
+                            tint = MnTheme.iconColorScheme.primary,
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             CatRive(
                 tooltipMessage = catMessage,
@@ -176,18 +171,18 @@ fun PomodoroSettingScreen(
                         it.fireState("State Machine_Home", state.cat.type.catFireInput)
                         catMessage = state.cat.type.getRandomMessage()
                     }
-                }
+                },
             )
 
             Text(
                 text = state.cat.name,
                 style = MnTheme.typography.header4,
-                color = MnTheme.textColorScheme.tertiary
+                color = MnTheme.textColorScheme.tertiary,
             )
 
             CategoryBox(
-                iconRes = pomodoroSelectedCategoryModel?.categoryType?.iconRes ?: R.drawable.ic_null,
-                categoryName = pomodoroSelectedCategoryModel?.title ?: "",
+                iconRes = state.selectedSettingModel.categoryIcon.resourceId,
+                categoryName = state.selectedSettingModel.title,
                 modifier = Modifier
                     .padding(bottom = MnSpacing.medium, top = 40.dp)
                     .clip(RoundedCornerShape(MnRadius.xSmall))
@@ -202,23 +197,23 @@ fun PomodoroSettingScreen(
                                 delay(250)
                                 timeTooltip = true
                             }
-                        }
+                        },
                     )
-                    .clickableSingle { onAction(PomodoroSettingEvent.ClickCategory) }
+                    .clickableSingle { onAction(PomodoroSettingEvent.ClickCategory) },
             )
 
             TimeSetting(
                 timeTooltip = timeTooltip,
                 onAction = onAction,
                 onDismiss = { timeTooltip = false },
-                pomodoroSelectedCategoryModel = pomodoroSelectedCategoryModel,
-                modifier = modifier
+                pomodoroSelectedCategoryModel = state.selectedSettingModel,
+                modifier = modifier,
             )
 
             SettingButton(
                 iconRes = R.drawable.ic_play_32,
                 onClick = { onAction(PomodoroSettingEvent.ClickStartPomodoroSetting) },
-                backgroundColor = MnTheme.backgroundColorScheme.accent1
+                backgroundColor = MnTheme.backgroundColorScheme.accent1,
             )
         }
     }
@@ -229,8 +224,8 @@ private fun TimeSetting(
     timeTooltip: Boolean,
     onAction: (PomodoroSettingEvent) -> Unit,
     onDismiss: () -> Unit,
-    pomodoroSelectedCategoryModel: PomodoroCategoryModel?,
-    modifier: Modifier = Modifier
+    pomodoroSelectedCategoryModel: PomodoroSettingModel?,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
@@ -244,62 +239,22 @@ private fun TimeSetting(
                 onDismiss = {
                     onDismiss()
                     onAction(PomodoroSettingEvent.DismissOnBoardingTooltip)
-                }
+                },
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium)
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.medium),
     ) {
         TimeComponent(
             modifier = Modifier.clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickFocusTime) },
             type = stringResource(R.string.focus),
-            time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.focusTime ?: 0)
+            time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.focusTime ?: 0),
         )
         TimeDivider()
         TimeComponent(
             modifier = Modifier.clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickRestTime) },
             type = stringResource(R.string.rest),
-            time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.restTime ?: 0)
+            time = stringResource(R.string.minute, pomodoroSelectedCategoryModel?.restTime ?: 0),
         )
-    }
-}
-
-@Composable
-private fun PomodoroCategoryBottomSheet(
-    onAction: (PomodoroSettingEvent) -> Unit,
-    categoryList: List<PomodoroCategoryModel>,
-    initialCategoryNo: Int,
-    modifier: Modifier = Modifier
-) {
-    var currentSelectedCategoryNo by remember { mutableIntStateOf(initialCategoryNo) }
-
-    MnBottomSheet(
-        onDismissRequest = { onAction(PomodoroSettingEvent.DismissCategoryDialog) },
-        modifier = modifier.fillMaxWidth(),
-        title = stringResource(R.string.change_category_title)
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            categoryList.forEach { pomodoroCategoryModel ->
-                MnSelectListItem(
-                    containerPadding = PaddingValues(bottom = MnSpacing.small),
-                    iconResource = pomodoroCategoryModel.categoryType.iconRes,
-                    categoryType = pomodoroCategoryModel.title,
-                    onClick = { currentSelectedCategoryNo = pomodoroCategoryModel.categoryNo },
-                    isSelected = pomodoroCategoryModel.categoryNo == currentSelectedCategoryNo,
-                    restTime = stringResource(R.string.minute, pomodoroCategoryModel.restTime),
-                    focusTime = stringResource(R.string.minute, pomodoroCategoryModel.focusTime),
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            MnBoxButton(
-                containerPadding = PaddingValues(top = MnSpacing.xSmall, bottom = MnSpacing.medium),
-                modifier = Modifier.fillMaxWidth(),
-                styles = MnBoxButtonStyles.large,
-                text = stringResource(R.string.confirm),
-                onClick = { onAction(PomodoroSettingEvent.ClickCategoryConfirmButton(currentSelectedCategoryNo)) },
-                colors = MnBoxButtonColorType.secondary
-            )
-        }
     }
 }
 
@@ -307,26 +262,26 @@ private fun PomodoroCategoryBottomSheet(
 private fun TimeComponent(
     type: String,
     time: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier.padding(
             vertical = MnSpacing.xSmall,
-            horizontal = MnSpacing.small
+            horizontal = MnSpacing.small,
         ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
         CompositionLocalProvider(
-            LocalContentColor provides MnColor.Gray500
+            LocalContentColor provides MnColor.Gray500,
         ) {
             Text(
                 text = type,
-                style = MnTheme.typography.bodySemiBold
+                style = MnTheme.typography.bodySemiBold,
             )
             Text(
                 text = time,
-                style = MnTheme.typography.header3
+                style = MnTheme.typography.header3,
             )
         }
     }
@@ -338,7 +293,7 @@ private fun TimeDivider(modifier: Modifier = Modifier) {
         modifier
             .width(2.dp)
             .height(20.dp)
-            .background(color = MnColor.Gray200, shape = RoundedCornerShape(MnRadius.xSmall))
+            .background(color = MnColor.Gray200, shape = RoundedCornerShape(MnRadius.xSmall)),
     )
 }
 
@@ -347,7 +302,7 @@ fun SettingButton(
     @DrawableRes iconRes: Int,
     backgroundColor: Color,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -355,11 +310,11 @@ fun SettingButton(
             .clip(CircleShape)
             .background(color = backgroundColor)
             .clickableSingle { onClick() },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         MnLargeIcon(
             resourceId = iconRes,
-            tint = MnTheme.iconColorScheme.inverse
+            tint = MnTheme.iconColorScheme.inverse,
         )
     }
 }
@@ -375,17 +330,15 @@ fun PomodoroStarterScreenPreview() {
                 PomodoroCategoryModel(
                     categoryNo = 0,
                     title = "집중",
-                    categoryType = PomodoroCategoryType.DEFAULT,
-                    focusTime = 25,
-                    restTime = 10
-                )
+                    categoryIcon = CategoryIcon.CAT,
+                ),
             ),
             cat = CatInfoModel(
                 no = 0,
                 name = "이이오",
-                type = CatType.CHEESE
-            )
-        )
+                type = CatType.CHEESE,
+            ),
+        ),
     )
 }
 
@@ -394,6 +347,6 @@ fun PomodoroStarterScreenPreview() {
 fun StartButtonPreview() {
     SettingButton(
         iconRes = 0,
-        backgroundColor = MnTheme.backgroundColorScheme.accent1
+        backgroundColor = MnTheme.backgroundColorScheme.accent1,
     ) {}
 }

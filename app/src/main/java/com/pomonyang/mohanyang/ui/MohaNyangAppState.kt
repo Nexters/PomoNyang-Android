@@ -16,18 +16,18 @@ fun rememberMohaNyangAppState(
     isNewUser: Boolean,
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope,
-    navHostController: NavHostController = rememberNavController()
+    navHostController: NavHostController = rememberNavController(),
 ) = remember(
     isNewUser,
     networkMonitor,
     coroutineScope,
-    navHostController
+    navHostController,
 ) {
     MohaNyangAppState(
         isNewUser = isNewUser,
         networkMonitor = networkMonitor,
         coroutineScope = coroutineScope,
-        navHostController = navHostController
+        navHostController = navHostController,
     )
 }
 
@@ -36,13 +36,13 @@ class MohaNyangAppState(
     val isNewUser: Boolean,
     val navHostController: NavHostController,
     val coroutineScope: CoroutineScope,
-    networkMonitor: NetworkMonitor
+    networkMonitor: NetworkMonitor,
 ) {
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false
+            initialValue = false,
         )
 }

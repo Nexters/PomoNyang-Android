@@ -23,17 +23,17 @@ data object CatProfile
 fun NavGraphBuilder.myPageScreen(
     navHostController: NavHostController,
     onShowSnackbar: (String, Int?) -> Unit,
-    isOfflineState: StateFlow<Boolean>
+    isOfflineState: StateFlow<Boolean>,
 ) {
     navigation<MyPage>(
-        startDestination = MyPageHome
+        startDestination = MyPageHome,
     ) {
         composable<MyPageHome> {
             MyPageRoute(
                 isOfflineState = isOfflineState,
                 onShowSnackBar = onShowSnackbar,
                 onBackClick = { navHostController.popBackStack() },
-                onProfileClick = { navHostController.navigate(CatProfile) }
+                onProfileClick = { navHostController.navigate(CatProfile) },
             )
         }
 
@@ -45,9 +45,9 @@ fun NavGraphBuilder.myPageScreen(
                 },
                 onCatNameChangeClick = { catName, catNo, catType ->
                     navHostController.navigate(
-                        OnboardingNamingCat(catName = catName, catNo = catNo, destination = CatSettingDestination.MY_PAGE.name, catTypeName = catType.name)
+                        OnboardingNamingCat(catName = catName, catNo = catNo, destination = CatSettingDestination.MY_PAGE.name, catTypeName = catType.name),
                     )
-                }
+                },
             )
         }
     }

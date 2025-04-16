@@ -11,7 +11,7 @@ data class AppVersion(
     val major: Int,
     val minor: Int,
     val patch: Int,
-    val code: Int
+    val code: Int,
 ) {
     fun getName() = "$major.$minor.$patch"
     fun getVersionCode() = code
@@ -38,7 +38,7 @@ class AppVersionPlugin : Plugin<Project> {
             (appVersionJson["major"] as Number).toInt(),
             (appVersionJson["minor"] as Number).toInt(),
             (appVersionJson["patch"] as Number).toInt(),
-            (appVersionJson["code"] as Number).toInt()
+            (appVersionJson["code"] as Number).toInt(),
         )
     }
 
@@ -47,7 +47,7 @@ class AppVersionPlugin : Plugin<Project> {
             "appVersion",
             AppVersionExtension::class.java,
             appVersion.getName(),
-            appVersion.getVersionCode()
+            appVersion.getVersionCode(),
         )
     }
 }

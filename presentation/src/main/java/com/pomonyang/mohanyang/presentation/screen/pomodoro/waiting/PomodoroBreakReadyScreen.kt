@@ -32,46 +32,33 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonS
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants.DEFAULT_TIME
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.presentation.util.formatTime
 
 @Composable
-fun PomodoroRestWaitingRoute(
-    type: String,
-    focusTime: Int,
-    exceedTime: Int,
+fun PomodoroBreakReadyRoute(
     goToHome: () -> Unit,
     forceGoHome: () -> Unit,
-    goToPomodoroRest: () -> Unit,
+    goToPomodoroRest: (pomodoroId: String) -> Unit,
     modifier: Modifier = Modifier,
-    pomodoroRestWaitingViewModel: PomodoroRestWaitingViewModel = hiltViewModel(),
-    onShowSnackbar: (String, Int?) -> Unit
+    pomodoroBreakReadyViewModel: PomodoroBreakReadyViewModel = hiltViewModel(),
+    onShowSnackbar: (String, Int?) -> Unit,
 ) {
-    val state by pomodoroRestWaitingViewModel.state.collectAsStateWithLifecycle()
-    pomodoroRestWaitingViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
+    val state by pomodoroBreakReadyViewModel.state.collectAsStateWithLifecycle()
+    pomodoroBreakReadyViewModel.effects.collectWithLifecycle(minActiveState = Lifecycle.State.CREATED) { effect ->
         when (effect) {
-            PomodoroRestWaitingSideEffect.GoToPomodoroSetting -> goToHome()
-            is PomodoroRestWaitingSideEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
-            PomodoroRestWaitingSideEffect.GoToPomodoroRest -> goToPomodoroRest()
+            PomodoroBreakReadySideEffect.GoToPomodoroSetting -> goToHome()
+            is PomodoroBreakReadySideEffect.ShowSnackbar -> onShowSnackbar(effect.message, effect.iconRes)
+            PomodoroBreakReadySideEffect.GoToPomodoroRest -> goToPomodoroRest(state.pomodoroId)
         }
     }
 
     BackHandler {
         // NOTHING
-    }
-
-    LaunchedEffect(Unit) {
-        pomodoroRestWaitingViewModel.handleEvent(
-            PomodoroRestWaitingEvent.Init(
-                type = type,
-                exceedTime = exceedTime,
-                focusTime = focusTime
-            )
-        )
     }
 
     LaunchedEffect(state.forceGoHome) {
@@ -80,48 +67,50 @@ fun PomodoroRestWaitingRoute(
         }
     }
 
-    PomodoroRestWaitingScreen(
-        type = type,
-        focusTime = focusTime.formatTime(),
-        exceedTime = exceedTime.formatTime(),
+    PomodoroBreakReadyScreen(
+        type = state.type,
+        categoryIcon = state.categoryIcon,
+        focusedTime = state.focusedTime.formatTime(),
+        exceededTime = state.exceededTime.formatTime(),
         plusButtonSelected = state.plusButtonSelected,
         minusButtonSelected = state.minusButtonSelected,
         plusButtonEnabled = state.plusButtonEnabled,
         minusButtonEnabled = state.minusButtonEnabled,
-        onAction = { pomodoroRestWaitingViewModel.handleEvent(it) },
-        modifier = modifier
+        onAction = { pomodoroBreakReadyViewModel.handleEvent(it) },
+        modifier = modifier,
     )
 }
 
 @Composable
-private fun PomodoroRestWaitingScreen(
+private fun PomodoroBreakReadyScreen(
     type: String,
-    focusTime: String,
-    exceedTime: String,
+    categoryIcon: CategoryIcon,
+    focusedTime: String,
+    exceededTime: String,
     plusButtonSelected: Boolean,
     minusButtonSelected: Boolean,
     plusButtonEnabled: Boolean,
     minusButtonEnabled: Boolean,
-    onAction: (PomodoroRestWaitingEvent) -> Unit,
-    modifier: Modifier = Modifier
+    onAction: (PomodoroBreakReadyEvent) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MnTheme.backgroundColorScheme.primary),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        CategoryBox(categoryName = type, iconRes = PomodoroCategoryType.safeValueOf(type).iconRes)
+        CategoryBox(categoryName = type, iconRes = categoryIcon.resourceId)
 
         Timer(
             modifier = Modifier.padding(top = MnSpacing.small),
-            time = focusTime,
-            exceededTime = exceedTime
+            time = focusedTime,
+            exceededTime = exceededTime,
         )
 
-        RestLottie(isCompleteFocus = exceedTime != DEFAULT_TIME)
+        RestLottie(isCompleteFocus = exceededTime != DEFAULT_TIME)
 
         TimerSelectedButtons(
             plusButtonSelected = plusButtonSelected,
@@ -129,8 +118,8 @@ private fun PomodoroRestWaitingScreen(
             plusButtonEnabled = plusButtonEnabled,
             minusButtonEnabled = minusButtonEnabled,
             title = stringResource(R.string.change_focus_time_prompt),
-            onPlusButtonClick = { onAction(PomodoroRestWaitingEvent.OnPlusButtonClick(plusButtonSelected.not())) },
-            onMinusButtonClick = { onAction(PomodoroRestWaitingEvent.OnMinusButtonClick(minusButtonSelected.not())) }
+            onPlusButtonClick = { onAction(PomodoroBreakReadyEvent.OnPlusButtonClick(plusButtonSelected.not())) },
+            onMinusButtonClick = { onAction(PomodoroBreakReadyEvent.OnMinusButtonClick(minusButtonSelected.not())) },
         )
         Spacer(modifier = Modifier.weight(1f))
 
@@ -138,15 +127,15 @@ private fun PomodoroRestWaitingScreen(
             modifier = Modifier.size(200.dp, 60.dp),
             styles = MnBoxButtonStyles.large,
             text = stringResource(id = R.string.rest_start),
-            onClick = { onAction(PomodoroRestWaitingEvent.OnStartRestClick) },
-            colors = MnBoxButtonColorType.primary
+            onClick = { onAction(PomodoroBreakReadyEvent.OnStartRestClick) },
+            colors = MnBoxButtonColorType.primary,
         )
 
         MnTextButton(
             styles = MnTextButtonStyles.large,
             containerPadding = PaddingValues(bottom = MnSpacing.xLarge),
             text = stringResource(id = R.string.focus_end),
-            onClick = { onAction(PomodoroRestWaitingEvent.OnEndFocusClick) }
+            onClick = { onAction(PomodoroBreakReadyEvent.OnEndFocusClick) },
         )
     }
 }
@@ -154,7 +143,7 @@ private fun PomodoroRestWaitingScreen(
 @Composable
 private fun RestLottie(
     modifier: Modifier = Modifier,
-    isCompleteFocus: Boolean
+    isCompleteFocus: Boolean,
 ) {
     val restWaitingLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loti_rest_waiting))
     val completeFocusLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loti_rest_waiting_complete_focus))
@@ -162,10 +151,10 @@ private fun RestLottie(
     Box(
         modifier = modifier
             .padding(top = MnSpacing.xLarge)
-            .size(240.dp)
+            .size(240.dp),
     ) {
         LottieAnimation(
-            composition = restWaitingLottie
+            composition = restWaitingLottie,
         )
 
         if (isCompleteFocus) {
@@ -176,17 +165,18 @@ private fun RestLottie(
 
 @DevicePreviews
 @Composable
-private fun PomodoroRestScreenPreview() {
+private fun PomodoroBreakReadyScreenPreview() {
     MnTheme {
-        PomodoroRestWaitingScreen(
+        PomodoroBreakReadyScreen(
             type = "작업",
-            focusTime = "30:00",
-            exceedTime = "05:30",
+            categoryIcon = CategoryIcon.CAT,
+            focusedTime = "30:00",
+            exceededTime = "05:30",
             plusButtonSelected = false,
             minusButtonSelected = true,
             plusButtonEnabled = true,
             minusButtonEnabled = true,
-            onAction = {}
+            onAction = {},
         )
     }
 }

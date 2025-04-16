@@ -34,7 +34,7 @@ fun MnTopAppBar(
     windowInsets: WindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal),
     content: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
-    actions: @Composable () -> Unit = {}
+    actions: @Composable () -> Unit = {},
 ) {
     val iconHorizontalPadding = MnTopAppBarDefaults.iconHorizontalPadding.dpToPx().toInt()
     val topAppBarHeightToPx = MnTopAppBarDefaults.height.dpToPx().toInt()
@@ -43,26 +43,26 @@ fun MnTopAppBar(
             Box(Modifier.layoutId(NAVIGATION_ICON)) {
                 CompositionLocalProvider(
                     value = LocalContentColor provides topAppBarColors.navigationIconContentColor,
-                    content = navigationIcon
+                    content = navigationIcon,
                 )
             }
             Box(Modifier.layoutId(ACTIONS)) {
                 CompositionLocalProvider(
                     value = LocalContentColor provides topAppBarColors.actionIconContentColor,
-                    content = actions
+                    content = actions,
                 )
             }
             Box(Modifier.layoutId(CONTENT)) {
                 CompositionLocalProvider(
                     LocalContentColor provides topAppBarColors.titleContentColor,
                     LocalTextStyle provides contentStyle,
-                    content = content
+                    content = content,
                 )
             }
         },
         modifier = modifier
             .windowInsetsPadding(windowInsets)
-            .background(topAppBarColors.containerColor)
+            .background(topAppBarColors.containerColor),
     ) { measurables, constraints ->
         val navigationIconPlaceable = measurables.first { it.layoutId == NAVIGATION_ICON }.measure(constraints)
         val actionsPlaceable = measurables.first { it.layoutId == ACTIONS }.measure(constraints)
@@ -95,11 +95,11 @@ private fun MnTopAppBarPreview() {
                     modifier = Modifier
                         .size(40.dp)
                         .clickableSingle(activeRippleEffect = false) { },
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     MnMediumIcon(
                         resourceId = R.drawable.ic_null,
-                        tint = topAppBarColors.navigationIconContentColor
+                        tint = topAppBarColors.navigationIconContentColor,
                     )
                 }
             },
@@ -108,14 +108,14 @@ private fun MnTopAppBarPreview() {
                     modifier = Modifier
                         .size(40.dp)
                         .clickableSingle(activeRippleEffect = false) { },
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     MnMediumIcon(
                         resourceId = R.drawable.ic_null,
-                        tint = topAppBarColors.navigationIconContentColor
+                        tint = topAppBarColors.navigationIconContentColor,
                     )
                 }
-            }
+            },
         )
     }
 }
@@ -134,14 +134,14 @@ private fun MnTopAppBarNotUseActionsPreview() {
                     modifier = Modifier
                         .size(40.dp)
                         .clickableSingle(activeRippleEffect = false) { },
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     MnMediumIcon(
                         resourceId = R.drawable.ic_null,
-                        tint = topAppBarColors.navigationIconContentColor
+                        tint = topAppBarColors.navigationIconContentColor,
                     )
                 }
-            }
+            },
         )
     }
 }
@@ -160,14 +160,14 @@ private fun MnTopAppBarNotUseNaivigationPreview() {
                     modifier = Modifier
                         .size(40.dp)
                         .clickableSingle(activeRippleEffect = false) { },
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     MnMediumIcon(
                         resourceId = R.drawable.ic_null,
-                        tint = topAppBarColors.navigationIconContentColor
+                        tint = topAppBarColors.navigationIconContentColor,
                     )
                 }
-            }
+            },
         )
     }
 }

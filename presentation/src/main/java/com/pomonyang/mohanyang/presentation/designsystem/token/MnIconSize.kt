@@ -29,7 +29,7 @@ object MnIconSize {
 private fun MohaNyangIconPreview() {
     MnTheme {
         Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.Top)
+            verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.Top),
         ) {
             MnXSmallIcon(resourceId = R.drawable.ic_null)
             MnSmallIcon(resourceId = R.drawable.ic_null)

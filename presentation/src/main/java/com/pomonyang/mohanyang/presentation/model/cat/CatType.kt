@@ -14,11 +14,11 @@ enum class CatType(
     val messages: List<String>,
     val pomodoroRiveCat: String,
     val catFireInput: String,
-    val kor: String
+    val kor: String,
 ) {
     CHEESE(
         personality = R.string.cat_cheese_personality,
-        personalityIcon = R.drawable.ic_star,
+        personalityIcon = R.drawable.ic_asterisk,
         timerEndPushContent = R.string.cat_cheese_timer_end_push,
         restEndPushContent = R.string.cat_cheese_rest_end_push,
         backgroundPushContent = R.string.cat_cheese_background_push,
@@ -26,10 +26,10 @@ enum class CatType(
         messages = listOf(
             "나랑 함께할 시간이다냥!",
             "자주 와서 쓰다듬어 달라냥",
-            "집중이 잘 될 거 같다냥"
+            "집중이 잘 될 거 같다냥",
         ),
         catFireInput = "Click_Cheese Cat",
-        kor = "치즈냥"
+        kor = "치즈냥",
     ),
     BLACK(
         personality = R.string.cat_black_personality,
@@ -41,14 +41,14 @@ enum class CatType(
         messages = listOf(
             "나랑 함께할 시간이다냥!",
             "자주 와서 쓰다듬어 달라냥",
-            "집중이 잘 될 거 같다냥"
+            "집중이 잘 될 거 같다냥",
         ),
         catFireInput = "Click_Black Cat",
-        kor = "까만냥"
+        kor = "까만냥",
     ),
     THREE_COLOR(
         personality = R.string.cat_three_personality,
-        personalityIcon = R.drawable.ic_focus,
+        personalityIcon = R.drawable.ic_fire,
         timerEndPushContent = R.string.cat_three_timer_end_push,
         restEndPushContent = R.string.cat_cheese_rest_end_push,
         backgroundPushContent = R.string.cat_three_background_push,
@@ -56,11 +56,12 @@ enum class CatType(
         messages = listOf(
             "“시간이 없어서\"는 변명이다냥",
             "휴대폰 그만보고 집중하라냥",
-            "기회란 금새 왔다 사라진다냥"
+            "기회란 금새 왔다 사라진다냥",
         ),
         catFireInput = "Click_Calico Cat",
-        kor = "삼색냥"
-    );
+        kor = "삼색냥",
+    ),
+    ;
 
     fun getRandomMessage(): String = messages[Random.nextInt(messages.size)]
 

@@ -14,7 +14,7 @@ import okhttp3.Response
 internal class HttpRequestInterceptor @Inject constructor(
     private val tokenLocalDataSource: TokenLocalDataSource,
     private val deviceIdLocalDataSource: DeviceIdLocalDataSource,
-    private val context: Context
+    private val context: Context,
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = runBlocking {
@@ -56,7 +56,7 @@ internal class HttpRequestInterceptor @Inject constructor(
             Build.VERSION.RELEASE,
             Build.MODEL,
             Build.BRAND,
-            Locale.getDefault().language
+            Locale.getDefault().language,
         )
     }
 }

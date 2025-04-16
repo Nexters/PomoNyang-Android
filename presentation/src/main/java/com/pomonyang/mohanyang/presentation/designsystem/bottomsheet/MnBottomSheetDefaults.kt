@@ -12,20 +12,20 @@ object MnBottomSheetDefaults {
     fun colors(
         containerColor: Color = MnColor.White,
         titleColor: Color = MnTheme.textColorScheme.primary,
-        subTitleColor: Color = MnTheme.textColorScheme.secondary
+        subTitleColor: Color = MnTheme.textColorScheme.secondary,
     ) = MnBottomSheetColors(
         containerColor = containerColor,
         titleColor = titleColor,
-        subTitleColor = subTitleColor
+        subTitleColor = subTitleColor,
     )
 
     @Composable
     fun textStyles(
         titleTextStyle: TextStyle = MnTheme.typography.header3,
-        subTitleTextStyle: TextStyle = MnTheme.typography.subBodyRegular
+        subTitleTextStyle: TextStyle = MnTheme.typography.bodyRegular,
     ) = MnBottomSheetTextStyles(
         titleTextStyle = titleTextStyle,
-        subTitleTextStyle = subTitleTextStyle
+        subTitleTextStyle = subTitleTextStyle,
     )
 }
 
@@ -33,11 +33,11 @@ object MnBottomSheetDefaults {
 data class MnBottomSheetColors(
     val containerColor: Color,
     val titleColor: Color,
-    val subTitleColor: Color
+    val subTitleColor: Color,
 )
 
 @Immutable
 data class MnBottomSheetTextStyles(
     val titleTextStyle: TextStyle,
-    val subTitleTextStyle: TextStyle
+    val subTitleTextStyle: TextStyle,
 )

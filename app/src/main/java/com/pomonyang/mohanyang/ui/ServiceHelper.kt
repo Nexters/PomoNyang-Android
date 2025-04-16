@@ -10,7 +10,7 @@ object ServiceHelper {
 
     fun clickPendingIntent(
         context: Context,
-        requestCode: Int
+        requestCode: Int,
     ): PendingIntent {
         val notificationIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -19,7 +19,7 @@ object ServiceHelper {
             context,
             requestCode,
             notificationIntent,
-            FLAG
+            FLAG,
         )
     }
 }

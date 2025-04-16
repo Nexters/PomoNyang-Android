@@ -8,12 +8,16 @@ data class PomodoroSettingResponse(
     val no: Int = -1,
     val title: String = "",
     val focusTime: String = "",
-    val restTime: String = ""
+    val restTime: String = "",
+    val iconType: String = "",
+    val isSelected: Boolean = false,
 )
 
 internal fun PomodoroSettingResponse.toEntity() = PomodoroSettingEntity(
     categoryNo = no,
     title = title,
     focusTime = focusTime,
-    restTime = restTime
+    restTime = restTime,
+    iconType = iconType,
+    isSelected = isSelected,
 )

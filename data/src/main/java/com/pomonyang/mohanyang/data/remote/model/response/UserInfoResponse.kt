@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class UserInfoResponse(
     val registeredDeviceNo: Int = -1,
     val isPushEnabled: Boolean = false,
-    val cat: CatTypeResponse = CatTypeResponse()
+    val cat: CatTypeResponse = CatTypeResponse(),
 ) {
     fun isNewUser(): Boolean {
         /* 서버에서 fetch 한 기본 고양이 id가 -1 인 경우 신규 유저로 판단 */

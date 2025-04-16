@@ -6,5 +6,5 @@ import androidx.compose.ui.graphics.Color
 @Immutable
 data class MnRoundButtonColors(
     val containerColor: Color,
-    val iconColor: Color
+    val iconColor: Color,
 )

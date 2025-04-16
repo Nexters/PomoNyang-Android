@@ -23,35 +23,28 @@ interface PomodoroTimerDao {
         """
             UPDATE pomodoro_timer 
             SET focusedTime = focusedTime + 1 
-            WHERE focusTimeId = (
-                SELECT focusTimeId 
-                FROM pomodoro_timer 
-                ORDER BY ROWID DESC 
-                LIMIT 1
-            )
-        """
+            WHERE focusTimeId = :pomodoroTimerId
+        """,
     )
-    suspend fun incrementFocusedTime()
+    suspend fun incrementFocusedTime(pomodoroTimerId: String)
 
     @Query(
         """
             UPDATE pomodoro_timer 
             SET restedTime = restedTime + 1 
-            WHERE focusTimeId = (
-                SELECT focusTimeId 
-                FROM pomodoro_timer 
-                ORDER BY ROWID DESC 
-                LIMIT 1
-            )
-        """
+            WHERE focusTimeId = :pomodoroTimerId
+        """,
     )
-    suspend fun incrementRestTime()
+    suspend fun incrementRestTime(pomodoroTimerId: String)
 
-    @Query("UPDATE pomodoro_timer SET doneAt = :doneAt WHERE focusTimeId = :focusTimerId")
-    suspend fun updateDoneAt(doneAt: String, focusTimerId: String)
+    @Query("UPDATE pomodoro_timer SET doneAt = :doneAt WHERE focusTimeId = :pomodoroTimerId")
+    suspend fun updateDoneAt(doneAt: String, pomodoroTimerId: String)
 
     @Query("UPDATE pomodoro_timer SET doneAt = :doneAt WHERE focusTimeId = (SELECT focusTimeId FROM pomodoro_timer ORDER BY ROWID DESC LIMIT 1)")
     suspend fun updateDoneAtRecentPomodoro(doneAt: String)
+
+    @Query("UPDATE pomodoro_timer SET doneAt = :doneAt WHERE focusTimeId = :pomodoroTimerId")
+    suspend fun updateDoneAtPomodoro(doneAt: String, pomodoroTimerId: String)
 
     @Query("DELETE FROM pomodoro_timer")
     suspend fun deletePomodoroTimerAll()

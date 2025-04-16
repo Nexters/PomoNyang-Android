@@ -5,14 +5,15 @@ import android.graphics.Bitmap
 import android.view.View
 import android.widget.RemoteViews
 import com.mohanyang.presentation.R
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 import com.pomonyang.mohanyang.presentation.util.formatTime
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import timber.log.Timber
 
 internal class PomodoroNotificationContentFactory @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val bitmapGenerator: PomodoroNotificationBitmapGenerator
+    private val bitmapGenerator: PomodoroNotificationBitmapGenerator,
 ) {
 
     fun createPomodoroNotificationContent(isRest: Boolean): RemoteViews {
@@ -29,10 +30,11 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     }
 
     fun createPomodoroNotificationBigContent(
-        category: PomodoroCategoryType?,
+        category: CategoryModel?,
         time: String,
-        overtime: String?
+        overtime: String?,
     ): RemoteViews {
+        Timber.tag("koni").d("createPomodoroNotificationBigContent > $category")
         val remoteViews = RemoteViews(context.packageName, R.layout.notification_pomodoro_expand)
 
         val formattedTime = formatTimeString(time)
@@ -55,7 +57,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
             text = titleRes,
             color = R.color.notification_pomodoro_title,
             font = R.font.pretendard_semibold,
-            textSize = 14f
+            textSize = 14f,
         )
     }
 
@@ -65,7 +67,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
             text = contentRes,
             color = R.color.notification_pomodoro_content,
             font = R.font.pretendard_regular,
-            textSize = 14f
+            textSize = 14f,
         )
     }
 
@@ -95,7 +97,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
     private fun setTime(remoteViews: RemoteViews, formattedTime: String) {
         val timeBitmap = bitmapGenerator.combineTimeBitmaps(
             time = formattedTime,
-            isOvertime = false
+            isOvertime = false,
         )
         remoteViews.setImageViewBitmap(R.id.text_time, timeBitmap)
     }
@@ -104,7 +106,7 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
         if (formattedOvertime != null) {
             val overtimeBitmap = bitmapGenerator.combineTimeBitmaps(
                 time = formattedOvertime,
-                isOvertime = true
+                isOvertime = true,
             )
             remoteViews.setImageViewBitmap(R.id.text_overtime, overtimeBitmap)
             remoteViews.setViewVisibility(R.id.text_overtime, View.VISIBLE)
@@ -121,11 +123,11 @@ internal class PomodoroNotificationContentFactory @Inject constructor(
         remoteViews.setImageViewResource(R.id.iv_right_content, R.drawable.img_touch_hair_ball)
     }
 
-    private fun getStatusBitmapAndIcon(category: PomodoroCategoryType?): Pair<Bitmap, Int> {
-        val statusTextRes = category?.kor ?: R.string.notification_timer_rest
-        val statusText = context.getString(statusTextRes)
+    private fun getStatusBitmapAndIcon(category: CategoryModel?): Pair<Bitmap, Int> {
+        val statusText = category?.name ?: context.getString(R.string.notification_timer_rest)
         val statusBitmap = bitmapGenerator.createStatusBitmap(statusText)
-        val iconRes = category?.iconRes ?: R.drawable.ic_rest
+        Timber.tag("koni").d("category?.icon?.resourceId ${category?.icon?.resourceId}")
+        val iconRes = category?.icon?.resourceId ?: R.drawable.ic_lightning
         return statusBitmap to iconRes
     }
 }

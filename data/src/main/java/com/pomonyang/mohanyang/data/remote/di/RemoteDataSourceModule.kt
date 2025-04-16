@@ -20,6 +20,6 @@ internal abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
     abstract fun providePomodoroSettingDataSource(
-        pomodoroSettingRemoteDataSourceImpl: PomodoroSettingRemoteDataSourceImpl
+        pomodoroSettingRemoteDataSourceImpl: PomodoroSettingRemoteDataSourceImpl,
     ): PomodoroSettingRemoteDataSource
 }

@@ -22,17 +22,23 @@ import com.pomonyang.mohanyang.presentation.util.clickableSingle
 fun MnPressableWrapper(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    isEnabled: Boolean = true,
+    content: @Composable () -> Unit,
 ) {
+    val clickableModifier = if (isEnabled) {
+        Modifier
+            .pressClickEffect(onClick)
+    } else {
+        Modifier
+    }
     Box(
         modifier = modifier
-            .wrapContentSize()
+            .wrapContentSize(),
     ) {
         content()
         Box(
-            modifier = Modifier
-                .pressClickEffect(onClick)
-                .matchParentSize()
+            modifier = clickableModifier
+                .matchParentSize(),
         )
     }
 }
@@ -45,7 +51,7 @@ fun Modifier.pressClickEffect(onClick: () -> Unit) = composed {
     val interactionColor by animateColorAsState(
         targetValue = if (buttonState == ButtonState.Pressed) MnInteraction.pressed else MnInteraction.default,
         animationSpec = tween(100, 0),
-        label = "button-interaction"
+        label = "button-interaction",
     )
 
     this

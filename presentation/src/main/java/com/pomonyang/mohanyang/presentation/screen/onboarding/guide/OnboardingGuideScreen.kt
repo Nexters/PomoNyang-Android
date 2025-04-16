@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 internal fun OnboardingGuideRoute(
     onStartClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onboardingViewModel: OnboardingGuideViewModel = hiltViewModel()
+    onboardingViewModel: OnboardingGuideViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
         onboardingViewModel.handleEvent(OnboardingGuideEvent.Init)
@@ -58,14 +58,14 @@ internal fun OnboardingGuideRoute(
 
     OnboardingGuideScreen(
         modifier = modifier,
-        onHomeClick = onStartClick
+        onHomeClick = onStartClick,
     )
 }
 
 @Composable
 private fun OnboardingGuideScreen(
     modifier: Modifier = Modifier,
-    onHomeClick: () -> Unit
+    onHomeClick: () -> Unit,
 ) {
     val onboardingContents = LocalContext.current.getOnBoardingContents()
 
@@ -75,17 +75,17 @@ private fun OnboardingGuideScreen(
             .windowInsetsPadding(WindowInsets.systemBars)
             .background(MnTheme.backgroundColorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         OnboardingSlider(
-            contents = onboardingContents
+            contents = onboardingContents,
         )
         MnBoxButton(
             modifier = Modifier.width(200.dp),
             text = LocalContext.current.getString(R.string.onboarding_start),
             onClick = onHomeClick,
             colors = MnBoxButtonColorType.primary,
-            styles = MnBoxButtonStyles.large
+            styles = MnBoxButtonStyles.large,
         )
     }
 }
@@ -93,7 +93,7 @@ private fun OnboardingGuideScreen(
 @Composable
 fun OnboardingSlider(
     contents: List<OnboardingGuideContent>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val infinitePageCount = Int.MAX_VALUE
 
@@ -109,8 +109,8 @@ fun OnboardingSlider(
             page = page,
             animationSpec = tween(
                 durationMillis = animationDuration,
-                easing = FastOutSlowInEasing
-            )
+                easing = FastOutSlowInEasing,
+            ),
         )
     }
 
@@ -124,20 +124,20 @@ fun OnboardingSlider(
 
     Column(
         modifier = modifier.padding(bottom = 48.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             HorizontalPager(
-                state = pagerState
+                state = pagerState,
             ) { currentPage ->
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     OnboardingGuideContent(
-                        content = contents[currentPage % contents.size]
+                        content = contents[currentPage % contents.size],
                     )
                 }
             }
@@ -150,7 +150,7 @@ fun OnboardingSlider(
                 scope.launch {
                     onboardingContentScroll(page)
                 }
-            }
+            },
         )
     }
 }
@@ -158,17 +158,17 @@ fun OnboardingSlider(
 @Composable
 private fun OnboardingGuideContent(
     content: OnboardingGuideContent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.padding(bottom = MnSpacing.threeXLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MnSpacing.threeXLarge)
+        verticalArrangement = Arrangement.spacedBy(MnSpacing.threeXLarge),
     ) {
         Image(
             painter = painterResource(id = content.image),
             contentDescription = stringResource(R.string.onboarding_guide_image),
-            modifier = Modifier.size(240.dp)
+            modifier = Modifier.size(240.dp),
         )
         TextGuide(content)
     }
@@ -177,24 +177,24 @@ private fun OnboardingGuideContent(
 @Composable
 private fun TextGuide(
     content: OnboardingGuideContent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MnSpacing.small)
+        verticalArrangement = Arrangement.spacedBy(MnSpacing.small),
     ) {
         Text(
             text = content.title,
             style = MnTheme.typography.header4,
             textAlign = TextAlign.Center,
-            color = MnTheme.textColorScheme.primary
+            color = MnTheme.textColorScheme.primary,
         )
         Text(
             text = content.subtitle,
             style = MnTheme.typography.bodyRegular,
             textAlign = TextAlign.Center,
-            color = MnTheme.textColorScheme.secondary
+            color = MnTheme.textColorScheme.secondary,
         )
     }
 }
@@ -202,7 +202,7 @@ private fun TextGuide(
 @Composable
 private fun IndicatorDots(
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -210,8 +210,8 @@ private fun IndicatorDots(
             .clip(CircleShape)
             .size(8.dp)
             .background(
-                if (isSelected) MnTheme.backgroundColorScheme.tertiary else MnTheme.backgroundColorScheme.secondary
-            )
+                if (isSelected) MnTheme.backgroundColorScheme.tertiary else MnTheme.backgroundColorScheme.secondary,
+            ),
     )
 }
 
@@ -220,17 +220,17 @@ private fun PageIndicator(
     pageCount: Int,
     currentPage: Int,
     onClickIndicator: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         repeat(pageCount) {
             IndicatorDots(
                 isSelected = it == currentPage,
-                onClick = { onClickIndicator(it) }
+                onClick = { onClickIndicator(it) },
             )
         }
     }
@@ -244,8 +244,8 @@ private fun OnboardingContentPreview() {
             title = "모하냥과 함께 집중시간을 늘려보세요",
             subtitle = "고양이 종에 따라 성격이 달라요\n" +
                 "취향에 맞는 고양이를 선택해 몰입해 보세요",
-            image = R.drawable.onboarding_contents_1
-        )
+            image = R.drawable.onboarding_contents_1,
+        ),
     )
 }
 

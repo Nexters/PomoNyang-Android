@@ -9,10 +9,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.pomonyang.mohanyang.presentation.screen.home.category.CategorySettingRoute
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon.CategoryIconNavType
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.home.time.PomodoroTimeSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
+import kotlin.reflect.typeOf
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,30 +29,37 @@ internal data object PomodoroSetting
 internal data class TimeSetting(
     val isFocusTime: Boolean,
     val initialTime: Int,
-    val categoryName: String
+    val categoryName: String,
+)
+
+@Serializable
+internal data class CategorySetting(
+    val categoryNo: Int?,
+    val categoryName: String = "",
+    val categoryIcon: CategoryIcon = CategoryIcon.CAT,
 )
 
 fun NavGraphBuilder.homeScreen(
     isNewUser: Boolean,
     onShowSnackbar: (String, Int?) -> Unit,
-    navHostController: NavHostController
+    navHostController: NavHostController,
 ) {
     navigation<Home>(
-        startDestination = PomodoroSetting
+        startDestination = PomodoroSetting,
     ) {
         val slideDuration = 500
 
         composable<PomodoroSetting>(
             popEnterTransition = {
                 EnterTransition.None
-            }
+            },
         ) {
             PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,
                 goTimeSetting = { isFocusTime, initialTime, categoryName ->
                     navHostController.navigate(
-                        TimeSetting(isFocusTime, initialTime, categoryName)
+                        TimeSetting(isFocusTime, initialTime, categoryName),
                     )
                 },
                 goToPomodoro = {
@@ -56,7 +67,19 @@ fun NavGraphBuilder.homeScreen(
                 },
                 goToMyPage = {
                     navHostController.navigate(MyPage)
-                }
+                },
+                goToCategoryEdit = { category ->
+                    navHostController.navigate(
+                        CategorySetting(
+                            categoryNo = category.categoryNo,
+                            categoryName = category.title,
+                            categoryIcon = category.categoryIcon,
+                        ),
+                    )
+                },
+                goToCategoryCreate = {
+                    navHostController.navigate(CategorySetting(categoryNo = null))
+                },
             )
         }
 
@@ -66,7 +89,7 @@ fun NavGraphBuilder.homeScreen(
             },
             exitTransition = {
                 slideOutVertically(tween(slideDuration), targetOffsetY = { it })
-            }
+            },
 
         ) { backStackEntry ->
             val routeData = backStackEntry.toRoute<TimeSetting>()
@@ -74,7 +97,21 @@ fun NavGraphBuilder.homeScreen(
                 isFocusTime = routeData.isFocusTime,
                 initialSettingTime = routeData.initialTime,
                 categoryName = routeData.categoryName,
-                onShowSnackbar = onShowSnackbar
+                onShowSnackbar = onShowSnackbar,
+            ) {
+                navHostController.popBackStack()
+            }
+        }
+
+        composable<CategorySetting>(
+            popEnterTransition = {
+                EnterTransition.None
+            },
+            typeMap = mapOf(typeOf<CategoryIcon>() to CategoryIconNavType),
+        ) { backStackEntry ->
+            val routeData = backStackEntry.toRoute<CategorySetting>()
+            CategorySettingRoute(
+                categoryNo = routeData.categoryNo,
             ) {
                 navHostController.popBackStack()
             }

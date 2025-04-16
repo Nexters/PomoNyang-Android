@@ -37,33 +37,36 @@ fun MnBoxButton(
     containerPadding: PaddingValues = PaddingValues(),
     isEnabled: Boolean = true,
     @DrawableRes rightIconResourceId: Int? = null,
-    @DrawableRes leftIconResourceId: Int? = null
+    @DrawableRes leftIconResourceId: Int? = null,
 ) {
     val containerColor = if (isEnabled) colors.containerColor else colors.disabledContainerColor
     val contentColor = if (isEnabled) colors.contentColor else colors.disabledContentColor
     val iconColor = if (isEnabled) colors.iconColor else colors.disabledIconColor
 
     MnPressableWrapper(
-        modifier = Modifier.padding(containerPadding).clip(shape = styles.shape),
-        onClick = onClick
+        modifier = Modifier
+            .padding(containerPadding)
+            .clip(shape = styles.shape),
+        isEnabled = isEnabled,
+        onClick = onClick,
     ) {
         CompositionLocalProvider(
             LocalContentColor provides contentColor,
-            LocalTextStyle provides styles.textStyle
+            LocalTextStyle provides styles.textStyle,
         ) {
             Box(
                 modifier = modifier
                     .height(styles.height)
                     .background(
-                        containerColor
+                        containerColor,
                     )
                     .padding(styles.contentPadding),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
 
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(styles.spacing)
+                    horizontalArrangement = Arrangement.spacedBy(styles.spacing),
                 ) {
                     if (leftIconResourceId != null) MnMediumIcon(resourceId = leftIconResourceId, tint = iconColor)
                     Text(text = text, textAlign = TextAlign.Center)
@@ -84,7 +87,7 @@ fun PreviewMnBoxButton() {
                 styles = MnBoxButtonStyles.large,
                 text = "Button",
                 onClick = { },
-                colors = MnBoxButtonColorType.primary
+                colors = MnBoxButtonColorType.primary,
             )
             MnBoxButton(
                 styles = MnBoxButtonStyles.large,
@@ -92,7 +95,7 @@ fun PreviewMnBoxButton() {
                 onClick = { },
                 colors = MnBoxButtonColorType.primary,
                 rightIconResourceId = R.drawable.ic_null,
-                leftIconResourceId = R.drawable.ic_null
+                leftIconResourceId = R.drawable.ic_null,
             )
             MnBoxButton(
                 styles = MnBoxButtonStyles.large,
@@ -101,28 +104,28 @@ fun PreviewMnBoxButton() {
                 onClick = { },
                 colors = MnBoxButtonColorType.primary,
                 rightIconResourceId = R.drawable.ic_null,
-                leftIconResourceId = R.drawable.ic_null
+                leftIconResourceId = R.drawable.ic_null,
             )
             MnBoxButton(
                 styles = MnBoxButtonStyles.medium,
                 text = "Button",
                 onClick = {},
                 colors = MnBoxButtonColorType.secondary,
-                leftIconResourceId = R.drawable.ic_null
+                leftIconResourceId = R.drawable.ic_null,
             )
 
             MnBoxButton(
                 styles = MnBoxButtonStyles.small,
                 text = "Button",
                 onClick = {},
-                colors = MnBoxButtonColorType.secondary
+                colors = MnBoxButtonColorType.secondary,
             )
             MnBoxButton(
                 styles = MnBoxButtonStyles.small,
                 text = "Button",
                 onClick = {},
                 leftIconResourceId = R.drawable.ic_null,
-                colors = MnBoxButtonColorType.tertiary
+                colors = MnBoxButtonColorType.tertiary,
             )
         }
     }

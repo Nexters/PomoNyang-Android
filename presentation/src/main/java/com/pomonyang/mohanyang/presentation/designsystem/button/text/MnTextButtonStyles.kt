@@ -23,7 +23,7 @@ object MnTextButtonStyles {
             shape = RoundedCornerShape(MnRadius.small),
             contentPadding = PaddingValues(horizontal = MnSpacing.xLarge),
             spacing = MnSpacing.small,
-            textStyle = MnTheme.typography.header5
+            textStyle = MnTheme.typography.header5,
         )
     val medium: MnButtonStyleProperties
         @Composable
@@ -32,7 +32,7 @@ object MnTextButtonStyles {
             shape = RoundedCornerShape(MnRadius.small),
             contentPadding = PaddingValues(horizontal = MnSpacing.large),
             spacing = MnSpacing.small,
-            textStyle = MnTheme.typography.bodySemiBold
+            textStyle = MnTheme.typography.bodySemiBold,
         )
 
     val small: MnButtonStyleProperties
@@ -42,6 +42,6 @@ object MnTextButtonStyles {
             shape = RoundedCornerShape(MnRadius.xSmall),
             contentPadding = PaddingValues(horizontal = MnSpacing.medium),
             spacing = MnSpacing.small,
-            textStyle = MnTheme.typography.subBodySemiBold
+            textStyle = MnTheme.typography.subBodySemiBold,
         )
 }

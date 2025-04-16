@@ -30,7 +30,7 @@ class MohaNyangApplication : Application() {
         val configuration = Configuration.Builder(
             clientToken = clientToken,
             env = environmentName,
-            variant = appVariantName
+            variant = appVariantName,
         )
             .useSite(DatadogSite.US5)
             .build()
@@ -48,8 +48,8 @@ class MohaNyangApplication : Application() {
                         override fun accept(component: Activity): Boolean = component !is MainActivity
 
                         override fun getViewName(component: Activity): String? = null
-                    }
-                )
+                    },
+                ),
             )
             .build()
 

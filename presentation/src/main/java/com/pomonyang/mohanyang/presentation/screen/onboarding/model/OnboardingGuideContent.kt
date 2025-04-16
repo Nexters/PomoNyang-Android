@@ -10,7 +10,7 @@ import kotlin.math.max
 data class OnboardingGuideContent(
     val title: String,
     val subtitle: String,
-    @DrawableRes val image: Int
+    @DrawableRes val image: Int,
 )
 
 fun Context.getOnBoardingContents(): List<OnboardingGuideContent> {

@@ -23,7 +23,7 @@ interface NetworkMonitor {
 
 @SuppressLint("MissingPermission")
 internal class NetworkMonitorImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) : NetworkMonitor {
     private val connectivityManager by lazy {
         context.getSystemService(ConnectivityManager::class.java) as ConnectivityManager

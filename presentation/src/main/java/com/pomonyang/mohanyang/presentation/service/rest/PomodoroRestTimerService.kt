@@ -5,13 +5,14 @@ import android.content.Intent
 import android.os.IBinder
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.presentation.di.RestTimerType
-import com.pomonyang.mohanyang.presentation.model.setting.PomodoroCategoryType
 import com.pomonyang.mohanyang.presentation.noti.PomodoroNotificationManager
 import com.pomonyang.mohanyang.presentation.screen.PomodoroConstants
+import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryModel
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimer
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerEventHandler
 import com.pomonyang.mohanyang.presentation.service.PomodoroTimerServiceExtras
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
+import com.pomonyang.mohanyang.presentation.util.getSerializableExtraCompat
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -40,16 +41,23 @@ internal class PomodoroRestTimerService :
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        val timerId = intent.getStringExtra(PomodoroTimerServiceExtras.INTENT_TIMER_ID) ?: run {
+            throw Exception("timerId is null or blank")
+        }
         val maxTime = intent.getIntExtra(PomodoroTimerServiceExtras.INTENT_TIMER_MAX_TIME, 0)
+        val category = intent.getSerializableExtraCompat<CategoryModel>(PomodoroTimerServiceExtras.INTENT_CATEGORY)
+        Timber.tag("TIMER").d("onStartCommand > ${intent.action} / maxTime: $maxTime / category $category")
         when (intent.action) {
             PomodoroTimerServiceExtras.ACTION_TIMER_START -> {
                 startForeground(
                     PomodoroConstants.POMODORO_NOTIFICATION_ID,
-                    pomodoroNotificationManager.createNotification()
+                    pomodoroNotificationManager.createNotification(category, true),
                 )
                 restTimer.startTimer(
+                    timerId = timerId,
                     maxTime = maxTime,
-                    eventHandler = this
+                    eventHandler = this,
+                    category = category,
                 )
             }
 
@@ -71,14 +79,19 @@ internal class PomodoroRestTimerService :
         // TODO 여기 뭔가 로직이 필요하면 그때 추가
     }
 
-    override fun updateTimer(time: String, overtime: String, category: PomodoroCategoryType?) {
+    override fun updateTimer(
+        timerId: String,
+        time: String,
+        overtime: String,
+        category: CategoryModel?,
+    ) {
         scope.launch {
-            timerRepository.incrementRestedTime()
+            timerRepository.incrementRestedTime(timerId)
         }
         pomodoroNotificationManager.updateNotification(
             time = time,
             overtime = overtime,
-            category = category
+            category = category,
         )
     }
 

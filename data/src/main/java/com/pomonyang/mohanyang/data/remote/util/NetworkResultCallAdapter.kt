@@ -5,7 +5,7 @@ import retrofit2.Call
 import retrofit2.CallAdapter
 
 internal class NetworkResultCallAdapter(
-    private val responseType: Type
+    private val responseType: Type,
 ) : CallAdapter<Type, Call<Result<Type>>> {
     override fun responseType(): Type = responseType
 

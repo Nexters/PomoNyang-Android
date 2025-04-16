@@ -43,7 +43,7 @@ fun CatRive(
     stateMachineName: String? = null,
     stateMachineInput: String? = null,
     fireState: String? = null,
-    onRiveClick: (RiveAnimationView) -> Unit = {}
+    onRiveClick: (RiveAnimationView) -> Unit = {},
 ) {
     var showTooltip by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -56,7 +56,7 @@ fun CatRive(
             resId = riveResource,
             stateMachineName = stateMachineName,
             autoplay = isAutoPlay,
-            animationName = riveAnimationName
+            animationName = riveAnimationName,
         )
     }
 
@@ -82,29 +82,29 @@ fun CatRive(
 
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.TopCenter,
     ) {
         Box {
             AndroidView(
                 modifier = Modifier.size(240.dp),
-                factory = { riveView }
+                factory = { riveView },
             )
 
             Box(
                 modifier = Modifier
                     .matchParentSize()
                     .clickableSingle(
-                        activeRippleEffect = false
+                        activeRippleEffect = false,
                     ) {
                         onRiveClick(riveView)
-                    }
+                    },
             )
         }
 
         AnimatedVisibility(
             visible = showTooltip && tooltipMessage != null,
             enter = fadeIn(),
-            exit = fadeOut()
+            exit = fadeOut(),
         ) {
             val colors = MnTooltipDefaults.lightTooltipColors()
             Column(
@@ -112,17 +112,17 @@ fun CatRive(
                     .zIndex(1f)
                     .clickable(enabled = false) {},
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 TooltipContent(
                     tooltipColors = MnTooltipDefaults.lightTooltipColors(),
                     content = tooltipMessage ?: "",
-                    contentAlign = TextAlign.Center
+                    contentAlign = TextAlign.Center,
                 )
 
                 TooltipAnchor(
                     modifier = Modifier.width(MnTooltipDefaults.anchorWidth),
-                    anchorColor = colors.containerColor
+                    anchorColor = colors.containerColor,
                 )
             }
         }
@@ -136,7 +136,7 @@ private fun CatRivePreview() {
         CatRive(
             tooltipMessage = "잘 집중하고 있는 거냥?",
             riveAnimationName = "Cheese Cat",
-            riveResource = 0
+            riveResource = 0,
         )
     }
 }
@@ -147,7 +147,7 @@ private fun CatRiveNamePreview() {
     MnTheme {
         CatRive(
             tooltipMessage = "잘 집중하고 있는 거냥?",
-            riveResource = 0
+            riveResource = 0,
         )
     }
 }

@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -44,6 +47,7 @@ import com.pomonyang.mohanyang.presentation.screen.common.ServerErrorScreen
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.clickableSingle
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
+import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingNamingCatRoute(
@@ -53,7 +57,7 @@ fun OnboardingNamingCatRoute(
     onBackClick: () -> Unit,
     onNavToDestination: () -> Unit,
     modifier: Modifier = Modifier,
-    onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel()
+    onboardingNamingCatViewModel: OnboardingNamingCatViewModel = hiltViewModel(),
 ) {
     val state by onboardingNamingCatViewModel.state.collectAsStateWithLifecycle()
 
@@ -72,7 +76,7 @@ fun OnboardingNamingCatRoute(
         onAction = onboardingNamingCatViewModel::handleEvent,
         onNavToHomeClick = onNavToHomeClick,
         onBackClick = onBackClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -84,10 +88,12 @@ fun OnboardingNamingCatScreen(
     onAction: (NamingEvent) -> Unit,
     onNavToHomeClick: () -> Unit,
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
 
     var name by rememberSaveable { mutableStateOf(catName) }
     val catNameValidator = remember { CatNameVerifier() }
@@ -106,9 +112,11 @@ fun OnboardingNamingCatScreen(
     LoadingContentContainer(isLoading = state.isLoading) {
         when {
             state.isInternalError -> ServerErrorScreen(onClickNavigateToHome = onNavToHomeClick)
-            state.isInvalidError -> NetworkErrorScreen(onClickRetry = {
-                onAction(NamingEvent.OnClickRetry)
-            })
+            state.isInvalidError -> NetworkErrorScreen(
+                onClickRetry = {
+                    onAction(NamingEvent.OnClickRetry)
+                },
+            )
 
             else -> {
                 Column(
@@ -120,62 +128,78 @@ fun OnboardingNamingCatScreen(
                             focusManager.clearFocus(true)
                             keyboardController?.hide()
                         },
-                    verticalArrangement = Arrangement.SpaceBetween
+                    verticalArrangement = Arrangement.SpaceBetween,
                 ) {
                     MnTopAppBar(
                         navigationIcon = {
                             MnIconButton(
                                 onClick = onBackClick,
-                                iconResourceId = R.drawable.ic_chevron_left
+                                iconResourceId = R.drawable.ic_chevron_left,
                             )
-                        }
+                        },
                     )
-
                     Column(
                         modifier = Modifier
-                            .padding(horizontal = MnSpacing.xLarge)
+                            .fillMaxSize()
+                            .verticalScroll(scrollState),
+                        verticalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        CatRive(
-                            modifier = Modifier.fillMaxWidth(),
-                            isAutoPlay = false,
-                            stateMachineInput = catType.pomodoroRiveCat,
-                            stateMachineName = "State Machine_Rename",
-                            riveResource = R.raw.cat_rename_2,
-                            tooltipMessage = stringResource(id = R.string.naming_cat_tooltip)
-                        )
-                        Text(
-                            modifier = Modifier.padding(
-                                top = MnSpacing.twoXLarge,
-                                bottom = MnSpacing.small
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = MnSpacing.xLarge)
+                                .weight(1f),
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            CatRive(
+                                modifier = Modifier.fillMaxWidth(),
+                                isAutoPlay = false,
+                                stateMachineInput = catType.pomodoroRiveCat,
+                                stateMachineName = "State Machine_Rename",
+                                riveResource = R.raw.cat_rename_2,
+                                tooltipMessage = stringResource(id = R.string.naming_cat_tooltip),
+                            )
+                            Text(
+                                modifier = Modifier.padding(
+                                    top = MnSpacing.twoXLarge,
+                                    bottom = MnSpacing.small,
+                                ),
+                                text = stringResource(R.string.naming_cat),
+                                style = MnTheme.typography.subBodyRegular,
+                                color = MnTheme.textColorScheme.secondary,
+                            )
+                            MnTextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                value = name,
+                                isError = !nameValidationResult.isValid,
+                                errorMessage = nameValidationResult.message,
+                                backgroundColor = MnColor.White,
+                                onValueChange = { value -> name = value },
+                                hint = catType.kor,
+                                onFocusChanged = { event ->
+                                    run {
+                                        if (event.isFocused) {
+                                            coroutineScope.launch {
+                                                scrollState.animateScrollTo(Int.MAX_VALUE)
+                                            }
+                                        }
+                                    }
+                                },
+                            )
+                        }
+                        MnBoxButton(
+                            text = stringResource(R.string.complete),
+                            containerPadding = PaddingValues(
+                                bottom = MnSpacing.small,
+                                start = MnSpacing.xLarge,
+                                end = MnSpacing.xLarge,
                             ),
-                            text = stringResource(R.string.naming_cat),
-                            style = MnTheme.typography.subBodyRegular,
-                            color = MnTheme.textColorScheme.secondary
-                        )
-                        MnTextField(
+                            onClick = { if (isEnabled()) onAction(NamingEvent.OnComplete(name)) },
+                            isEnabled = isEnabled(),
                             modifier = Modifier.fillMaxWidth(),
-                            value = name,
-                            isError = !nameValidationResult.isValid,
-                            errorMessage = nameValidationResult.message,
-                            backgroundColor = MnColor.White,
-                            onValueChange = { value -> name = value },
-                            hint = catType.kor
+                            colors = MnBoxButtonColorType.primary,
+                            styles = MnBoxButtonStyles.large,
                         )
                     }
-
-                    MnBoxButton(
-                        text = stringResource(R.string.complete),
-                        containerPadding = PaddingValues(
-                            bottom = MnSpacing.small,
-                            start = MnSpacing.xLarge,
-                            end = MnSpacing.xLarge
-                        ),
-                        onClick = { if (isEnabled()) onAction(NamingEvent.OnComplete(name)) },
-                        isEnabled = isEnabled(),
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = MnBoxButtonColorType.primary,
-                        styles = MnBoxButtonStyles.large
-                    )
                 }
             }
         }
@@ -191,6 +215,6 @@ private fun PreviewOnboardingNamingCatScreen() {
         catType = CatType.CHEESE,
         onAction = { _ -> },
         onNavToHomeClick = {},
-        onBackClick = {}
+        onBackClick = {},
     )
 }

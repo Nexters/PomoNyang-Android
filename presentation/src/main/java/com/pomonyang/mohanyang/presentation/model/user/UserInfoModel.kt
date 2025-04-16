@@ -7,11 +7,11 @@ import com.pomonyang.mohanyang.presentation.model.cat.toModel
 data class UserInfoModel(
     val registeredDeviceNo: Int,
     val isPushEnabled: Boolean,
-    val cat: CatInfoModel
+    val cat: CatInfoModel,
 )
 
 fun UserInfoResponse.toModel() = UserInfoModel(
     registeredDeviceNo = this.registeredDeviceNo,
     isPushEnabled = this.isPushEnabled,
-    cat = this.cat.toModel()
+    cat = this.cat.toModel(),
 )

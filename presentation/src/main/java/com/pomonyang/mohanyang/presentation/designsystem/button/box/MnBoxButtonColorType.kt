@@ -12,7 +12,7 @@ object MnBoxButtonColorType {
             iconColor = MnTheme.iconColorScheme.inverse,
             disabledContainerColor = MnTheme.backgroundColorScheme.secondary,
             disabledContentColor = MnTheme.textColorScheme.disabled,
-            disabledIconColor = MnTheme.iconColorScheme.disabled
+            disabledIconColor = MnTheme.iconColorScheme.disabled,
         )
 
     val secondary: MnBoxButtonColors
@@ -23,7 +23,7 @@ object MnBoxButtonColorType {
             iconColor = MnTheme.iconColorScheme.inverse,
             disabledContainerColor = MnTheme.backgroundColorScheme.inverse,
             disabledContentColor = MnTheme.textColorScheme.inverse,
-            disabledIconColor = MnTheme.iconColorScheme.inverse
+            disabledIconColor = MnTheme.iconColorScheme.inverse,
         )
 
     val tertiary: MnBoxButtonColors
@@ -34,6 +34,6 @@ object MnBoxButtonColorType {
             iconColor = MnTheme.iconColorScheme.tertiary,
             disabledContainerColor = MnTheme.backgroundColorScheme.secondary,
             disabledContentColor = MnTheme.textColorScheme.tertiary,
-            disabledIconColor = MnTheme.iconColorScheme.tertiary
+            disabledIconColor = MnTheme.iconColorScheme.tertiary,
         )
 }
