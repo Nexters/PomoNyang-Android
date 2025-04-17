@@ -26,11 +26,13 @@ class MohanyangEventLoggerImpl @Inject constructor(
 
     override fun log(event: MohanyangEventLog) {
         val userId = userDeviceId
+
         val defaultParams = mapOf(
             "user_id" to userId,
             "timestamp" to LocalDateTime.now(),
             "os" to "android",
-            "debug" to "${BuildConfig.DEBUG}"
+            "debug" to BuildConfig.DEBUG,
+            "version" to BuildConfig.APP_VERSION,
         )
         val params = defaultParams + event.toParams()
         val bundle = Bundle().apply {

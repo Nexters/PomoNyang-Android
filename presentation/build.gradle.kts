@@ -2,10 +2,14 @@ plugins {
     id("mohanyang.android.library")
     id("mohanyang.android.hilt")
     id("mohanyang.android.library.compose")
+    id("mohanyang.appversion")
 }
 
 android {
     namespace = "com.mohanyang.presentation"
+    defaultConfig {
+        buildConfigField("String", "APP_VERSION", "\"${appVersion.name}\"")
+    }
 }
 
 dependencies {
