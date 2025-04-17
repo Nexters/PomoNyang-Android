@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.mohanyang.presentation.BuildConfig
 import com.pomonyang.mohanyang.data.local.datastore.datasource.deviceid.DeviceIdLocalDataSource
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -17,18 +18,21 @@ interface MohanyangEventLogger {
 class MohanyangEventLoggerImpl @Inject constructor(
     private val deviceIdLocalDataSource: DeviceIdLocalDataSource,
 ) : MohanyangEventLogger {
+
+    private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
     private val userDeviceId by lazy {
         runBlocking { deviceIdLocalDataSource.getDeviceId() }
     }
 
     override fun log(event: MohanyangEventLog) {
-        val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
         val userId = userDeviceId
-        val commonParams = mapOf(
+        val defaultParams = mapOf(
             "user_id" to userId,
             "timestamp" to LocalDateTime.now(),
+            "os" to "android",
+            "debug" to "${BuildConfig.DEBUG}"
         )
-        val params = (event.toParams() + commonParams)
+        val params = defaultParams + event.toParams()
         val bundle = Bundle().apply {
             params.forEach { (key, value) ->
                 when (value) {
