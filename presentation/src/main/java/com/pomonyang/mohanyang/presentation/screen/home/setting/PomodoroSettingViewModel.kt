@@ -32,6 +32,7 @@ class PomodoroSettingViewModel @Inject constructor(
             PomodoroSettingEvent.ClickCategory -> {
                 updateState { copy(showCategoryBottomSheet = true) }
                 mohanyangEventLogger.log(MohanyangEventLog.HomeCategoryClick)
+                mohanyangEventLogger.log(MohanyangEventLog.CategoryCreateCount(state.value.categoryList.count()))
             }
 
             PomodoroSettingEvent.ClickFocusTime -> {
@@ -54,6 +55,7 @@ class PomodoroSettingViewModel @Inject constructor(
 
             PomodoroSettingEvent.DismissCategoryDialog -> {
                 updateState { copy(showCategoryBottomSheet = false) }
+                mohanyangEventLogger.log(MohanyangEventLog.CategoryCreateCount(state.value.categoryList.count()))
             }
 
             is PomodoroSettingEvent.SelectCategory -> {
@@ -120,8 +122,6 @@ class PomodoroSettingViewModel @Inject constructor(
         pomodoroSettingRepository.getPomodoroSettingList()
             .onEach { pomodoroSettingList ->
                 updateState { copy(categoryList = pomodoroSettingList.map { it.toCategoryModel() }) }
-            }.also {
-                mohanyangEventLogger.log(MohanyangEventLog.CategoryCreateCount(state.value.categoryList.count()))
             }
             .launchIn(viewModelScope)
     }
