@@ -125,5 +125,7 @@
     <string name="dialog_delete_category_subtitle">카테고리로 집중한 기록도 함께 사라져요.</string>
     <string name="delete_category">삭제하기</string>
     <string name="statistics_top_bar_title">%s월 %s일</string>
+    <string name="statistics_focus_content">집중했어요!</string>
+    <string name="statistics_non_record">집중한 기록이 없어요</string>
 
 </resources>
