@@ -24,10 +24,10 @@ import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
 @Composable
 fun MnIconButton(
+    @DrawableRes iconResourceId: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     containerPadding: PaddingValues = PaddingValues(),
-    @DrawableRes iconResourceId: Int,
     iconColor: Color = LocalContentColor.current,
 ) {
     val buttonSize = 40.dp
