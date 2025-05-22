@@ -74,6 +74,7 @@ private fun StatisticsTopBarTitle(
         )
         MnIconButton(
             iconResourceId = R.drawable.ic_chevron_down,
+            iconColor = MnTheme.iconColorScheme.tertiary,
             onClick = onMoreClick,
             modifier = Modifier.background(
                 color = MnTheme.backgroundColorScheme.secondary,
