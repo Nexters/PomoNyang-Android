@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButton
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
@@ -32,7 +31,7 @@ private fun StatisticsTopBar(
         modifier = modifier
             .fillMaxWidth()
             .background(color = MnColor.Gray50)
-            .padding(10.dp),
+            .padding(MnSpacing.medium),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
