@@ -10,6 +10,7 @@ import androidx.annotation.FontRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.createBitmap
 import com.mohanyang.presentation.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -111,7 +112,7 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
         val width = (paint.measureText(text) + 0.5f).toInt()
         val height = (baseline + paint.descent() + 0.5f).toInt()
 
-        return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+        return createBitmap(width, height).apply {
             Canvas(this).drawText(text, 0f, baseline, paint)
         }
     }
@@ -151,11 +152,7 @@ internal class PomodoroNotificationBitmapGenerator @Inject constructor(
             maxHeight = maxOf(maxHeight, extraTextBitmap.height)
         }
 
-        return Bitmap.createBitmap(
-            totalWidth,
-            maxHeight,
-            Bitmap.Config.ARGB_8888,
-        ).apply {
+        return createBitmap(totalWidth, maxHeight).apply {
             val canvas = Canvas(this)
             var currentX = 0f
 
