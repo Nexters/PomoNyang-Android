@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="notification_background">#E46900</color>
+    <color name="text_color">#000000</color>
+    <color name="notification_pomodoro_category_text">#B8AFA8</color>
+    <color name="notification_pomodoro_time">#FFFFFF</color>
+    <color name="notification_pomodoro_over_time">#FF7E65</color>
+    <color name="notification_pomodoro_title">#FFFFFF</color>
+    <color name="notification_pomodoro_content">#FFFFFF</color>
+</resources>
