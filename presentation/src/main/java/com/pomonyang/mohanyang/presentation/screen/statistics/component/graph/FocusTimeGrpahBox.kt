@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -42,16 +43,21 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.spToPx
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun FocusTimeGraphBox(
+    graphData: ImmutableList<Float>,
     modifier: Modifier = Modifier,
-    graphData: List<Float> = listOf(),
-    configure: FocusGraphConfigure = FocusGraphConfigure(
-        maxFocusTime = graphData.max(),
-        targetDateTime = LocalDateTime.now(),
-    ),
+    configure: FocusGraphConfigure = remember {
+        FocusGraphConfigure(
+            maxFocusTime = graphData.max(),
+            targetDateTime = LocalDateTime.now(),
+        )
+    }
 ) {
+
     val canvasHeight = 160.dp
     val gap = configure.maxYAxis / configure.yAxisRange
     val gapHeight = canvasHeight / gap
@@ -68,19 +74,13 @@ fun FocusTimeGraphBox(
             style = MnTheme.typography.header4,
             color = MnTheme.iconColorScheme.secondary,
         )
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(top = 48.dp, bottom = MnSpacing.xLarge),
-        ) {
-            FocusTimeGraph(
-                modifier = Modifier.height(canvasHeight),
-                configure = configure,
-                graphData = graphData,
-                gap = gap,
-                gapHeight = gapHeight,
-            )
-        }
+        FocusTimeGraph(
+            modifier = Modifier.padding(top = 48.dp, bottom = MnSpacing.xLarge).height(canvasHeight),
+            configure = configure,
+            graphData = graphData,
+            gap = gap,
+            gapHeight = gapHeight,
+        )
     }
 }
 
@@ -125,18 +125,14 @@ private fun FocusGraphXAxis(
                         barHeight = barHeight,
                     )
 
-                    Box(
+                    Text(
                         modifier = Modifier.absoluteOffset(y = 20.dp),
-                        contentAlignment = Alignment.BottomCenter,
-                    ) {
-                        Text(
-                            text = configure.xAxis[idx].format(graphDayParser),
-                            style = MnTheme.typography.captionRegular.copy(fontSize = 11.sp),
-                            color = MnTheme.textColorScheme.tertiary,
-                            maxLines = 1,
-                            textAlign = TextAlign.Center,
-                        )
-                    } // date
+                        text = configure.xAxis[idx].format(graphDayParser),
+                        style = MnTheme.typography.captionRegular.copy(fontSize = 11.sp),
+                        color = MnTheme.textColorScheme.tertiary,
+                        maxLines = 1,
+                        textAlign = TextAlign.Center,
+                    )
 
                     if (graphData.max() == graphData[idx] && graphData[idx] > 0) {
                         MaxFocusTimeToolTip(
@@ -408,7 +404,7 @@ private fun FocusTimeGraphMax0MinutePreview() {
         modifier = Modifier
             .wrapContentSize(),
     ) {
-        val graphData = listOf(0f, 0f, 0f, 0f, 0f, 0f, 0f)
+        val graphData = listOf(0f, 0f, 0f, 0f, 0f, 0f, 0f).toImmutableList()
         FocusTimeGraphBox(
             graphData = graphData,
         )
@@ -422,7 +418,7 @@ private fun FocusTimeGraphMax10MinutePreview() {
         modifier = Modifier
             .wrapContentSize(),
     ) {
-        val graphData = listOf(8f, 5f, 0f, 0f, 9f, 2f, 7f)
+        val graphData = listOf(8f, 5f, 0f, 0f, 9f, 2f, 7f).toImmutableList()
         FocusTimeGraphBox(
             graphData = graphData,
         )
@@ -436,7 +432,7 @@ private fun FocusTimeGraphMax1HourPreview() {
         modifier = Modifier
             .wrapContentSize(),
     ) {
-        val graphData = listOf(10f, 10f, 40f, 30f, 9f, 21f, 7f)
+        val graphData = listOf(10f, 10f, 40f, 30f, 9f, 21f, 7f).toImmutableList()
         FocusTimeGraphBox(
             graphData = graphData,
         )
@@ -450,7 +446,7 @@ private fun FocusTimeGraphMax5HourPreview2() {
         modifier = Modifier
             .wrapContentSize(),
     ) {
-        val graphData = listOf(100f, 120f, 20f, 20f, 100f, 21f, 70f)
+        val graphData = listOf(100f, 120f, 20f, 20f, 100f, 21f, 70f).toImmutableList()
         FocusTimeGraphBox(
             graphData = graphData,
         )
@@ -464,7 +460,7 @@ private fun FocusTimeGraphMax5HourPreview() {
         modifier = Modifier
             .wrapContentSize(),
     ) {
-        val graphData = listOf(10f, 100f, 190f, 0f, 290f, 222f, 147f)
+        val graphData = listOf(10f, 100f, 190f, 0f, 290f, 222f, 147f).toImmutableList()
         FocusTimeGraphBox(
             graphData = graphData,
         )
@@ -478,7 +474,7 @@ private fun FocusTimeGraphMax8HourPreview() {
         modifier = Modifier
             .wrapContentSize(),
     ) {
-        val graphData = listOf(10f, 100f, 90f, 398f, 290f, 0f, 147f)
+        val graphData = listOf(10f, 100f, 90f, 398f, 290f, 0f, 147f).toImmutableList()
         FocusTimeGraphBox(
             graphData = graphData,
         )
@@ -492,7 +488,7 @@ private fun FocusTimeGraphMax20HourPreview() {
         modifier = Modifier
             .wrapContentSize(),
     ) {
-        val graphData = listOf(200f, 100f, 490f, 398f, 1090f, 0f, 147f)
+        val graphData = listOf(200f, 100f, 490f, 398f, 1090f, 0f, 147f).toImmutableList()
         FocusTimeGraphBox(
             graphData = graphData,
         )
@@ -506,7 +502,7 @@ private fun FocusTimeGraphOver20HourPreview() {
         modifier = Modifier
             .wrapContentSize(),
     ) {
-        val graphData = listOf(200f, 400f, 490f, 398f, 1390f, 100f, 547f)
+        val graphData = listOf(200f, 400f, 490f, 398f, 1390f, 100f, 547f).toImmutableList()
         FocusTimeGraphBox(
             graphData = graphData,
         )
@@ -520,7 +516,7 @@ private fun FocusTimeGraphPreview() {
         modifier = Modifier
             .wrapContentSize(),
     ) {
-        val graphData = listOf<Float>(190f, 10f, 320f, 0f, 90f, 120f, 157f)
+        val graphData = listOf<Float>(190f, 10f, 320f, 0f, 90f, 120f, 157f).toImmutableList()
         FocusTimeGraphBox(
             graphData = graphData,
         )
@@ -530,7 +526,7 @@ private fun FocusTimeGraphPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun FocusGraphXAxisPreview() {
-    val graphData = listOf<Float>(190f, 10f, 320f, 0f, 90f, 120f, 157f)
+    val graphData = listOf<Float>(190f, 10f, 320f, 0f, 90f, 120f, 157f).toImmutableList()
 
     val configure = FocusGraphConfigure(
         maxFocusTime = graphData.max() / 60,
