@@ -59,7 +59,7 @@ fun FocusTimeGraphBox(
 ) {
 
     val canvasHeight = 160.dp
-    val gap = configure.maxYAxis / configure.yAxisRange
+    val gap = (configure.maxYAxis.inWholeMinutes / configure.yAxisRange.inWholeMinutes).toInt()
     val gapHeight = canvasHeight / gap
 
     Column(
@@ -103,7 +103,7 @@ private fun FocusGraphXAxis(
             verticalAlignment = Alignment.Bottom,
         ) {
             graphData.mapIndexed { idx, data ->
-                val barHeight = if (data == 0f) MnSpacing.xSmall else gapHeight * (data / configure.yAxisRange)
+                val barHeight = if (data == 0f) MnSpacing.xSmall else gapHeight * (data / configure.yAxisRange.inWholeMinutes)
 
                 val barColor = if (data == 0f) {
                     MnTheme.iconColorScheme.disabled
@@ -533,7 +533,7 @@ private fun FocusGraphXAxisPreview() {
         targetDateTime = LocalDateTime.now(),
     )
 
-    val gap = configure.maxYAxis / configure.yAxisRange
+    val gap = (configure.maxYAxis.inWholeMinutes / configure.yAxisRange.inWholeMinutes).toFloat()
     val gapHeight = 160.dp / gap
 
     Box(

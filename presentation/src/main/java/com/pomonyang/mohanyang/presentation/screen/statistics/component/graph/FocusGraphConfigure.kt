@@ -2,50 +2,48 @@ package com.pomonyang.mohanyang.presentation.screen.statistics.component.graph
 
 import java.time.LocalDateTime
 import kotlin.math.ceil
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 data class FocusGraphConfigure(
     val targetDateTime: LocalDateTime = LocalDateTime.now(),
     val maxFocusTime: Float,
 ) {
-    val yAxisRange: Int = when {
-        maxFocusTime == 0.0F -> 10
-        maxFocusTime > 0.0F && maxFocusTime < 1.0F * hour -> 15
-        maxFocusTime >= 1.0F * hour && maxFocusTime < 5.0F * hour -> 1 * hour
-        maxFocusTime >= 5.0F * hour && maxFocusTime < 8.0F * hour -> 2 * hour
-        maxFocusTime >= 8.0F * hour && maxFocusTime < 20.0F * hour -> 5 * hour
-        else -> 6 * hour
+    private val maxFocusDuration: Duration = maxFocusTime.toInt().minutes
+
+    val yAxisRange: Duration = when {
+        maxFocusDuration.inWholeMinutes == 0L -> 10.minutes
+        maxFocusDuration < 1.hours -> 15.minutes
+        maxFocusDuration < 5.hours -> 1.hours
+        maxFocusDuration < 8.hours -> 2.hours
+        maxFocusDuration < 20.hours -> 5.hours
+        else -> 6.hours
     }
 
-    val maxYAxis = when {
-        maxFocusTime == 0.0F -> 10
-        maxFocusTime > 0.0F && maxFocusTime < hour -> hour
-        maxFocusTime >= hour && maxFocusTime < 5 * hour -> {
-            if (maxFocusTime % hour == 0F) {
-                maxFocusTime.toInt() + hour
-            } else {
-                ceil(maxFocusTime / hour).toInt() * hour
+    val maxYAxis: Duration = when {
+        maxFocusDuration.inWholeMinutes == 0L -> 10.minutes
+        maxFocusDuration < 1.hours -> 1.hours
+        maxFocusDuration < 5.hours -> {
+            if(maxFocusDuration.inWholeMinutes.toFloat() % hour  == 0f){
+                (maxFocusDuration.inWholeHours+1).hours
+            }else{
+                ceil(maxFocusDuration.inWholeMinutes.toFloat()/hour).toInt().hours
             }
         }
-
-        maxFocusTime >= 5 * hour && maxFocusTime < 8 * hour -> 8 * hour
-        maxFocusTime >= 8 * hour && maxFocusTime < 20 * hour -> when {
-            maxFocusTime < 10 * hour -> 10 * hour
-            maxFocusTime < 15 * hour -> 15 * hour
-            else -> 20 * hour
-        }
-
-        else -> 24 * hour
+        maxFocusDuration < 8.hours -> 8.hours
+        maxFocusDuration < 10.hours -> 10.hours
+        maxFocusDuration < 15.hours -> 15.hours
+        maxFocusDuration < 20.hours -> 20.hours
+        else -> 24.hours
     }
 
     val xAxis: List<LocalDateTime> = generateWeekDates(targetDateTime)
 
     fun getYLabel(index: Int): String {
-        val value = index * yAxisRange
-        return if (yAxisRange >= hour) "${value / hour}$yAxisUnit" else "$value$yAxisUnit"
+        val value = yAxisRange * index
+        return if (value >= 1.hours) "${value.inWholeHours}h" else "${value.inWholeMinutes}m"
     }
-
-
-    private val yAxisUnit: String = if (maxFocusTime in 0.0F..<1.0F * hour) "m" else "h"
 
     private fun generateWeekDates(baseDate: LocalDateTime): List<LocalDateTime> =
         (6 downTo 0).map { baseDate.minusDays(it.toLong()) }
