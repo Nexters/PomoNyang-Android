@@ -30,12 +30,14 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
@@ -47,7 +49,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-fun FocusTimeGraphBox(
+fun GraphContainer(
     graphData: ImmutableList<Float>,
     modifier: Modifier = Modifier,
     configure: FocusGraphConfigure = remember {
@@ -57,10 +59,12 @@ fun FocusTimeGraphBox(
         )
     }
 ) {
+    val totalFocusTime = remember(graphData) { graphData.sum() }
 
     val canvasHeight = 160.dp
     val gap = (configure.maxYAxis.inWholeMinutes / configure.yAxisRange.inWholeMinutes).toInt()
     val gapHeight = canvasHeight / gap
+
 
     Column(
         modifier = modifier
@@ -68,13 +72,14 @@ fun FocusTimeGraphBox(
             .padding(MnSpacing.large),
         verticalArrangement = Arrangement.Center,
     ) {
+
         Text(
             modifier = Modifier.padding(bottom = 10.dp),
-            text = "총 ${graphData.sum().toInt() / 60}시간 ${graphData.sum().toInt() % 60}분",
+            text =  stringResource(R.string.graph_total_time, totalFocusTime.toInt() / 60, totalFocusTime.toInt() % 60),
             style = MnTheme.typography.header4,
             color = MnTheme.iconColorScheme.secondary,
         )
-        FocusTimeGraph(
+        GraphData(
             modifier = Modifier.padding(top = 48.dp, bottom = MnSpacing.xLarge).height(canvasHeight),
             configure = configure,
             graphData = graphData,
@@ -228,7 +233,7 @@ private fun MaxFocusTimeToolTip(
 }
 
 @Composable
-private fun FocusTimeGraph(
+private fun GraphData(
     modifier: Modifier,
     configure: FocusGraphConfigure,
     graphData: List<Float>,
@@ -405,7 +410,7 @@ private fun FocusTimeGraphMax0MinutePreview() {
             .wrapContentSize(),
     ) {
         val graphData = listOf(0f, 0f, 0f, 0f, 0f, 0f, 0f).toImmutableList()
-        FocusTimeGraphBox(
+        GraphContainer(
             graphData = graphData,
         )
     }
@@ -419,7 +424,7 @@ private fun FocusTimeGraphMax10MinutePreview() {
             .wrapContentSize(),
     ) {
         val graphData = listOf(8f, 5f, 0f, 0f, 9f, 2f, 7f).toImmutableList()
-        FocusTimeGraphBox(
+        GraphContainer(
             graphData = graphData,
         )
     }
@@ -433,7 +438,7 @@ private fun FocusTimeGraphMax1HourPreview() {
             .wrapContentSize(),
     ) {
         val graphData = listOf(10f, 10f, 40f, 30f, 9f, 21f, 7f).toImmutableList()
-        FocusTimeGraphBox(
+        GraphContainer(
             graphData = graphData,
         )
     }
@@ -447,7 +452,7 @@ private fun FocusTimeGraphMax5HourPreview2() {
             .wrapContentSize(),
     ) {
         val graphData = listOf(100f, 120f, 20f, 20f, 100f, 21f, 70f).toImmutableList()
-        FocusTimeGraphBox(
+        GraphContainer(
             graphData = graphData,
         )
     }
@@ -461,7 +466,7 @@ private fun FocusTimeGraphMax5HourPreview() {
             .wrapContentSize(),
     ) {
         val graphData = listOf(10f, 100f, 190f, 0f, 290f, 222f, 147f).toImmutableList()
-        FocusTimeGraphBox(
+        GraphContainer(
             graphData = graphData,
         )
     }
@@ -475,7 +480,7 @@ private fun FocusTimeGraphMax8HourPreview() {
             .wrapContentSize(),
     ) {
         val graphData = listOf(10f, 100f, 90f, 398f, 290f, 0f, 147f).toImmutableList()
-        FocusTimeGraphBox(
+        GraphContainer(
             graphData = graphData,
         )
     }
@@ -489,7 +494,7 @@ private fun FocusTimeGraphMax20HourPreview() {
             .wrapContentSize(),
     ) {
         val graphData = listOf(200f, 100f, 490f, 398f, 1090f, 0f, 147f).toImmutableList()
-        FocusTimeGraphBox(
+        GraphContainer(
             graphData = graphData,
         )
     }
@@ -503,7 +508,7 @@ private fun FocusTimeGraphOver20HourPreview() {
             .wrapContentSize(),
     ) {
         val graphData = listOf(200f, 400f, 490f, 398f, 1390f, 100f, 547f).toImmutableList()
-        FocusTimeGraphBox(
+        GraphContainer(
             graphData = graphData,
         )
     }
@@ -517,7 +522,7 @@ private fun FocusTimeGraphPreview() {
             .wrapContentSize(),
     ) {
         val graphData = listOf<Float>(190f, 10f, 320f, 0f, 90f, 120f, 157f).toImmutableList()
-        FocusTimeGraphBox(
+        GraphContainer(
             graphData = graphData,
         )
     }
