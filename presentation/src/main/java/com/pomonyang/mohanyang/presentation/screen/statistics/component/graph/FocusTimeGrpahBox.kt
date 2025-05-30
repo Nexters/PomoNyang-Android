@@ -397,7 +397,7 @@ private fun GraphDashLine(modifier: Modifier, lineColor: Color) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "데이터가 없을 때")
 @Composable
 private fun FocusTimeGraphMax0MinutePreview() {
     Box(
@@ -411,7 +411,7 @@ private fun FocusTimeGraphMax0MinutePreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "최고 집중 시간이 10분 이내")
 @Composable
 private fun FocusTimeGraphMax10MinutePreview() {
     Box(
@@ -425,7 +425,7 @@ private fun FocusTimeGraphMax10MinutePreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "최고 집중 시간이 1시간 이내")
 @Composable
 private fun FocusTimeGraphMax1HourPreview() {
     Box(
@@ -439,7 +439,7 @@ private fun FocusTimeGraphMax1HourPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "최고 집중 시간이 1시간 ~ 5시간 이면서 정각")
 @Composable
 private fun FocusTimeGraphMax5HourPreview2() {
     Box(
@@ -453,7 +453,7 @@ private fun FocusTimeGraphMax5HourPreview2() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "최고 집중 시간이 1시간 ~ 5시간 이내")
 @Composable
 private fun FocusTimeGraphMax5HourPreview() {
     Box(
@@ -467,7 +467,7 @@ private fun FocusTimeGraphMax5HourPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "최고 집중 시간이 8시간 이내")
 @Composable
 private fun FocusTimeGraphMax8HourPreview() {
     Box(
@@ -481,7 +481,7 @@ private fun FocusTimeGraphMax8HourPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "최고 집중 시간이 20시간 이내")
 @Composable
 private fun FocusTimeGraphMax20HourPreview() {
     Box(
@@ -495,7 +495,7 @@ private fun FocusTimeGraphMax20HourPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "최고 집중 시간이 24시간 이내")
 @Composable
 private fun FocusTimeGraphOver20HourPreview() {
     Box(
