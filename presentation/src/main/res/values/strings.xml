@@ -128,4 +128,6 @@
     <string name="statistics_focus_content">집중했어요!</string>
     <string name="statistics_non_record">집중한 기록이 없어요</string>
 
+    <string name="graph_total_time">총 %d시간 %d분</string>
+
 </resources>
