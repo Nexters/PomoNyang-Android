@@ -25,10 +25,10 @@ data class FocusGraphConfigure(
         maxFocusDuration.inWholeMinutes == 0L -> 10.minutes
         maxFocusDuration < 1.hours -> 1.hours
         maxFocusDuration < 5.hours -> {
-            if(maxFocusDuration.inWholeMinutes.toFloat() % hour  == 0f){
-                (maxFocusDuration.inWholeHours+1).hours
-            }else{
-                ceil(maxFocusDuration.inWholeMinutes.toFloat()/hour).toInt().hours
+            if (maxFocusDuration.inWholeMinutes.toFloat() % HOUR == 0f) {
+                (maxFocusDuration.inWholeHours + 1).hours
+            } else {
+                ceil(maxFocusDuration.inWholeMinutes.toFloat() / HOUR).toInt().hours
             }
         }
         maxFocusDuration < 8.hours -> 8.hours
@@ -45,10 +45,9 @@ data class FocusGraphConfigure(
         return if (value >= 1.hours) "${value.inWholeHours}h" else "${value.inWholeMinutes}m"
     }
 
-    private fun generateWeekDates(baseDate: LocalDateTime): List<LocalDateTime> =
-        (6 downTo 0).map { baseDate.minusDays(it.toLong()) }
+    private fun generateWeekDates(baseDate: LocalDateTime): List<LocalDateTime> = (6 downTo 0).map { baseDate.minusDays(it.toLong()) }
 
-    companion object{
-        private const val hour = 60
+    companion object {
+        private const val HOUR = 60
     }
 }

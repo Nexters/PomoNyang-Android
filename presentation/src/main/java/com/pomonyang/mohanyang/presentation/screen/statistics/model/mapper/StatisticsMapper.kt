@@ -7,8 +7,8 @@ import com.pomonyang.mohanyang.data.remote.model.response.FocusTimeResponse
 import com.pomonyang.mohanyang.data.remote.model.response.RankingItemResponse
 import com.pomonyang.mohanyang.data.remote.model.response.StatisticsResponse
 import com.pomonyang.mohanyang.data.remote.model.response.WeeklyFocusTimeTrendResponse
+import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
-import com.pomonyang.mohanyang.presentation.screen.statistics.model.CategoryModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.CategoryRankingModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.DailyFocusTimeModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.FocusTimeModel
@@ -32,10 +32,10 @@ fun FocusTimeResponse.toModel(): FocusTimeModel = FocusTimeModel(
     totalFocusTime = Duration.parse(this.totalFocusTime),
 )
 
-fun CategoryResponse.toModel(): CategoryModel = CategoryModel(
-    no = this.no,
+fun CategoryResponse.toModel(): PomodoroCategoryModel = PomodoroCategoryModel(
+    categoryNo = this.no,
     title = this.title,
-    icon = CategoryIcon.safeValueOf(this.iconType),
+    categoryIcon = CategoryIcon.safeValueOf(this.iconType),
 )
 
 fun WeeklyFocusTimeTrendResponse.toModel(): WeeklyFocusTimeTrendModel = WeeklyFocusTimeTrendModel(

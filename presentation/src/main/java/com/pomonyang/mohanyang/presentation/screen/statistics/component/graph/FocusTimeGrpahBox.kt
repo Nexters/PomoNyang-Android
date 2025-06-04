@@ -57,7 +57,7 @@ fun GraphContainer(
             maxFocusTime = graphData.max(),
             targetDateTime = LocalDateTime.now(),
         )
-    }
+    },
 ) {
     val totalFocusTime = remember(graphData) { graphData.sum() }
 
@@ -65,17 +65,15 @@ fun GraphContainer(
     val gap = (configure.maxYAxis.inWholeMinutes / configure.yAxisRange.inWholeMinutes).toInt()
     val gapHeight = canvasHeight / gap
 
-
     Column(
         modifier = modifier
             .background(MnColor.White, shape = RoundedCornerShape(MnRadius.small))
             .padding(MnSpacing.large),
         verticalArrangement = Arrangement.Center,
     ) {
-
         Text(
             modifier = Modifier.padding(bottom = 10.dp),
-            text =  stringResource(R.string.graph_total_time, totalFocusTime.toInt() / 60, totalFocusTime.toInt() % 60),
+            text = stringResource(R.string.graph_total_time, totalFocusTime.toInt() / 60, totalFocusTime.toInt() % 60),
             style = MnTheme.typography.header4,
             color = MnTheme.iconColorScheme.secondary,
         )
