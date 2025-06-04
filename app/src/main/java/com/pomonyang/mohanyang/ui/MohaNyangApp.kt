@@ -12,8 +12,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,8 +36,13 @@ import com.pomonyang.mohanyang.presentation.designsystem.toast.MnToastSnackbarHo
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
+import com.pomonyang.mohanyang.presentation.screen.home.Home
+import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
+import com.pomonyang.mohanyang.presentation.screen.statistics.Statistics
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
+import com.pomonyang.mohanyang.ui.component.MohaNyangBottomBar
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,11 +64,47 @@ private fun MohaNyangApp(
     modifier: Modifier = Modifier,
 ) {
     var snackbarIconRes by remember { mutableStateOf<Int?>(null) }
+    val navHostController = mohaNyangAppState.navHostController
+    var selectedNavigationIndex by rememberSaveable { mutableIntStateOf(0) }
+
+    val items = persistentListOf(
+        BottomNavItem(
+            route = Home,
+            iconRes = PresentationR.drawable.ic_house,
+            selectedIconRes = PresentationR.drawable.ic_house_fill,
+            label = "홈",
+        ),
+        BottomNavItem(
+            route = Statistics,
+            iconRes = PresentationR.drawable.ic_chart_bar,
+            selectedIconRes = PresentationR.drawable.ic_chart_bar_fill,
+            label = "통계",
+        ),
+        BottomNavItem(
+            route = MyPage,
+            iconRes = PresentationR.drawable.ic_user,
+            selectedIconRes = PresentationR.drawable.ic_user_fill,
+            label = "프로필",
+        ),
+    )
 
     Scaffold(
         modifier = modifier,
         containerColor = MnTheme.backgroundColorScheme.primary,
-        snackbarHost = { MnToastSnackbarHost(hostState = snackbarHostState, leadingIconResourceId = snackbarIconRes) },
+        snackbarHost = {
+            MnToastSnackbarHost(
+                hostState = snackbarHostState,
+                leadingIconResourceId = snackbarIconRes,
+            )
+        },
+        bottomBar = {
+            MohaNyangBottomBar(
+                navController = navHostController,
+                items = items,
+                selectedIndex = selectedNavigationIndex,
+                onItemSelected = { selectedNavigationIndex = it },
+            )
+        },
     ) { innerPadding ->
         val isOffline by mohaNyangAppState.isOffline.collectAsStateWithLifecycle()
         var isForceHome by remember { mutableStateOf(false) }
@@ -143,5 +186,7 @@ private fun OfflinePopup(
 @ThemePreviews
 @Composable
 private fun NetworkErrorMessagePreview() {
-    OfflinePopup()
+    MnTheme {
+        OfflinePopup()
+    }
 }
