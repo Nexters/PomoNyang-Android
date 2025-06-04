@@ -8,6 +8,8 @@ import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepository
 import com.pomonyang.mohanyang.data.repository.pomodoro.PomodoroTimerRepositoryImpl
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepository
 import com.pomonyang.mohanyang.data.repository.push.PushAlarmRepositoryImpl
+import com.pomonyang.mohanyang.data.repository.statistics.StatisticsRepository
+import com.pomonyang.mohanyang.data.repository.statistics.StatisticsRepositoryImpl
 import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.data.repository.user.UserRepositoryImpl
 import dagger.Binds
@@ -49,4 +51,10 @@ internal abstract class RepositoryModule {
     internal abstract fun providePomodoroTimerRepository(
         pomodoroTimerRepositoryImpl: PomodoroTimerRepositoryImpl,
     ): PomodoroTimerRepository
+
+    @Binds
+    @Singleton
+    internal abstract fun provideStatisticsRepository(
+        statisticsRepositoryImpl: StatisticsRepositoryImpl,
+    ): StatisticsRepository
 }
