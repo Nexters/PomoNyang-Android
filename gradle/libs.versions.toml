@@ -24,8 +24,8 @@ ksp = "2.0.10-1.0.24"
 
 # Squareup
 okhttp = "4.12.0"
-retrofit = "2.9.0"
-kotlin-serializaition = "1.7.1"
+retrofit = "3.0.0"
+kotlin-serializaition = "1.8.1"
 kotlinx-serialization-converter = "1.0.0"
 
 # firebase
