@@ -27,6 +27,9 @@ fun NavGraphBuilder.statisticsScreen(
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             popExitTransition = { fadeOut(animationSpec = tween(300)) },
         ) {
+            StatisticsRoute(
+                onShowSnackbar = onShowSnackbar,
+            )
         }
     }
 }
