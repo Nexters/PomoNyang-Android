@@ -9,6 +9,7 @@ import com.pomonyang.mohanyang.data.remote.model.request.UpdateCatTypeRequest
 import com.pomonyang.mohanyang.data.remote.model.request.UpdateCategoryInfoRequest
 import com.pomonyang.mohanyang.data.remote.model.response.CatTypeResponse
 import com.pomonyang.mohanyang.data.remote.model.response.PomodoroSettingResponse
+import com.pomonyang.mohanyang.data.remote.model.response.StatisticsResponse
 import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -78,4 +79,9 @@ interface MohaNyangService {
     suspend fun updateSelectPomodoroCategory(
         @Path("no") no: Int,
     ): Result<Unit>
+
+    @GET("/api/v1/statistics/{date}")
+    suspend fun getStatistics(
+        @Path("date") date: String,
+    ): StatisticsResponse
 }
