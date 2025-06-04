@@ -12,6 +12,7 @@ import com.pomonyang.mohanyang.presentation.screen.mypage.myPageScreen
 import com.pomonyang.mohanyang.presentation.screen.onboarding.Onboarding
 import com.pomonyang.mohanyang.presentation.screen.onboarding.onboardingScreen
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.pomodoroScreen
+import com.pomonyang.mohanyang.presentation.screen.statistics.statisticsScreen
 import com.pomonyang.mohanyang.ui.MohaNyangAppState
 
 @Composable
@@ -22,7 +23,6 @@ internal fun MohaNyangNavHost(
     modifier: Modifier = Modifier,
 ) {
     val navHostController = mohaNyangAppState.navHostController
-    val navigateUp: () -> Unit = { navHostController.navigateUp() }
 
     val startDestination: Any = if (mohaNyangAppState.isNewUser) {
         Onboarding
@@ -70,6 +70,11 @@ internal fun MohaNyangNavHost(
             isNewUser = mohaNyangAppState.isNewUser,
             navHostController = mohaNyangAppState.navHostController,
             onShowSnackbar = onShowSnackbar,
+        )
+
+        statisticsScreen(
+            onShowSnackbar = onShowSnackbar,
+            navHostController = mohaNyangAppState.navHostController,
         )
 
         pomodoroScreen(
