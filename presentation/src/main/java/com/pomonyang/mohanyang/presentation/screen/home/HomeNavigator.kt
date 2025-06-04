@@ -2,6 +2,8 @@ package com.pomonyang.mohanyang.presentation.screen.home
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavGraphBuilder
@@ -50,9 +52,9 @@ fun NavGraphBuilder.homeScreen(
         val slideDuration = 500
 
         composable<PomodoroSetting>(
-            popEnterTransition = {
-                EnterTransition.None
-            },
+            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            popExitTransition = { fadeOut(animationSpec = tween(300)) },
         ) {
             PomodoroSettingRoute(
                 isNewUser = isNewUser,

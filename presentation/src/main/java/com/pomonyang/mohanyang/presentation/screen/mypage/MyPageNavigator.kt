@@ -1,5 +1,8 @@
 package com.pomonyang.mohanyang.presentation.screen.mypage
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -28,7 +31,11 @@ fun NavGraphBuilder.myPageScreen(
     navigation<MyPage>(
         startDestination = MyPageHome,
     ) {
-        composable<MyPageHome> {
+        composable<MyPageHome>(
+            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            popExitTransition = { fadeOut(animationSpec = tween(300)) },
+        ) {
             MyPageRoute(
                 isOfflineState = isOfflineState,
                 onShowSnackBar = onShowSnackbar,
