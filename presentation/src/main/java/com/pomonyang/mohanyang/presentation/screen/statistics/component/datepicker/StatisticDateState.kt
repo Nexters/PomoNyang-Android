@@ -38,7 +38,7 @@ fun rememberStatisticDateState(
     val now = nowProvider()
 
     fun isValid(date: LocalDate): Boolean =
-        date.isAfter(joinedDate) && date.isAfter(now).not()
+        date.isBefore(joinedDate).not() && date.isAfter(now).not()
 
     fun updateDate(epochMillis: Long) {
         val date = Instant.ofEpochMilli(epochMillis).atZone(zoneId).toLocalDate()
@@ -60,8 +60,8 @@ fun rememberStatisticDateState(
         selectedMonth = selectedDate.monthValue,
         selectedDay = selectedDate.dayOfMonth,
         selectedDateMillis = selectedDate.atStartOfDay(zoneId).toInstant().toEpochMilli(),
-        canMoveToPreviousDay = selectedDate.minusDays(1).isAfter(joinedDate),
-        canMoveToNextDay = selectedDate.isBefore(now),
+        canMoveToPreviousDay = selectedDate.minusDays(1).isBefore(joinedDate).not(),
+        canMoveToNextDay = selectedDate.plusDays(1).isAfter(now).not(),
         updateDate = ::updateDate,
         moveToPreviousDay = ::moveToPreviousDay,
         moveToNextDay = ::moveToNextDay,
