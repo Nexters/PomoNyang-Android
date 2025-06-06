@@ -39,7 +39,24 @@ fun StatisticDatePickerModal(
 @Preview
 @Composable
 fun StatisticDatePickerModalPreview() {
-    val joinedDate = LocalDate.of(2025, 5, 1)
+    val joinedDate = LocalDate.of(2025, 6, 1)
+
+    val dateState = rememberStatisticDateState(joinedDate)
+
+    MnTheme {
+        StatisticDatePickerModal(
+            statisticDateState = dateState,
+            onDateSelected = { date -> date?.let { dateState.updateDate(it) } },
+            onDismiss = {
+            },
+        )
+    }
+}
+
+@Preview
+@Composable
+fun StatisticDatePickerModalApplyPreview() {
+    val joinedDate = LocalDate.of(2025, 5, 10)
 
     var isShowDatePicker by remember { mutableStateOf(false) }
     val dateState = rememberStatisticDateState(joinedDate)
