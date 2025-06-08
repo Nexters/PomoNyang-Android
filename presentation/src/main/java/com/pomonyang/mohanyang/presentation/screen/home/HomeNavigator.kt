@@ -2,8 +2,6 @@ package com.pomonyang.mohanyang.presentation.screen.home
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavGraphBuilder
@@ -18,6 +16,7 @@ import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingR
 import com.pomonyang.mohanyang.presentation.screen.home.time.PomodoroTimeSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
+import com.pomonyang.mohanyang.presentation.util.composableWithDefaultTransition
 import kotlin.reflect.typeOf
 import kotlinx.serialization.Serializable
 
@@ -25,7 +24,7 @@ import kotlinx.serialization.Serializable
 data object Home
 
 @Serializable
-internal data object PomodoroSetting
+data object PomodoroSetting
 
 @Serializable
 internal data class TimeSetting(
@@ -51,11 +50,7 @@ fun NavGraphBuilder.homeScreen(
     ) {
         val slideDuration = 500
 
-        composable<PomodoroSetting>(
-            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            popExitTransition = { fadeOut(animationSpec = tween(300)) },
-        ) {
+        composableWithDefaultTransition<PomodoroSetting> {
             PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,

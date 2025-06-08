@@ -1,12 +1,9 @@
 package com.pomonyang.mohanyang.presentation.screen.statistics
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.pomonyang.mohanyang.presentation.util.composableWithDefaultTransition
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,11 +19,7 @@ fun NavGraphBuilder.statisticsScreen(
     navigation<StatisticsGraph>(
         startDestination = Statistics,
     ) {
-        composable<Statistics>(
-            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            popExitTransition = { fadeOut(animationSpec = tween(300)) },
-        ) {
+        composableWithDefaultTransition<Statistics> {
             StatisticsRoute(
                 onShowSnackbar = onShowSnackbar,
             )

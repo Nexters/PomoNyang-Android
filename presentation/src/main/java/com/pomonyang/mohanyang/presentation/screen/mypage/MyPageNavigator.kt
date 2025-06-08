@@ -1,8 +1,5 @@
 package com.pomonyang.mohanyang.presentation.screen.mypage
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -11,6 +8,7 @@ import com.pomonyang.mohanyang.presentation.screen.mypage.profile.CatProfileRout
 import com.pomonyang.mohanyang.presentation.screen.onboarding.CatSettingDestination
 import com.pomonyang.mohanyang.presentation.screen.onboarding.OnboardingNamingCat
 import com.pomonyang.mohanyang.presentation.screen.onboarding.OnboardingSelectCat
+import com.pomonyang.mohanyang.presentation.util.composableWithDefaultTransition
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
 
@@ -31,11 +29,7 @@ fun NavGraphBuilder.myPageScreen(
     navigation<MyPage>(
         startDestination = MyPageHome,
     ) {
-        composable<MyPageHome>(
-            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            popExitTransition = { fadeOut(animationSpec = tween(300)) },
-        ) {
+        composableWithDefaultTransition<MyPageHome> {
             MyPageRoute(
                 isOfflineState = isOfflineState,
                 onShowSnackBar = onShowSnackbar,
