@@ -16,6 +16,7 @@ import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingR
 import com.pomonyang.mohanyang.presentation.screen.home.time.PomodoroTimeSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
+import com.pomonyang.mohanyang.presentation.util.composableWithDefaultTransition
 import kotlin.reflect.typeOf
 import kotlinx.serialization.Serializable
 
@@ -23,7 +24,7 @@ import kotlinx.serialization.Serializable
 data object Home
 
 @Serializable
-internal data object PomodoroSetting
+data object PomodoroSetting
 
 @Serializable
 internal data class TimeSetting(
@@ -49,11 +50,7 @@ fun NavGraphBuilder.homeScreen(
     ) {
         val slideDuration = 500
 
-        composable<PomodoroSetting>(
-            popEnterTransition = {
-                EnterTransition.None
-            },
-        ) {
+        composableWithDefaultTransition<PomodoroSetting> {
             PomodoroSettingRoute(
                 isNewUser = isNewUser,
                 onShowSnackbar = onShowSnackbar,
