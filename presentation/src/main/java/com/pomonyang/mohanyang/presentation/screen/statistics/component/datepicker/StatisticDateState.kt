@@ -37,8 +37,7 @@ fun rememberStatisticDateState(
 
     val now = nowProvider()
 
-    fun isValid(date: LocalDate): Boolean =
-        date.isBefore(joinedDate).not() && date.isAfter(now).not()
+    fun isValid(date: LocalDate): Boolean = date.isBefore(joinedDate).not() && date.isAfter(now).not()
 
     fun updateDate(epochMillis: Long) {
         val date = Instant.ofEpochMilli(epochMillis).atZone(zoneId).toLocalDate()
