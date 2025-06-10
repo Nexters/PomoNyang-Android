@@ -12,8 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.contentcapture.ContentCaptureManager.Companion.isEnabled
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +31,7 @@ fun MnTextButton(
     styles: MnButtonStyleProperties,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    textColor: Color = MnTheme.iconColorScheme.secondary,
     containerPadding: PaddingValues = PaddingValues(),
     isEnabled: Boolean = true,
     @DrawableRes rightIconResourceId: Int? = null,
@@ -57,7 +58,7 @@ fun MnTextButton(
                         tint = if (isEnabled) MnTheme.iconColorScheme.secondary else MnTheme.iconColorScheme.tertiary,
                     )
                 }
-                Text(text = text, style = styles.textStyle, textAlign = TextAlign.Center, color = if (isEnabled) MnTheme.textColorScheme.secondary else MnTheme.textColorScheme.tertiary)
+                Text(text = text, style = styles.textStyle, textAlign = TextAlign.Center, color = if (isEnabled) textColor else MnTheme.textColorScheme.tertiary)
                 if (rightIconResourceId != null) {
                     MnMediumIcon(
                         resourceId = rightIconResourceId,

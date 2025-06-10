@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButton
@@ -19,13 +20,15 @@ import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 
 @Composable
-private fun StatisticsTopBar(
+fun StatisticsTopBar(
     month: String,
     day: String,
     onLeftClick: () -> Unit,
     onRightClick: () -> Unit,
     onMoreClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isLeftClickable: Boolean = true,
+    isRightClickable: Boolean = true,
 ) {
     Row(
         modifier = modifier
@@ -38,6 +41,7 @@ private fun StatisticsTopBar(
         MnIconButton(
             iconResourceId = R.drawable.ic_chevron_left,
             onClick = onLeftClick,
+            modifier = Modifier.alpha(if (isLeftClickable) 1f else 0f),
         )
 
         StatisticsTopBarTitle(
@@ -49,6 +53,7 @@ private fun StatisticsTopBar(
         MnIconButton(
             iconResourceId = R.drawable.ic_chevron_right,
             onClick = onRightClick,
+            modifier = Modifier.alpha(if (isRightClickable) 1f else 0f),
         )
     }
 }
