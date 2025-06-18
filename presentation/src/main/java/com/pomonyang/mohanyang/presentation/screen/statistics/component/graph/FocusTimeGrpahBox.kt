@@ -1,5 +1,14 @@
 package com.pomonyang.mohanyang.presentation.screen.statistics.component.graph
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +27,11 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -47,6 +60,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 
 @Composable
 fun GraphContainer(
@@ -78,7 +92,9 @@ fun GraphContainer(
             color = MnTheme.iconColorScheme.secondary,
         )
         GraphData(
-            modifier = Modifier.padding(top = 48.dp, bottom = MnSpacing.xLarge).height(canvasHeight),
+            modifier = Modifier
+                .padding(top = 48.dp, bottom = MnSpacing.xLarge)
+                .height(canvasHeight),
             configure = configure,
             graphData = graphData,
             gap = gap,
@@ -96,6 +112,18 @@ private fun FocusGraphXAxis(
 ) {
     val graphDayParser = DateTimeFormatter.ofPattern("M/dd")
 
+    val maxFocusTime = remember(graphData) { graphData.max() }
+
+    var barAnimated by remember { mutableStateOf(false) }
+    var showTooltip by remember { mutableStateOf(false) }
+    val totalAnimationDuration = 1000 + (graphData.size - 1) * 100L
+
+    LaunchedEffect(graphData) {
+        barAnimated = true
+        delay(totalAnimationDuration)
+        showTooltip = true
+    }
+
     Box(
         modifier = modifier.padding(horizontal = MnSpacing.xSmall),
         contentAlignment = Alignment.BottomCenter,
@@ -106,6 +134,7 @@ private fun FocusGraphXAxis(
             verticalAlignment = Alignment.Bottom,
         ) {
             graphData.mapIndexed { idx, data ->
+
                 val barHeight = if (data == 0f) MnSpacing.xSmall else gapHeight * (data / configure.yAxisRange.inWholeMinutes)
 
                 val barColor = if (data == 0f) {
@@ -118,14 +147,36 @@ private fun FocusGraphXAxis(
                     MnTheme.iconColorScheme.secondary
                 }
 
+                val height = animateDpAsState(
+                    targetValue = if (barAnimated) barHeight else 0.dp,
+                    animationSpec = tween(
+                        durationMillis = 1000,
+                        delayMillis = idx * 100, // 각 바에 대한 지연 시간
+                        easing = FastOutSlowInEasing,
+                    ),
+                    finishedListener = { barAnimated = true },
+                    label = "barHeight",
+                )
+
+                val color by animateColorAsState(
+                    targetValue = if (barAnimated) barColor else Color.Transparent,
+                    tween(
+                        durationMillis = 2000,
+                        delayMillis = idx * 100, // 각 바에 대한 지연 시간
+                        easing = FastOutSlowInEasing,
+                    ),
+                )
+
+                val isMaxFocusTime = data > 0 && data == maxFocusTime
+
                 Box(
                     modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.BottomCenter,
                 ) {
                     FocusTimeGraphBar(
                         modifier = Modifier,
-                        barColor = barColor,
-                        barHeight = barHeight,
+                        barColor = color,
+                        barHeight = height.value,
                     )
 
                     Text(
@@ -136,17 +187,17 @@ private fun FocusGraphXAxis(
                         maxLines = 1,
                         textAlign = TextAlign.Center,
                     )
-
-                    if (graphData.max() == graphData[idx] && graphData[idx] > 0) {
+                    if (isMaxFocusTime) {
                         MaxFocusTimeToolTip(
                             modifier = Modifier
                                 .absoluteOffset(
                                     x = 0.dp,
-                                    y = -(barHeight + MnSpacing.xSmall),
+                                    y = -(height.value + MnSpacing.xSmall),
                                 )
                                 .wrapContentWidth(unbounded = true)
                                 .padding(bottom = MnSpacing.small),
                             data = graphData[idx],
+                            enabled = showTooltip,
                         )
                     }
                 }
@@ -182,49 +233,65 @@ private fun FocusTimeGraphBar(
 private fun MaxFocusTimeToolTip(
     modifier: Modifier,
     data: Float,
+    enabled: Boolean,
 ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.TopCenter,
+    AnimatedVisibility(
+        visible = enabled,
+        enter = fadeIn(animationSpec = tween(durationMillis = 300, delayMillis = 200)) +
+            slideInVertically(
+                animationSpec = tween(durationMillis = 1000),
+                initialOffsetY = { it / 3 },
+            ),
+        exit = fadeOut(animationSpec = tween(durationMillis = 100)) +
+            scaleOut(
+                animationSpec = tween(durationMillis = 100),
+                targetScale = 0.8f,
+            ),
     ) {
         Box(
-            modifier = Modifier
-                .background(
-                    color = MnTheme.iconColorScheme.primary,
-                    shape = RoundedCornerShape(MnRadius.threeXSmall),
-                )
-                .padding(
-                    horizontal = MnSpacing.small,
-                    vertical = MnSpacing.xSmall,
-                ),
-            contentAlignment = Alignment.Center,
-
-        ) {
-            val targetData = data.toInt()
-            val maxTime = if (targetData > 60) "${stringResource(R.string.hour, targetData / 60)} ${stringResource(R.string.minute,targetData % 60)}" else stringResource(R.string.minute, targetData % 60)
-
-            Text(
-                text = maxTime,
-                textAlign = TextAlign.Center,
-                color = MnTheme.textColorScheme.inverse,
-                style = MnTheme.typography.captionSemiBold,
-
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .size(width = 10.dp, height = 8.dp)
-                .align(Alignment.BottomCenter)
-                .absoluteOffset(y = 8.dp)
-                .zIndex(1f),
+            modifier = modifier,
             contentAlignment = Alignment.TopCenter,
         ) {
-            FocusTooltipTriangleShape(
+            Box(
                 modifier = Modifier
-                    .fillMaxSize(),
-                color = MnTheme.iconColorScheme.primary,
-            )
+                    .background(
+                        color = MnTheme.iconColorScheme.primary,
+                        shape = RoundedCornerShape(MnRadius.threeXSmall),
+                    )
+                    .padding(
+                        horizontal = MnSpacing.small,
+                        vertical = MnSpacing.xSmall,
+                    ),
+                contentAlignment = Alignment.Center,
+
+            ) {
+                val targetData = data.toInt()
+
+                val maxTime = if (targetData > 60) "${(targetData / 60)}시간\n${(targetData % 60)}분" else "${targetData}분"
+
+                Text(
+                    text = maxTime,
+                    textAlign = TextAlign.Center,
+                    color = MnTheme.textColorScheme.inverse,
+                    style = MnTheme.typography.captionSemiBold,
+
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .size(width = 10.dp, height = 8.dp)
+                    .align(Alignment.BottomCenter)
+                    .absoluteOffset(y = 8.dp)
+                    .zIndex(1f),
+                contentAlignment = Alignment.TopCenter,
+            ) {
+                FocusTooltipTriangleShape(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    color = MnTheme.iconColorScheme.primary,
+                )
+            }
         }
     }
 }
@@ -558,6 +625,7 @@ private fun StaticFocusMaxTooltip() {
         MaxFocusTimeToolTip(
             modifier = Modifier,
             data = 120f,
+            enabled = true,
         )
     }
 }
