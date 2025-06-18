@@ -201,8 +201,7 @@ private fun MaxFocusTimeToolTip(
 
         ) {
             val targetData = data.toInt()
-
-            val maxTime = if (targetData > 60) "${(targetData / 60)}시간\n${(targetData % 60)}분" else "${targetData}분"
+            val maxTime = if (targetData > 60) "${stringResource(R.string.hour, targetData / 60)} ${stringResource(R.string.minute,targetData % 60)}" else stringResource(R.string.minute, targetData % 60)
 
             Text(
                 text = maxTime,
