@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -38,9 +37,9 @@ import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonC
 import com.pomonyang.mohanyang.presentation.designsystem.button.box.MnBoxButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.button.icon.MnIconButton
 import com.pomonyang.mohanyang.presentation.designsystem.dialog.MnDialog
+import com.pomonyang.mohanyang.presentation.designsystem.header.MnHeader
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
-import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.DevicePreviews
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
@@ -52,7 +51,6 @@ import kotlinx.coroutines.flow.StateFlow
 fun MyPageRoute(
     isOfflineState: StateFlow<Boolean>,
     onShowSnackBar: (String, Int?) -> Unit,
-    onBackClick: () -> Unit,
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
     myPageViewModel: MyPageViewModel = hiltViewModel(),
@@ -139,7 +137,6 @@ fun MyPageRoute(
     MyPageScreen(
         state = state,
         onAction = myPageViewModel::handleEvent,
-        onBackClick = onBackClick,
         isOffline = isOffline,
         isShowDialog = isShowDialog,
         modifier = modifier,
@@ -152,13 +149,10 @@ enum class NotificationRequest { TIMER, INTERRUPT, LOCKSCREEN }
 fun MyPageScreen(
     state: MyPageState,
     onAction: (MyPageEvent) -> Unit,
-    onBackClick: () -> Unit,
     isOffline: Boolean,
     isShowDialog: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val listState = rememberLazyListState()
-
     if (isShowDialog) {
         MnDialog(
             title = stringResource(id = R.string.notification_dialog_title),
@@ -191,28 +185,17 @@ fun MyPageScreen(
         modifier = modifier
             .fillMaxSize()
             .background(MnTheme.backgroundColorScheme.primary),
+        verticalArrangement = Arrangement.spacedBy(MnSpacing.xLarge),
     ) {
-        MnTopAppBar(
-            navigationIcon = {
-                MnIconButton(
-                    onClick = onBackClick,
-                    iconResourceId = R.drawable.ic_chevron_left,
-                )
-            },
-            content = {
-                Text(
-                    text = stringResource(id = R.string.my_page_title),
-                    style = MnTheme.typography.bodySemiBold,
-                    color = MnTheme.textColorScheme.primary,
-                )
-            },
+        MnHeader(
+            title = stringResource(id = R.string.my_page_title),
+            modifier = Modifier.padding(top = MnSpacing.xLarge),
         )
 
         Column(
             modifier = Modifier
                 .padding(
                     horizontal = MnSpacing.xLarge,
-                    vertical = MnSpacing.medium,
                 )
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(MnSpacing.medium),
@@ -435,7 +418,6 @@ fun MyPageScreenPreview() {
         MyPageScreen(
             state = MyPageState(),
             onAction = {},
-            onBackClick = {},
             isOffline = false,
             isShowDialog = false,
         )
@@ -449,7 +431,6 @@ fun MyPageScreenOfflinePreview() {
         MyPageScreen(
             state = MyPageState(),
             onAction = {},
-            onBackClick = {},
             isOffline = true,
             isShowDialog = false,
         )
