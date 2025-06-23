@@ -78,19 +78,19 @@ private fun MohaNyangApp(
             route = Home,
             iconRes = PresentationR.drawable.ic_house,
             selectedIconRes = PresentationR.drawable.ic_house_fill,
-            label = "홈",
+            label = stringResource(R.string.bottom_navigation_home),
         ),
         BottomNavItem(
             route = Statistics,
             iconRes = PresentationR.drawable.ic_chart_bar,
             selectedIconRes = PresentationR.drawable.ic_chart_bar_fill,
-            label = "통계",
+            label = stringResource(R.string.bottom_navigation_statistics),
         ),
         BottomNavItem(
             route = MyPage,
             iconRes = PresentationR.drawable.ic_user,
             selectedIconRes = PresentationR.drawable.ic_user_fill,
-            label = "프로필",
+            label = stringResource(R.string.bottom_navigation_my_page),
         ),
     )
 
