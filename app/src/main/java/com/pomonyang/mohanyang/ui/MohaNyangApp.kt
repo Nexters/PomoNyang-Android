@@ -1,15 +1,15 @@
 package com.pomonyang.mohanyang.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration.Short
@@ -62,7 +62,6 @@ internal fun MohaNyangApp(
     )
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun MohaNyangApp(
     mohaNyangAppState: MohaNyangAppState,
@@ -97,6 +96,7 @@ private fun MohaNyangApp(
     Scaffold(
         modifier = modifier,
         containerColor = MnTheme.backgroundColorScheme.primary,
+        contentWindowInsets = WindowInsets.systemBars,
         snackbarHost = {
             MnToastSnackbarHost(
                 hostState = snackbarHostState,
@@ -117,7 +117,7 @@ private fun MohaNyangApp(
                 )
             }
         },
-    ) {
+    ) { innerPadding ->
         val isOffline by mohaNyangAppState.isOffline.collectAsStateWithLifecycle()
         var isForceHome by remember { mutableStateOf(false) }
         val showSnackbar: (String, Int?) -> Unit = remember {
@@ -158,7 +158,7 @@ private fun MohaNyangApp(
             onShowSnackbar = showSnackbar,
             onForceGoHome = { isForceHome = true },
             mohaNyangAppState = mohaNyangAppState,
-            modifier = Modifier.systemBarsPadding(),
+            modifier = Modifier.padding(innerPadding),
         )
     }
 }
