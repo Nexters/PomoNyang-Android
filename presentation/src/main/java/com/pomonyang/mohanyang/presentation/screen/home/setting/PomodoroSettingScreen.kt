@@ -41,12 +41,10 @@ import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.component.CatRive
 import com.pomonyang.mohanyang.presentation.component.CategoryBox
 import com.pomonyang.mohanyang.presentation.designsystem.icon.MnLargeIcon
-import com.pomonyang.mohanyang.presentation.designsystem.icon.MnMediumIcon
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.designsystem.tooltip.guideTooltip
-import com.pomonyang.mohanyang.presentation.designsystem.topappbar.MnTopAppBar
 import com.pomonyang.mohanyang.presentation.model.cat.CatInfoModel
 import com.pomonyang.mohanyang.presentation.model.cat.CatType
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
@@ -68,7 +66,6 @@ fun PomodoroSettingRoute(
     onShowSnackbar: suspend (String, Int?) -> Unit,
     goToPomodoro: () -> Unit,
     goTimeSetting: (isFocusTime: Boolean, initialTime: Int, categoryName: String) -> Unit,
-    goToMyPage: () -> Unit,
     goToCategoryEdit: (PomodoroCategoryModel) -> Unit,
     goToCategoryCreate: () -> Unit,
     modifier: Modifier = Modifier,
@@ -83,7 +80,6 @@ fun PomodoroSettingRoute(
             is PomodoroSettingSideEffect.ShowSnackBar -> onShowSnackbar(effect.message, effect.iconRes)
             is PomodoroSettingSideEffect.GoTimeSetting -> goTimeSetting(effect.isFocusTime, effect.initialTime, effect.category)
             PomodoroSettingSideEffect.GoToPomodoro -> goToPomodoro()
-            PomodoroSettingSideEffect.GoToMyPage -> goToMyPage()
             PomodoroSettingSideEffect.GoToCategoryCreate -> goToCategoryCreate()
             is PomodoroSettingSideEffect.GoToCategoryEdit -> goToCategoryEdit(effect.category)
             is PomodoroSettingSideEffect.ShowBottomSheetSnackBar -> bottomSheetSnackbarHostState.showSnackbar(
@@ -137,23 +133,6 @@ fun PomodoroSettingScreen(
     Scaffold(
         modifier = modifier,
         containerColor = MnTheme.backgroundColorScheme.primary,
-        topBar = {
-            MnTopAppBar(
-                actions = {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clickableSingle(activeRippleEffect = false) { onAction(PomodoroSettingEvent.ClickMenu) },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        MnMediumIcon(
-                            resourceId = R.drawable.ic_menu,
-                            tint = MnTheme.iconColorScheme.primary,
-                        )
-                    }
-                },
-            )
-        },
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

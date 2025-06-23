@@ -70,10 +70,6 @@ class PomodoroSettingViewModel @Inject constructor(
                 updateState { copy(isEndOnBoardingTooltip = true) }
             }
 
-            PomodoroSettingEvent.ClickMenu -> {
-                setEffect(PomodoroSettingSideEffect.GoToMyPage)
-            }
-
             is PomodoroSettingEvent.ClickCategoryEdit -> {
                 setEffect(PomodoroSettingSideEffect.GoToCategoryEdit(category = event.category))
                 mohanyangEventLogger.log(MohanyangEventLog.CategoryEditClick)
