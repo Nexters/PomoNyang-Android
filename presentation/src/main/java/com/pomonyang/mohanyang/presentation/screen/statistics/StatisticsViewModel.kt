@@ -17,28 +17,52 @@ class StatisticsViewModel @Inject constructor(
 ) : BaseViewModel<StatisticsState, StatisticsEvent, StatisticsSideEffect>() {
 
     init {
-        viewModelScope.launch {
-            statisticsRepository.getStatistics(
-                LocalDate.now(),
-            ).onSuccess { statisticsResponse ->
-                updateState {
-                    copy(
-                        statisticsModel = statisticsResponse.toModel(),
-                    )
-                }
-            }.onFailure { error ->
-                Timber.e("getStatistics fail $error")
+        fetchStatistics(LocalDate.now())
+    }
+
+    override fun setInitialState(): StatisticsState = StatisticsModel.placeHolder.toState()
+
+    override fun handleEvent(event: StatisticsEvent) {
+        when (event) {
+            is StatisticsEvent.Refresh -> {
+                fetchStatistics(event.date)
+            }
+
+            is StatisticsEvent.SelectDate -> {
+                fetchStatistics(event.date)
+            }
+
+            is StatisticsEvent.ClickNextDay -> {
+                fetchStatistics(event.nextDay)
+            }
+
+            is StatisticsEvent.ClickPrevDay -> {
+                fetchStatistics(event.prevDay)
+            }
+
+            StatisticsEvent.ShowDatePickerDialog -> {
+                setEffect(StatisticsSideEffect.ShowDatePickerDialog)
+            }
+
+            StatisticsEvent.HideDatePickerDialog -> {
+                setEffect(StatisticsSideEffect.SideDatePickerDialog)
             }
         }
     }
 
-    override fun setInitialState(): StatisticsState = StatisticsState(
-        statisticsModel = StatisticsModel.placeHolder,
-    )
-
-    override fun handleEvent(event: StatisticsEvent) {
-        when (event) {
-            else -> {}
+    private fun fetchStatistics(date: LocalDate) {
+        viewModelScope.launch {
+            updateState { copy(isLoading = true) }
+            statisticsRepository.getStatistics(
+                date,
+            ).onSuccess { statisticsResponse ->
+                updateState {
+                    statisticsResponse.toModel().toState()
+                }
+            }.onFailure { error ->
+                Timber.e("hyom : getStatistics fail $error")
+            }
+            updateState { copy(isLoading = false) }
         }
     }
 }
