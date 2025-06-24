@@ -20,8 +20,7 @@ import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryI
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.RankingItemModel
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
+import java.time.Duration
 
 @Composable
 fun CategoryRankingItem(
@@ -55,7 +54,7 @@ fun CategoryRankingItem(
         )
 
         Text(
-            text = stringResource(R.string.common_time_format, rankingItemModel.totalFocusTime.inWholeHours, rankingItemModel.totalFocusTime.inWholeMinutes % 60),
+            text = stringResource(R.string.common_time_format, rankingItemModel.totalFocusTime.toHours(), rankingItemModel.totalFocusTime.toMinutes() % 60),
             style = MnTheme.typography.bodyRegular,
             color = MnTheme.textColorScheme.tertiary,
         )
@@ -76,7 +75,7 @@ private fun PreviewCategoryRankingItem() {
                         categoryNo = 1,
                         categoryIcon = CategoryIcon.SUN,
                     ),
-                    totalFocusTime = 140.minutes,
+                    totalFocusTime = Duration.ofMinutes(140),
                 ),
             )
             CategoryRankingItem(
@@ -87,7 +86,7 @@ private fun PreviewCategoryRankingItem() {
                         categoryNo = 1,
                         categoryIcon = CategoryIcon.SUN,
                     ),
-                    totalFocusTime = 100.minutes,
+                    totalFocusTime = Duration.ofMinutes(100),
                 ),
             )
             CategoryRankingItem(

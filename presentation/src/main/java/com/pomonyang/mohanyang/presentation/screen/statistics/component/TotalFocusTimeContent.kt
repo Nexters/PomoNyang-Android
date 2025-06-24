@@ -24,14 +24,13 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
-import kotlin.time.Duration
 
 @Composable
 fun TotalFocusTimeContent(
-    focusTime: Duration,
+    focusTime: String, // 데이터 형식 어떻게 뽑을지 고민 중
     modifier: Modifier = Modifier,
 ) {
-    val hasRecord = remember(focusTime) { focusTime.inWholeMinutes > 0L }
+    val hasRecord = remember(focusTime) { focusTime.isNotEmpty() }
     val backgroundColor = if (hasRecord) {
         MnTheme.backgroundColorScheme.accent1
     } else {
@@ -65,7 +64,7 @@ fun TotalFocusTimeContent(
         ) {
             if (hasRecord) {
                 Text(
-                    text = stringResource(R.string.common_time_format, focusTime.inWholeHours, focusTime.inWholeMinutes % 60),
+                    text = focusTime,
                     style = MnTheme.typography.header3,
                     color = MnTheme.textColorScheme.inverse,
                 )
@@ -106,7 +105,7 @@ private fun TotalFocusTImeContentPreview(
 ) {
     MnTheme {
         TotalFocusTimeContent(
-            focusTime = Duration.parse(focusTime),
+            focusTime = focusTime,
         )
     }
 }

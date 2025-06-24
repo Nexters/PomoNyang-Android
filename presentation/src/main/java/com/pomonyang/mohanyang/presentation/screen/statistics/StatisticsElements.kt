@@ -8,8 +8,8 @@ import com.pomonyang.mohanyang.presentation.base.ViewState
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.FocusTimeModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.RankingItemModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.StatisticsModel
+import java.time.Duration
 import java.time.LocalDate
-import kotlin.time.Duration
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
