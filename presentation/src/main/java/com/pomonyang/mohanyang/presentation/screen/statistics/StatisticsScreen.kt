@@ -209,7 +209,7 @@ private fun StatisticsTotalFocusSection(
         )
 
         TotalFocusTimeContent(
-            focusTime = stringResource(R.string.common_time_format, focusTime.toHours(), focusTime.toMinutes() % 60),
+            focusTime = focusTime,
         )
     }
 }

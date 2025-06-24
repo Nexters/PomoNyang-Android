@@ -24,13 +24,14 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
+import java.time.Duration
 
 @Composable
 fun TotalFocusTimeContent(
-    focusTime: String, // 데이터 형식 어떻게 뽑을지 고민 중
+    focusTime: Duration,
     modifier: Modifier = Modifier,
 ) {
-    val hasRecord = remember(focusTime) { focusTime.isNotEmpty() }
+    val hasRecord = remember(focusTime) { focusTime.isZero.not() }
     val backgroundColor = if (hasRecord) {
         MnTheme.backgroundColorScheme.accent1
     } else {
@@ -64,7 +65,7 @@ fun TotalFocusTimeContent(
         ) {
             if (hasRecord) {
                 Text(
-                    text = focusTime,
+                    text = stringResource(R.string.common_time_format, focusTime.toHours(), focusTime.toMinutes() % 60),
                     style = MnTheme.typography.header3,
                     color = MnTheme.textColorScheme.inverse,
                 )
@@ -91,17 +92,17 @@ fun TotalFocusTimeContent(
 }
 
 private class TotalFocusTimeContentPreviewParameter :
-    CollectionPreviewParameterProvider<String>(
+    CollectionPreviewParameterProvider<Duration>(
         listOf(
-            "3시간 27분",
-            "",
+            Duration.ofHours(10),
+            Duration.ZERO,
         ),
     )
 
 @ThemePreviews
 @Composable
 private fun TotalFocusTImeContentPreview(
-    @PreviewParameter(TotalFocusTimeContentPreviewParameter::class) focusTime: String,
+    @PreviewParameter(TotalFocusTimeContentPreviewParameter::class) focusTime: Duration,
 ) {
     MnTheme {
         TotalFocusTimeContent(
