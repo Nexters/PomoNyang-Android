@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -73,6 +74,8 @@ fun GraphContainer(
         )
     },
 ) {
+    val graphDayParser = remember { DateTimeFormatter.ofPattern("M/dd") }
+
     val totalFocusTime = remember(graphData) { graphData.sum() }
 
     val canvasHeight = 160.dp
@@ -97,6 +100,7 @@ fun GraphContainer(
                 .height(canvasHeight),
             configure = configure,
             graphData = graphData,
+            graphDayParser = graphDayParser,
             gap = gap,
             gapHeight = gapHeight,
         )
@@ -108,9 +112,9 @@ private fun FocusGraphXAxis(
     modifier: Modifier,
     graphData: List<Float>,
     configure: FocusGraphConfigure,
+    parser: DateTimeFormatter,
     gapHeight: Dp,
 ) {
-    val graphDayParser = DateTimeFormatter.ofPattern("M/dd")
 
     val maxFocusTime = remember(graphData) { graphData.max() }
 
@@ -133,72 +137,73 @@ private fun FocusGraphXAxis(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom,
         ) {
-            graphData.mapIndexed { idx, data ->
+            graphData.forEachIndexed(){ idx, data ->
+                key(idx){
+                    val barHeight = if (data == 0f) MnSpacing.xSmall else gapHeight * (data / configure.yAxisRange.inWholeMinutes)
 
-                val barHeight = if (data == 0f) MnSpacing.xSmall else gapHeight * (data / configure.yAxisRange.inWholeMinutes)
+                    val barColor = if (data == 0f) {
+                        MnTheme.iconColorScheme.disabled
+                    } else if (
+                        configure.xAxis[idx].format(parser) == LocalDateTime.now().format(parser)
+                    ) {
+                        MnTheme.backgroundColorScheme.accent1
+                    } else {
+                        MnTheme.iconColorScheme.secondary
+                    }
 
-                val barColor = if (data == 0f) {
-                    MnTheme.iconColorScheme.disabled
-                } else if (
-                    configure.xAxis[idx].format(graphDayParser) == LocalDateTime.now().format(graphDayParser)
-                ) {
-                    MnTheme.backgroundColorScheme.accent1
-                } else {
-                    MnTheme.iconColorScheme.secondary
-                }
+                    val height = animateDpAsState(
+                        targetValue = if (barAnimated) barHeight else 0.dp,
+                        animationSpec = tween(
+                            durationMillis = 1000,
+                            delayMillis = idx * 100, // 각 바에 대한 지연 시간
+                            easing = FastOutSlowInEasing,
+                        ),
+                        finishedListener = { barAnimated = true },
+                        label = "barHeight",
+                    )
 
-                val height = animateDpAsState(
-                    targetValue = if (barAnimated) barHeight else 0.dp,
-                    animationSpec = tween(
-                        durationMillis = 1000,
-                        delayMillis = idx * 100, // 각 바에 대한 지연 시간
-                        easing = FastOutSlowInEasing,
-                    ),
-                    finishedListener = { barAnimated = true },
-                    label = "barHeight",
-                )
-
-                val color by animateColorAsState(
-                    targetValue = if (barAnimated) barColor else Color.Transparent,
-                    tween(
-                        durationMillis = 2000,
-                        delayMillis = idx * 100, // 각 바에 대한 지연 시간
-                        easing = FastOutSlowInEasing,
-                    ),
-                )
+                    val color by animateColorAsState(
+                        targetValue = if (barAnimated) barColor else Color.Transparent,
+                        tween(
+                            durationMillis = 2000,
+                            delayMillis = idx * 100, // 각 바에 대한 지연 시간
+                            easing = FastOutSlowInEasing,
+                        ),
+                    )
 
                 val isMaxFocusTime = data > 0 && data == maxFocusTime
 
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.BottomCenter,
-                ) {
-                    FocusTimeGraphBar(
-                        modifier = Modifier,
-                        barColor = color,
-                        barHeight = height.value,
-                    )
-
-                    Text(
-                        modifier = Modifier.absoluteOffset(y = 20.dp),
-                        text = configure.xAxis[idx].format(graphDayParser),
-                        style = MnTheme.typography.captionRegular.copy(fontSize = 11.sp),
-                        color = MnTheme.textColorScheme.tertiary,
-                        maxLines = 1,
-                        textAlign = TextAlign.Center,
-                    )
-                    if (isMaxFocusTime) {
-                        MaxFocusTimeToolTip(
-                            modifier = Modifier
-                                .absoluteOffset(
-                                    x = 0.dp,
-                                    y = -(height.value + MnSpacing.xSmall),
-                                )
-                                .wrapContentWidth(unbounded = true)
-                                .padding(bottom = MnSpacing.small),
-                            data = graphData[idx],
-                            enabled = showTooltip,
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.BottomCenter,
+                    ) {
+                        FocusTimeGraphBar(
+                            modifier = Modifier,
+                            barColor = color,
+                            barHeight = height.value,
                         )
+
+                        Text(
+                            modifier = Modifier.absoluteOffset(y = 20.dp),
+                            text = configure.xAxis[idx].format(parser),
+                            style = MnTheme.typography.captionRegular.copy(fontSize = 11.sp),
+                            color = MnTheme.textColorScheme.tertiary,
+                            maxLines = 1,
+                            textAlign = TextAlign.Center,
+                        )
+                        if (isMaxFocusTime) {
+                            MaxFocusTimeToolTip(
+                                modifier = Modifier
+                                    .absoluteOffset(
+                                        x = 0.dp,
+                                        y = -(height.value + MnSpacing.xSmall),
+                                    )
+                                    .wrapContentWidth(unbounded = true)
+                                    .padding(bottom = MnSpacing.small),
+                                data = graphData[idx],
+                                enabled = showTooltip,
+                            )
+                        }
                     }
                 }
             }
@@ -301,6 +306,7 @@ private fun GraphData(
     modifier: Modifier,
     configure: FocusGraphConfigure,
     graphData: List<Float>,
+    graphDayParser: DateTimeFormatter,
     gap: Int,
     gapHeight: Dp,
 ) {
@@ -322,6 +328,7 @@ private fun GraphData(
                     modifier = Modifier.fillMaxSize(),
                     graphData = graphData,
                     configure = configure,
+                    parser =  graphDayParser,
                     gapHeight = gapHeight,
                 )
             }
