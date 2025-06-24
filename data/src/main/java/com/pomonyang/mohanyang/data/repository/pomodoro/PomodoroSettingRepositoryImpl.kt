@@ -4,8 +4,8 @@ import com.pomonyang.mohanyang.data.local.room.dao.PomodoroSettingDao
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroSettingEntity
 import com.pomonyang.mohanyang.data.remote.datasource.pomodoro.PomodoroSettingRemoteDataSource
 import com.pomonyang.mohanyang.data.remote.model.response.toEntity
-import java.time.Duration
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEmpty
 
@@ -37,13 +37,8 @@ internal class PomodoroSettingRepositoryImpl @Inject constructor(
         focusTime: Int?,
         restTime: Int?,
     ): Result<Unit> {
-        val focusTimeDuration = focusTime?.let {
-            Duration.ofMinutes(it.toLong()).toString()
-        }
-
-        val restTimeDuration = restTime?.let {
-            Duration.ofMinutes(it.toLong()).toString()
-        }
+        val focusTimeDuration = focusTime?.toLong()?.minutes.toString()
+        val restTimeDuration = restTime?.toLong()?.minutes.toString()
         return pomodoroSettingRemoteDataSource.modifyCategorySettingOption(
             categoryNo = categoryNo,
             focusTime = focusTimeDuration,

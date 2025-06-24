@@ -15,8 +15,8 @@ import com.pomonyang.mohanyang.presentation.screen.statistics.model.FocusTimeMod
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.RankingItemModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.StatisticsModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.WeeklyFocusTimeTrendModel
-import java.time.Duration
 import java.time.LocalDate
+import kotlin.time.Duration
 
 fun StatisticsResponse.toModel(): StatisticsModel = StatisticsModel(
     date = LocalDate.parse(this.date),

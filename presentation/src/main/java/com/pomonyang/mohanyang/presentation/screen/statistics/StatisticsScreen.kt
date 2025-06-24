@@ -61,9 +61,10 @@ import com.pomonyang.mohanyang.presentation.screen.statistics.model.WeeklyFocusT
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
-import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
@@ -217,7 +218,7 @@ private fun StatisticsTotalFocusSection(
         )
 
         TotalFocusTimeContent(
-            focusTime = stringResource(R.string.common_time_format, focusTime.toHours(), focusTime.toMinutes() % 60),
+            focusTime = focusTime,
         )
     }
 }
@@ -310,8 +311,8 @@ private fun StatisticsFocusTimeContent(
         StatisticsContentHeader(
             time = stringResource(
                 R.string.common_time_format,
-                focusData.totalFocusTime.toHours(),
-                focusData.totalFocusTime.toMinutes() % 60,
+                focusData.totalFocusTime.inWholeHours,
+                focusData.totalFocusTime.inWholeMinutes % 60,
             ),
         )
 
@@ -339,8 +340,8 @@ private fun StatisticsFocusTimeContent(
                     .padding(vertical = MnSpacing.small),
                 time = stringResource(
                     R.string.common_time_format,
-                    focusData.totalFocusTime.toHours(),
-                    focusData.totalFocusTime.toMinutes() % 60,
+                    focusData.totalFocusTime.inWholeHours,
+                    focusData.totalFocusTime.inWholeMinutes % 60,
                 ),
                 category = focusData.category,
             )
@@ -407,6 +408,7 @@ private fun StatisticsCategoryRankingSection(
                 color = MnTheme.textColorScheme.tertiary,
             )
         }
+
         Column(
             modifier = Modifier
                 .background(
@@ -425,6 +427,12 @@ private fun StatisticsCategoryRankingSection(
                 }
             }
         }
+
+//        if (categoryRankingList.isEmpty()) {
+//
+//        } else {
+//
+//        }
     }
 }
 
@@ -435,7 +443,7 @@ private fun StatisticsScreenPreview() {
     MnTheme {
         val previewStatisticsState = StatisticsModel(
             date = LocalDate.of(2024, 4, 7),
-            totalFocusTime = Duration.ofMinutes(30),
+            totalFocusTime = 30.minutes,
             focusTimes = (1..7).map {
                 FocusTimeModel(
                     no = it,
@@ -444,7 +452,7 @@ private fun StatisticsScreenPreview() {
                         title = "카테고리 $it",
                         categoryIcon = CategoryIcon.DUMBBELL,
                     ),
-                    totalFocusTime = Duration.ofMinutes((10 * it).toLong()),
+                    totalFocusTime = (10 * it).minutes,
                 )
             },
             weeklyFocusTimeTrend = WeeklyFocusTimeTrendModel(
@@ -453,7 +461,7 @@ private fun StatisticsScreenPreview() {
                 dateToFocusTimeStatistics = (0..6).map { offset ->
                     DailyFocusTimeModel(
                         date = LocalDate.of(2024, 4, 1).plusDays(offset.toLong()),
-                        totalFocusTime = Duration.ofMinutes((15 + offset * 5).toLong()),
+                        totalFocusTime = (15 + offset * 5).minutes,
                     )
                 },
             ),
@@ -468,7 +476,7 @@ private fun StatisticsScreenPreview() {
                             title = "카테고리 $it",
                             categoryIcon = CategoryIcon.CAT,
                         ),
-                        totalFocusTime = Duration.ofMinutes((20 * it).toLong()),
+                        totalFocusTime = (20 * it).minutes,
                     )
                 }.sortedByDescending { it.totalFocusTime }
                     .take(3)
