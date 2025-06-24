@@ -14,7 +14,6 @@ import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryI
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon.CategoryIconNavType
 import com.pomonyang.mohanyang.presentation.screen.home.setting.PomodoroSettingRoute
 import com.pomonyang.mohanyang.presentation.screen.home.time.PomodoroTimeSettingRoute
-import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
 import com.pomonyang.mohanyang.presentation.screen.pomodoro.Pomodoro
 import com.pomonyang.mohanyang.presentation.util.composableWithDefaultTransition
 import kotlin.reflect.typeOf
@@ -61,9 +60,6 @@ fun NavGraphBuilder.homeScreen(
                 },
                 goToPomodoro = {
                     navHostController.navigate(Pomodoro)
-                },
-                goToMyPage = {
-                    navHostController.navigate(MyPage)
                 },
                 goToCategoryEdit = { category ->
                     navHostController.navigate(

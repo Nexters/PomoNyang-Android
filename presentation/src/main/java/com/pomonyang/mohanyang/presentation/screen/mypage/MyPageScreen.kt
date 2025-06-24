@@ -7,7 +7,6 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,10 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
@@ -228,7 +223,6 @@ fun MyPageScreen(
                     onAction(MyPageEvent.ClickCatProfile(isOffline))
                 },
             )
-            CheckFocusTimeBox()
             NotificationBox(
                 state = state,
                 onAction = onAction,
@@ -274,54 +268,6 @@ fun ProfileBox(
                 )
             }
             MnIconButton(onClick = onClick, iconResourceId = R.drawable.ic_chevron_right)
-        }
-    }
-}
-
-@Composable
-fun CheckFocusTimeBox(
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = MnTheme.backgroundColorScheme.secondary,
-                shape = RoundedCornerShape(MnRadius.large),
-            )
-            .padding(MnSpacing.xLarge),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_static_ready),
-                contentDescription = "static_ready_image",
-                modifier = Modifier.size(
-                    96.dp,
-                ),
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = MnSpacing.medium),
-                verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = stringResource(id = R.string.my_page_static_title),
-                    style = MnTheme.typography.bodySemiBold,
-                    color = MnTheme.textColorScheme.secondary,
-                )
-                Text(
-                    text = stringResource(id = R.string.my_page_static_subtitle),
-                    style = MnTheme.typography.subBodyRegular,
-                    color = MnTheme.textColorScheme.secondary,
-                    textAlign = TextAlign.Center,
-                )
-            }
         }
     }
 }

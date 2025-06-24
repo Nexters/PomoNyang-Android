@@ -38,7 +38,6 @@ sealed interface PomodoroSettingEvent : ViewEvent {
     data object DismissCategoryDialog : PomodoroSettingEvent
     data object DismissOnBoardingTooltip : PomodoroSettingEvent
     data class SelectCategory(val categoryNo: Int) : PomodoroSettingEvent
-    data object ClickMenu : PomodoroSettingEvent
     data class ClickCategoryEdit(val category: PomodoroCategoryModel) : PomodoroSettingEvent
     data object ClickCategoryCreate : PomodoroSettingEvent
     data class DeleteCategories(val categoryIds: List<Int>) : PomodoroSettingEvent
@@ -62,8 +61,6 @@ sealed interface PomodoroSettingSideEffect : ViewSideEffect {
         val initialTime: Int,
         val category: String,
     ) : PomodoroSettingSideEffect
-
-    data object GoToMyPage : PomodoroSettingSideEffect
 
     data class GoToCategoryEdit(val category: PomodoroCategoryModel) : PomodoroSettingSideEffect
 

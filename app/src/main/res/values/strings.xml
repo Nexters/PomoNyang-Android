@@ -14,4 +14,7 @@
     <string name="pomodoro_channel_id_v1">pomodoro_notification_channel_id</string>
     <string name="interrupt_channel_id">interrupt_notification_channel_id</string>
     <string name="interrupt_channel_name">interrupt_notification_channel_name</string>
+    <string name="bottom_navigation_home">홈</string>
+    <string name="bottom_navigation_statistics">통계</string>
+    <string name="bottom_navigation_my_page">마이페이지</string>
 </resources>
