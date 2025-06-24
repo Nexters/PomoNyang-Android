@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,20 +15,17 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mohanyang.presentation.R
@@ -40,8 +36,6 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
 import com.pomonyang.mohanyang.presentation.screen.statistics.component.CategoryRankingContent
-import com.pomonyang.mohanyang.presentation.screen.statistics.component.Dot
-import com.pomonyang.mohanyang.presentation.screen.statistics.component.FocusTimeListItem
 import com.pomonyang.mohanyang.presentation.screen.statistics.component.StatisticsContentHeader
 import com.pomonyang.mohanyang.presentation.screen.statistics.component.StatisticsTopBar
 import com.pomonyang.mohanyang.presentation.screen.statistics.component.TotalFocusTimeContent
@@ -55,6 +49,7 @@ import com.pomonyang.mohanyang.presentation.screen.statistics.model.FocusTimeMod
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.RankingItemModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.StatisticsModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.WeeklyFocusTimeTrendModel
+import com.pomonyang.mohanyang.presentation.screen.statistics.widget.StatisticsContent
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
@@ -220,16 +215,15 @@ private fun StatisticsTotalFocusSection(
     }
 }
 
-@Suppress("PropertyName")
+private const val FIRST_PAGE_SIZE = 3
+private const val DEFAULT_PAGE_SIZE = 10
+
 @Composable
 private fun StatisticsFocusListSection(
     focusHistory: ImmutableList<FocusTimeModel>,
     modifier: Modifier = Modifier,
 ) {
-    val FIRST_PAGE_SIZE = 3
-    val DEFAULT_PAGE_SIZE = 10
-
-    var currentHistoryPage by remember { mutableIntStateOf(0) }
+    var currentHistoryPage by rememberSaveable { mutableIntStateOf(0) }
 
     val historyPageSize = if (currentHistoryPage == 0) FIRST_PAGE_SIZE else DEFAULT_PAGE_SIZE
 
@@ -292,18 +286,8 @@ private fun StatisticsFocusTimeContent(
     focusData: FocusTimeModel,
     modifier: Modifier = Modifier,
 ) {
-    var contentHeightPx by remember { mutableIntStateOf(0) }
-    val density = LocalDensity.current
-    val dotCounts by remember(contentHeightPx, density) {
-        derivedStateOf {
-            val heightDp = with(density) { contentHeightPx.toDp() }
-            (heightDp / 8.dp).toInt()
-        }
-    }
-
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.Start,
     ) {
         StatisticsContentHeader(
             time = stringResource(
@@ -313,36 +297,14 @@ private fun StatisticsFocusTimeContent(
             ),
         )
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
-        ) {
-            Column(
-                modifier = Modifier.width(20.dp),
-                verticalArrangement = Arrangement.spacedBy(3.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                if (dotCounts > 0) {
-                    repeat(dotCounts) {
-                        Dot()
-                    }
-                }
-            }
-
-            FocusTimeListItem(
-                modifier = Modifier
-                    .onGloballyPositioned { coords ->
-                        contentHeightPx = coords.size.height
-                    }
-                    .padding(vertical = MnSpacing.small),
-                time = stringResource(
-                    R.string.common_time_format,
-                    focusData.totalFocusTime.inWholeHours,
-                    focusData.totalFocusTime.inWholeMinutes % 60,
-                ),
-                category = focusData.category,
-            )
-        }
+        StatisticsContent(
+            time = stringResource(
+                R.string.common_time_format,
+                focusData.totalFocusTime.inWholeHours,
+                focusData.totalFocusTime.inWholeMinutes % 60,
+            ),
+            category = focusData.category,
+        )
     }
 }
 
