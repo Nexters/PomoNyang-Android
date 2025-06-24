@@ -1,6 +1,5 @@
 package com.pomonyang.mohanyang.presentation.screen.statistics
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -38,11 +36,10 @@ import com.mohanyang.presentation.R
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButton
 import com.pomonyang.mohanyang.presentation.designsystem.button.text.MnTextButtonStyles
 import com.pomonyang.mohanyang.presentation.designsystem.spinner.MnSpinner
-import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import com.pomonyang.mohanyang.presentation.screen.home.category.model.CategoryIcon
-import com.pomonyang.mohanyang.presentation.screen.statistics.component.CategoryRankingItem
+import com.pomonyang.mohanyang.presentation.screen.statistics.component.CategoryRankingContent
 import com.pomonyang.mohanyang.presentation.screen.statistics.component.Dot
 import com.pomonyang.mohanyang.presentation.screen.statistics.component.FocusTimeListItem
 import com.pomonyang.mohanyang.presentation.screen.statistics.component.StatisticsContentHeader
@@ -191,7 +188,7 @@ private fun StatisticsScreen(
                         weeklyFocusTime = weeklyFocusTime,
                         weeklyMaxFocusTime = weeklyMaxFocusTime,
                     )
-                    StatisticsCategoryRankingSection(
+                    CategoryRankingContent(
                         startDate = categoryRankingDate.first,
                         endDate = categoryRankingDate.second,
                         categoryRankingList = categoryRankingList,
@@ -377,62 +374,6 @@ private fun StatisticsGraphSection(
                 targetDateTime = LocalDateTime.of(targetDate.year, targetDate.month, targetDate.dayOfMonth, 0, 0),
             ),
         )
-    }
-}
-
-@Composable
-private fun StatisticsCategoryRankingSection(
-    startDate: LocalDate,
-    endDate: LocalDate,
-    categoryRankingList: ImmutableList<RankingItemModel>,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = MnSpacing.xLarge),
-    ) {
-        Row(
-            modifier = Modifier.padding(vertical = MnSpacing.xLarge),
-            horizontalArrangement = Arrangement.spacedBy(MnSpacing.small),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(R.string.total_focus_category_ranking),
-                style = MnTheme.typography.header4,
-                color = MnTheme.textColorScheme.primary,
-            )
-            Text(
-                text = "${stringResource(R.string.common_day_format, startDate.monthValue, startDate.dayOfMonth)} - ${stringResource(R.string.common_day_format, endDate.monthValue, endDate.dayOfMonth)}",
-                style = MnTheme.typography.subBodyRegular,
-                color = MnTheme.textColorScheme.tertiary,
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .background(
-                    shape = RoundedCornerShape(MnRadius.small),
-                    color = MnTheme.iconColorScheme.inverse,
-                )
-                .padding(MnSpacing.large),
-            verticalArrangement = Arrangement.spacedBy(MnSpacing.large),
-        ) {
-            categoryRankingList.forEachIndexed { idx, item ->
-                key(idx) {
-                    CategoryRankingItem(
-                        rankingItemModel = item,
-                        modifier = Modifier,
-                    )
-                }
-            }
-        }
-
-//        if (categoryRankingList.isEmpty()) {
-//
-//        } else {
-//
-//        }
     }
 }
 
