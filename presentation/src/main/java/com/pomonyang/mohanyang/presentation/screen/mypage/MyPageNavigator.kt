@@ -33,7 +33,6 @@ fun NavGraphBuilder.myPageScreen(
             MyPageRoute(
                 isOfflineState = isOfflineState,
                 onShowSnackBar = onShowSnackbar,
-                onBackClick = { navHostController.popBackStack() },
                 onProfileClick = { navHostController.navigate(CatProfile) },
             )
         }
