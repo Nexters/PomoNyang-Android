@@ -111,7 +111,7 @@ private fun StatisticsScreen(
     modifier: Modifier = Modifier,
 ) {
     val joinedDate = LocalDate.of(2023, 5, 10)
-
+    val currentDate = remember { LocalDate.now() }
     val dateState = rememberStatisticDateState(joinedDate)
     val scrollState = rememberScrollState(0)
     val pullRefreshState = rememberPullToRefreshState()
@@ -147,6 +147,8 @@ private fun StatisticsScreen(
                 onRightClick = dateState.moveToNextDay,
                 onLeftClick = dateState.moveToPreviousDay,
                 onMoreClick = { onAction.invoke(StatisticsEvent.ShowDatePickerDialog) },
+                isRightClickable = currentDate.isEqual(dateState.selectedDate).not(),
+                isLeftClickable = joinedDate.isEqual(dateState.selectedDate).not(),
             )
             PullToRefreshBox(
                 modifier = Modifier
@@ -256,7 +258,6 @@ private fun StatisticsFocusListSection(
                 text = stringResource(R.string.total_focus_history_title),
                 style = MnTheme.typography.header4,
                 color = MnTheme.textColorScheme.primary,
-
             )
             Text(
                 text = "${focusHistory.size}",
