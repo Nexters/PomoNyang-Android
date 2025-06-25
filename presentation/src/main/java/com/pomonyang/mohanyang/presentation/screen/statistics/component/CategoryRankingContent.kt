@@ -38,7 +38,8 @@ fun CategoryRankingContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = MnSpacing.xLarge),
+            .padding(horizontal = MnSpacing.xLarge)
+            .padding(bottom = MnSpacing.xLarge),
     ) {
         RankingTitle(startDate, endDate)
         RankingContent(categoryRankingList)
@@ -62,7 +63,19 @@ private fun RankingTitle(
             color = MnTheme.textColorScheme.primary,
         )
         Text(
-            text = "${stringResource(R.string.common_day_format, startDate.monthValue, startDate.dayOfMonth)} - ${stringResource(R.string.common_day_format, endDate.monthValue, endDate.dayOfMonth)}",
+            text = "${
+                stringResource(
+                    R.string.common_day_format,
+                    startDate.monthValue,
+                    startDate.dayOfMonth,
+                )
+            } - ${
+                stringResource(
+                    R.string.common_day_format,
+                    endDate.monthValue,
+                    endDate.dayOfMonth,
+                )
+            }",
             style = MnTheme.typography.subBodyRegular,
             color = MnTheme.textColorScheme.tertiary,
         )

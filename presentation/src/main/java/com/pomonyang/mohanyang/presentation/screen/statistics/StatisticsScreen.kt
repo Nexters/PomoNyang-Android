@@ -186,6 +186,9 @@ private fun StatisticsScreen(
                         startDate = categoryRankingDate.first,
                         endDate = categoryRankingDate.second,
                         categoryRankingList = categoryRankingList,
+                        modifier = Modifier.padding(
+                            bottom = MnSpacing.xLarge,
+                        ),
                     )
                 }
             }
