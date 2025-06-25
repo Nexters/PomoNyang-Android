@@ -601,6 +601,7 @@ private fun FocusTimeGraphPreview() {
 @Composable
 private fun FocusGraphXAxisPreview() {
     val graphData = listOf<Float>(190f, 10f, 320f, 0f, 90f, 120f, 157f).toImmutableList()
+    val graphDayParser = DateTimeFormatter.ofPattern("M/dd")
 
     val configure = FocusGraphConfigure(
         maxFocusTime = graphData.max() / 60,
@@ -619,6 +620,7 @@ private fun FocusGraphXAxisPreview() {
             graphData = graphData,
             configure = configure,
             gapHeight = gapHeight,
+            parser = graphDayParser,
         )
     }
 }
