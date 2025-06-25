@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,6 +57,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnColor
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import com.pomonyang.mohanyang.presentation.util.spToPx
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -78,8 +80,8 @@ fun GraphContainer(
     val totalFocusTime = remember(graphData) { graphData.sum() }
 
     val canvasHeight = 160.dp
-    val gap = (configure.maxYAxis.inWholeMinutes / configure.yAxisRange.inWholeMinutes).toInt()
-    val gapHeight = canvasHeight / gap
+    val gap = remember(configure) { (configure.maxYAxis.inWholeMinutes / configure.yAxisRange.inWholeMinutes).toInt() }
+    val gapHeight = remember(gap) { canvasHeight / gap }
 
     Column(
         modifier = modifier
@@ -109,16 +111,15 @@ fun GraphContainer(
 @Composable
 private fun FocusGraphXAxis(
     modifier: Modifier,
-    graphData: List<Float>,
+    graphData: ImmutableList<Float>,
     configure: FocusGraphConfigure,
     parser: DateTimeFormatter,
     gapHeight: Dp,
 ) {
-    val maxFocusTime = remember(graphData) { graphData.max() }
-
+    var focusGraphIndex by remember(graphData) { mutableIntStateOf(graphData.size - 1) }
     var barAnimated by remember { mutableStateOf(false) }
     var showTooltip by remember { mutableStateOf(false) }
-    val totalAnimationDuration = 1000 + (graphData.size - 1) * 100L
+    val totalAnimationDuration = remember(graphData) { 1000 + (graphData.size - 1) * 100L }
 
     LaunchedEffect(graphData) {
         barAnimated = true
@@ -137,14 +138,14 @@ private fun FocusGraphXAxis(
         ) {
             graphData.forEachIndexed { idx, data ->
                 key(idx) {
+                    val isFocused = remember(focusGraphIndex) { idx == focusGraphIndex }
+                    val isEnabled = remember(data) { data != 0f }
                     val barHeight = if (data == 0f) MnSpacing.xSmall else gapHeight * (data / configure.yAxisRange.inWholeMinutes)
 
-                    val barColor = if (data == 0f) {
-                        MnTheme.iconColorScheme.disabled
-                    } else if (
-                        configure.xAxis[idx].format(parser) == LocalDateTime.now().format(parser)
-                    ) {
+                    val barColor = if (isFocused && isEnabled) {
                         MnTheme.backgroundColorScheme.accent1
+                    } else if (isEnabled.not()) {
+                        MnTheme.iconColorScheme.disabled
                     } else {
                         MnTheme.iconColorScheme.secondary
                     }
@@ -162,17 +163,20 @@ private fun FocusGraphXAxis(
 
                     val color by animateColorAsState(
                         targetValue = if (barAnimated) barColor else Color.Transparent,
-                        tween(
-                            durationMillis = 2000,
-                            delayMillis = idx * 100, // 각 바에 대한 지연 시간
+                        animationSpec = tween(
+                            durationMillis = 500,
                             easing = FastOutSlowInEasing,
                         ),
                     )
 
-                    val isMaxFocusTime = remember { data > 0 && data == maxFocusTime }
-
                     Box(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .noRippleClickable(
+                                onClick = {
+                                    focusGraphIndex = idx
+                                },
+                            ),
                         contentAlignment = Alignment.BottomCenter,
                     ) {
                         FocusTimeGraphBar(
@@ -189,7 +193,7 @@ private fun FocusGraphXAxis(
                             maxLines = 1,
                             textAlign = TextAlign.Center,
                         )
-                        if (isMaxFocusTime) {
+                        if (focusGraphIndex == idx && data != 0f) {
                             MaxFocusTimeToolTip(
                                 modifier = Modifier
                                     .absoluteOffset(
@@ -277,7 +281,6 @@ private fun MaxFocusTimeToolTip(
                     textAlign = TextAlign.Center,
                     color = MnTheme.textColorScheme.inverse,
                     style = MnTheme.typography.captionSemiBold,
-
                 )
             }
 
@@ -303,7 +306,7 @@ private fun MaxFocusTimeToolTip(
 private fun GraphData(
     modifier: Modifier,
     configure: FocusGraphConfigure,
-    graphData: List<Float>,
+    graphData: ImmutableList<Float>,
     graphDayParser: DateTimeFormatter,
     gap: Int,
     gapHeight: Dp,
