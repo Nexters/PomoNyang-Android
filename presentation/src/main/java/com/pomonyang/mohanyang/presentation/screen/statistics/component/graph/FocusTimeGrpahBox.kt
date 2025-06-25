@@ -75,7 +75,6 @@ fun GraphContainer(
     },
 ) {
     val graphDayParser = remember { DateTimeFormatter.ofPattern("M/dd") }
-
     val totalFocusTime = remember(graphData) { graphData.sum() }
 
     val canvasHeight = 160.dp
@@ -115,7 +114,6 @@ private fun FocusGraphXAxis(
     parser: DateTimeFormatter,
     gapHeight: Dp,
 ) {
-
     val maxFocusTime = remember(graphData) { graphData.max() }
 
     var barAnimated by remember { mutableStateOf(false) }
@@ -137,8 +135,8 @@ private fun FocusGraphXAxis(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom,
         ) {
-            graphData.forEachIndexed(){ idx, data ->
-                key(idx){
+            graphData.forEachIndexed { idx, data ->
+                key(idx) {
                     val barHeight = if (data == 0f) MnSpacing.xSmall else gapHeight * (data / configure.yAxisRange.inWholeMinutes)
 
                     val barColor = if (data == 0f) {
@@ -171,7 +169,7 @@ private fun FocusGraphXAxis(
                         ),
                     )
 
-                val isMaxFocusTime = data > 0 && data == maxFocusTime
+                    val isMaxFocusTime = remember { data > 0 && data == maxFocusTime }
 
                     Box(
                         modifier = Modifier.weight(1f),
@@ -328,7 +326,7 @@ private fun GraphData(
                     modifier = Modifier.fillMaxSize(),
                     graphData = graphData,
                     configure = configure,
-                    parser =  graphDayParser,
+                    parser = graphDayParser,
                     gapHeight = gapHeight,
                 )
             }
