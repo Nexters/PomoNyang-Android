@@ -41,8 +41,13 @@ fun CategoryRankingContent(
             .padding(horizontal = MnSpacing.xLarge)
             .padding(bottom = MnSpacing.xLarge),
     ) {
-        RankingTitle(startDate, endDate)
-        RankingContent(categoryRankingList)
+        RankingTitle(
+            startDate = startDate,
+            endDate = endDate,
+        )
+        RankingContent(
+            categoryRankingList = categoryRankingList,
+        )
     }
 }
 
