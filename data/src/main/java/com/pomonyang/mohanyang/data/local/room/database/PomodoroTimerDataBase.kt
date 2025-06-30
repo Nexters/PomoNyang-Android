@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.pomonyang.mohanyang.data.local.room.dao.PomodoroTimerDao
 import com.pomonyang.mohanyang.data.local.room.enitity.PomodoroTimerEntity
 
-@Database(entities = [PomodoroTimerEntity::class], version = 1, exportSchema = false)
+@Database(entities = [PomodoroTimerEntity::class], version = 2, exportSchema = false)
 internal abstract class PomodoroTimerDataBase : RoomDatabase() {
     abstract fun dao(): PomodoroTimerDao
 }

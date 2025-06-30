@@ -13,6 +13,7 @@ data class PomodoroTimerEntity(
     val focusedTime: Int = 0,
     val restedTime: Int = 0,
     val doneAt: String = "",
+    val startedAt: String = getCurrentIsoInstant(),
     val categoryNo: Int,
 )
 
@@ -22,4 +23,5 @@ fun PomodoroTimerEntity.toRequestModel() = PomodoroTimerRequest(
     focusedTime = focusedTime.formatDurationToMinutesString(),
     restedTime = restedTime.formatDurationToMinutesString(),
     doneAt = doneAt.ifEmpty { getCurrentIsoInstant() },
+    startedAt = startedAt,
 )
