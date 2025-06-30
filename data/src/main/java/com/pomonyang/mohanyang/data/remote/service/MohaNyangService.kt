@@ -65,7 +65,7 @@ interface MohaNyangService {
     @DELETE("/api/v1/notifications")
     suspend fun unSubscribeNotification(): Result<Unit>
 
-    @POST("/api/v1/focus-times")
+    @POST("/api/v2/focus-times")
     suspend fun saveFocusTime(
         @Body pomodoroTimerRequest: List<PomodoroTimerRequest>,
     ): Result<Unit>

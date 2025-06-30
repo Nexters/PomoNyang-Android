@@ -8,5 +8,6 @@ data class PomodoroTimerRequest(
     val categoryNo: Int,
     val focusedTime: String,
     val restedTime: String,
+    val startedAt: String,
     val doneAt: String,
 )
