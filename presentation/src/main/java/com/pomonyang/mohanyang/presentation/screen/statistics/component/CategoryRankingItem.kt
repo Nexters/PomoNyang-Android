@@ -100,8 +100,6 @@ private fun PreviewCategoryRankingItem() {
                     totalFocusTime = Duration.ZERO,
                 ),
             )
-
         }
-
     }
 }

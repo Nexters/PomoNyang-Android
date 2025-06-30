@@ -1,5 +1,8 @@
 package com.pomonyang.mohanyang.presentation.screen.statistics.component
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,13 +31,14 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
+import java.time.Duration
 
 @Composable
 fun TotalFocusTimeContent(
-    focusTime: String, // 데이터 형식 어떻게 뽑을지 고민 중
+    focusTime: Duration,
     modifier: Modifier = Modifier,
 ) {
-    val hasRecord = remember(focusTime) { focusTime.isNotEmpty() }
+    val hasRecord = remember(focusTime) { focusTime.isZero.not() }
     val backgroundColor = if (hasRecord) {
         MnTheme.backgroundColorScheme.accent1
     } else {
@@ -63,11 +71,7 @@ fun TotalFocusTimeContent(
             verticalArrangement = Arrangement.spacedBy(MnSpacing.xSmall),
         ) {
             if (hasRecord) {
-                Text(
-                    text = focusTime,
-                    style = MnTheme.typography.header3,
-                    color = MnTheme.textColorScheme.inverse,
-                )
+                AnimatedFocusTime(focusTime)
 
                 Text(
                     text = stringResource(R.string.statistics_focus_content),
@@ -90,18 +94,60 @@ fun TotalFocusTimeContent(
     }
 }
 
+@Composable
+fun AnimatedFocusTime(
+    focusTime: Duration,
+    modifier: Modifier = Modifier,
+) {
+    val targetHours = remember(focusTime) { focusTime.toHours().toInt() }
+    val targetMinutes = remember(focusTime) { (focusTime.toMinutes() % 60).toInt() }
+    var startAnimation by remember { mutableStateOf(false) }
+
+    val animatedHours by animateIntAsState(
+        targetValue = if (startAnimation) targetHours else 0,
+        animationSpec = tween(
+            durationMillis = targetHours * 100,
+            easing = LinearEasing,
+        ),
+    )
+
+    val animatedMinutes by animateIntAsState(
+        targetValue = if (startAnimation) targetMinutes else 0,
+        animationSpec = tween(
+            durationMillis = targetMinutes * 100,
+            delayMillis = 300,
+            easing = LinearEasing,
+        ),
+    )
+
+    LaunchedEffect(Unit) {
+        startAnimation = true
+    }
+
+    Text(
+        text = stringResource(
+            R.string.common_time_format,
+            animatedHours,
+            animatedMinutes,
+        ),
+        style = MnTheme.typography.header3,
+        color = MnTheme.textColorScheme.inverse,
+        modifier = modifier,
+    )
+}
+
 private class TotalFocusTimeContentPreviewParameter :
-    CollectionPreviewParameterProvider<String>(
+    CollectionPreviewParameterProvider<Duration>(
         listOf(
-            "3시간 27분",
-            "",
+            Duration.ofHours(10),
+            Duration.ZERO,
         ),
     )
 
 @ThemePreviews
 @Composable
 private fun TotalFocusTImeContentPreview(
-    @PreviewParameter(TotalFocusTimeContentPreviewParameter::class) focusTime: String,
+    @PreviewParameter(TotalFocusTimeContentPreviewParameter::class) focusTime: Duration,
 ) {
     MnTheme {
         TotalFocusTimeContent(

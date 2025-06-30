@@ -1,5 +1,6 @@
 package com.pomonyang.mohanyang.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ internal fun MohaNyangBottomBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = MnSpacing.xLarge)
+            .background(MnTheme.backgroundColorScheme.primary)
             .navigationBarsPadding(),
     ) {
         items.forEachIndexed { index, bottomNavItem ->

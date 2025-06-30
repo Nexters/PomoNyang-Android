@@ -128,4 +128,11 @@
 
     <string name="graph_total_time">총 %d시간 %d분</string>
     <string name="common_time_format">%d시간 %d분</string>
+    <string name="common_day_format">%s월 %s일</string>
+    <string name="total_focus_time_title">총 집중시간</string>
+    <string name="total_focus_history_title">집중 기록</string>
+    <string name="total_focus_graph_title">집중 추세</string>
+    <string name="total_focus_category_ranking">카테고리 랭킹</string>
+
+
 </resources>
