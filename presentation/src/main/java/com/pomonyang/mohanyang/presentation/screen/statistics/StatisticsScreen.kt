@@ -57,7 +57,6 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun StatisticsRoute(
@@ -86,7 +85,7 @@ fun StatisticsRoute(
         targetDate = state.targetDate,
         focusTime = state.totalFocusTime,
         focusHistory = state.focusTimes,
-        weeklyFocusTime = state.weeklyFocusTimeList.toImmutableList(),
+        weeklyFocusTime = state.weeklyFocusTimeList,
         weeklyMaxFocusTime = state.weeklyMaxFocusTime,
         categoryRankingList = state.categoryRankingList,
         categoryRankingDate = state.categoryRankingDate,
@@ -151,8 +150,7 @@ private fun StatisticsScreen(
                 isLeftClickable = joinedDate.isEqual(dateState.selectedDate).not(),
             )
             PullToRefreshBox(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 isRefreshing = isLoading,
                 state = pullRefreshState,
                 onRefresh = {
@@ -167,9 +165,7 @@ private fun StatisticsScreen(
                 },
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(scrollState),
+                    modifier = Modifier.verticalScroll(scrollState),
                     verticalArrangement = Arrangement.spacedBy(MnSpacing.xLarge),
                 ) {
                     StatisticsTotalFocusSection(
@@ -178,7 +174,6 @@ private fun StatisticsScreen(
                     StatisticsFocusListSection(
                         focusHistory = focusHistory,
                     )
-
                     StatisticsGraphSection(
                         targetDate = targetDate,
                         weeklyFocusTime = weeklyFocusTime,
@@ -293,11 +288,7 @@ private fun StatisticsFocusTimeContent(
         modifier = modifier,
     ) {
         StatisticsContentHeader(
-            time = stringResource(
-                R.string.common_time_format,
-                focusData.totalFocusTime.toHours(),
-                focusData.totalFocusTime.toMinutes() % 60,
-            ),
+            time = focusData.timeRange,
         )
 
         StatisticsContent(
@@ -359,6 +350,8 @@ private fun StatisticsScreenPreview() {
                         categoryIcon = CategoryIcon.DUMBBELL,
                     ),
                     totalFocusTime = Duration.ofMinutes((10 * it).toLong()),
+                    startedAt = LocalDateTime.of(2024, 4, 7, 0, 0),
+                    doneAt = LocalDateTime.of(2024, 4, 7, 0, 0),
                 )
             },
             weeklyFocusTimeTrend = WeeklyFocusTimeTrendModel(
