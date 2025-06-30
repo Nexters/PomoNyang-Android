@@ -4,6 +4,8 @@ import androidx.compose.runtime.Stable
 import com.pomonyang.mohanyang.presentation.model.category.PomodoroCategoryModel
 import java.time.Duration
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlinx.collections.immutable.toImmutableList
 
 @Stable
@@ -38,7 +40,15 @@ data class FocusTimeModel(
     val no: Int,
     val category: PomodoroCategoryModel,
     val totalFocusTime: Duration,
-)
+    val startedAt: LocalDateTime,
+    val doneAt: LocalDateTime,
+) {
+    val timeRange: String = "${startedAt.format(formatter)} - ${doneAt.format(formatter)}"
+
+    companion object {
+        private val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    }
+}
 
 @Stable
 data class WeeklyFocusTimeTrendModel(

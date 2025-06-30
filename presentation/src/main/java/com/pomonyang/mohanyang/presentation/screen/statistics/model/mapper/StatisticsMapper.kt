@@ -30,6 +30,8 @@ fun FocusTimeResponse.toModel(): FocusTimeModel = FocusTimeModel(
     no = this.no,
     category = this.category.toModel(),
     totalFocusTime = Duration.parse(this.totalFocusTime),
+    startedAt = this.startedAt,
+    doneAt = this.doneAt,
 )
 
 fun CategoryResponse.toModel(): PomodoroCategoryModel = PomodoroCategoryModel(

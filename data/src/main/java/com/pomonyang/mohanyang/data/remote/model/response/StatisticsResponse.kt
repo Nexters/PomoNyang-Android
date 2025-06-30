@@ -1,5 +1,7 @@
 package com.pomonyang.mohanyang.data.remote.model.response
 
+import com.pomonyang.mohanyang.data.serializer.LocalDateTimeSerializer
+import java.time.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,6 +27,10 @@ data class FocusTimeResponse(
     val category: CategoryResponse,
     @SerialName("totalFocusTime")
     val totalFocusTime: String,
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val startedAt: LocalDateTime,
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val doneAt: LocalDateTime,
 )
 
 @Serializable
