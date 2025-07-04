@@ -16,6 +16,7 @@ import kotlinx.collections.immutable.toImmutableList
 @Stable
 data class StatisticsState(
     val isLoading: Boolean = false,
+    val joinedDate: LocalDate,
     val targetDate: LocalDate,
     val totalFocusTime: Duration,
     val focusTimes: ImmutableList<FocusTimeModel>,
@@ -41,8 +42,9 @@ sealed interface StatisticsSideEffect : ViewSideEffect {
     data object SideDatePickerDialog : StatisticsSideEffect
 }
 
-fun StatisticsModel.toState(): StatisticsState = StatisticsState(
+fun StatisticsModel.toState(joinedDate: LocalDate): StatisticsState = StatisticsState(
     isLoading = false,
+    joinedDate = joinedDate,
     targetDate = date,
     totalFocusTime = totalFocusTime,
     focusTimes = focusTimes.toImmutableList(),
