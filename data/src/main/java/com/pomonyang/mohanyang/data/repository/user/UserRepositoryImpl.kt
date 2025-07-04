@@ -7,6 +7,8 @@ import com.pomonyang.mohanyang.data.remote.model.request.TokenRequest
 import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
 import com.pomonyang.mohanyang.data.remote.service.AuthService
 import com.pomonyang.mohanyang.data.remote.service.MohaNyangService
+import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 
@@ -31,4 +33,6 @@ internal class UserRepositoryImpl @Inject constructor(
     override suspend fun fetchMyInfo(): Result<UserInfoResponse> = mohaNyangService.getMyInfo().onSuccess { userLocalDataSource.saveUserInfo(it) }
 
     override suspend fun getMyInfo() = userLocalDataSource.getUserInfo()
+
+    override suspend fun getJoinedDate(): LocalDate  = LocalDateTime.parse(userLocalDataSource.getUserInfo().createdAt).toLocalDate()
 }

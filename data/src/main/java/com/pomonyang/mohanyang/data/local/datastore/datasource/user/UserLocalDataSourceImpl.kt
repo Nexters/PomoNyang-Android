@@ -27,6 +27,7 @@ class UserLocalDataSourceImpl @Inject constructor(
                 preferences[intPreferencesKey(USER_CAT_NO_KEY)] = it.cat.no
                 preferences[stringPreferencesKey(USER_CAT_TYPE_KEY)] = it.cat.type
                 preferences[stringPreferencesKey(USER_CAT_NAME_KEY)] = it.cat.name
+                preferences[stringPreferencesKey(USER_CREATED_AT_KEY)] = it.createdAt
             }
         }
     }
@@ -46,6 +47,7 @@ class UserLocalDataSourceImpl @Inject constructor(
                 type = it[stringPreferencesKey(USER_CAT_TYPE_KEY)] ?: "",
                 name = it[stringPreferencesKey(USER_CAT_NAME_KEY)] ?: "",
             ),
+            createdAt = it[stringPreferencesKey(USER_CREATED_AT_KEY)] ?: "",
         )
     }.first()
 
@@ -56,5 +58,6 @@ class UserLocalDataSourceImpl @Inject constructor(
         private const val USER_CAT_NO_KEY = "user_cat_no"
         private const val USER_CAT_TYPE_KEY = "user_cat_type"
         private const val USER_CAT_NAME_KEY = "user_cat_name"
+        private const val USER_CREATED_AT_KEY = "user_created_at"
     }
 }
