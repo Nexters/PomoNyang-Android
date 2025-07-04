@@ -34,5 +34,5 @@ internal class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getMyInfo() = userLocalDataSource.getUserInfo()
 
-    override suspend fun getJoinedDate(): LocalDate  = LocalDateTime.parse(userLocalDataSource.getUserInfo().createdAt).toLocalDate()
+    override suspend fun getJoinedDate(): LocalDate = LocalDateTime.parse(userLocalDataSource.getUserInfo().createdAt).toLocalDate()
 }

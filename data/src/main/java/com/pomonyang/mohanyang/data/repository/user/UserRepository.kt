@@ -11,5 +11,5 @@ interface UserRepository {
     suspend fun saveToken(accessToken: String, refreshToken: String)
     suspend fun fetchMyInfo(): Result<UserInfoResponse>
     suspend fun getMyInfo(): UserInfoResponse
-    suspend fun getJoinedDate() : LocalDate
+    suspend fun getJoinedDate(): LocalDate
 }
