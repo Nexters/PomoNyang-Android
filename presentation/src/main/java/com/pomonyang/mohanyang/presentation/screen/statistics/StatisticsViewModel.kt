@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.presentation.screen.statistics
 
 import androidx.lifecycle.viewModelScope
 import com.pomonyang.mohanyang.data.repository.statistics.StatisticsRepository
+import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.StatisticsModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.mapper.toModel
@@ -14,13 +15,14 @@ import timber.log.Timber
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     private val statisticsRepository: StatisticsRepository,
+    private val userRepository: UserRepository,
 ) : BaseViewModel<StatisticsState, StatisticsEvent, StatisticsSideEffect>() {
 
     init {
         fetchStatistics(LocalDate.now())
     }
 
-    override fun setInitialState(): StatisticsState = StatisticsModel.placeHolder.toState()
+    override fun setInitialState(): StatisticsState = StatisticsModel.placeHolder.toState(LocalDate.now())
 
     override fun handleEvent(event: StatisticsEvent) {
         when (event) {
@@ -56,8 +58,10 @@ class StatisticsViewModel @Inject constructor(
             statisticsRepository.getStatistics(
                 date,
             ).onSuccess { statisticsResponse ->
-                updateState {
-                    statisticsResponse.toModel().toState()
+                userRepository.getJoinedDate().let { joinedDate ->
+                    updateState {
+                        statisticsResponse.toModel().toState(joinedDate)
+                    }
                 }
             }.onFailure { error ->
                 Timber.e("hyom : getStatistics fail $error")

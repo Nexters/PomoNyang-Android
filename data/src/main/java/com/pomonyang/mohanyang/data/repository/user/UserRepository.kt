@@ -2,6 +2,7 @@ package com.pomonyang.mohanyang.data.repository.user
 
 import com.pomonyang.mohanyang.data.remote.model.response.TokenResponse
 import com.pomonyang.mohanyang.data.remote.model.response.UserInfoResponse
+import java.time.LocalDate
 
 interface UserRepository {
     suspend fun getDeviceId(): String
@@ -10,4 +11,5 @@ interface UserRepository {
     suspend fun saveToken(accessToken: String, refreshToken: String)
     suspend fun fetchMyInfo(): Result<UserInfoResponse>
     suspend fun getMyInfo(): UserInfoResponse
+    suspend fun getJoinedDate(): LocalDate
 }

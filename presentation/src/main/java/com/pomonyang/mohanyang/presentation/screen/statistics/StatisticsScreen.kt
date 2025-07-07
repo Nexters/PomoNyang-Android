@@ -83,6 +83,7 @@ fun StatisticsRoute(
         isLoading = state.isLoading,
         showDatePickerDialog = showDatePickerDialog,
         targetDate = state.targetDate,
+        joinedDate = state.joinedDate,
         focusTime = state.totalFocusTime,
         focusHistory = state.focusTimes,
         weeklyFocusTime = state.weeklyFocusTimeList,
@@ -100,6 +101,7 @@ private fun StatisticsScreen(
     isLoading: Boolean,
     showDatePickerDialog: Boolean,
     targetDate: LocalDate,
+    joinedDate: LocalDate,
     focusTime: Duration,
     focusHistory: ImmutableList<FocusTimeModel>,
     weeklyMaxFocusTime: Float,
@@ -109,7 +111,6 @@ private fun StatisticsScreen(
     onAction: (StatisticsEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val joinedDate = LocalDate.of(2023, 5, 10)
     val currentDate = remember { LocalDate.now() }
     val dateState = rememberStatisticDateState(joinedDate)
     val scrollState = rememberScrollState(0)
@@ -381,12 +382,13 @@ private fun StatisticsScreenPreview() {
                     .take(3)
                     .mapIndexed { rank, item -> item.copy(rank = rank + 1) },
             ),
-        ).toState()
+        ).toState(LocalDate.now())
 
         StatisticsScreen(
             isLoading = previewStatisticsState.isLoading,
             showDatePickerDialog = false,
             targetDate = LocalDate.of(2024, 4, 3),
+            joinedDate = previewStatisticsState.joinedDate,
             focusTime = previewStatisticsState.totalFocusTime,
             focusHistory = previewStatisticsState.focusTimes,
             weeklyFocusTime = previewStatisticsState.weeklyFocusTimeList,
