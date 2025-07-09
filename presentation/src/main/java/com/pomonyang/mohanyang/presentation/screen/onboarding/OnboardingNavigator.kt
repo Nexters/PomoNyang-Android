@@ -62,19 +62,17 @@ fun NavGraphBuilder.onboardingScreen(
 
             val routeData = navBackStackEntry.toRoute<OnboardingSelectCat>()
             val destination = CatSettingDestination.valueOf(routeData.destination)
+            val isOnBoardingProcess = destination == CatSettingDestination.POMODORO
 
             OnboardingSelectCatRoute(
+                isOnBoardingProcess = isOnBoardingProcess,
                 selectedCatNo = routeData.selectedCatNo,
                 onBackClick = { navHostController.popBackStack() },
                 onStartClick = { catNo, catName, catTypeName ->
-                    when (destination) {
-                        CatSettingDestination.POMODORO -> {
-                            navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, destination = destination.name, catTypeName = catTypeName))
-                        }
-
-                        CatSettingDestination.MY_PAGE -> {
-                            navHostController.popBackStack()
-                        }
+                    if (isOnBoardingProcess) {
+                        navHostController.navigate(OnboardingNamingCat(catNo = catNo, catName = catName, destination = destination.name, catTypeName = catTypeName))
+                    } else {
+                        navHostController.popBackStack()
                     }
                 },
                 onShowSnackBar = {

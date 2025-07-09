@@ -62,7 +62,7 @@ class OnboardingSelectCatViewModel @Inject constructor(
                 }
             }
 
-            is SelectCatEvent.OnGrantedAlarmPermission -> {
+            is SelectCatEvent.InitDefaultAlarmSetting -> {
                 viewModelScope.launch {
                     pushAlarmRepository.setInterruptNotification(true)
                     pushAlarmRepository.setTimerNotification(true)

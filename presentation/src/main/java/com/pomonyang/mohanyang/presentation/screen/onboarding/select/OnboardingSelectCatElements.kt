@@ -19,7 +19,7 @@ sealed interface SelectCatEvent : ViewEvent {
     data class Init(val catNo: Int? = null) : SelectCatEvent
     data class OnSelectType(val type: CatType) : SelectCatEvent
     data object OnStartClick : SelectCatEvent
-    data object OnGrantedAlarmPermission : SelectCatEvent
+    data object InitDefaultAlarmSetting : SelectCatEvent
     data object OnClickRetry : SelectCatEvent
 }
 
