@@ -55,6 +55,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun OnboardingSelectCatRoute(
+    isOnBoardingProcess: Boolean,
     selectedCatNo: Int,
     onBackClick: () -> Unit,
     onStartClick: (Int, String, String) -> Unit,
@@ -85,7 +86,7 @@ fun OnboardingSelectCatRoute(
     }
 
     NotificationPermissionEffect {
-        onboardingSelectCatViewModel.handleEvent(SelectCatEvent.OnGrantedAlarmPermission)
+        if (isOnBoardingProcess) onboardingSelectCatViewModel.handleEvent(SelectCatEvent.InitDefaultAlarmSetting)
     }
 
     LaunchedEffect(Unit) {
