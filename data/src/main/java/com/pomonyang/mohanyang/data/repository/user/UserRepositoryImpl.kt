@@ -9,6 +9,7 @@ import com.pomonyang.mohanyang.data.remote.service.AuthService
 import com.pomonyang.mohanyang.data.remote.service.MohaNyangService
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 
@@ -34,5 +35,19 @@ internal class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getMyInfo() = userLocalDataSource.getUserInfo()
 
-    override suspend fun getJoinedDate(): LocalDate = LocalDateTime.parse(userLocalDataSource.getUserInfo().createdAt).toLocalDate()
+    override suspend fun getJoinedDate(): LocalDate {
+        val createdAtString = userLocalDataSource.getUserInfo().createdAt
+        return try {
+            // 먼저 ISO_LOCAL_DATE_TIME 형식으로 파싱 시도
+            LocalDateTime.parse(createdAtString).toLocalDate()
+        } catch (e: Exception) {
+            try {
+                // 타임존 정보가 포함된 경우 ZonedDateTime으로 파싱 후 LocalDateTime으로 변환
+                ZonedDateTime.parse(createdAtString).toLocalDateTime().toLocalDate()
+            } catch (e2: Exception) {
+                // 마지막으로 ISO_INSTANT 형식 시도 (UTC 기준)
+                LocalDateTime.parse(createdAtString, java.time.format.DateTimeFormatter.ISO_INSTANT).toLocalDate()
+            }
+        }
+    }
 }
