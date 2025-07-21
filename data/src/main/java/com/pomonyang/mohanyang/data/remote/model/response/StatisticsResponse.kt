@@ -13,7 +13,7 @@ data class StatisticsResponse(
     val totalFocusTime: String,
     @SerialName("focusTimes")
     val focusTimes: List<FocusTimeResponse>,
-    @SerialName("weaklyFocusTimeTrend")
+    @SerialName("weeklyFocusTimeTrend")
     val weeklyFocusTimeTrend: WeeklyFocusTimeTrendResponse,
     @SerialName("categoryRanking")
     val categoryRanking: CategoryRankingResponse,

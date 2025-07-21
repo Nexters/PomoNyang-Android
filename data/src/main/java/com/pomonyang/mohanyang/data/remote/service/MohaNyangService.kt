@@ -19,6 +19,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MohaNyangService {
     @GET("/api/v1/categories")
@@ -83,5 +84,6 @@ interface MohaNyangService {
     @GET("/api/v1/statistics/{date}")
     suspend fun getStatistics(
         @Path("date") date: String,
+        @Query("zoneId") zoneId: String,
     ): StatisticsResponse
 }
