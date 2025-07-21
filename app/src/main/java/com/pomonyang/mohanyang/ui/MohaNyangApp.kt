@@ -17,10 +17,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +41,7 @@ import com.pomonyang.mohanyang.presentation.designsystem.token.MnRadius
 import com.pomonyang.mohanyang.presentation.designsystem.token.MnSpacing
 import com.pomonyang.mohanyang.presentation.screen.home.Home
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
-import com.pomonyang.mohanyang.presentation.screen.statistics.Statistics
+import com.pomonyang.mohanyang.presentation.screen.statistics.StatisticsGraph
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 import com.pomonyang.mohanyang.ui.component.MohaNyangBottomBar
@@ -70,7 +68,6 @@ private fun MohaNyangApp(
 ) {
     var snackbarIconRes by remember { mutableStateOf<Int?>(null) }
     val navHostController = mohaNyangAppState.navHostController
-    var selectedNavigationIndex by rememberSaveable { mutableIntStateOf(0) }
 
     val items = persistentListOf(
         BottomNavItem(
@@ -80,7 +77,7 @@ private fun MohaNyangApp(
             label = stringResource(R.string.bottom_navigation_home),
         ),
         BottomNavItem(
-            route = Statistics,
+            route = StatisticsGraph,
             iconRes = PresentationR.drawable.ic_chart_bar,
             selectedIconRes = PresentationR.drawable.ic_chart_bar_fill,
             label = stringResource(R.string.bottom_navigation_statistics),
@@ -112,8 +109,7 @@ private fun MohaNyangApp(
                 MohaNyangBottomBar(
                     navController = navHostController,
                     items = items,
-                    selectedIndex = selectedNavigationIndex,
-                    onItemSelected = { selectedNavigationIndex = it },
+                    currentBottomRootRoute = mohaNyangAppState.currentBottomRootRoute,
                 )
             }
         },
