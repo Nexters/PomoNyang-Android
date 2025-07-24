@@ -31,8 +31,7 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun MohaNyangBottomBar(
     navController: NavHostController,
     items: PersistentList<BottomNavItem>,
-    selectedIndex: Int,
-    onItemSelected: (index: Int) -> Unit,
+    currentBottomRootRoute: String? = null,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -50,7 +49,6 @@ internal fun MohaNyangBottomBar(
                     .weight(1f)
                     .padding(vertical = MnSpacing.small)
                     .noRippleClickable {
-                        onItemSelected(index)
                         navController.navigate(bottomNavItem.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
@@ -60,7 +58,8 @@ internal fun MohaNyangBottomBar(
                         }
                     },
             ) {
-                val iconRes = if (selectedIndex == index) {
+                val isItemSelected = currentBottomRootRoute == bottomNavItem.route::class.qualifiedName
+                val iconRes = if (isItemSelected) {
                     bottomNavItem.selectedIconRes
                 } else {
                     bottomNavItem.iconRes
@@ -102,8 +101,7 @@ private fun MohaNyangBottomBarPreview() {
                     label = "프로필",
                 ),
             ),
-            selectedIndex = 0,
-            onItemSelected = {},
+            currentBottomRootRoute = Home::class.qualifiedName,
         )
     }
 }

@@ -77,4 +77,7 @@ class MohaNyangAppState(
                 }
             } ?: previousDestination.value
         }
+
+    val currentBottomRootRoute: String?
+        @Composable get() = currentDestination?.parent?.route
 }
