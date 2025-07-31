@@ -103,8 +103,8 @@ class MainViewModel @Inject constructor(
 
     // 오프라인 상태일 때 실행할 초기화 로직
     private fun onOffline() = scope.launch {
-        val isNewUser = checkIfNewUser()
-        setupUserAndNavigate(isNewUser)
+        pomodoroTimerRepository.savePomodoroCacheData()
+        setEffect(MainEffect.ShowDialog)
     }
 
     private suspend fun setupUserAndNavigate(isNewUser: Boolean) {
