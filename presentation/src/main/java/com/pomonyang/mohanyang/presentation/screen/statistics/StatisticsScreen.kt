@@ -51,8 +51,10 @@ import com.pomonyang.mohanyang.presentation.screen.statistics.model.StatisticsMo
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.WeeklyFocusTimeTrendModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.widget.StatisticsContent
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLog
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
+import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -91,6 +93,7 @@ fun StatisticsRoute(
         categoryRankingList = state.categoryRankingList,
         categoryRankingDate = state.categoryRankingDate,
         onAction = viewModel::handleEvent,
+        onLogEvent = viewModel::handleEventLog,
         modifier = modifier,
     )
 }
@@ -109,12 +112,17 @@ private fun StatisticsScreen(
     categoryRankingList: ImmutableList<RankingItemModel>,
     categoryRankingDate: Pair<LocalDate, LocalDate>,
     onAction: (StatisticsEvent) -> Unit,
+    onLogEvent: (MohanyangEventLog) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val currentDate = remember { LocalDate.now() }
     val dateState = rememberStatisticDateState(joinedDate)
     val scrollState = rememberScrollState(0)
     val pullRefreshState = rememberPullToRefreshState()
+
+    LaunchedEffect(Unit) {
+        onLogEvent(MohanyangEventLog.StatisticsView)
+    }
 
     LaunchedEffect(dateState.selectedDate) {
         onAction.invoke(StatisticsEvent.SelectDate(dateState.selectedDate))
@@ -174,11 +182,13 @@ private fun StatisticsScreen(
                     )
                     StatisticsFocusListSection(
                         focusHistory = focusHistory,
+                        onLogEvent = onLogEvent,
                     )
                     StatisticsGraphSection(
                         targetDate = targetDate,
                         weeklyFocusTime = weeklyFocusTime,
                         weeklyMaxFocusTime = weeklyMaxFocusTime,
+                        onLogEvent = onLogEvent,
                     )
                     CategoryRankingContent(
                         startDate = categoryRankingDate.first,
@@ -221,6 +231,7 @@ private const val DEFAULT_PAGE_SIZE = 10
 @Composable
 private fun StatisticsFocusListSection(
     focusHistory: ImmutableList<FocusTimeModel>,
+    onLogEvent: (MohanyangEventLog) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var currentHistoryPage by rememberSaveable { mutableIntStateOf(0) }
@@ -272,7 +283,10 @@ private fun StatisticsFocusListSection(
         if (currentHistoryPage < lastHistoryPage) {
             MnTextButton(
                 text = "더보기",
-                onClick = { currentHistoryPage += 1 },
+                onClick = {
+                    currentHistoryPage += 1
+                    onLogEvent.invoke(MohanyangEventLog.ViewingMoreRecordsBtnClick)
+                },
                 styles = MnTextButtonStyles.medium,
                 rightIconResourceId = R.drawable.ic_chevron_down,
             )
@@ -308,6 +322,7 @@ private fun StatisticsGraphSection(
     targetDate: LocalDate,
     weeklyFocusTime: ImmutableList<Float>,
     weeklyMaxFocusTime: Float,
+    onLogEvent: (MohanyangEventLog) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -322,14 +337,17 @@ private fun StatisticsGraphSection(
         )
 
         GraphContainer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = MnSpacing.xLarge),
             graphData = weeklyFocusTime,
             configure = FocusGraphConfigure(
                 maxFocusTime = weeklyMaxFocusTime,
                 targetDateTime = LocalDateTime.of(targetDate.year, targetDate.month, targetDate.dayOfMonth, 0, 0),
             ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = MnSpacing.xLarge)
+                .noRippleClickable {
+                    onLogEvent.invoke(MohanyangEventLog.BarChartClick)
+                },
         )
     }
 }
@@ -395,6 +413,7 @@ private fun StatisticsScreenPreview() {
             weeklyMaxFocusTime = previewStatisticsState.weeklyMaxFocusTime,
             categoryRankingList = previewStatisticsState.categoryRankingList,
             categoryRankingDate = previewStatisticsState.categoryRankingDate,
+            onLogEvent = {},
             onAction = {},
         )
     }

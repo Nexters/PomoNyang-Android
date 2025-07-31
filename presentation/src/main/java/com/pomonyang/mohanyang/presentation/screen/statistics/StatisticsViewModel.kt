@@ -6,6 +6,8 @@ import com.pomonyang.mohanyang.data.repository.user.UserRepository
 import com.pomonyang.mohanyang.presentation.base.BaseViewModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.StatisticsModel
 import com.pomonyang.mohanyang.presentation.screen.statistics.model.mapper.toModel
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLog
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLogger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
@@ -16,6 +18,7 @@ import timber.log.Timber
 class StatisticsViewModel @Inject constructor(
     private val statisticsRepository: StatisticsRepository,
     private val userRepository: UserRepository,
+    private val eventLogger: MohanyangEventLogger,
 ) : BaseViewModel<StatisticsState, StatisticsEvent, StatisticsSideEffect>() {
 
     init {
@@ -36,14 +39,17 @@ class StatisticsViewModel @Inject constructor(
 
             is StatisticsEvent.ClickNextDay -> {
                 fetchStatistics(event.nextDay)
+                eventLogger.log(MohanyangEventLog.FutureDateBtnClick)
             }
 
             is StatisticsEvent.ClickPrevDay -> {
                 fetchStatistics(event.prevDay)
+                eventLogger.log(MohanyangEventLog.PastDateBtnClick)
             }
 
             StatisticsEvent.ShowDatePickerDialog -> {
                 setEffect(StatisticsSideEffect.ShowDatePickerDialog)
+                eventLogger.log(MohanyangEventLog.ChangingDateBtnClick)
             }
 
             StatisticsEvent.HideDatePickerDialog -> {
@@ -69,4 +75,6 @@ class StatisticsViewModel @Inject constructor(
             updateState { copy(isLoading = false) }
         }
     }
+
+    fun handleEventLog(log: MohanyangEventLog) = eventLogger.log(log)
 }

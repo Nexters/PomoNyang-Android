@@ -110,11 +110,11 @@ fun GraphContainer(
 
 @Composable
 private fun FocusGraphXAxis(
-    modifier: Modifier,
     graphData: ImmutableList<Float>,
     configure: FocusGraphConfigure,
     parser: DateTimeFormatter,
     gapHeight: Dp,
+    modifier: Modifier,
 ) {
     var focusGraphIndex by remember(graphData) { mutableIntStateOf(graphData.size - 1) }
     var barAnimated by remember { mutableStateOf(false) }
@@ -215,9 +215,9 @@ private fun FocusGraphXAxis(
 
 @Composable
 private fun FocusTimeGraphBar(
-    modifier: Modifier,
     barColor: Color,
     barHeight: Dp,
+    modifier: Modifier,
 ) {
     Box(
         modifier = modifier
@@ -238,9 +238,9 @@ private fun FocusTimeGraphBar(
 
 @Composable
 private fun MaxFocusTimeToolTip(
-    modifier: Modifier,
     data: Float,
     enabled: Boolean,
+    modifier: Modifier,
 ) {
     AnimatedVisibility(
         visible = enabled,
@@ -304,12 +304,13 @@ private fun MaxFocusTimeToolTip(
 
 @Composable
 private fun GraphData(
-    modifier: Modifier,
     configure: FocusGraphConfigure,
     graphData: ImmutableList<Float>,
     graphDayParser: DateTimeFormatter,
     gap: Int,
     gapHeight: Dp,
+    onBarClick: (String) -> Unit = {},
+    modifier: Modifier,
 ) {
     /* 그래프 배경 */
     Box(
@@ -326,11 +327,11 @@ private fun GraphData(
                     gapHeight = gapHeight,
                 )
                 FocusGraphXAxis(
-                    modifier = Modifier.fillMaxSize(),
                     graphData = graphData,
                     configure = configure,
                     parser = graphDayParser,
                     gapHeight = gapHeight,
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
 
