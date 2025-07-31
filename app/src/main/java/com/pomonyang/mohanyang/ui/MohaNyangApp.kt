@@ -16,6 +16,7 @@ import androidx.compose.material3.SnackbarDuration.Short
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,9 @@ import com.pomonyang.mohanyang.presentation.screen.home.Home
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
 import com.pomonyang.mohanyang.presentation.screen.statistics.StatisticsGraph
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.LocalMohanyangEventLogger
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLog
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLogger
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 import com.pomonyang.mohanyang.ui.component.MohaNyangBottomBar
 import kotlinx.collections.immutable.persistentListOf
@@ -51,11 +55,13 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun MohaNyangApp(
     mohaNyangAppState: MohaNyangAppState,
+    logger: MohanyangEventLogger,
     modifier: Modifier = Modifier,
 ) {
     MohaNyangApp(
         modifier = modifier,
         mohaNyangAppState = mohaNyangAppState,
+        logger = logger,
         snackbarHostState = remember { SnackbarHostState() },
     )
 }
@@ -64,6 +70,7 @@ internal fun MohaNyangApp(
 private fun MohaNyangApp(
     mohaNyangAppState: MohaNyangAppState,
     snackbarHostState: SnackbarHostState,
+    logger: MohanyangEventLogger,
     modifier: Modifier = Modifier,
 ) {
     var snackbarIconRes by remember { mutableStateOf<Int?>(null) }
@@ -75,87 +82,92 @@ private fun MohaNyangApp(
             iconRes = PresentationR.drawable.ic_house,
             selectedIconRes = PresentationR.drawable.ic_house_fill,
             label = stringResource(R.string.bottom_navigation_home),
+            log = MohanyangEventLog.TabHomeClick,
         ),
         BottomNavItem(
             route = StatisticsGraph,
             iconRes = PresentationR.drawable.ic_chart_bar,
             selectedIconRes = PresentationR.drawable.ic_chart_bar_fill,
             label = stringResource(R.string.bottom_navigation_statistics),
+            log = MohanyangEventLog.TabStatisticsClick,
         ),
         BottomNavItem(
             route = MyPage,
             iconRes = PresentationR.drawable.ic_user,
             selectedIconRes = PresentationR.drawable.ic_user_fill,
             label = stringResource(R.string.bottom_navigation_my_page),
+            log = MohanyangEventLog.TabMyPageClick,
         ),
     )
 
-    Scaffold(
-        modifier = modifier,
-        containerColor = MnTheme.backgroundColorScheme.primary,
-        contentWindowInsets = WindowInsets.systemBars,
-        snackbarHost = {
-            MnToastSnackbarHost(
-                hostState = snackbarHostState,
-                leadingIconResourceId = snackbarIconRes,
-            )
-        },
-        bottomBar = {
-            AnimatedVisibility(
-                visible = mohaNyangAppState.showBottomBar,
-                enter = fadeIn(),
-                exit = fadeOut(),
-            ) {
-                MohaNyangBottomBar(
-                    navController = navHostController,
-                    items = items,
-                    currentBottomRootRoute = mohaNyangAppState.currentBottomRootRoute,
+    CompositionLocalProvider(LocalMohanyangEventLogger provides logger) {
+        Scaffold(
+            modifier = modifier,
+            containerColor = MnTheme.backgroundColorScheme.primary,
+            contentWindowInsets = WindowInsets.systemBars,
+            snackbarHost = {
+                MnToastSnackbarHost(
+                    hostState = snackbarHostState,
+                    leadingIconResourceId = snackbarIconRes,
                 )
-            }
-        },
-    ) { innerPadding ->
-        val isOffline by mohaNyangAppState.isOffline.collectAsStateWithLifecycle()
-        var isForceHome by remember { mutableStateOf(false) }
-        val showSnackbar: (String, Int?) -> Unit = remember {
-            { message, iconRes ->
-                snackbarIconRes = iconRes
-                mohaNyangAppState.coroutineScope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                    snackbarHostState.showSnackbar(
-                        message = message,
-                        duration = Short,
+            },
+            bottomBar = {
+                AnimatedVisibility(
+                    visible = mohaNyangAppState.showBottomBar,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    MohaNyangBottomBar(
+                        navController = navHostController,
+                        items = items,
+                        currentBottomRootRoute = mohaNyangAppState.currentBottomRootRoute,
                     )
                 }
+            },
+        ) { innerPadding ->
+            val isOffline by mohaNyangAppState.isOffline.collectAsStateWithLifecycle()
+            var isForceHome by remember { mutableStateOf(false) }
+            val showSnackbar: (String, Int?) -> Unit = remember {
+                { message, iconRes ->
+                    snackbarIconRes = iconRes
+                    mohaNyangAppState.coroutineScope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(
+                            message = message,
+                            duration = Short,
+                        )
+                    }
+                }
             }
-        }
 
-        if (isOffline) {
-            OfflinePopup()
-        }
-
-        if (isForceHome) {
-            MnDialog(
-                title = stringResource(R.string.force_home_dialog_title),
-                subTitle = stringResource(R.string.force_home_dialog_subtitle),
-                positiveButton = {
-                    MnBoxButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(id = PresentationR.string.confirm),
-                        onClick = { isForceHome = false },
-                        colors = MnBoxButtonColorType.tertiary,
-                        styles = MnBoxButtonStyles.medium,
-                    )
-                },
-            ) {
-                isForceHome = false
+            if (isOffline) {
+                OfflinePopup()
             }
+
+            if (isForceHome) {
+                MnDialog(
+                    title = stringResource(R.string.force_home_dialog_title),
+                    subTitle = stringResource(R.string.force_home_dialog_subtitle),
+                    positiveButton = {
+                        MnBoxButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = stringResource(id = PresentationR.string.confirm),
+                            onClick = { isForceHome = false },
+                            colors = MnBoxButtonColorType.tertiary,
+                            styles = MnBoxButtonStyles.medium,
+                        )
+                    },
+                ) {
+                    isForceHome = false
+                }
+            }
+            MohaNyangNavHost(
+                onShowSnackbar = showSnackbar,
+                onForceGoHome = { isForceHome = true },
+                mohaNyangAppState = mohaNyangAppState,
+                modifier = Modifier.padding(innerPadding),
+            )
         }
-        MohaNyangNavHost(
-            onShowSnackbar = showSnackbar,
-            onForceGoHome = { isForceHome = true },
-            mohaNyangAppState = mohaNyangAppState,
-            modifier = Modifier.padding(innerPadding),
-        )
     }
 }
 

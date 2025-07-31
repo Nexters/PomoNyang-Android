@@ -38,6 +38,7 @@ import com.pomonyang.mohanyang.presentation.screen.common.NetworkErrorScreen
 import com.pomonyang.mohanyang.presentation.screen.common.ServerErrorScreen
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
 import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLogger
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.ui.MohaNyangApp
 import com.pomonyang.mohanyang.ui.MohaNyangAppState
@@ -57,6 +58,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var networkMonitor: NetworkMonitor
+
+    @Inject
+    lateinit var eventLogger: MohanyangEventLogger
 
     private var keepSplashOnScreen = true
 
@@ -122,6 +126,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier,
                         viewState = state,
                         mohaNyangAppState = mohaNyangAppState,
+                        eventLogger = eventLogger,
                     )
                 }
             }
@@ -133,6 +138,7 @@ class MainActivity : ComponentActivity() {
         modifier: Modifier,
         viewState: MainState,
         mohaNyangAppState: MohaNyangAppState,
+        eventLogger: MohanyangEventLogger,
     ) {
         when {
             viewState.isInternalError -> ServerErrorScreen(onClickNavigateToHome = { })
@@ -144,7 +150,10 @@ class MainActivity : ComponentActivity() {
 
             viewState.isLoading -> LoadingScreen(modifier = modifier)
             else -> {
-                MohaNyangApp(mohaNyangAppState = mohaNyangAppState)
+                MohaNyangApp(
+                    mohaNyangAppState = mohaNyangAppState,
+                    logger = eventLogger,
+                )
             }
         }
     }
