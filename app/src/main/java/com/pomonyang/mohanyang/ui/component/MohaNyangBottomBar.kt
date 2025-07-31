@@ -21,6 +21,8 @@ import com.pomonyang.mohanyang.presentation.screen.home.Home
 import com.pomonyang.mohanyang.presentation.screen.mypage.MyPage
 import com.pomonyang.mohanyang.presentation.screen.statistics.Statistics
 import com.pomonyang.mohanyang.presentation.theme.MnTheme
+import com.pomonyang.mohanyang.presentation.util.LocalMohanyangEventLogger
+import com.pomonyang.mohanyang.presentation.util.MohanyangEventLog
 import com.pomonyang.mohanyang.presentation.util.ThemePreviews
 import com.pomonyang.mohanyang.presentation.util.noRippleClickable
 import com.pomonyang.mohanyang.ui.BottomNavItem
@@ -33,6 +35,8 @@ internal fun MohaNyangBottomBar(
     items: PersistentList<BottomNavItem>,
     currentBottomRootRoute: String? = null,
 ) {
+    val logger = LocalMohanyangEventLogger.current
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -60,6 +64,7 @@ internal fun MohaNyangBottomBar(
             ) {
                 val isItemSelected = currentBottomRootRoute == bottomNavItem.route::class.qualifiedName
                 val iconRes = if (isItemSelected) {
+                    logger.log(bottomNavItem.log)
                     bottomNavItem.selectedIconRes
                 } else {
                     bottomNavItem.iconRes
@@ -87,18 +92,21 @@ private fun MohaNyangBottomBarPreview() {
                     iconRes = R.drawable.ic_house,
                     selectedIconRes = R.drawable.ic_house_fill,
                     label = "홈",
+                    log = MohanyangEventLog.TabHomeClick,
                 ),
                 BottomNavItem(
                     route = Statistics,
                     iconRes = R.drawable.ic_chart_bar,
                     selectedIconRes = R.drawable.ic_chart_bar_fill,
                     label = "통계",
+                    log = MohanyangEventLog.TabStatisticsClick,
                 ),
                 BottomNavItem(
                     route = MyPage,
                     iconRes = R.drawable.ic_user,
                     selectedIconRes = R.drawable.ic_user_fill,
                     label = "프로필",
+                    log = MohanyangEventLog.TabMyPageClick,
                 ),
             ),
             currentBottomRootRoute = Home::class.qualifiedName,
