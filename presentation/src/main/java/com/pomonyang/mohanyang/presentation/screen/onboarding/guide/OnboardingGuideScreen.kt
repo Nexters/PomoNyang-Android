@@ -52,10 +52,6 @@ internal fun OnboardingGuideRoute(
     modifier: Modifier = Modifier,
     onboardingViewModel: OnboardingGuideViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(Unit) {
-        onboardingViewModel.handleEvent(OnboardingGuideEvent.Init)
-    }
-
     OnboardingGuideScreen(
         modifier = modifier,
         onHomeClick = onStartClick,
