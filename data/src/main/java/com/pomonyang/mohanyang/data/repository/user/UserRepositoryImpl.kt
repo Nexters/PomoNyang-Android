@@ -11,7 +11,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import javax.inject.Inject
-import kotlinx.coroutines.runBlocking
 
 internal class UserRepositoryImpl @Inject constructor(
     private val deviceLocalDataStore: DeviceIdLocalDataSource,
@@ -21,8 +20,6 @@ internal class UserRepositoryImpl @Inject constructor(
     private val authService: AuthService,
 ) : UserRepository {
     override suspend fun getDeviceId() = deviceLocalDataStore.getDeviceId()
-
-    override fun isNewUser(): Boolean = runBlocking { tokenLocalDataSource.getAccessToken().isEmpty() || userLocalDataSource.getUserInfo().isNewUser() }
 
     override suspend fun login(deviceId: String) = authService.getTokenByDeviceId(TokenRequest(deviceId))
 

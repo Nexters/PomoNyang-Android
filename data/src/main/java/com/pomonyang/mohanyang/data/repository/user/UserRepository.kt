@@ -6,7 +6,6 @@ import java.time.LocalDate
 
 interface UserRepository {
     suspend fun getDeviceId(): String
-    fun isNewUser(): Boolean
     suspend fun login(deviceId: String): Result<TokenResponse>
     suspend fun saveToken(accessToken: String, refreshToken: String)
     suspend fun fetchMyInfo(): Result<UserInfoResponse>
