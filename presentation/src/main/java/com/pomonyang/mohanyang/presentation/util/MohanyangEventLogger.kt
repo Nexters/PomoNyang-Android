@@ -1,6 +1,7 @@
 package com.pomonyang.mohanyang.presentation.util
 
 import android.os.Bundle
+import androidx.compose.runtime.staticCompositionLocalOf
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -77,4 +78,18 @@ sealed class MohanyangEventLog(val name: String) {
     ) : MohanyangEventLog("deleted_category_count") {
         override fun toParams() = mapOf("count" to count)
     }
+
+    data object StatisticsView : MohanyangEventLog("statistics_view")
+    data object PastDateBtnClick : MohanyangEventLog("past_date_btn_click")
+    data object ChangingDateBtnClick : MohanyangEventLog("changing_date_btn_click")
+    data object FutureDateBtnClick : MohanyangEventLog("future_date_btn_click")
+    data object ViewingMoreRecordsBtnClick : MohanyangEventLog("viewing_more_records_btn_click")
+    data object BarChartClick : MohanyangEventLog("bar_chart_click")
+    data object TabHomeClick : MohanyangEventLog("tab_home_click")
+    data object TabStatisticsClick : MohanyangEventLog("tab_statistics_click")
+    data object TabMyPageClick : MohanyangEventLog("tab_mypage_click")
+}
+
+val LocalMohanyangEventLogger = staticCompositionLocalOf<MohanyangEventLogger> {
+    error("No EventLogger provided")
 }
