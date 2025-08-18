@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.compose.rememberNavController
 import androidx.startup.AppInitializer
@@ -41,7 +40,6 @@ import com.pomonyang.mohanyang.presentation.util.MnNotificationManager
 import com.pomonyang.mohanyang.presentation.util.MohanyangEventLogger
 import com.pomonyang.mohanyang.presentation.util.collectWithLifecycle
 import com.pomonyang.mohanyang.ui.MohaNyangApp
-import com.pomonyang.mohanyang.ui.MohaNyangAppState
 import com.pomonyang.mohanyang.ui.rememberMohaNyangAppState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -64,32 +62,18 @@ class MainActivity : ComponentActivity() {
 
     private var keepSplashOnScreen = true
 
+    private var splashTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         handleSplashScreen()
         super.onCreate(savedInstanceState)
-
+        viewModel.handleEvent(MainEvent.Init)
         configureAppStartup()
 
         setContent {
             val activity = (LocalContext.current as? Activity)
-
             val state by viewModel.state.collectAsStateWithLifecycle()
-            val coroutineScope = rememberCoroutineScope()
-
-            val mohaNyangAppState = rememberMohaNyangAppState(
-                isNewUser = viewModel.checkIfNewUser(),
-                networkMonitor = networkMonitor,
-                coroutineScope = coroutineScope,
-                navHostController = rememberNavController().apply {
-                    NavigationViewTrackingEffect(navController = this)
-                },
-            )
-
             var showDialog by remember { mutableStateOf(false) }
-
-            LaunchedEffect(Unit) {
-                viewModel.handleEvent(MainEvent.Init)
-            }
 
             viewModel.effects.collectWithLifecycle { effect ->
                 when (effect) {
@@ -125,7 +109,6 @@ class MainActivity : ComponentActivity() {
                     AppScreen(
                         modifier = Modifier,
                         viewState = state,
-                        mohaNyangAppState = mohaNyangAppState,
                         eventLogger = eventLogger,
                     )
                 }
@@ -137,9 +120,19 @@ class MainActivity : ComponentActivity() {
     fun AppScreen(
         modifier: Modifier,
         viewState: MainState,
-        mohaNyangAppState: MohaNyangAppState,
         eventLogger: MohanyangEventLogger,
     ) {
+        LaunchedEffect(viewState.isDataFetched) {
+            if (viewState.isDataFetched) {
+                val loadDuration = System.currentTimeMillis() - splashTime
+                val loadRemainTime = (SPLASH_DELAY - loadDuration).coerceAtLeast(0)
+                if (loadRemainTime > 0) {
+                    delay(loadRemainTime)
+                }
+                keepSplashOnScreen = false
+            }
+        }
+
         when {
             viewState.isInternalError -> ServerErrorScreen(onClickNavigateToHome = { })
             viewState.isInvalidError ->
@@ -149,11 +142,17 @@ class MainActivity : ComponentActivity() {
                 )
 
             viewState.isLoading -> LoadingScreen(modifier = modifier)
-            else -> {
-                MohaNyangApp(
-                    mohaNyangAppState = mohaNyangAppState,
-                    logger = eventLogger,
+            viewState.isDataFetched -> {
+                val coroutineScope = rememberCoroutineScope()
+                val mohaNyangAppState = rememberMohaNyangAppState(
+                    isNewUser = viewState.isNewUser!!,
+                    networkMonitor = networkMonitor,
+                    coroutineScope = coroutineScope,
+                    navHostController = rememberNavController().apply {
+                        NavigationViewTrackingEffect(navController = this)
+                    },
                 )
+                MohaNyangApp(mohaNyangAppState = mohaNyangAppState, logger = eventLogger)
             }
         }
     }
@@ -178,11 +177,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleSplashScreen() {
+        splashTime = System.currentTimeMillis()
         installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
-        lifecycleScope.launch {
-            delay(SPLASH_DELAY)
-            keepSplashOnScreen = false
-        }
     }
 
     override fun onResume() {

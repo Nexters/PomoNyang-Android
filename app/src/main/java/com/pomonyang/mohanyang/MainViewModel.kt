@@ -97,7 +97,9 @@ class MainViewModel @Inject constructor(
     private fun onOnline() = scope.launch {
         fetchFcmToken()
         fetchUserInfo().onSuccess {
-            setupUserAndNavigate(it.isNewUser())
+            val isNewUser = it.isNewUser()
+            updateState { copy(isNewUser = isNewUser) }
+            setupUserAndNavigate(isNewUser)
         }.getOrThrow()
     }
 
@@ -116,8 +118,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun checkIfNewUser() = userRepository.isNewUser()
-
     private suspend fun fetchUserInfo(): Result<UserInfoResponse> = runCatching {
         getTokenByDeviceIdUseCase().getOrThrow()
         val userInfo = userRepository.fetchMyInfo().getOrThrow()
@@ -129,8 +129,10 @@ class MainViewModel @Inject constructor(
         if (!networkMonitor.isConnected) return
         scope.launch {
             val userInfo = fetchUserInfo().getOrThrow()
+            val isNewUser = userInfo.isNewUser()
+            updateState { copy(isNewUser = isNewUser) }
+            setupUserAndNavigate(isNewUser)
             setEffect(MainEffect.DismissDialog)
-            setupUserAndNavigate(userInfo.isNewUser())
         }
     }
 
