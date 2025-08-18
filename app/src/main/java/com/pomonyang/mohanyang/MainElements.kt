@@ -9,7 +9,10 @@ data class MainState(
     override val isInternalError: Boolean = false,
     override val isInvalidError: Boolean = false,
     override val lastRequestAction: MainEvent? = null,
-) : NetworkViewState()
+    val isNewUser: Boolean? = null,
+) : NetworkViewState() {
+    val isDataFetched = isLoading.not() && isNewUser != null
+}
 
 sealed interface MainEvent : ViewEvent {
     data object Init : MainEvent

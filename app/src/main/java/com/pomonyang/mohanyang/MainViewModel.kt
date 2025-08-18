@@ -97,14 +97,16 @@ class MainViewModel @Inject constructor(
     private fun onOnline() = scope.launch {
         fetchFcmToken()
         fetchUserInfo().onSuccess {
-            setupUserAndNavigate(it.isNewUser())
+            val isNewUser = it.isNewUser()
+            updateState { copy(isNewUser = isNewUser) }
+            setupUserAndNavigate(isNewUser)
         }.getOrThrow()
     }
 
     // 오프라인 상태일 때 실행할 초기화 로직
     private fun onOffline() = scope.launch {
-        val isNewUser = checkIfNewUser()
-        setupUserAndNavigate(isNewUser)
+        pomodoroTimerRepository.savePomodoroCacheData()
+        setEffect(MainEffect.ShowDialog)
     }
 
     private suspend fun setupUserAndNavigate(isNewUser: Boolean) {
@@ -115,8 +117,6 @@ class MainViewModel @Inject constructor(
             setEffect(MainEffect.GoToTimer)
         }
     }
-
-    fun checkIfNewUser() = userRepository.isNewUser()
 
     private suspend fun fetchUserInfo(): Result<UserInfoResponse> = runCatching {
         getTokenByDeviceIdUseCase().getOrThrow()
@@ -129,8 +129,10 @@ class MainViewModel @Inject constructor(
         if (!networkMonitor.isConnected) return
         scope.launch {
             val userInfo = fetchUserInfo().getOrThrow()
+            val isNewUser = userInfo.isNewUser()
+            updateState { copy(isNewUser = isNewUser) }
+            setupUserAndNavigate(isNewUser)
             setEffect(MainEffect.DismissDialog)
-            setupUserAndNavigate(userInfo.isNewUser())
         }
     }
 
